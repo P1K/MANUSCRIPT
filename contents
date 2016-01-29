@@ -1,0 +1,22 @@
+# Construction et analyse de primitives symétriques
+
+# Abstract using a reduced vocabulary (Things Explainer-like)
+
+# Z : Introduction
+# 1. Cryptographie (symétrique)
+# 2. Présentation de mes travaux
+# Include funny talks
+# (For each funny talk, a description of what it was about. In the case of
+# IACR flag, also the figure.)
+
+# I : Prolégomènes (I'd rather call this propédeutique, but it's less appropriate)
+# Use ISC attack to introduce terminology, models, differences.
+
+# II : Constructions
+# 1. Matices géométriques
+# 2. LOTF cipher
+
+# III : Cryptanalyse de la fonction de compression de SHA-1
+# Somewhat focus on GPU framework (after nice global explanation)
+# Include SMT-based instantiation as a développement (in the "state-of-the-art"
+# intro)?
