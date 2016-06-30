@@ -1,0 +1,112 @@
+\section{The SHA-1 hash function}
+\label{sec:description}
+
+This section gives a brief description of the \shaone hash function. We refer to the most recent NIST standard document~\cite{Nist-SHA} for a more thorough
+presentation.
+
+\shaone is a hash function from the ``\mdsha'' family which produces digests of $160$ bits.
+Its high-level structure follows the Merkle-Damg{\aa}rd paradigm~\cite{DBLP:conf/crypto/Damgard89a,DBLP:conf/crypto/Merkle89a}: the input message to the function
+is first padded to a length multiple of a certain \emph{block size} (which is 512 bits in the case of \shaone), defining $k$ similarly-sized blocks.
+Each block $\messblock_i$ is then fed to a \emph{compression function} $\compress$ which is used to update a 160-bit \emph{chaining value} $\chain_i$:
+$\chain_{i+1} \defas \compress(\chain_i,\messblock_{i})$.
+The first chaining value $\chain_0$ is a predefined constant set to an initial value \iv given in the specifications of the function, and the last value $\chain_k$ is the final output of the hash function.
+The padding rule of \shaone is a straightforward application of \merkdam strengthening; it is at least 65-bit long and is made of one `1' bit followed by a (possibly zero)
+number of `0' bits, and the length of the message to be hashed (without the padding) in bits as a 64-bit integer. The value of the \iv is given in \autoref{tab:sha_iv} as five 32-bit words
+(each of these words initializes one of the five internal registers of the compression function, described below).
+Note that neither the padding nor the \iv actually play any role in our attacks.
+
+\begin{table}[ht]
+\caption{\label{tab:sha_iv}The initial value (\iv) of \shaone.}
+\begin{center}
+\begin{tabular}{c c c c c} \toprule
+$A_0$:\texttt{0x67452301} & $B_0$:\texttt{0xefcfab89} & $C_0$:\texttt{0x98badcfe} & $D_0$:\texttt{0x10325476} & $E_0$:\texttt{0xc3d2e1f0} \\ 
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Similarly to other members of the \mdsha family, the compression function $\compress$ is built around an \emph{ad hoc} block cipher $\blockE$ used in a Davies-Meyer construction:
+$\chain_{i+1} \defas \blockE(\messblock_{i+1},\chain_i) \boxplus \chain_i$, where $\blockE(x,y)$ is the encryption of the plaintext $y$ with the key $x$ and ``$\boxplus$'' denotes
+wordiwse addition of the five state registers (cf. below) in $\ztt$.
+%and ``$\boxplus$'' denotes word-wise addition in $\mathbf{Z}/2^{32}\,\mathbf{Z}$. 
+The block cipher itself is a five-branch generalized Feistel network using an Add-Rotate-XOR ``ARX'' step function\footnote{This step function is not, strictly speaking, a pure ARX, as it also
+uses two non-linear Boolean functions, see \autoref{tab:sha_spec}.}. In its full version, the step function is
+iterated 80 times (divided in four rounds of 20 steps).
+
+The internal state of $\blockE$ consists in five 32-bit registers $(\mathcal{A}_i, \mathcal{B}_i, \mathcal{C}_i, \mathcal{D}_i, \mathcal{E}_i)$; at each step, a 32-bit \emph{expanded} message word $\expmess_i$ derived from
+a message block $\messblock$
+is used to update the five registers:
+
+\[
+\left\{
+\begin{array}{lcl}
+\mathcal{A}_{i+1} & = & (\mathcal{A}_i \circlearrowleft 5) + \boolF_i(\mathcal{B}_i,\mathcal{C}_i,\mathcal{D}_i) + \mathcal{E}_i + \mathcal{K}_i + \expmess_i\\
+\mathcal{B}_{i+1} & = & \mathcal{A}_i\\
+\mathcal{C}_{i+1} & = & \mathcal{B}_i \circlearrowright 2 \\
+\mathcal{D}_{i+1} & = & \mathcal{C}_i \\
+\mathcal{E}_{i+1} & = & \mathcal{D}_i \\
+\end{array},
+\right.	
+\]
+
+\noindent with $\mathcal{K}_i$ a constant and $\boolF_i$ a bitwise Boolean function (see \autoref{tab:sha_spec} for their specifications).
+We give a graphical representation of this step function in \autoref{fig:sha1_step}.
+From this figure and the definition of the function, one can notice that all updated registers except $\mathcal{A}_{i+1}$ are just rotated copies of another;
+thus it is possible to equivalently express \shaone's step function in a recursive way, using only (past values of) the register $\mathcal{A}$. The definition then becomes:
+\begin{equation}
+\label{eq:rec_step}
+\mathcal{A}_{i+1} = (\mathcal{A}_i \circlearrowleft 5) + \boolF_i(\mathcal{A}_{i-1},\mathcal{A}_{i-2}\circlearrowright 2,\mathcal{A}_{i-3}\circlearrowright 2) + (\mathcal{A}_{i-4}\circlearrowright 2) + \mathcal{K}_i + \expmess_i.
+\end{equation}
+
+\noindent
+With this notation, the output of one application of the compression function is made of the last five state words, $\mathcal{A}_{76}\ldots \mathcal{A}_{80}$.
+
+\begin{figure}[ht]
+\begin{center}
+\input{figures/sha1_step.tex}
+\caption{One step of \shaone. Figure adapted from \cite{TiKZ:Cryptographers}.\label{fig:sha1_step}}
+\end{center}
+\end{figure}
+
+
+\renewcommand{\arraystretch}{1.2}
+\begin{table}[ht]
+\caption{\label{tab:sha_spec}Boolean functions and constants of \shaone.}
+\begin{center}
+% why was it like this again?? \begin{tabular}{c c c c r @{}} \toprule
+\begin{tabular}{c c c c} \toprule
+$\;\; \textnormal{round} \;\;$ & step $i$ & $\boolF_i(x,y,z)$ &  $\mathcal{K}_i$ \\ \midrule
+1 & $\;\;  \:\:0 \leq i <  20 \;\;$  & $\boolF_{\text{IF}} = (x \wedge y) \vee (\neg x \wedge z)$ & $\;\; \texttt{0x5a827999} \;\;$ \\
+2 & $20 \leq i <  40$ & $\boolF_{\text{XOR}} = x \oplus y \oplus z$ & \texttt{0x6ed6eba1} \\
+3 & $40 \leq i <  60$ & $\;\;  \boolF_{\text{MAJ}} = (x \wedge y) \vee (x \wedge z) \vee (y \wedge z) \;\;$  & \texttt{0x8fabbcdc} \\
+4 & $60 \leq i <  80$ & $\boolF_{\text{XOR}} = x \oplus y \oplus z $ & \texttt{0xca62c1d6} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\noindent
+Finally, the expanded message words $\expmess_i$ are computed from the 512-bit message block $\messblock$. This message is first expressed as
+sixteen 32-bit words $\mess_0,\ldots, \mess_{15}$, which are then used to recursively define the eighty 32-bit words $\expmess_i$:
+\begin{equation}
+\label{eq:exp_mess}
+\expmess_i=
+\left\{
+\begin{array}{ll}
+\mess_i, & \textnormal{ for } 0\leq i\leq 15 \\
+(\expmess_{i-3} \oplus \expmess_{i-8} \oplus \expmess_{i-14} \oplus \expmess_{i-16}) \circlearrowleft 1, & \textnormal{ for } 16\leq i\leq 79
+\end{array}.
+\right.
+\end{equation}
+
+\noindent
+The step function and the message expansion can both easily be inverted as follows:
+\begin{equation}
+\label{eq:rec_step_inv}
+\mathcal{A}_{i}\hspace{-0.7mm}=\hspace{-0.8mm}(\mathcal{A}_{i+5} - \expmess_{i+4} - \mathcal{K}_{i+4} - \boolF_{i+4}(\mathcal{A}_{i+3},\mathcal{A}_{i+2}\circlearrowright 2,\mathcal{A}_{i+1}\circlearrowright 2) -
+(\mathcal{A}_{i+4} \circlearrowleft 5))\hspace{-0.8mm}\circlearrowleft 2,
+\end{equation}
+\begin{equation}
+\label{eq:exp_mess_inv}
+\expmess_{i} = (\expmess_{i+16} \circlearrowright 1) \oplus \expmess_{i+13} \oplus \expmess_{i+8} \oplus \expmess_{i+2}.
+\end{equation}

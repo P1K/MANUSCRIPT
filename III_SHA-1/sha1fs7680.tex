@@ -1,0 +1,201 @@
+\documentclass[11pt]{article}
+
+\usepackage{etex}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[greek,english]{babel}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{url}
+\usepackage{appendix}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{amsmath,amssymb}
+\usepackage{pstricks}
+\usepackage{epic}
+%\usepackage[ruled]{algorithm2e}
+\usepackage{mathtools}
+\usepackage{xspace}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes}
+\usetikzlibrary{positioning}
+\usetikzlibrary{crypto.symbols}
+\usepackage{rotating}
+\usepackage{verbatimbox}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+%\usepackage{breakurl}
+\usepackage{fourier-orns}
+\usepackage{textcomp}
+\usepackage{bbding}
+\usepackage{xfrac}
+\usepackage{yfonts}
+\usepackage{MnSymbol}
+
+\usepackage{newtxtext}
+\usepackage[mathcal]{euscript}
+
+%\usepackage{marginnote}
+
+\usepackage[a4paper,hmargin=3cm,vmargin=2.5cm]{geometry}
+
+\hypersetup{
+  colorlinks=true,
+  citecolor=NavyBlue,
+  linkcolor=ForestGreen,
+  urlcolor=Violet
+}
+
+\renewcommand{\thetable}{\thesection-\arabic{table}}
+\makeatletter\@addtoreset{table}{section}\makeatother
+\renewcommand{\thefigure}{\thesection-\arabic{figure}}
+\makeatletter\@addtoreset{figure}{section}\makeatother
+
+\renewcommand{\labelitemi}{--}
+\renewcommand{\labelitemii}{--}
+\renewcommand{\labelitemiii}{--}
+\renewcommand{\labelitemiv}{--}
+
+\newcommand{\aes}                  {AES\xspace}
+\newcommand{\shazero}              {SHA-0\xspace}
+\newcommand{\shaone}               {SHA-1\xspace}
+\newcommand{\shatwo}               {SHA-2\xspace}
+\newcommand{\shathree}             {SHA-3\xspace}
+\newcommand{\mdfive} 			   {MD5\xspace}
+\newcommand{\mdfour} 			   {MD4\xspace}
+\newcommand{\mdsha} 			   {MD-SHA\xspace}
+\newcommand{\md} 			   	   {MD\xspace}
+\newcommand{\sha} 			 	   {SHA\xspace}
+\newcommand{\ripemd} 			   {RIPEMD\xspace}
+\newcommand{\ripemdote} 		   {RIPEMD-128\xspace}
+\newcommand{\ripemdosz}			   {RIPEMD-160\xspace}
+\newcommand{\hmac}			       {HMAC\xspace}
+\newcommand{\shiun}			       {SHI-1\xspace}
+
+\newcommand{\gtx}              {GTX\,970\xspace}
+
+\newcommand\merkdam{Merkle-Damg{\aa}rd\xspace}
+\newcommand\iv{\textit{IV}\xspace}
+\newcommand\dv{\textit{DV}\xspace}
+\newcommand\dvs{\textit{DVs}\xspace}
+
+\newcommand{\etal}{\mbox{\emph{et al.}}\xspace}
+\newcommand\ie{\emph{i.e.}\xspace}
+\newcommand\eg{\emph{e.g.}\xspace}
+
+\newcommand\messblock{\mathfrak{m}}
+\newcommand\mess{\mathcal{M}}
+\newcommand\eem{\mathfrak{W}}
+\newcommand\chain{\mathfrak{c}}
+\newcommand\mainmess{\mathcal{M}}
+\newcommand\expmess{\mathcal{W}}
+\newcommand\dexpmess{\mathcal{\widetilde W}}
+\newcommand\state{\mathcal{A}}
+\newcommand\dstate{\mathcal{\widetilde A}}
+\DeclareMathOperator\compress{\mathfrak{H}}
+\DeclareMathOperator\blockE{\mathfrak{E}}
+\DeclareMathOperator\boolF{\varphi}
+\newcommand\fif{\boolF_\text{IF}}
+\newcommand\fxor{\boolF_\text{XOR}}
+\newcommand\fmaj{\boolF_\text{MAJ}}
+
+\DeclareMathOperator\diff{\Delta}
+
+\newcommand\nodiff{\textopenbullet}
+\newcommand\nodiffz{$\smalltriangledown$\xspace}
+\newcommand\nodiffo{$\smalltriangleup$\xspace}
+\newcommand\onediff{\textbullet}
+\newcommand\onediffd{$\filledtriangledown$\xspace}
+\newcommand\onediffu{$\filledtriangleup$\xspace}
+\newcommand\monediff{\bullet}
+\newcommand\mnodiff{\circ}
+\newcommand\monediffd{\filledtriangledown}
+\newcommand\monediffu{\filledtriangleup}
+
+\newcommand\ftwo{\mathbf{F}_{2}}
+\newcommand\ztt{\mathbf{Z}/2^{32}\mathbf{Z}}
+
+\newcommand\defas{:=}
+
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\newtheorem{defi}{Definition}
+\newtheorem{fact}{Fact}
+\newtheorem{example}{Example}
+
+\pagestyle{plain}
+
+\begin{document}
+
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Section}
+\renewcommand{\subsubsectionautorefname}{Section}
+\newcommand{\appendixref}[1]{\hyperref[#1]{Appendix~\ref*{#1}}}
+
+% For custom thanks symbols
+\makeatletter
+\renewcommand*{\@fnsymbol}[1]{\ensuremath{\ifcase#1\or \text{\decosix} \or \text{\leafNE} \or \text{\aldine} \or \text{\floweroneleft} \or \text{\textxswdown}
+\or \ddagger \or \ddagger\ddagger \else\@ctrerr\fi}}
+\makeatother
+
+
+\title{
+Practical freestart collision attacks on \textswab{SHA-1}\thanks{This article presents two recent works on practical freestart collision attacks on \shaone in a unified and expanded way:
+the 76-step attack of Karpman \etal from CRYPTO~2015~\cite{DBLP:conf/crypto/KarpmanPS15,76stepFull} and the 80-step (full) attack of Stevens \etal from
+EUROCRYPT~2016~\cite{DBLP:conf/eurocrypt/StevensKP16,80stepFull}.}
+}
+
+\author{Pierre Karpman}%\thanks{Some of the material also by Marc Stevens and Thomas Peyrin.}}
+
+\maketitle
+
+\begin{abstract}
+It's been a while since we learned that SHA-1 is weak against collision attacks. This paper gives an account of two practical attacks on its compression
+function, including one on the full 80 steps. This is actually quite nice.
+\end{abstract}
+
+\setcounter{footnote}{0}
+
+%\begin{center}
+%\textbf{Note:} in all of this article, we assume that $2^{\aleph_0} = \aleph_{27}$.
+%\end{center}
+
+\tableofcontents
+
+\input{introduction.tex}
+
+\input{notations.tex}
+
+\input{sha1_presentation.tex}
+
+\input{history.tex}
+
+\input{freestart.tex}
+
+\input{gpu.tex}
+
+\input{res76.tex}
+
+\input{res80.tex}
+
+
+%\FloatBarrier
+
+%\section*{Software disclosure policy}
+%To allow verification and improve understanding of our new results, we intend to release our engineered freestart attack code for graphic cards at \url{https://sites.google.com/site/itstheshappening/}. 
+%
+%However, this source code does not directly enable the engineering of a SHA-1 collision attack. Any cryptanalytic tools needed for engineering a full SHA-1 collision attack will be released independently in a responsible manner.
+
+
+\bibliographystyle{amsalpha_nolower_eev2}
+
+\bibliography{sha1fs7680_bibliography}
+
+\end{document}
