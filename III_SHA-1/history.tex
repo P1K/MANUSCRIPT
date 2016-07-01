@@ -155,14 +155,14 @@ In its most basic form, such a difference is similar to an XOR difference with t
 which is a ``sign'' for the difference.
 
 This is an important information when one works with modular addition as the sign impacts the (absence of) propagation of carries in the addition of two differences.
-Let us for instance consider the two pairs of words $a = 11011000001_b$, $\tilde{a} = 11011000000_b$ and $b = 10100111000_b$, $\tilde{b} = 10100111001_b$; the XOR
-differences $(a \oplus \tilde{a})$ and $(b \oplus \tilde{b})$ are both $00000000001_b$ (\ie \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff),
-meaning that $(a \oplus b) = (\tilde{a} \oplus \tilde{b})$. On the other hand, the signed
-XOR difference between $a$ and $\tilde{a}$ may be written \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediffd to convey the fact that they are different on their lowest bit \emph{and} that
-the value of this bit is 1 for $a$ (and thence 0 for $\tilde{a}$), \ie $\tilde{a} = a - 1$ (using modular addition); similarly, the signed difference between $b$ and $\tilde{b}$ may be written
-\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediffu, which is a difference in the same position but of a different sign, \ie $\tilde{b} = b + 1$. From these differences, we can deduce that $(a + b) = (\tilde{a} + \tilde{b})$
-because differences of different signs cancel (while differences of the same sign do not); if we were to swap the values $b$ and $\tilde{b}$, both differences on $a$ and $b$ would have the same sign and
-indeed we have $(a + \tilde{b}) \neq (\tilde{a} + b)$ (though $(a \oplus \tilde{b})$ and $(\tilde{a} \oplus b)$ remain equal).
+Let us for instance consider the two pairs of words $a = 11011000001_b$, $\widetilde{a} = 11011000000_b$ and $b = 10100111000_b$, $\widetilde{b} = 10100111001_b$; the XOR
+differences $(a \oplus \widetilde{a})$ and $(b \oplus \widetilde{b})$ are both $00000000001_b$ (\ie \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff),
+meaning that $(a \oplus b) = (\widetilde{a} \oplus \widetilde{b})$. On the other hand, the signed
+XOR difference between $a$ and $\widetilde{a}$ may be written \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediffd to convey the fact that they are different on their lowest bit \emph{and} that
+the value of this bit is 1 for $a$ (and thence 0 for $\widetilde{a}$), \ie $\widetilde{a} = a - 1$ (using modular addition); similarly, the signed difference between $b$ and $\widetilde{b}$ may be written
+\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediffu, which is a difference in the same position but of a different sign, \ie $\widetilde{b} = b + 1$. From these differences, we can deduce that $(a + b) = (\widetilde{a} + \widetilde{b})$
+because differences of different signs cancel (while differences of the same sign do not); if we were to swap the values $b$ and $\widetilde{b}$, both differences on $a$ and $b$ would have the same sign and
+indeed we have $(a + \widetilde{b}) \neq (\widetilde{a} + b)$ (though $(a \oplus \widetilde{b})$ and $(\widetilde{a} \oplus b)$ remain equal).
 In the case of bits with no differences, we may similarly want to use different notations to express the fact that two bits are equal to zero (\nodiffz) or equal to one (\nodiffo).
 
 It is possible to extend signed differences to account for more generic combinations of possible
@@ -721,15 +721,15 @@ Let us see how this may work on an example with three neighbouring differences.
 \begin{example}[Compression of three differences]
 \label{ex:bit_comp}
 Consider a chain of differences of the form $\ldots\mnodiff\monediffu\monediffd\monediffd\mnodiff\ldots$ added to a state with no difference $\ldots\mnodiff\mnodiff\mnodiff\mnodiff\mnodiff\ldots$.
-It is most useful in this case to first consider the differences as modular ones. If we call $x,\tilde{x}$ and $y,\tilde{y}$ the two states that are added together, we
-have $\tilde{x} = x - 2^{i} - 2^{i+1} + 2^{i+2}$ for some value $i$. Now we want to determine what are the probabilities of some of the possible resulting XOR differences between $x + y$ and $\tilde{x} + \tilde{y}$.
+It is most useful in this case to first consider the differences as modular ones. If we call $x,\widetilde{x}$ and $y,\widetilde{y}$ the two states that are added together, we
+have $\widetilde{x} = x - 2^{i} - 2^{i+1} + 2^{i+2}$ for some value $i$. Now we want to determine what are the probabilities of some of the possible resulting XOR differences between $x + y$ and $\widetilde{x} + \widetilde{y}$.
 
 Using a traditional view and treating all differences separately (which is what would happen if these were perturbations of local collisions seen independently), we would like to have no
 carry propagation at any of the three position to obtain an XOR difference on the same three positions where differences were introduced. It is easy to see that this imposes three conditions
-on $x + y$, as it means that we want $\tilde{x} + \tilde{y} = (x + y) \oplus 2^{i} \oplus 2^{i+1} \oplus 2^{i+2}$, which translates to bit $i$, $i+1$ and $i+2$ of $x+y$ being 1, 1 and 0 respectively.
+on $x + y$, as it means that we want $\widetilde{x} + \widetilde{y} = (x + y) \oplus 2^{i} \oplus 2^{i+1} \oplus 2^{i+2}$, which translates to bit $i$, $i+1$ and $i+2$ of $x+y$ being 1, 1 and 0 respectively.
 The probability of this happening is thus $2^{-3}$.
 
-However, as we have $2^{i+2} - 2^{i+1} - 2^{i} = 2^{i}$, the alternative XOR difference $\tilde{x} + \tilde{y} = (x + y) \oplus 2^{i}$ only imposes one condition on $x + y$, namely that bit $i$
+However, as we have $2^{i+2} - 2^{i+1} - 2^{i} = 2^{i}$, the alternative XOR difference $\widetilde{x} + \widetilde{y} = (x + y) \oplus 2^{i}$ only imposes one condition on $x + y$, namely that bit $i$
 must be 0; this difference may then happen with probability $2^{-1}$.
 \end{example}
 
@@ -742,11 +742,11 @@ our previous example.
 \begin{example}[Correction of compressed differences]
 \label{ex:bit_comp2}
 Let us use modular differences again. Consider the case of Example~\ref{ex:bit_comp} and assume that the introduction of the perturbation resulted in the modular and XOR difference
-$\tilde{x} + \tilde{y} = (x + y) + 2^{i}  = (x + y) \oplus 2^{i}$. Assume that this difference is preserved through the step function, excluding the addition of the message,
-resulting in a partial state $z, \tilde{z}$ with $\tilde{z} = z + 2^{i}$. This partial state is rotated to the left by $r \in \{0, 5, 30\}$ in the computation of the new state,
+$\widetilde{x} + \widetilde{y} = (x + y) + 2^{i}  = (x + y) \oplus 2^{i}$. Assume that this difference is preserved through the step function, excluding the addition of the message,
+resulting in a partial state $z, \widetilde{z}$ with $\widetilde{z} = z + 2^{i}$. This partial state is rotated to the left by $r \in \{0, 5, 30\}$ in the computation of the new state,
 and the differences in the message at this point are at positions $\alpha = i + r\mod32$, $\beta = i+1+r \mod 32$, $\gamma = i+2+r \mod 32$ and of sign opposite the ones of the initial perturbation,
-\ie we have $m, \tilde{m}$ with $\tilde{m} = m + 2^{\alpha} + 2^{\beta} - 2^{\gamma}$. If $\alpha < \beta < \gamma$, we then have $\tilde{m} = m - 2^{\alpha}$. In that case,
-$(\tilde{z} \circlearrowleft r) + \tilde{m}$ = $(z \circlearrowleft r) + 2^{\alpha} + m - 2^{\alpha}$ = $(z \circlearrowleft r) + m$, and the correction is indeed successful.
+\ie we have $m, \widetilde{m}$ with $\widetilde{m} = m + 2^{\alpha} + 2^{\beta} - 2^{\gamma}$. If $\alpha < \beta < \gamma$, we then have $\widetilde{m} = m - 2^{\alpha}$. In that case,
+$(\widetilde{z} \circlearrowleft r) + \widetilde{m}$ = $(z \circlearrowleft r) + 2^{\alpha} + m - 2^{\alpha}$ = $(z \circlearrowleft r) + m$, and the correction is indeed successful.
 \end{example}
 
 It is worth noting that because only a single state difference needs to be preserved through the Boolean functions during the correction, the probability of all corrections of compressed
@@ -781,14 +781,14 @@ We may rephrase this in a slightly more formal way as follows:
 \medskip
 
 Consider a local collision started by an initial perturbation on $m_s$ and $\widetilde{m_s}$ of positive sign at position $i < 31$, \ie with a signed bit difference $\ldots\mnodiff\monediffu\mnodiff\ldots$.
-This corresponds to a modular difference $\widetilde{m_s} = m_s + 2^i$. Call $x$, $\tilde{x}$ and $y$, $\tilde{y}$ the state to which the message $m_s$, $\widetilde{m_s}$ is added and the result of this addition
-respectively. The probability (over the values of $x$) of having a signed difference $\ldots\mnodiff\monediffu\mnodiff\ldots$ for $y$, $\tilde{y}$ is $2^{-1}$.
-However, we also have $\widetilde{m_s} = m_s - \sum_{j = i}^{k - 1}2^j + 2^k$ for any $k < 32$. Thus we can write $\tilde{y} = \tilde{x} + \widetilde{m_s} = x + m_s - \sum_{j = i}^{k - 1}2^j + 2^k$. The
-probability of having a difference $\ldots\mnodiff\monediffu\monediffd\mnodiff\ldots$ between $\tilde{y}$ and $y$ is thus $2^{-2}$; more generally, the probability of
-having a difference $\ldots\mnodiff\monediffu\underbrace{\monediffd\ldots\monediffd}_{u~\text{times}}\mnodiff\ldots$ between $\tilde{y}$ and $y$ (with $i+u+1 < 32$) is $2^{-u-1}$.
+This corresponds to a modular difference $\widetilde{m_s} = m_s + 2^i$. Call $x$, $\widetilde{x}$ and $y$, $\widetilde{y}$ the state to which the message $m_s$, $\widetilde{m_s}$ is added and the result of this addition
+respectively. The probability (over the values of $x$) of having a signed difference $\ldots\mnodiff\monediffu\mnodiff\ldots$ for $y$, $\widetilde{y}$ is $2^{-1}$.
+However, we also have $\widetilde{m_s} = m_s - \sum_{j = i}^{k - 1}2^j + 2^k$ for any $k < 32$. Thus we can write $\widetilde{y} = \widetilde{x} + \widetilde{m_s} = x + m_s - \sum_{j = i}^{k - 1}2^j + 2^k$. The
+probability of having a difference $\ldots\mnodiff\monediffu\monediffd\mnodiff\ldots$ between $\widetilde{y}$ and $y$ is thus $2^{-2}$; more generally, the probability of
+having a difference $\ldots\mnodiff\monediffu\underbrace{\monediffd\ldots\monediffd}_{u~\text{times}}\mnodiff\ldots$ between $\widetilde{y}$ and $y$ (with $i+u+1 < 32$) is $2^{-u-1}$.
 
 For an initial difference of weight $u+1$, the corrections on subsequent message words $m_{s+o}$, $\widetilde{m_{s+o}}$ are of the form $\widetilde{m_{s+o}} = m_{s+o} - 2^{i+r\mod 32}$, $r \in \{0,5,30\}$.
-An initial perturbation that resulted in a difference on $y$, $\tilde{y}$ of weight $u+1$ can thus be corrected at every step only if $i+r\mod 32 \leq i+u+r\mod 32$, because the equality
+An initial perturbation that resulted in a difference on $y$, $\widetilde{y}$ of weight $u+1$ can thus be corrected at every step only if $i+r\mod 32 \leq i+u+r\mod 32$, because the equality
 $\widetilde{m_{s+o}} = m_{s+o} + \sum_{j = i+r \mod 32}^{i+r+u-1 \mod 32}2^j - 2^{i+r+u \mod 32}$ must hold.
 
 Now assume that the maximal weight of an initial perturbation that can be corrected is $v$, and that for the sake of simplicity all induced perturbations are in an XOR round in no particular position

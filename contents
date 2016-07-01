@@ -18,5 +18,3 @@
 
 # III : Cryptanalyse de la fonction de compression de SHA-1
 # Somewhat focus on GPU framework (after nice global explanation)
-# Include SMT-based instantiation as a développement (in the "state-of-the-art"
-# intro)?

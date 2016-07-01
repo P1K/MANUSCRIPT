@@ -1,1 +1,98 @@
 \section{A framework for freestart collisions for SHA-1}
+
+This section presents in detail our framework for freestart collision attacks on \shaone. We start by presenting our general approach to such attacks
+in \autoref{sec:why_free}, and the addition and improvements to existing techniques that were developped to make the attacks possible in \autoref{sec:attack_techs}.
+
+But first, we start by recalling the definition of freestart collisions for Merkle-Damg\aa rd hash functions.
+
+\begin{defi}[Freestart collision]
+A \emph{freestart collision} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $((\freeiv,\messblock), (\widetilde{\freeiv},\widetilde{\messblock}))$
+of two \iv and message pairs such that $\hash_\freeiv(\messblock) = \hash_{\widetilde{\freeiv}}(\widetilde{\messblock})$, with $\hash_\freeiv(\cdot)$ denoting
+the hash function $\hash$ with its original \iv replaced by $\freeiv$.
+\end{defi}
+
+It can be noted that if the two messages of a freestart collision pair are one-block long, the definition above becomes equivalent to the one of a collision
+on the compression function $\compress$ used to build $\hash$. As the attacks presented in the remainder of this article only use one-block messages, we
+will make no distinction between the two notions. 
+
+% TODO ===> explain reduction etc. in the introduction for the whooooole thingy.
+%The theoretical justification for freestart collisions comes from the fact that the existence of such attacks violates the security guarantees of the hash function,
+%even if they do not necessarily.......
+% definition
+
+\subsection{Faster collisions by exploiting more freedom}
+\label{sec:why_free}
+
+The main interest of freestart collisions is that they consist in an attack against a meaningful (though weakened) security notion, while granting more freedom to
+the attacker by providing him with an additional input. It is thus expected that such attacks should be more efficient than ones on stronger notions (\eg hash function
+collisions), not unlike attacking a reduced version of a function, using fewer steps.
+
+However, it is not necessarily clear in general how to efficiently exploit the additional input in a freestart attack. We describe below our strategy in that respect
+in the case of \shaone.
+
+\medskip
+
+The basic idea underlying the structure of our freestart collisions is to start the initialisation of the hash function from a ``middle'' state rather than from the \iv,
+and to similarly initialize the message with an offset. As both of the step function and the message expansion of \shaone can easily be inverted, any computation started
+from the middle can be equivalently defined as starting from the beginning.
+
+The desired effect of this shift is to move down the part where freedom is available, enabling to satisfy conditions (either deterministically or with accelerating techniques)
+up to a later point in the attack. Being able to do so would mechanically make the attack more efficient, at the condition that this gain is not entirely offset by the cost
+of satisfying potential conditions when computing backward to the corresponding \iv (this computation being eventually necessary to fully determine the colliding inputs).
+
+In the case of a freestart attack, the entire freedom of the \iv implies that no \emph{a priori} constraints are set on the values for the middle initializations. This is in contrast to a hash function attack, where
+the necessity for the backward-computed \iv to be of a specific value makes the approach less powerful, altough potentially still useful.
+
+We briefly review below some cases of past attacks on hash functions using this sort of approach.
+
+\medskip
+
+A first example is due to Dobbertin, who used such a technique in a collision attack on \mdfour~\cite{DBLP:conf/fse/Dobbertin96}.
+This method has also been used to improve collision attacks on functions based on parallel branches, such as \ripemdote~\cite{DBLP:conf/eurocrypt/LandelleP13}.
+A reduced version of \groestl (which is much more recent than the \mdsha family and structurally quite different) was also attacked by using such a shifted initialization~\cite{DBLP:conf/fse/MendelRS14}
+
+Starting from the middle may also be useful in weaker attack models, such as ``distinguishers''. The approach was for instance used in
+Saarinen's slide distinguisher on the \shaone compression function~\cite{DBLP:conf/fse/Saarinen03} and in
+rebound attacks in general~\cite{DBLP:conf/fse/MendelRST09}, which can be thought of as a start-from-the-middle strategy adapted to the specific case of \aes-like primitives.
+
+We conclude this discussion by considering more closely how we applied this technique to \shaone.
+
+\subsubsection{Different choices for the disturbance vectors.}
+We already mentioned at length the importance of the disturbance vectors in attacks on \shaone.
+When shifting the window where actual freedom is used, it seems natural to also shift the disturbance vector.
+This is in part a consequence of the fact that good \dvs tend to naturally include a series of steps for which they impose a lot of conditions. These can easily be resolved provided that
+enough freedom is available, but they would heavily impact the complexity of an attack were they to be satisfied probabilistically.
+
+As the equivalence classes of Manuel already include vertical shifts in their definitions, the two known good classes are already suitable to search for good \dvs for freestart collisions.
+We simply expect to use known \dvs with a different shift value.
+
+\medskip
+
+The structure of the attack also imposes additional conditions on the \dv, compared to a usual two-block hash function attack. Both conditions come from the aforementioned fact that bit conditions
+(ensuring that the message pair follows a proper differential path)
+may need to be satisfied (probabilistically) when computing the \iv backward from the values of the middle initialization. To make this phase efficient, we would like to have as few such
+bit conditions as possible. This translates to the two high-level conditions:
+\begin{enumerate}
+\item The \dv should not imply too many differences in the last five steps of the attack. This is because we aim for a one-block attack, thus corresponding differences will need to be inserted in the
+backward-computed \iv for the pair to define a collision.
+\item The \dv itself should not include too many differences in its early words (corresponding to the ones used in the backward computation), as we observed that being dense on these positions makes
+it harder to connect to the \iv with few conditions. Additionally, it may decrease the overall probability of the computation.
+\end{enumerate}
+
+\subsubsection{New constraints for the accelerating techniques.}
+The necessity of satisfying bit conditions in a backward computation also imposes some constraints on the accelerating techniques that can be used. These all have in common that they work by
+selectively changing the value of some bits of the message. As the structure of our attacks also includes shifting down the free window of the message, changing a bit in this window may also impact
+the value of the few first message words that are computed backward. This may potentially result in unwanted interactions with the ability to satisfy the backward bit conditions.
+
+In short, the selection of accelerating techniques (\eg neutral bits) must take into account their ``back effects'', which may disqualify some otherwise good candidates.
+
+\subsection{New techniques for freestart collisions}
+\label{sec:attack_techs}
+
+% how we did it (freestart, and our SHA-1 thingies in gal)
+% moar criteria for L part
+% 2-part NL part
+	% show example of lo starting point
+% NL search
+% use neutral bits and boomerangs (cf. implem)
+% middle basesol instantiation, backward okay

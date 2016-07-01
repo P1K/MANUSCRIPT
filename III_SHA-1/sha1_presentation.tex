@@ -5,7 +5,7 @@ This section gives a brief description of the \shaone hash function. We refer to
 presentation.
 
 \shaone is a hash function from the ``\mdsha'' family which produces digests of $160$ bits.
-Its high-level structure follows the Merkle-Damg{\aa}rd paradigm~\cite{DBLP:conf/crypto/Damgard89a,DBLP:conf/crypto/Merkle89a}: the input message to the function
+Its high-level structure follows the Merkle-Damg{\aa}rd structure~\cite{DBLP:conf/crypto/Merkle89a,DBLP:conf/crypto/Damgard89a}: the input message to the function
 is first padded to a length multiple of a certain \emph{block size} (which is 512 bits in the case of \shaone), defining $k$ similarly-sized blocks.
 Each block $\messblock_i$ is then fed to a \emph{compression function} $\compress$ which is used to update a 160-bit \emph{chaining value} $\chain_i$:
 $\chain_{i+1} \defas \compress(\chain_i,\messblock_{i})$.
