@@ -1,28 +1,28 @@
-% defining the new dimensions
-\newlength{\starsize}
-\newlength{\starspread}
-% declaring the keys in tikz
-\tikzset{starsize/.code={\setlength{\starsize}{#1}},
-         starspread/.code={\setlength{\starspread}{#1}}}
-% setting the default values
-\tikzset{starsize=1mm,
-         starspread=3mm}
-% declaring the pattern
-\pgfdeclarepatternformonly[\starspread,\starsize]% variables
-  {custom fivepointed stars}% name
-  {\pgfpointorigin}% lower left corner
-  {\pgfqpoint{\starspread}{\starspread}}% upper right corner
-  {\pgfqpoint{\starspread}{\starspread}}% tilesize
-  {% shape description
-   \pgftransformshift{\pgfqpoint{\starsize}{\starsize}}
-   \pgfpathmoveto{\pgfqpointpolar{18}{\starsize}}
-   \pgfpathlineto{\pgfqpointpolar{162}{\starsize}}
-   \pgfpathlineto{\pgfqpointpolar{306}{\starsize}}
-   \pgfpathlineto{\pgfqpointpolar{90}{\starsize}}
-   \pgfpathlineto{\pgfqpointpolar{234}{\starsize}}
-   \pgfpathclose%
-   \pgfusepath{fill}
-  }
+%% defining the new dimensions
+%\newlength{\starsize}
+%\newlength{\starspread}
+%% declaring the keys in tikz
+%\tikzset{starsize/.code={\setlength{\starsize}{#1}},
+%         starspread/.code={\setlength{\starspread}{#1}}}
+%% setting the default values
+%\tikzset{starsize=1mm,
+%         starspread=3mm}
+%% declaring the pattern
+%\pgfdeclarepatternformonly[\starspread,\starsize]% variables
+%  {custom fivepointed stars}% name
+%  {\pgfpointorigin}% lower left corner
+%  {\pgfqpoint{\starspread}{\starspread}}% upper right corner
+%  {\pgfqpoint{\starspread}{\starspread}}% tilesize
+%  {% shape description
+%   \pgftransformshift{\pgfqpoint{\starsize}{\starsize}}
+%   \pgfpathmoveto{\pgfqpointpolar{18}{\starsize}}
+%   \pgfpathlineto{\pgfqpointpolar{162}{\starsize}}
+%   \pgfpathlineto{\pgfqpointpolar{306}{\starsize}}
+%   \pgfpathlineto{\pgfqpointpolar{90}{\starsize}}
+%   \pgfpathlineto{\pgfqpointpolar{234}{\starsize}}
+%   \pgfpathclose%
+%   \pgfusepath{fill}
+%  }
 
 
 
@@ -50,10 +50,15 @@
     \fill[pattern=north west lines] (0,-18) -- (7,-18) -- (0,-22); % base solution
     \fill[pattern=north west lines] (13,-18) -- (20,-18) -- (20,-22); % base solution
 	\draw (0,-22) -- (7,-18) -- (13,-18) -- (20,-22);
-    \fill[pattern=custom fivepointed stars,starspread=1.4mm,starsize=0.5mm] (0,-22.2) -- (7,-18) -- (13,-18) -- (20,-22.2); % NB 1
-	\fill[pattern=custom fivepointed stars,starspread=1.7mm,starsize=0.5mm] (0,-22.4) rectangle (20,-26); % NB 2
-    \fill[pattern=custom fivepointed stars,starspread=2.1mm,starsize=0.5mm] (0,-26.1) rectangle (20,-30); % NB 3
-    \fill[pattern=custom fivepointed stars,starspread=2.5mm,starsize=0.5mm] (0,-30) rectangle (20,-33); % NB 6
+%    \fill[pattern=custom fivepointed stars,starspread=1.4mm,starsize=0.5mm] (0,-22.2) -- (7,-18) -- (13,-18) -- (20,-22.2); % NB 1
+%	\fill[pattern=custom fivepointed stars,starspread=1.7mm,starsize=0.5mm] (0,-22.4) rectangle (20,-26); % NB 2
+%    \fill[pattern=custom fivepointed stars,starspread=2.1mm,starsize=0.5mm] (0,-26.1) rectangle (20,-30); % NB 3
+%    \fill[pattern=custom fivepointed stars,starspread=2.5mm,starsize=0.5mm] (0,-30) rectangle (20,-33); % NB 6
+    \fill[pattern=dots] (0,-22.2) -- (7,-18) -- (13,-18) -- (20,-22.2); % NB 1
+	\fill[pattern=dots] (0,-22.4) rectangle (20,-26); % NB 2
+    \fill[pattern=dots] (0,-26.1) rectangle (20,-30); % NB 3
+    \fill[pattern=dots] (0,-30) rectangle (20,-33); % NB 6
+    \fill[pattern=dots] (20,-33) -- (20,-34) -- (15,-33) -- (10,-34) -- (5,-33) -- (0,-34) -- (0,-33);
 	\fill[pattern=north east lines] (25,-4) rectangle (45,-15); % message
 	\fill[pattern=north east lines] (25,-15) --  (32,-15) -- (29,-19) -- (25,-19) ; % message
 	\fill[pattern=north east lines] (38,-15) --  (45,-15) -- (45,-19) -- (41,-19) ; % message
@@ -75,7 +80,8 @@
     \draw[thick] (50,-16) rectangle (51.5,-17.5);
     \node[anchor=text] at (55,-17.5) {Probabilistic};
     \node[anchor=text] at (55,-19) {conditions};
-    \draw[pattern=custom fivepointed stars,starspread=1.2mm,starsize=0.5mm] (50,-16) rectangle (51.5,-17.5);
+%    \draw[pattern=custom fivepointed stars,starspread=1.2mm,starsize=0.5mm] (50,-16) rectangle (51.5,-17.5);
+    \draw[pattern=dots] (50,-16) rectangle (51.5,-17.5);
     %
     \draw[thick] (50,-20) rectangle (51.5,-21.5);
     \node[anchor=text] at (55,-21.5) {Fixed};
