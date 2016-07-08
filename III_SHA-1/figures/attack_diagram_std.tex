@@ -1,0 +1,97 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes}
+\usetikzlibrary{positioning}
+\usetikzlibrary{crypto.symbols}
+\begin{document}
+% From texample.net
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, thick,
+    text width=4.5em, text badly centered, node distance=3.5cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, thick,
+    text width=6em, text centered, minimum height=3em]
+\tikzstyle{block2} = [ellipse, draw, thick,
+    text width=5em, text centered, rounded corners, minimum height=3em]
+\tikzstyle{outside} = [circle, draw, very thick,
+    text width=2em, text centered, minimum height=2em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{dataline} = [draw, dotted, thick, ->]
+    
+\begin{tikzpicture}[auto,scale=1,transform shape]
+    % Decision nodes
+    \node [decision] (st25) {Enough solutions up to 25?};
+    \node [decision, below of =st25] (st24) {Enough solutions up to 24?};
+    \node [decision, below of =st24, node distance=4cm] (st18) {Enough solutions up to 18?};
+    % Process nodes
+    \node [block, right of=st25, node distance=3cm] (proc25) {Extend to 26};
+    \node [block, right of=st24, node distance=3cm] (proc24) {Extend to 25};
+    \node [block, right of=st18, node distance=3cm] (proc18) {Extend to 19};
+    \node [block, below of=st18, node distance=3cm] (proc17) {Extend to 18};
+    % I/O nodes
+    \node [block2, above of=proc25, node distance=1.75cm] (buf25) {Solutions up to 26};
+    \node [block2, above of=proc24, node distance=1.75cm] (buf24) {Solutions up to 25};
+    \node [block2, below of=proc18, node distance=1.75cm] (buf18) {Solutions up to 18};
+    \node [block2, below of=buf18, node distance=2.5cm] (buf17) {Base solutions};
+    \node [outside, below of=buf17, node distance=1.5cm] (from) {From CPU};
+    \node [outside, above of=buf25, node distance=1.75cm] (to) {To CPU};
+    % Coordinates
+    \coordinate [above of=st25, node distance=2.5cm] (indicSt25);
+    \coordinate [right of=proc25, node distance=3cm] (indic25);
+    \coordinate [right of=proc24, node distance=3cm] (indic24);
+    \coordinate [right of=proc18, node distance=3cm] (indic18);
+    \coordinate [right of=proc17, node distance=6cm] (indic17);
+    \coordinate [below of=indic17, node distance=.3cm] (indic172);
+    \coordinate [left of=indic172, node distance=4.9cm] (indic173);
+    \coordinate [below of=proc24, node distance=1.25cm] (buf23);
+    \coordinate [above of=proc18, node distance=1.25cm] (buf19);
+    % Decision edges
+    \path [line] (st25) -- node {yes} (proc25);
+    \path [line] (st25) -- node {no} (st24);
+    \path [line] (st24) -- node {yes} (proc24);
+    \path [line,dashed] (st24) -- (st18);
+    \path [line] (st18) -- node {yes} (proc18);
+    \path [line] (st18) -- node {no} (proc17);
+    % I/O edges
+    \path [dataline] (buf24) -- node {reads} (proc25);
+    \path [dataline] (proc25) -- node {writes} (buf25);
+    \path [dataline] (proc24) -- node {writes} (buf24);
+    \path [dataline] (buf18) -- node {reads} (proc18);
+    \path [dataline] (proc17) -| node[near start] {writes} (buf18);
+    \path [dataline] (buf17) -| node[near start] {reads} (proc17);
+    \path [dataline] (buf23) -- node {reads} (proc24);
+    \path [dataline] (proc18) -- node {writes} (buf19);
+    \draw [->,very thick] (from) -- (buf17);
+    \draw [->,very thick] (buf25) -- (to);
+    % Flow edges
+    \path [line] (proc25) -- (indic25);
+    \path [line] (proc24) -- (indic24);
+    \path [line] (proc18) -- (indic18);
+    \path [line] (indic173) |- (indic172);
+    \path [line] (indic172) |- (indicSt25) -- (st25);
+
+
+
+
+    % % Place nodes
+    % \node [block] (init) {initialize model};
+    % \node [cloud, left of=init] (expert) {expert};
+    % \node [cloud, right of=init] (system) {system};
+    % \node [block, below of=init] (identify) {identify candidate models};
+    % \node [block, below of=identify] (evaluate) {evaluate candidate models};
+    % \node [block, left of=evaluate, node distance=3cm] (update) {update model};
+    % \node [decision, below of=evaluate] (decide) {is best candidate better?};
+    % \node [block, below of=decide, node distance=3cm] (stop) {stop};
+    % % Draw edges
+    % \path [line] (init) -- (identify);
+    % \path [line] (identify) -- (evaluate);
+    % \path [line] (evaluate) -- (decide);
+    % \path [line] (decide) -| node [near start] {yes} (update);
+    % \path [line] (update) |- (identify);
+    % \path [line] (decide) -- node {no}(stop);
+    % \path [line,dashed] (expert) -- (init);
+    % \path [line,dashed] (system) -- (init);
+    % \path [line,dashed] (system) |- (evaluate);
+\end{tikzpicture}
+\end{document}

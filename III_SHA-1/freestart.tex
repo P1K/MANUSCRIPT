@@ -1,4 +1,5 @@
 \section{A framework for freestart collisions for SHA-1}
+\label{sec:framework}
 % TODO Explain message bit relations somewhere (not necessarily this section)
 % + homogeneize notations (bit / path /state conditions)
 
@@ -321,13 +322,15 @@ For both attacks, the implementation of this search directly uses the path condi
 %TODO restructure ? Attack process ?
 \paragraph{Attack process.}
 We already mentioned that the main block offset is 6 (resp. 5) for the 76-step (resp. 80-step) attack. Let us detail here the effect of this offset on the base solution and on the attack process
-in a bit more details, considering a main block offset of 6 w.l.o.g..
+in a bit more details, considering the 76-step case (without losing much generality).
 
 In the course of the attack, the window of freedom for the message is made of $\expmess_6,\ldots,\expmess_{21}$, and all state conditions are known to be satisfied for steps $-4$ to $17$.
 The value of the message words cannot be changed entirely, because they must conform to the base solution. It is thus not possible to \eg fix the value of $\expmess_{17}$ so that all conditions
 for $\state_{18}$ become satisfied. However, a certain number of neutral bits have been determined for this message window. The attack then consists in searching for good patterns of active and
 inactive neutral bits that allow to satisfy path conditions in state words past $\state_{17}$. These bits were chosen so that they do not interact badly with the already fulfilled conditions,
-first of the base solution, and then of the further state words that are iteratively added to the partial solution, while allowing to try many different messages.
+first of the base solution, and then of the further state words that are iteratively added to the partial solution, while allowing to try many different messages. The best neutral bit does not
+interact w.h.p. with any condition before $\state_{26}$ excluded; in general, for each previous step starting from $\state_{18}$, some fresh neutral bits are available. Past $\state_{26}$,
+the attack switches to a purely probabilistic phase.
 
 We show in \autoref{fig:attack_layout} the starting point for the attack process in the 76-step case. This figure shows the state words for which the conditions were satisfied in the base solution
 (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=horizontal lines] (0,0) rectangle (1,1);\end{tikzpicture}\,\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=vertical lines] (0,0) rectangle (1,1);\end{tikzpicture}\,),
