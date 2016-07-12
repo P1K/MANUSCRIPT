@@ -354,10 +354,16 @@ temporary buffer, which is flushed to the actual buffer on line 42 to ensure tha
 \subsubsection{GPU tuning}
 \label{sec:gpu_tune}
 
-After our initial implementation, we did some fine tuning of the GPU BIOS settings in order to try having an optimal performance.
+After our initial implementation of the 76-step attack, we did some fine tuning of the GPU BIOS settings in order to try improving the performance.
 One first objective was to ensure that the GPU fans work at 100\% during the attack, as this was strangely
-not the case initially, and was obviously not ideal for cooling.
+not the case initially for our particular boards, and was obviously not ideal for cooling.
 We also experimented with various temperature limits
 (that define when the GPU will start to throttle) and both over-clocking and under-volting.
-Taken together, these variations can have a significant impact on the overall performance of the program, as can be seen with
-our 76-step attack below.
+
+Taken together, these variations had a significant impact on the overall performance of the program. For a single GPU, the initial setting resulted in an estimated
+time of 4.94 days to produce one 76-step freestart collision. We were able to eventually reduce this to 4.16 days. We also set-up machines with four GPUs, and observed significant
+performance variations across the GPUs. This was likely due to uneven heat dissipation, as was shown by the different temperatures reached by every board. All in all, the
+average expected time to obtain a collision on our 4-GPU machines was 4.42 days per GPU, and thus about 1.1 day per machine. As the cooling was not optimal in our set-up,
+reaching a performance closer to the one-GPU setting is likely to be possible.
+
+We did not make any major change for the 80-step attack, but due to the higher computational cost, only 4-GPU machines were used.
