@@ -15,10 +15,10 @@
 \usepackage{array}
 \usepackage{comment}
 \usepackage{amsmath,amssymb}
-\usepackage{pstricks}
-\usepackage{epic}
+%\usepackage{pstricks}
+%\usepackage{epic}
 %\usepackage[ruled]{algorithm2e}
-\usepackage{mathtools}
+%\usepackage{mathtools}
 \usepackage{xspace}
 \usepackage{tikz}
 \usetikzlibrary{arrows}
@@ -38,8 +38,10 @@
 \usepackage{xfrac}
 \usepackage{yfonts}
 \usepackage{MnSymbol}
+%\usepackage{listings}
+\usepackage[section]{minted}
 
-\usepackage{newtxtext}
+%\usepackage{newtxtext}
 \usepackage[mathcal]{euscript}
 
 %\usepackage{marginnote}
@@ -135,6 +137,26 @@
 \newtheorem{fact}{Fact}
 \newtheorem{example}{Example}
 
+%\lstdefinestyle{customc}{
+%  belowcaptionskip=1\baselineskip,
+%  breaklines=true,
+%  % frame=L,
+%  xleftmargin=\parindent,
+%  language=C,
+%  showstringspaces=false,
+%  basicstyle=\scriptsize\ttfamily,
+%  keywordstyle=\bfseries\color{YellowOrange},
+%  commentstyle=\itshape\color{LimeGreen},
+%  identifierstyle=\color{Fuchsia},
+%  stringstyle=\color{Red},
+%  otherkeywords={uint64_t,uint32_t,__device__},
+%  numbers=left,
+%  numbersep=10pt,
+%  numberstyle=\tiny\color{MidnightBlue}
+%}
+
+\usemintedstyle{tango}
+
 \pagestyle{plain}
 
 \begin{document}
@@ -193,7 +215,7 @@ function, including one on the full 80 steps. This is actually quite nice.
 \input{conclusion.tex}
 
 
-%\FloatBarrier
+\FloatBarrier
 
 %\section*{Software disclosure policy}
 %To allow verification and improve understanding of our new results, we intend to release our engineered freestart attack code for graphic cards at \url{https://sites.google.com/site/itstheshappening/}. 

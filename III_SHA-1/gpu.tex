@@ -263,10 +263,93 @@ flush it to the main block-wise buffer as soon as it holds 32 solutions or more,
 significantly reducing the number of accesses to the slower global memory.
 
 
-\subsubsection{An example of step function}
+\subsubsection{An example of snippet function}
 \label{sec:snippet}
 
-% insert example step implem from the C code
+%TODO autoref
+We now illustrate the discussion of this section by providing a commented snippet from the 76-step attack given in Listing~\ref{lst:snippet_example} (written in \textsf{CUDA C/C++}), namely a function that is taking partial solutions up to $\state_{22}$  and that is
+trying to extend them up to $\state_{23}$ using neutral bits on $\expmess_{19}$. Its structure is a straightforward application of the framework, and is fairly representative of most of the
+code of both of our attacks (although some snippets may at first seem more complex due to their use of neutral bits located on several distinct message words).
+
+%\begin{lstlisting}[style=customc]
+\begin{listing}[!htb]
+\begin{center}
+\begin{minted}[linenos,breaklines]{c}
+__device__ void stepQ23(uint32_t thread_rd_idx)
+{
+	uint32_t base_idx = Q22SOLBUF.get<11>(thread_rd_idx);
+	uint32_t q17 = Q22SOLBUF.get<0>(thread_rd_idx);
+	uint32_t q18 = Q22SOLBUF.get<1>(thread_rd_idx);
+	uint32_t q19 = Q22SOLBUF.get<2>(thread_rd_idx);
+	uint32_t q20 = Q22SOLBUF.get<3>(thread_rd_idx);
+	uint32_t q21 = Q22SOLBUF.get<4>(thread_rd_idx);
+	uint32_t m6  = BASESOLBUF.get<6>(base_idx);
+	uint32_t m8  = BASESOLBUF.get<8>(base_idx);
+	uint32_t m19 = BASESOLBUF.get<19>(base_idx);
+	uint32_t m21 = BASESOLBUF.get<21>(base_idx);
+	uint32_t m14 = Q22SOLBUF.get<5>(thread_rd_idx);
+	uint32_t m22;
+
+	uint32_t q22  = sha1_round2(q21, q20, q19, q18, q17, m21);
+
+	uint32_t w19_q23_nb = 0;
+	for (unsigned i = 0; i < 32; i++)
+	{
+		NEXT_NB(w19_q23_nb, W19NBQ23M);
+
+		m19 &= ~W19NBQ23M;
+		m19 |= w19_q23_nb;
+		m22 = sha1_mess(m19, m14, m8, m6);
+
+		uint32_t newq20 = q20 + w19_q23_nb;
+		uint32_t newq21 = q21 + rotate_left(w19_q23_nb, 5);
+		uint32_t newq22 = sha1_round2(newq21, newq20, q19, q18, q17, m21);
+		uint32_t newq23 = sha1_round2(newq22, newq21, newq20, q19, q18, m22);
+
+		uint32_t q23nessies = Qset1mask[QOFF + 23] ^ (Qprevrmask [QOFF + 23] & rotate_left(newq22, 30));
+		bool valid_sol = (0 == ((newq21 ^ q21) & Qcondmask[QOFF + 21]));
+		valid_sol &= (0 == ((newq22 ^ q22) & Qcondmask[QOFF + 22]));
+		valid_sol &= (0 == ((newq23 ^ q23nessies) & Qcondmask[QOFF + 23]));
+
+		uint32_t sol_val_0 = pack_update_q23_0(m19);
+		uint32_t sol_val_1 = pack_update_q23_1(thread_rd_idx);
+
+		WARP_TMP_BUF.write2(valid_sol, sol_val_0, sol_val_1, Q23SOLBUF, Q23SOLCTL);
+	}
+	WARP_TMP_BUF.flush2(Q23SOLBUF, Q23SOLCTL);
+}
+\end{minted}
+\end{center}
+\caption{The \emph{stepQ23} function from the 76-step attack.}
+\label{lst:snippet_example}
+\end{listing}
+%\end{lstlisting}
+
+\medskip
+
+This function takes as argument a thread-dependent identifier \mintinline{c}{thread_rd_idx} for a partial solution, which is essentially an index for the buffer \mintinline{c}{Q22SOLBUF}
+of solutions up to $\state_{22}$.
+
+The partial solution is loaded from the buffer and reconstructed from lines 3 to 16. This buffer being the first one holding an extended base solution,
+there is no need to reapply neutral bits and most of the work simply consists in loading the appropriate state and message words either directly from the extended base solution
+buffer, or from the matching solution of the base solution buffer \mintinline{c}{BASESOLBUF}, the index of which is recovered on line 3. The only recomputation performed here
+is the one of \mintinline{c}{q22} on line 16, using the \shaone round function. This would in fact not be necessary in this function, as the value could have been included in the extended base solution altogether.
+This was not done because recomputing \mintinline{c}{q22} is necessary in the snippets of the following steps and causes only minimal overhead in this one, while saving a 32-bit word from the \mintinline{c}{Q22SOLBUF} buffer.
+
+The loop from line 18 to 41 (\ie the remainder of the function) applies every combination of the five neutral bits for this step, all of which being located on $\expmess_{19}$. In more details, line 21 sets the register
+\mintinline{c}{w19_q23_nb} to one of the 32 possible combinations. Lines 23 and 24 clear the message word \mintinline{c}{m19} of the previous neutral bit combination and applies the new one, and line 25
+computes the expanded message word \mintinline{c}{m22} based on the new value for \mintinline{c}{m19}, using \shaone's message expansion (note that this computation could actually be optimized, \eg by
+precomputing the contribution of \mintinline{c}{m14}, \mintinline{c}{m8} and \mintinline{c}{m6}, which are fixed in this function).
+Lines 27 to 30 compute the impact of the current neutral bit combination, first by (partially) recomputing the state words \mintinline{c}{newq20} and \mintinline{c}{newq21}, then fully recomputing
+\mintinline{c}{newq22}, and finally computing the (as yet unknown) word \mintinline{c}{newq23}.
+Line 32 computes a mask of sufficient conditions for the value of \mintinline{c}{newq23} based on the value of \mintinline{c}{newq22}.
+Lines 33 to 35 determine if the current combination of neutral bits lead to a valid partial solution for $\state_{23}$, first by comparing the values of \mintinline{c}{q21} and  \mintinline{c}{q22}
+(which we know to fulfill the conditions) with the updated values \mintinline{c}{newq21} and \mintinline{c}{newq22} (lines 33 and 34), and then checking \mintinline{c}{newq23} for the previously computed conditions.
+Lines 37 and 38 prepare the description of the partial solution.
+Finally, line 40 writes the partial solution to the buffer \mintinline{c}{Q23SOLBUF}, at the condition that it is indeed valid. As mentioned at the end of \autoref{sec:part_sol}, this is done through a warp-specific
+temporary buffer, which is flushed to the actual buffer on line 42 to ensure that every valid solution is indeed eventually copied to \mintinline{c}{Q23SOLBUF}.
+
+
 
 \subsubsection{GPU tuning}
 \label{sec:gpu_tune}
