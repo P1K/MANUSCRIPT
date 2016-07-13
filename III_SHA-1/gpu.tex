@@ -272,7 +272,7 @@ trying to extend them up to $\state_{23}$ using neutral bits on $\expmess_{19}$.
 code of both of our attacks (although some snippets may at first seem more complex due to their use of neutral bits located on several distinct message words).
 
 %\begin{lstlisting}[style=customc]
-\begin{listing}[!htb]
+\begin{listing}[tbh]
 \begin{center}
 \begin{minted}[linenos,breaklines]{c}
 __device__ void stepQ23(uint32_t thread_rd_idx)
@@ -367,3 +367,28 @@ average expected time to obtain a collision on our 4-GPU machines was 4.42 days 
 reaching a performance closer to the one-GPU setting is likely to be possible.
 
 We did not make any major change for the 80-step attack, but due to the higher computational cost, only 4-GPU machines were used.
+
+\FloatBarrier
+
+\subsection{Efficiency of the framework}
+\label{sec:effi_fw}
+
+We conclude this section by evaluating the performance of our framework, and in particular by assessing the relative efficiency of a GPU-based attack compared to a more traditional CPU implementation.
+We provide this analysis for the 76-step attack, but the results apply entirely to the 80-step attack as well (and to \shaone collision attacks implemented with our framework in general).
+
+
+Our GPU implementation of \shaone can compute about $2^{31.8}$ (full) \shaone compression functions per second on a \gtx.
+Comparing this with the expected time to find a collision of 4.16 days, this means that the 76-step attack has a complexity equivalent to $2^{50.25}$ calls to the compression function for the
+best-performing GPU; this increases slightly to $2^{50.34}$ when considering the 4-GPU average of 4.42 days.
+
+Comparatively, on a Haswell Core-i5 running at 3.2\,GHz, the OpenSSL implementation of \shaone
+can compute $2^{23.47}$ compression functions per second on one core. A CPU implementation of our attack
+on the same processor leads to an expected time to collision of 606.12 core-days, which translates to a complexity of $2^{49.1}$
+compression function calls.
+This means that a single \gtx is worth 322 such CPU cores when computing the \shaone compression function, and 138 cores when
+running our attack program (this increases to 146 for the best-performing GPU).
+While this drop in relative efficiency was to be expected, it is somehow surprisingly small given the
+complexity of our implementation and \eg the intensive use of large shared data structures. Our careful implementation thus
+gives a much better value for the GPUs when compared to previous attempts at running collision attacks on such a platform:
+in their work, Grechnikov and Adinetz estimated a GPU to be worth 39 CPU cores~\cite{cryptoeprint:2011:641}\footnote{This comparison must me modulated by possibly uneven progress in GPUs and CPUs
+since 2011 and the quality of the hardware used for comparsion. We believe that the gap between these and our results is nonetheless significant.}.
