@@ -1,2 +1,370 @@
 \section{Freestart collisions for 80-step SHA-1}
 \label{sec:res_80}
+
+This section gives the attack parameters for the 80-step (full) freestart collision attack on \shaone.
+
+\subsection{The differential path for part of the two first rounds}
+\label{sec:app_diff_path80}
+
+A graphical representation of the differential path
+used in our attack up to step 28 is given in \autoref{fig:diff_path80}.
+It consists of sufficient conditions for the state, and of the associated message signed bit differences.
+The meaning of the bit condition symbols were defined in \autoref{table:appbitconditions}.
+Note that the signs of message bit differences are enforced through message bit relations.
+The message bit relations
+used in the attack past $\expmess_{28}$ are given in \autoref{fig:msgbitrel80}, and a graphical
+representation thereof in
+\autoref{fig:msgbitrel80_graph}.
+The remainder of the path can easily be determined by linearization of the step function given the differences
+in the message.
+
+\begingroup
+\fontsize{8pt}{9pt}\selectfont
+\begin{verbbox}
+A-4: ........ ........ ........ ........
+A-3: ........ ........ ........ ........
+A-2: ........ ........ ........ .....^-.
+A-1: 1...1... ........ ........ .0.....+
+A0 : 01..0... ........ ........ .1......  W0 : x.+...+. ........ ........ ...+....
+A1 : 11+^..+. ........ ....^... ...+....  W1 : ..-..-.. ........ ........ ...-++..
+A2 : ..-11-1. 1......^ .....1+1 10.1.0..  W2 : ..+..--. ........ ........ ...-.+..
+A3 : .0.0-001 1.^.10.. .+01.011 11^0.1.1  W3 : ..-..--. ........ ........ ...-+.-.
+A4 : .1.11+-1 +^^^+1^^ ^011^^.- +++++-.+  W4 : ........ ........ ........ ...+....
+A5 : .+.+.-++ ++++++++ ++++++++ .+0-1111  W5 : .....-.. ........ ........ ...+++..
+A6 : .0.0.1.0 11.111.1 1110-010 0-1.10-+  W6 : x+..++.. ........ ........ ...-.+..
+A7 : 1-.+.1.0 10100010 00000011 1+.-.0.+  W7 : ....-+.. ........ ........ ......+.
+A8 : 0+.0.0.. ........ ......0. .+.-.0.1  W8 : x-...... ........ ........ ...+....
+A9 : .+.0.0.. ........ ........ .0.+...^  W9 : x.-+.-.. ........ ........ ...-++..
+A10: .+...... ........ ........ ...+.0..  W10: ..-+++.. ........ ........ .....-..
+A11: ...-.... ........ ........ ........  W11: x.++++.. ........ ........ ...-+.+.
+A12: ...0.1.. ........ ........ .....1..  W12: ..-..... ........ ........ ...-....
+A13: .1...0.. ........ ........ ......!^  W13: ..+..+.. ........ ........ ...-++..
+A14: +-...... ........ ........ ........  W14: x++.+-.. ........ ........ ...-.+..
+A15: 1.1-.... ........ ........ ......!.  W15: ....+-.. ........ ........ ......+.
+A16: +.10.1.. ........ ........ ........  W16: x+...... ........ ........ ...-....
+A17: 1.-..0.. ........ ........ .......^  W17: x.++.+.. ........ ........ ...+--..
+A18: .+-.0... ........ ........ .......!  W18: ..+.--.. ........ ........ .....-..
+A19: .+.s.... ........ ........ ........  W19: x.+---.. ........ ........ ...-+...
+A20: -...R... ........ ........ ........  W20: x.++.... ........ ........ ...+....
+A21: -.+R.... ........ ........ ........  W21: ........ ........ ........ ....++..
+A22: -...S... ........ ........ .......^  W22: x.---... ........ ........ ...+....
+A23: .-..R... ........ ........ ........  W23: ....-... ........ ........ ...+-...
+A24: -.rs.... ........ ........ ........  W24: .-+--... ........ ........ ...+....
+A25: -.-r.... ........ ........ ........  W25: ....+... ........ ........ ...+.+..
+A26: -...s... ........ ........ ........  W26: .+--.... ........ ........ ...+....
+A27: -.-.r... ........ ........ ........  W27: x.+-+... ........ ........ ...++-..
+A28: ........ ........ ........ ........  W28: x+-.-... ........ ........ ........
+A29: ..-..... ........ ........ ........
+\end{verbbox}
+\endgroup
+
+\begin{figure}[!htb]
+\centering
+\begin{tabular}{lcc}
+$i$ & $\state_i$ & $\mess_i$\\
+-4 & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+-3 & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+-2 & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\equaup$\monediffd$\nodiff \\
+-1 & $\mnodiffo$\nodiff\nodiff\nodiff$\mnodiffo$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$ \\
+0  & $\mnodiffz$$\mnodiffo$\nodiff\nodiff$\mnodiffz$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \onediff\nodiff$\monediffu$\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff \\
+1  & $\mnodiffo$$\mnodiffo$$\monediffu$\equaup\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\equaup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff  &  \nodiff\nodiff$\monediffd$\nodiff\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$$\monediffu$$\monediffu$\nodiff\nodiff \\
+2  & \nodiff\nodiff$\monediffd$$\mnodiffo$$\mnodiffo$$\monediffd$$\mnodiffo$\nodiff$\mnodiffo$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\equaup\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$$\monediffu$$\mnodiffo$$\mnodiffo$$\mnodiffz$\nodiff$\mnodiffo$\nodiff$\mnodiffz$\nodiff\nodiff  &  \nodiff\nodiff$\monediffu$\nodiff\nodiff$\monediffd$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$\nodiff$\monediffu$\nodiff\nodiff \\
+3  & \nodiff$\mnodiffz$\nodiff$\mnodiffz$$\monediffd$$\mnodiffz$$\mnodiffz$$\mnodiffo$$\mnodiffo$\nodiff\equaup\nodiff$\mnodiffo$$\mnodiffz$\nodiff\nodiff\nodiff$\monediffu$$\mnodiffz$$\mnodiffo$\nodiff$\mnodiffz$$\mnodiffo$$\mnodiffo$$\mnodiffo$$\mnodiffo$\equaup$\mnodiffz$\nodiff$\mnodiffo$\nodiff$\mnodiffo$  &  \nodiff\nodiff$\monediffd$\nodiff\nodiff$\monediffd$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$$\monediffu$\nodiff$\monediffd$\nodiff \\
+4  & \nodiff$\mnodiffo$\nodiff$\mnodiffo$$\mnodiffo$$\monediffu$$\monediffd$$\mnodiffo$$\monediffu$\equaup\equaup\equaup$\monediffu$$\mnodiffo$\equaup\equaup\equaup$\mnodiffz$$\mnodiffo$$\mnodiffo$\equaup\equaup\nodiff$\monediffd$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffd$\nodiff$\monediffu$  &  \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff \\
+5  & \nodiff$\monediffu$\nodiff$\monediffu$\nodiff$\monediffd$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$$\monediffu$\nodiff$\monediffu$$\mnodiffz$$\monediffd$$\mnodiffo$$\mnodiffo$$\mnodiffo$$\mnodiffo$  &  \nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$$\monediffu$$\monediffu$\nodiff\nodiff \\
+6  & \nodiff$\mnodiffz$\nodiff$\mnodiffz$\nodiff$\mnodiffo$\nodiff$\mnodiffz$$\mnodiffo$$\mnodiffo$\nodiff$\mnodiffo$$\mnodiffo$$\mnodiffo$\nodiff$\mnodiffo$$\mnodiffo$$\mnodiffo$$\mnodiffo$$\mnodiffz$$\monediffd$$\mnodiffz$$\mnodiffo$$\mnodiffz$$\mnodiffz$$\monediffd$$\mnodiffo$\nodiff$\mnodiffo$$\mnodiffz$$\monediffd$$\monediffu$  &  \onediff$\monediffu$\nodiff\nodiff$\monediffu$$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$\nodiff$\monediffu$\nodiff\nodiff \\
+7  & $\mnodiffo$$\monediffd$\nodiff$\monediffu$\nodiff$\mnodiffo$\nodiff$\mnodiffz$$\mnodiffo$$\mnodiffz$$\mnodiffo$$\mnodiffz$$\mnodiffz$$\mnodiffz$$\mnodiffo$$\mnodiffz$$\mnodiffz$$\mnodiffz$$\mnodiffz$$\mnodiffz$$\mnodiffz$$\mnodiffz$$\mnodiffo$$\mnodiffo$$\mnodiffo$$\monediffu$\nodiff$\monediffd$\nodiff$\mnodiffz$\nodiff$\monediffu$  &  \nodiff\nodiff\nodiff\nodiff$\monediffd$$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff \\
+8  & $\mnodiffz$$\monediffu$\nodiff$\mnodiffz$\nodiff$\mnodiffz$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\nodiff\nodiff$\monediffu$\nodiff$\monediffd$\nodiff$\mnodiffz$\nodiff$\mnodiffo$  &  \onediff$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff \\
+9  & \nodiff$\monediffu$\nodiff$\mnodiffz$\nodiff$\mnodiffz$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\nodiff$\monediffu$\nodiff\nodiff\nodiff\equaup  &  \onediff\nodiff$\monediffd$$\monediffu$\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$$\monediffu$$\monediffu$\nodiff\nodiff \\
+10 & \nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff$\mnodiffz$\nodiff\nodiff  &  \nodiff\nodiff$\monediffd$$\monediffu$$\monediffu$$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$\nodiff\nodiff \\
+11 & \nodiff\nodiff\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \onediff\nodiff$\monediffu$$\monediffu$$\monediffu$$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$$\monediffu$\nodiff$\monediffu$\nodiff \\
+12 & \nodiff\nodiff\nodiff$\mnodiffz$\nodiff$\mnodiffo$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$\nodiff\nodiff  &  \nodiff\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff \\
+13 & \nodiff$\mnodiffo$\nodiff\nodiff\nodiff$\mnodiffz$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\diffup\equaup  &  \nodiff\nodiff$\monediffu$\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$$\monediffu$$\monediffu$\nodiff\nodiff \\
+14 & $\monediffu$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \onediff$\monediffu$$\monediffu$\nodiff$\monediffu$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$\nodiff$\monediffu$\nodiff\nodiff \\
+15 & $\mnodiffo$\nodiff$\mnodiffo$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\diffup\nodiff  &  \nodiff\nodiff\nodiff\nodiff$\monediffu$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff \\
+16 & $\monediffu$\nodiff$\mnodiffo$$\mnodiffz$\nodiff$\mnodiffo$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \onediff$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff \\
+17 & $\mnodiffo$\nodiff$\monediffd$\nodiff\nodiff$\mnodiffz$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\equaup  &  \onediff\nodiff$\monediffu$$\monediffu$\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$$\monediffd$$\monediffd$\nodiff\nodiff \\
+18 & \nodiff$\monediffu$$\monediffd$\nodiff$\mnodiffz$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\diffup  &  \nodiff\nodiff$\monediffu$\nodiff$\monediffd$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$\nodiff\nodiff \\
+19 & \nodiff$\monediffu$\nodiff\equarightupup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \onediff\nodiff$\monediffu$$\monediffd$$\monediffd$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffd$$\monediffu$\nodiff\nodiff\nodiff \\
+20 & $\monediffd$\nodiff\nodiff\nodiff\diffrightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \onediff\nodiff$\monediffu$$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff \\
+21 & $\monediffd$\nodiff$\monediffu$\diffrightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$$\monediffu$\nodiff\nodiff \\
+22 & $\monediffd$\nodiff\nodiff\nodiff\diffrightupup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\equaup  &  \onediff\nodiff$\monediffd$$\monediffd$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff \\
+23 & \nodiff$\monediffd$\nodiff\nodiff\diffrightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \nodiff\nodiff\nodiff\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$$\monediffd$\nodiff\nodiff\nodiff \\
+24 & $\monediffd$\nodiff\equarightup\equarightupup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \nodiff$\monediffd$$\monediffu$$\monediffd$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff \\
+25 & $\monediffd$\nodiff$\monediffd$\equarightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff$\monediffu$\nodiff\nodiff \\
+26 & $\monediffd$\nodiff\nodiff\nodiff\equarightupup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \nodiff$\monediffu$$\monediffd$$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\nodiff\nodiff\nodiff\nodiff \\
+27 & $\monediffd$\nodiff$\monediffd$\nodiff\equarightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \onediff\nodiff$\monediffu$$\monediffd$$\monediffu$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$$\monediffu$$\monediffd$\nodiff\nodiff \\
+28 & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff  &  \onediff$\monediffu$$\monediffd$\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+29 & \nodiff\nodiff$\monediffd$\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+  \end{tabular}
+  \caption{The differential path used in the 80-step attack up to step 29.
+  \label{fig:diff_path80}}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+  \begin{tabular}{l l l}
+$\expmess_{29}[2] = 0$ & $\expmess_{29}[28] = 0$ & $\expmess_{29}[29] = 0$ \\
+$\expmess_{30}[27] \oplus \expmess_{30}[28] = 1$ & $\expmess_{30}[30] = 1$ & $\expmess_{31}[2] = 0$ \\
+$\expmess_{31}[3] = 0$ & $\expmess_{31}[28] = 0$ & $\expmess_{31}[29] = 0$ \\
+$\expmess_{33}[28] \oplus \expmess_{33}[29] = 1$ & $\expmess_{30}[4] \oplus \expmess_{34}[29] = 0$ & $\expmess_{35}[27] = 0$ \\
+$\expmess_{35}[28] = 0$ & $\expmess_{35}[4]  \oplus \expmess_{39}[29] = 0$ & $\expmess_{58}[29] \oplus \expmess_{59}[29] = 0$ \\
+$\expmess_{57}[29] \oplus \expmess_{59}[29] = 0$ & $\expmess_{55}[4]  \oplus \expmess_{59}[29] = 0$ & $\expmess_{53}[29] \oplus \expmess_{54}[29] = 0$ \\ 
+$\expmess_{52}[29] \oplus \expmess_{54}[29] = 0$ & $\expmess_{51}[28] \oplus \expmess_{51}[29] = 1$ & $\expmess_{50}[4]  \oplus \expmess_{54}[29] = 0$ \\ 
+$\expmess_{50}[28] \oplus \expmess_{51}[28] = 0$ & $\expmess_{50}[29] \oplus \expmess_{51}[28] = 1$ & $\expmess_{49}[28] \oplus \expmess_{51}[28] = 0$ \\ 
+$\expmess_{48}[29] \oplus \expmess_{48}[30] = 0$ & $\expmess_{47}[3]  \oplus \expmess_{51}[28] = 0$ & $\expmess_{47}[4]  \oplus \expmess_{51}[28] = 1$ \\ 
+$\expmess_{46}[29] \oplus \expmess_{51}[28] = 1$ & $\expmess_{45}[4]  \oplus \expmess_{51}[28] = 0$ & $\expmess_{44}[29] \oplus \expmess_{51}[28] = 0$ \\ 
+$\expmess_{43}[4]  \oplus \expmess_{51}[28] = 1$ & $\expmess_{43}[29] \oplus \expmess_{51}[28] = 0$ & $\expmess_{41}[4]  \oplus \expmess_{51}[28] = 0$ \\ 
+$\expmess_{63}[4]  \oplus \expmess_{67}[29] = 0$ & $\expmess_{79}[5] = 0$ & $\expmess_{78}[0] = 1$ \\
+$\expmess_{77}[1] \oplus \expmess_{78}[6] = 1$ & $\expmess_{75}[5] \oplus \expmess_{79}[30] = 0$ & $\expmess_{74}[0] \oplus \expmess_{79}[30] = 1$ \\
+  \end{tabular}
+  \caption{The message bit relations of the 80-step attack for message words $\expmess_{29}$ to $\expmess_{79}$.
+  \label{fig:msgbitrel80}}
+\end{figure}
+
+\begingroup
+\fontsize{8pt}{9pt}\selectfont
+\begin{verbbox}
+W29:	 . . 0 0 . . . . . . . . . . . . . . . . . . . . . . . . . 0 . .
+W30:	 . 1 . A a . . . . . . . . . . . . . . . . . . . . . . c . . . .
+W31:	 . . 0 0 . . . . . . . . . . . . . . . . . . . . . . . . 0 0 . .
+W32:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W33:	 . . B b . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W34:	 . . c . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W35:	 . . . 0 0 . . . . . . . . . . . . . . . . . . . . . . d . . . .
+W36:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W37:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W38:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W39:	 . . d . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W40:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W41:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . e . . . .
+W42:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W43:	 . . e . . . . . . . . . . . . . . . . . . . . . . . . E . . . .
+W44:	 . . e . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W45:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . e . . . .
+W46:	 . . E . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W47:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . E e . . .
+W48:	 . f f . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W49:	 . . . e . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W50:	 . . E e . . . . . . . . . . . . . . . . . . . . . . . g . . . .
+W51:	 . . E e . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W52:	 . . g . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W53:	 . . g . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W54:	 . . g . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W55:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . h . . . .
+W56:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W57:	 . . h . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W58:	 . . h . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W59:	 . . h . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W60:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W61:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W62:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W63:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . i . . . .
+W64:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W65:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W66:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W67:	 . . i . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W68:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W69:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W70:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W71:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W72:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W73:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W74:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . j
+W75:	 . . . . . . . . . . . . . . . . . . . . . . . . . . J . . . . .
+W76:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+W77:	 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . k .
+W78:	 . . . . . . . . . . . . . . . . . . . . . . . . . K . . . . . 1
+W79:	 . J . . . . . . . . . . . . . . . . . . . . . . . . 0 . . . . .
+\end{verbbox}
+\endgroup
+
+\begin{figure}[!htb]
+\centering
+  \theverbbox
+  \caption{The message bit-relations used in the attack for words $\expmess_{29}$ to $\expmess_{79}$ (graphical representation).
+  A dot (``\texttt{.}'') means an absence of condition. A zero (``\texttt{0}'') or a one (``\texttt{1}'') character represents a bit unconditionally set to 0 or 1.
+  A pair of two letters $x$ means that the two bits have the same value. A pair of two
+  letters $x$ and $X$ means that the two bits have different values.
+  \label{fig:msgbitrel80_graph}}
+\end{figure}
+
+\subsection{The neutral bits and boomerangs}
+\label{sec:neutral_bits80}
+
+We give here the list of the neutral bits used in the 80-step attack.
+There are sixty of them over the seven message words
+$\expmess_{14}$ to $\expmess_{20}$, distributed as
+follows:
+\begin{itemize}
+\item $\expmess_{14}$: 6 neutral bits at  bit positions (starting with the least significant bit (\emph{LSB}) at zero) 5,7,8,9,10,11
+\item $\expmess_{15}$: 11 neutral bits at positions 4,7,8,9,10,11,12,13,14,15,16
+\item $\expmess_{16}$: 9 neutral bits at positions 8,9,10,11,12,13,14,15,16
+\item $\expmess_{17}$: 10 neutral bits at positions 10,11,12,13,14,15,16,17,18,19 
+\item $\expmess_{18}$: 11 neutral bits at positions 4,6,7,8,9,10,11,12,13,14,15
+\item $\expmess_{19}$: 8 neutral bits at positions 6,7,8,9,10,11,12,14
+\item $\expmess_{20}$: 5 neutral bits at positions 6,11,12,13,15 
+\end{itemize}
+We give a graphical representation of the position of these neutral bits in \autoref{fig:neutbits80}.
+
+\begin{figure}[!htb]
+\centering
+\begin{tabular}{l c}
+$\expmess_{14}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\onediff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{15}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{16}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{17}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{18}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{19}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{20}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+\end{tabular}
+  \caption{The sixty neutral bits of the 80-step attack, using (with some abuse) a ``difference'' notation.
+  A ``\nodiff'' (resp. ``\onediff'') symbol means the absence (resp. presence) of a neutral bit on the corresponding bit.
+  The message words are (as usual) written left to right from MSB to LSB.
+  \label{fig:neutbits80}}
+\end{figure}
+
+Not all of the neutral bits of the same word (say $\expmess_{14}$) are used at the same step during the attack. Their repartition
+in that respect is as follows
+\begin{itemize}
+	\item Bits neutral up to step 18 (excluded): $\expmess_{14}$[8,9,10,11], $\expmess_{15}$[13,14,15,16]
+	\item Bits neutral up to step 19 (excluded): $\expmess_{14}$[5,7], $\expmess_{15}$[8,9,10,11,12], $\expmess_{16}$[12,13,14,15,16]
+	\item Bits neutral up to step 20 (excluded): $\expmess_{15}$[4,7,8,9], $\expmess_{16}$[8,9,10,11,12], $\expmess_{17}$[14,15,16,\linebreak17,18,19]
+	\item Bits neutral up to step 21 (excluded): $\expmess_{17}$[10,11,12,13], $\expmess_{18}$[15]
+	\item Bits neutral up to step 22 (excluded): $\expmess_{18}$[9,10,11,12,13,14], $\expmess_{19}$[10,14]
+	\item Bits neutral up to step 23 (excluded): $\expmess_{18}$[4,6,7,8], $\expmess_{19}$[9,11,12], $\expmess_{20}$[15]
+	\item Bits neutral up to step 24 (excluded): $\expmess_{19}$[6,7,8], $\expmess_{20}$[11,12,13]
+	\item Bit neutral up to step 25 (excluded): $\expmess_{20}$[7]
+\end{itemize}
+One should note that this list only includes a single bit per neutral bit group. As we mentioned in the previous section, some
+additional flips may be needed in order to preserve message bit relations.
+
+We also give a graphical representation of this repartition in \autoref{fig:neutbits80_2}.
+
+\begin{figure}[ht]
+\centering
+\begin{tabular}{l c}
+$\state_{18}$ \\
+$\expmess_{14}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{15}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\state_{19}$ \\
+$\expmess_{14}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{15}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{16}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\state_{20}$ \\
+$\expmess_{15}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{16}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{17}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\state_{21}$ \\
+$\expmess_{17}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{18}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\state_{22}$ \\
+$\expmess_{18}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{19}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\state_{23}$ \\
+$\expmess_{18}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{19}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{20}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\state_{24}$ \\
+$\expmess_{19}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{20}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\state_{25}$ \\
+$\expmess_{20}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+	\end{tabular}
+  \caption{The sixty neutral bits regrouped by the first state where they start to interact. A ``\onediff'' represents the presence
+  of a neutral bit, and a ``\nodiff'' the absence thereof. The LSB position is the rightmost one.
+  \label{fig:neutbits80_2}}
+\end{figure}
+
+In addition to the ``single'' neutral bits, the 80-step attack also uses boomerangs. These are regrouped in two sets of two.
+The first one first introduces a difference in the message at word $\expmess_{10}$;
+as it does not significantly impact conditions up to step 27, it is used to increase the number of partial solutions for $\state_{28}$ that are generated.
+The second set first introduces a difference at word $\expmess_{11}$, and is used to generate partial solutions up to $\state_{30}$.
+More precisely, the four boomerangs have their first differences on bits 7,8 of $\expmess_{10}$ and 8,9 of $\expmess_{11}$.
+In \autoref{fig:boom_coll}, we give a graphical representation of the complete set of message bits to be flipped for each
+boomerang. One can see that these follow the pattern of a local collisions, with some ``linear'' corrections omitted thanks to the absorption
+properties of the $\fif$ Boolean function. 
+
+\begin{figure}[!htb]
+\centering
+\begin{tabular}{l c}
+$\expmess_{10}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\diffup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{11}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$\equaup\nodiff\nodiff\nodiff\nodiff$\monediffd$\diffrightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{12}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\equarightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{13}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{14}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\equaup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{15}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$\equaup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{16}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\equarightup\nodiff\nodiff\nodiff\nodiff\nodiff \\
+\end{tabular}
+  \caption{The local collision patterns for each of the four boomerangs, using ``difference'' symbols by an abuse of notation. The position of the first difference to be introduced is highlighted
+  with a difference (black) symbol; the associated correcting differences (identified by the corresponding white symbols) must then have a sign different from this one. Note that boomerang ``\diffup'' uses one more difference than the others.
+  \label{fig:boom_coll}}
+\end{figure}
+
+We conclude by showing how the neutral bits are packed together with the index of an (extended) base solution in \autoref{fig:nb_packing80_1} and \autoref{fig:nb_packing80_1}.
+Note that neutral bits on $\expmess_{17}$ are split between the buffers for steps 18--20 and 21--25. Furthermore, the packing of steps 21--25 also includes
+some ``flip'' values, which are partial sums of some selected neutral bits that aid in determining if additionnal bits need to be flipped so as to preserve message bit relations.
+The representation of the packing is done similarly as in \autoref{sec:neutral_bits76}.
+
+\begin{verbbox}[\vspace{1mm}]
+For steps A18--20
+W14:a W15:b W16:c W17:d basesol:i
+ccccccccc...bbbbbbbbbb..baaaaa.a
+dddddd......iiiiiiiiiiiiiiiiiiii
+
+For steps A21--25
+W17:a W18:b W19:c W20:d extsol:i
+Additional flips:F
+bbbbbbbbbb.b..F.d.ddd....d.aaaaF
+F.Fc.ccccccciiiiiiiiiiiiiiiiiiii
+\end{verbbox}
+
+\begin{figure}[ht]
+\centering
+  \theverbbox
+  \caption{The packing of the neutral bits and the (extended) base solution index.
+  A letter \{\texttt{a,b,c,d}\} represents a bit on a given word, an ``\texttt{F}'' a flip bit, an ``\texttt{i}'' a bit
+  of an (extended) solution index, and  a ``\texttt{.}'' an unused bit (only present to maintain a proper alignment).
+  \label{fig:nb_packing80_1}}
+\end{figure}
+
+
+
+\subsection{An example of colliding message pair}
+\label{sec:colli_ex80}
+
+We give an example of 80-step collision in \autoref{tbl:fscoll80}.
+This shows the two (message, \iv) pairs with their (identical) resulting digest.
+This table is formatted in the same way as the one of \autoref{sec:colli_ex76}.
+
+\begin{table}[!htb]
+\caption{A freestart collision for 80-step \shaone. Message and \iv bytes with differences are highlighted with \framebox{\color{LimeGreen}coloured boxes}.}\label{tbl:fscoll80}
+\centering
+\begin{tabular}{c c}
+\toprule
+ & Message 1\\
+\midrule
+\iv &  \hspace{-1.95mm}\tt 50 6b 01 78 ff 6d 18 \framebox{\color{Cerulean}90 20} 22 91 fd 3a de 38 71 b2 c6 65 ea \\
+\midrule
+$\mess$ & \tt \framebox{\color{Cerulean}9d} 44 38 \framebox{\color{Cerulean}28 a5} ea 3d \framebox{\color{Cerulean}f0 86} ea a0 \framebox{\color{Cerulean}fa 77} 83 a7 \framebox{\color{Cerulean}36}\\
+      & \tt \hspace{1.15mm}33\hspace{1.25mm} 24 48 \framebox{\color{Cerulean}4d af} 70 2a \framebox{\color{Cerulean}aa a3} da b6 \framebox{\color{Cerulean}79 d8} a6 9e \framebox{\color{Cerulean}2d} \\
+			& \tt \framebox{\color{Cerulean}54} 38 20 \framebox{\color{Cerulean}ed a7} ff fb \framebox{\color{Cerulean}52 d3} ff 49 \framebox{\color{Cerulean}3f c3} ff 55 \framebox{\color{Cerulean}1e} \\
+			& \tt \framebox{\color{Cerulean}fb} ff d9 \framebox{\color{Cerulean}7f 55} fe ee \framebox{\color{Cerulean}f2 08} 5a f3 \framebox{\color{Cerulean}12 08} 86 88 \framebox{\color{Cerulean}a9} \\
+\midrule
+$\compress(\iv,\mess)$ & \tt f0 20 48 6f 07 1b f1 10 53 54 7a 86 f4 a7 15 3b 3c 95 0f 4b \\
+\bottomrule\\
+
+\toprule
+ & Message 2 \\
+\midrule
+$\diff\iv$ & \hspace{-1.95mm}\tt 50 6b 01 78 ff 6d 18 \framebox{\color{RubineRed}91 a0} 22 91 fd 3a de 38 71 b2 c6 65 ea \\
+\midrule
+$\diff\mess$ & \tt \framebox{\color{RubineRed}3f} 44 38 \framebox{\color{RubineRed}38 81} ea 3d \framebox{\color{RubineRed}ec a0} ea a0 \framebox{\color{RubineRed}ee 51} 83 a7 \framebox{\color{RubineRed}2c} \\
+      & \tt \hspace{1.15mm}33\hspace{1.25mm} 24 48 \framebox{\color{RubineRed}5d ab} 70 2a \framebox{\color{RubineRed}b6 6f} da b6 \framebox{\color{RubineRed}6d d4} a6 9e \framebox{\color{RubineRed}2f} \\
+			& \tt \framebox{\color{RubineRed}94} 38 20 \framebox{\color{RubineRed}fd 13} ff fb \framebox{\color{RubineRed}4e ef} ff 49 \framebox{\color{RubineRed}3b 7f} ff 55 \framebox{\color{RubineRed}04} \\
+			& \tt \framebox{\color{RubineRed}db} ff d9 \framebox{\color{RubineRed}6f 71} fe ee \framebox{\color{RubineRed}ee e4} 5a f3 \framebox{\color{RubineRed}06 04} 86 88 \framebox{\color{RubineRed}ab} \\
+\midrule
+$\compress(\diff\iv,\diff\mess)$ & \tt f0 20 48 6f 07 1b f1 10 53 54 7a 86 f4 a7 15 3b 3c 95 0f 4b \\
+\bottomrule
+\end{tabular}
+\end{table}
