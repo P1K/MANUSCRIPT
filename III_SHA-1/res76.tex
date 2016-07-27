@@ -17,53 +17,6 @@ in the message.
 The additional message bit relations used in the attack for message words past $\expmess_{35}$ are given in \autoref{fig:msgbitrel76}, together with a
 graphical representation in \autoref{fig:msgbitrel76_graph}.
 
-%\begingroup
-%\fontsize{8pt}{9pt}\selectfont
-%\begin{verbbox}
-%A-4 : ................................
-%A-3 : ................................
-%A-2 : .............................^+.
-%A-1 : 0........................1.....+
-%A0  : 10.0.....................0.0....     W 0 : ...........................+....
-%A1  : .0.1................^.0....+....     W 1 : .....-.....................-++..
-%A2  : ...^.-.........^.1....+....1.-.1     W 2 : -+..-+.....................+.-..
-%A3  : .....-.1..^.1....+....1.-...^-.0     W 3 : ....+-........................+.
-%A4  : .-.1...11.0.+....00-11..-.^..0+1     W 4 : +-.........................-....
-%A5  : 1+.0.^.00^111.-.101-00.1..+.+1.0     W 5 : +.++.-.....................-+-..
-%A6  : 00.-^-1-1--++++^01+0-.--.11.1.0-     W 6 : ..+-++.......................+..
-%A7  : 1+.-^+-0-+10+-0^++-+1^1.0+..0.11     W 7 : +.+---.....................+-.-.
-%A8  : +-.1..+-------------1-++11.-..+0     W 8 : ..-........................-....
-%A9  : --+0.1.010.1000.10+-.0.100-1.10.     W 9 : ..+..+.....................-++..
-%A10 : -10.1...1000111011001..111..10..     W10 : --+.+-.....................-.+..
-%A11 : 1..-1...............10......1.^.     W11 : ....-+........................-.
-%A12 : +.+..1..................^.......     W12 : -+.........................+....
-%A13 : 0.+.10....................-....0     W13 : +.--.-.....................+--..
-%A14 : ..+.........................0..1     W14 : ..-.-+.......................-..
-%A15 : 1-..........................1.!.     W15 : +.-+++.....................+-...
-%A16 : +..10.........................^.     W16 : -.-+.......................-....
-%A17 : +.-1..........................!.     W17 : ............................-+..
-%A18 : +...1..........................^     W18 : +.+-+......................-....
-%A19 : .-..R...........................     W19 : ....-......................+-...
-%A20 : -.RS............................     W20 : .++++......................+....
-%A21 : -.-R............................     W21 : ....-......................+.+..
-%A22 : -...s...........................     W22 : .-++.......................+....
-%A23 : -.+.r...........................     W23 : -.+-+......................+-+..
-%A24 : ....S...........................     W24 : --+.+...........................
-%A25 : ..-.R...........................     W25 : -.++.........................+..
-%A26 : -...S..........................^     W26 : .-.+-......................+....
-%A27 : .--.r...........................     W27 : +.+-........................++..
-%A28 : ..rSS...........................     W28 : .+..+...........................
-%A29 : ...rr...........................     W29 : +.+-............................
-%A30 : -...............................     W30 : -.+++......................+....
-%A31 : -.s.............................     W31 : -..++......................+....
-%A32 : ................................     W32 : -.+.............................
-%A33 : ..R.............................     W33 : ................................
-%A34 : ................................     W34 : ................................
-%A35 : ................................     W35 : ..+.............................
-%A36 : ................................
-%\end{verbbox}
-%\endgroup
-
 \begin{figure}
 \centering
 \begin{tabular}{lcc}
@@ -138,10 +91,6 @@ $i$ & $\state_i$ & $\mess_i$\\
 \end{tabular}\\}
 \caption{Meaning of the bit difference symbols, for a symbol located on $\state_t[i]$. The same symbols are also used for $\expmess$, $\diff\expmess$.}\label{table:appbitconditions}
 \end{figure}
-
-%\clearpage
-%\section{Message bit-relations for steps 36--75}
-%\label{sec:app_msgbitrel}
 
 \begingroup
 \fontsize{8pt}{9pt}\selectfont
@@ -271,17 +220,6 @@ follows:
 \end{itemize}
 We give a graphical representation of the repartition of these neutral bits in \autoref{fig:neutbits76}.
 
-\begin{verbbox}
-W14: ..................xxxxxxxxx.....
-W15: ...............x.xxxxxxxxxx.....
-W16: ...............x..x.xxxxxx......
-W17: ............x.....xxxx..........
-W18: ...............xx...............
-W19: .................x.xxxxxxx......
-W20: ..................xxx....x.....x
-W21: ..............xx....x...........
-\end{verbbox}
-
 \begin{figure}
 \centering
 \begin{tabular}{l c}
@@ -313,43 +251,6 @@ in that respect is as follows
 	\item Bits neutral up to step 26 (excluded): $\expmess_{20}$[0]
 \end{itemize}
 We also give a graphical representation of this repartition in \autoref{fig:neutbits76_2}.
-
-\begin{verbbox}
-A18:
-W14 ..................xxxxx.........
-W15 ...............x.x..............
-
-A19:
-W14 .......................xxxx.....
-W15 ..................xxxxxx........
-W16 ...............x..x.............
-W17 ............x...................
-
-A20:
-W15........................xxx.....
-W16....................xxx.........
-
-A21:
-W16.......................xxx......
-W17..................xxxx..........
-W18...............xx...............
-
-A23:
-W19.................x.xxxx.........
-
-A24:
-W19........................xx......
-W20...................xx...........
-W21..............xx................
-
-A25:
-W19.......................x........
-W20..................x......x......
-W21....................x...........
-
-A26:
-W20...............................x
-\end{verbbox}
 
 \begin{figure}
 \centering
@@ -402,97 +303,6 @@ of the first word.
 One should note however that not all message bits shown in this packing are actually used as neutral bits. For instance, there is no neutral bit on $\expmess_{15}[15]$, yet this bit is included in \autoref{fig:nb_packing76}
 as \begin{tikzpicture}[scale=0.67,transform shape]\draw[fill=Rhodamine!30] (0,0) circle (.3) node{15};\end{tikzpicture}. Although not including such non-neutral bits would save some space, it would make the storing process
 more cumbersome and overall less efficient.
-
-%\begin{figure}
-%\begin{center}
-%\begin{tikzpicture}[scale=0.67,transform shape]
-%\draw[fill=Cerulean!65] (0,0) circle (.3) node{13};
-%\draw[fill=Cerulean!65] (0.7,0) circle (.3) node{12};
-%\draw[fill=Cerulean!65] (1.4,0) circle (.3) node{11};
-%\draw[fill=Cerulean!65] (2.1,0) circle (.3) node{10};
-%\draw[fill=Cerulean!65] (2.8,0) circle (.3) node{ 9};
-%\draw[fill=Cerulean!65] (3.5,0) circle (.3) node{ 8};
-%\draw[fill=Cerulean!65] (4.2,0) circle (.3) node{ 7};
-%\draw[fill=Cerulean!65] (4.9,0) circle (.3) node{ 6};
-%\draw[fill=Cerulean!65] (5.6,0) circle (.3) node{ 5};
-%\draw[fill=WildStrawberry!30] (6.3,0) circle (.3) node{16};
-%\draw[fill=WildStrawberry!30] (7.0,0) circle (.3) node{15};
-%\draw[fill=WildStrawberry!30] (7.7,0) circle (.3) node{14};
-%\draw[fill=WildStrawberry!30] (8.4,0) circle (.3) node{13};
-%\draw[fill=WildStrawberry!30] (9.1,0) circle (.3) node{12};
-%\draw[fill=WildStrawberry!30] (9.8,0) circle (.3) node{11};
-%\draw[fill=WildStrawberry!30] (10.5,0) circle (.3) node{10};
-%\draw[fill=WildStrawberry!30] (11.2,0) circle (.3) node{ 9};
-%\draw[fill=WildStrawberry!30] (11.9,0) circle (.3) node{ 8};
-%\draw[fill=WildStrawberry!30] (12.6,0) circle (.3) node{ 7};
-%\draw[fill=WildStrawberry!30] (13.3,0) circle (.3) node{ 6};
-%\draw[fill=WildStrawberry!30] (14.0,0) circle (.3) node{ 5};
-%\draw[fill=BrickRed!65] (14.7,0) circle (.3) node{16};
-%\draw[fill=BrickRed!65] (15.4,0) circle (.3) node{15};
-%\draw[fill=BrickRed!65] (16.1,0) circle (.3) node{14};
-%\draw[fill=BrickRed!65] (16.8,0) circle (.3) node{13};
-%\draw[fill=BrickRed!65] (17.5,0) circle (.3) node{12};
-%\draw[fill=BrickRed!65] (18.2,0) circle (.3) node{11};
-%\draw[fill=BrickRed!65] (18.9,0) circle (.3) node{10};
-%\draw[fill=BrickRed!65] (19.6,0) circle (.3) node{ 9};
-%\draw[fill=BrickRed!65] (20.3,0) circle (.3) node{ 8};
-%\draw[fill=BrickRed!65] (21.0,0) circle (.3) node{ 7};
-%\draw[fill=BrickRed!65] (21.7,0) circle (.3) node{ 6};
-%\draw[fill=YellowOrange!65] (0,-1) circle (.3) node{13};
-%\draw[fill=YellowOrange!65] (0.7,-1) circle (.3) node{12};
-%\draw[fill=YellowOrange!65] (1.4,-1) circle (.3) node{11};
-%\draw[fill=YellowOrange!65] (2.1,-1) circle (.3) node{10};
-%\draw[fill=YellowOrange!65] (2.8,-1) circle (.3) node{ 9};
-%\draw[fill=YellowOrange!65] (3.5,-1) circle (.3) node{ 8};
-%\draw[fill=YellowOrange!65] (4.2,-1) circle (.3) node{ 7};
-%\draw[fill=YellowOrange!65] (4.9,-1) circle (.3) node{ 6};
-%\draw[fill=YellowOrange!65] (5.6,-1) circle (.3) node{ 5};
-%\draw[fill=LimeGreen!30] (6.3,-1) circle (.3) node{16};
-%\draw[fill=LimeGreen!30] (7.0,-1) circle (.3) node{15};
-%\draw[fill=LimeGreen!30] (7.7,-1) circle (.3) node{14};
-%\draw[fill=LimeGreen!30] (8.4,-1) circle (.3) node{13};
-%\draw[fill=LimeGreen!30] (9.1,-1) circle (.3) node{12};
-%\draw[fill=LimeGreen!30] (9.8,-1) circle (.3) node{11};
-%\draw[fill=LimeGreen!30] (10.5,-1) circle (.3) node{10};
-%\draw[fill=LimeGreen!30] (11.2,-1) circle (.3) node{ 9};
-%\draw[fill=LimeGreen!30] (11.9,-1) circle (.3) node{ 8};
-%\draw[fill=LimeGreen!30] (12.6,-1) circle (.3) node{ 7};
-%\draw[fill=LimeGreen!30] (13.3,-1) circle (.3) node{ 6};
-%\draw[fill=LimeGreen!30] (14.0,-1) circle (.3) node{ 5};
-%\draw[fill=Fuchsia!60] (14.7,-1) circle (.3) node{16};
-%\draw[fill=Fuchsia!60] (15.4,-1) circle (.3) node{15};
-%\draw[fill=Fuchsia!60] (16.1,-1) circle (.3) node{14};
-%\draw[fill=Fuchsia!60] (16.8,-1) circle (.3) node{13};
-%\draw[fill=Fuchsia!60] (17.5,-1) circle (.3) node{12};
-%\draw[fill=Fuchsia!60] (18.2,-1) circle (.3) node{11};
-%\draw[fill=Fuchsia!60] (18.9,-1) circle (.3) node{10};
-%\draw[fill=Fuchsia!60] (19.6,-1) circle (.3) node{ 9};
-%\draw[fill=Fuchsia!60] (20.3,-1) circle (.3) node{ 8};
-%\draw[fill=Fuchsia!60] (21.0,-1) circle (.3) node{ 7};
-%\draw[fill=Fuchsia!60] (21.7,-1) circle (.3) node{ 6};
-%\end{tikzpicture}
-%\end{center}
-%\end{figure}
-
-%\begin{verbbox}[\vspace{1mm}]
-%For steps A18--21
-%Word 1: W14 + W15 + W16 (32 bits)
-%|<13..5>||<16.....5>||<16....6>|
-%xxxxxxxxxx.xxxxxxxxxxx..x.xxxxxx
-%Word 2: W17 + W18 (12 bits)
-%|<19..10>||<16,15>/base sol id |
-%x.....xxxxxx--------------------
-%
-%
-%
-%For steps A23--26
-%Word 1: W21 + W19 + W20 (30 bits + 2 padding)
-%\<17.11>||<14..6>||<13.......0>|
-%~~xx....xx.xxxxxxxxxx....x.....x
-%Word 2:
-%            |	ext  sol id      |
-%~~~~~~~~~~~~--------------------
-%\end{verbbox}
 
 \begin{figure}[!htb]
 \begin{center}
@@ -660,7 +470,6 @@ bits finally hold the index of an extended base solution.}
 We give an example of collision in \autoref{tbl:fscoll76}.
 This shows the two (message, \iv) pairs with their (identical) resulting digest. The \ivs and the digests' words are ordered similarly
 as in \autoref{tab:sha_iv}; the messages' words are ordered as $\mess_0,\ldots,\mess_{15}$ from top to bottom, left to right.
-%The separations between the 32-bit words are materialized with a `\texttt{|}' symbol.
 Although the separations between the 32-bit words are not materialized, they should be taken into account, and
 the values should not be interpreted as binary strings.
 Note that unlike most inputs discussed in this article, the \iv values are compatible with the \emph{original} description
@@ -698,35 +507,3 @@ $\compress(\diff\iv,\diff\mess)$ & \tt af 49 5d 10  52 82 35 03  e4 9e 46 78  dc
 \bottomrule
 \end{tabular}
 \end{table}
-
-%\begin{table}[!htb]
-%\caption{A freestart collision for 76-step \shaone. Message and \iv bytes with differences are highlighted with \framebox{\color{LimeGreen}coloured boxes}.}\label{tbl:fscoll76}
-%\centering
-%\begin{tabular}{c c}
-%\toprule
-% & Message 1\\
-%\midrule
-%\iv &  \tt 81 bf 23 06 | 41 b8 3b \framebox{\color{Cerulean}5c | 03} e9 a7 8f | ba 50 28 d5 | fc 50 87 88 \\
-%\midrule
-%$\mess$ & \tt \hspace{1.15mm}46\hspace{1.25mm} fa 5a \framebox{\color{Cerulean}88 | f4} f0 c7 \framebox{\color{Cerulean}f0 | b8} de db \framebox{\color{Cerulean}ec | 95} 1e 25 \framebox{\color{Cerulean}88}\\
-%      & \tt \framebox{\color{Cerulean}77} 34 fd \framebox{\color{Cerulean}f5 | 4c} 42 c4 \framebox{\color{Cerulean}97 | 52} d7 d8 \framebox{\color{Cerulean}f9 | 5f} 14 52 \framebox{\color{Cerulean}ea} \\
-%			& \tt \framebox{\color{Cerulean}b4} 9e 93 \framebox{\color{Cerulean}b2 | 91} c2 30 \framebox{\color{Cerulean}71 | c7} 0f 35 \framebox{\color{Cerulean}9b | 8a} ba cf \framebox{\color{Cerulean}af} \\
-%			& \tt \framebox{\color{Cerulean}b3} 7f fb \framebox{\color{Cerulean}27 | 3d} fe 7f \framebox{\color{Cerulean}ad | 7a} de 56 \framebox{\color{Cerulean}95 | 20} fd 7c \framebox{\color{Cerulean}ea} \\
-%\midrule
-%$\compress(\iv,\mess)$ & \tt af 49 5d 10 | 52 82 35 03 | e4 9e 46 78 | dc e7 f3 b3 | d6 da a3 24 \\
-%\bottomrule\\
-%
-%\toprule
-% & Message 2 \\
-%\midrule
-%$\diff$\iv & \hspace{-1.95mm}\tt 81 bf 23 06 | 41 b8 3b \framebox{\color{RubineRed}5d | 83} e9 a7 8f | ba 50 28 d5 | fc 50 87 88 \\
-%\midrule
-%$\diff\mess$ & \tt \hspace{1.15mm}46\hspace{1.25mm} fa 5a \framebox{\color{RubineRed}98 | f0} f0 c7 \framebox{\color{RubineRed}ec | 7a} de db \framebox{\color{RubineRed}f8 | 99} 1e 25 \framebox{\color{RubineRed}8a}\\
-%      & \tt \framebox{\color{RubineRed}b7} 34 fd \framebox{\color{RubineRed}e5 | f8} 42 c4 \framebox{\color{RubineRed}8b | 6e} d7 d8 \framebox{\color{RubineRed}fd | e3} 14 52 \framebox{\color{RubineRed}f0} \\
-%			& \tt \framebox{\color{RubineRed}94} 9e 93 \framebox{\color{RubineRed}a2 | b5} c2 30 \framebox{\color{RubineRed}6d | 2b} 0f 35 \framebox{\color{RubineRed}8f | 86} ba cf \framebox{\color{RubineRed}ad} \\
-%			& \tt \framebox{\color{RubineRed}73} 7f fb \framebox{\color{RubineRed}37 | 89} fe 7f \framebox{\color{RubineRed}b1 | 56} de 56 \framebox{\color{RubineRed}91 | 9c} fd 7c \framebox{\color{RubineRed}f2} \\
-%\midrule
-%$\compress(\diff\iv,\diff\mess)$ & \tt af 49 5d 10 | 52 82 35 03 | e4 9e 46 78 | dc e7 f3 b3 | d6 da a3 24 \\
-%\bottomrule
-%\end{tabular}
-%\end{table}
