@@ -294,9 +294,9 @@ Finally, on the implementation side, we show how the neutral bits are packed tog
 bit comes from, and the number is the bit position in this original word. For instance, in \autoref{fig:nb_packing76}, \begin{tikzpicture}[scale=0.67,transform shape]\draw[fill=Cerulean!85] (0,0) circle (.3) node{13};\end{tikzpicture}
 is the value of the thirteenth bit (starting from zero) in some instance of $\expmess_{14}$ (\ie $\expmess_{14}[13]$); the fact that this circle is the leftmost one in the top sequence means that in the buffer, this information is stored as the MSB
 of the first word.
-One should note however that not all message bits shown in this packing are actually used as neutral bits. For instance, there is no neutral bit on $\expmess_{15}[15]$, yet this bit is included in \autoref{fig:nb_packing76}
-as \begin{tikzpicture}[scale=0.67,transform shape]\draw[fill=Rhodamine!30] (0,0) circle (.3) node{15};\end{tikzpicture}. Although not including such non-neutral bits would save some space, it would make the storing process
-more cumbersome and overall less efficient.
+One should note that not all consecutive bits of a message (for a certain window) are neutral; non-neutral bits do not need to be stored, but it is nonetheless useful to maintain in the packing the relative distance between the actual neutral bits.
+For instance, there is no neutral bit on $\expmess_{15}[15]$, thus this bit is not included \emph{per se} in \autoref{fig:nb_packing76}, but a padding bit is added instead.
+This is shown as \begin{tikzpicture}[scale=0.67,transform shape]\draw[fill=Rhodamine!30] (0,0) circle (.3) node{.};\end{tikzpicture}.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -311,7 +311,7 @@ more cumbersome and overall less efficient.
 \draw[fill=Cerulean!85] (4.9,0) circle (.3) node{ 6};
 \draw[fill=Cerulean!85] (5.6,0) circle (.3) node{ 5};
 \draw[fill=Rhodamine!30] (6.3,0) circle (.3) node{16};
-\draw[fill=Rhodamine!30] (7.0,0) circle (.3) node{15};
+\draw[fill=Rhodamine!30] (7.0,0) circle (.3) node{.};
 \draw[fill=Rhodamine!30] (7.7,0) circle (.3) node{14};
 \draw[fill=Rhodamine!30] (8.4,0) circle (.3) node{13};
 \draw[fill=Rhodamine!30] (9.1,0) circle (.3) node{12};
@@ -323,10 +323,10 @@ more cumbersome and overall less efficient.
 \draw[fill=Rhodamine!30] (13.3,0) circle (.3) node{ 6};
 \draw[fill=Rhodamine!30] (14.0,0) circle (.3) node{ 5};
 \draw[fill=BurntOrange!85] (14.7,0) circle (.3) node{16};
-\draw[fill=BurntOrange!85] (15.4,0) circle (.3) node{15};
-\draw[fill=BurntOrange!85] (16.1,0) circle (.3) node{14};
+\draw[fill=BurntOrange!85] (15.4,0) circle (.3) node{.};
+\draw[fill=BurntOrange!85] (16.1,0) circle (.3) node{.};
 \draw[fill=BurntOrange!85] (16.8,0) circle (.3) node{13};
-\draw[fill=BurntOrange!85] (17.5,0) circle (.3) node{12};
+\draw[fill=BurntOrange!85] (17.5,0) circle (.3) node{.};
 \draw[fill=BurntOrange!85] (18.2,0) circle (.3) node{11};
 \draw[fill=BurntOrange!85] (18.9,0) circle (.3) node{10};
 \draw[fill=BurntOrange!85] (19.6,0) circle (.3) node{ 9};
@@ -334,11 +334,11 @@ more cumbersome and overall less efficient.
 \draw[fill=BurntOrange!85] (21.0,0) circle (.3) node{ 7};
 \draw[fill=BurntOrange!85] (21.7,0) circle (.3) node{ 6};
 \draw[fill=YellowOrange!45] (0,-1) circle (.3) node{19};
-\draw[fill=YellowOrange!45] (0.7,-1) circle (.3) node{18};
-\draw[fill=YellowOrange!45] (1.4,-1) circle (.3) node{17};
-\draw[fill=YellowOrange!45] (2.1,-1) circle (.3) node{16};
-\draw[fill=YellowOrange!45] (2.8,-1) circle (.3) node{15};
-\draw[fill=YellowOrange!45] (3.5,-1) circle (.3) node{14};
+\draw[fill=YellowOrange!45] (0.7,-1) circle (.3) node{.};
+\draw[fill=YellowOrange!45] (1.4,-1) circle (.3) node{.};
+\draw[fill=YellowOrange!45] (2.1,-1) circle (.3) node{.};
+\draw[fill=YellowOrange!45] (2.8,-1) circle (.3) node{.};
+\draw[fill=YellowOrange!45] (3.5,-1) circle (.3) node{.};
 \draw[fill=YellowOrange!45] (4.2,-1) circle (.3) node{13};
 \draw[fill=YellowOrange!45] (4.9,-1) circle (.3) node{12};
 \draw[fill=YellowOrange!45] (5.6,-1) circle (.3) node{11};
@@ -385,13 +385,13 @@ and bits holding the index of a base solution respectively.}
 \draw[fill=LimeGreen!40] (0.7,0) circle (.3) node{.};
 \draw[fill=Cerulean!85] (1.4,0) circle (.3) node{17};
 \draw[fill=Cerulean!85] (2.1,0) circle (.3) node{16};
-\draw[fill=Cerulean!85] (2.8,0) circle (.3) node{15};
-\draw[fill=Cerulean!85] (3.5,0) circle (.3) node{14};
-\draw[fill=Cerulean!85] (4.2,0) circle (.3) node{13};
-\draw[fill=Cerulean!85] (4.9,0) circle (.3) node{12};
+\draw[fill=Cerulean!85] (2.8,0) circle (.3) node{.};
+\draw[fill=Cerulean!85] (3.5,0) circle (.3) node{.};
+\draw[fill=Cerulean!85] (4.2,0) circle (.3) node{.};
+\draw[fill=Cerulean!85] (4.9,0) circle (.3) node{.};
 \draw[fill=Cerulean!85] (5.6,0) circle (.3) node{11};
 \draw[fill=Rhodamine!30] (6.3,0) circle (.3) node{14};
-\draw[fill=Rhodamine!30] (7.0,0) circle (.3) node{13};
+\draw[fill=Rhodamine!30] (7.0,0) circle (.3) node{.};
 \draw[fill=Rhodamine!30] (7.7,0) circle (.3) node{12};
 \draw[fill=Rhodamine!30] (8.4,0) circle (.3) node{11};
 \draw[fill=Rhodamine!30] (9.1,0) circle (.3) node{10};
@@ -402,16 +402,16 @@ and bits holding the index of a base solution respectively.}
 \draw[fill=BurntOrange!85] (12.6,0) circle (.3) node{13};
 \draw[fill=BurntOrange!85] (13.3,0) circle (.3) node{12};
 \draw[fill=BurntOrange!85] (14.0,0) circle (.3) node{11};
-\draw[fill=BurntOrange!85] (14.7,0) circle (.3) node{10};
-\draw[fill=BurntOrange!85] (15.4,0) circle (.3) node{ 9};
-\draw[fill=BurntOrange!85] (16.1,0) circle (.3) node{ 8};
-\draw[fill=BurntOrange!85] (16.8,0) circle (.3) node{ 7};
+\draw[fill=BurntOrange!85] (14.7,0) circle (.3) node{.};
+\draw[fill=BurntOrange!85] (15.4,0) circle (.3) node{.};
+\draw[fill=BurntOrange!85] (16.1,0) circle (.3) node{.};
+\draw[fill=BurntOrange!85] (16.8,0) circle (.3) node{.};
 \draw[fill=BurntOrange!85] (17.5,0) circle (.3) node{ 6};
-\draw[fill=BurntOrange!85] (18.2,0) circle (.3) node{ 5};
-\draw[fill=BurntOrange!85] (18.9,0) circle (.3) node{ 4};
-\draw[fill=BurntOrange!85] (19.6,0) circle (.3) node{ 3};
-\draw[fill=BurntOrange!85] (20.3,0) circle (.3) node{ 2};
-\draw[fill=BurntOrange!85] (21.0,0) circle (.3) node{ 1};
+\draw[fill=BurntOrange!85] (18.2,0) circle (.3) node{.};
+\draw[fill=BurntOrange!85] (18.9,0) circle (.3) node{.};
+\draw[fill=BurntOrange!85] (19.6,0) circle (.3) node{.};
+\draw[fill=BurntOrange!85] (20.3,0) circle (.3) node{.};
+\draw[fill=BurntOrange!85] (21.0,0) circle (.3) node{.};
 \draw[fill=BurntOrange!85] (21.7,0) circle (.3) node{ 0};
 \draw[fill=YellowOrange!45] (0,-1) circle (.3) node{.};
 \draw[fill=YellowOrange!45] (0.7,-1) circle (.3) node{.};
@@ -501,3 +501,11 @@ $\compress(\diff\iv,\diff\mess)$ & \tt af 49 5d 10  52 82 35 03  e4 9e 46 78  dc
 \bottomrule
 \end{tabular}
 \end{table}
+
+\subsection{Complexity of the attack}
+\label{sec:comp76}
+
+As we already mentioned in \autoref{sec:gpu_tune}, the expected time to find a collision on a single average-performing \gtx is 4.42 days.
+This figure is obtained by considering the rate at which partial solutions up to $\state_{56}$ are produced together with the probability that such a partial solution leads to a collision.
+In our experiments, partial solutions were obtained at a rate of 0.0171 per second on average, while JLCA gives a probability of $2^{-12.67}$, leading to the above expected time to collision.
+As we mentioned in \autoref{sec:effi_fw}, this translates to a complexity of $2^{50.34}$ compression function calls on a \gtx.

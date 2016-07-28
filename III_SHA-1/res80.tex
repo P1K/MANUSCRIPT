@@ -306,28 +306,164 @@ Note that neutral bits on $\expmess_{17}$ are split between the buffers for step
 some ``flip'' values, which are partial sums of some selected neutral bits that aid in determining if additionnal bits need to be flipped so as to preserve message bit relations.
 The representation of the packing is done similarly as in \autoref{sec:neutral_bits76}.
 
-\begin{verbbox}[\vspace{1mm}]
-For steps A18--20
-W14:a W15:b W16:c W17:d basesol:i
-ccccccccc...bbbbbbbbbb..baaaaa.a
-dddddd......iiiiiiiiiiiiiiiiiiii
-
-For steps A21--25
-W17:a W18:b W19:c W20:d extsol:i
-Additional flips:F
-bbbbbbbbbb.b..F.d.ddd....d.aaaaF
-F.Fc.ccccccciiiiiiiiiiiiiiiiiiii
-\end{verbbox}
-
-\begin{figure}[ht]
-\centering
-  \theverbbox
-  \caption{The packing of the neutral bits and the (extended) base solution index.
-  A letter \{\texttt{a,b,c,d}\} represents a bit on a given word, an ``\texttt{F}'' a flip bit, an ``\texttt{i}'' a bit
-  of an (extended) solution index, and  a ``\texttt{.}'' an unused bit (only present to maintain a proper alignment).
-  \label{fig:nb_packing80_1}}
+\begin{figure}[!htb]
+\begin{center}
+\begin{tikzpicture}[scale=0.67,transform shape]
+\draw[fill=Cerulean!85] (0,0) circle (.3) node{16};
+\draw[fill=Cerulean!85] (0.7,0) circle (.3) node{15};
+\draw[fill=Cerulean!85] (1.4,0) circle (.3) node{14};
+\draw[fill=Cerulean!85] (2.1,0) circle (.3) node{13};
+\draw[fill=Cerulean!85] (2.8,0) circle (.3) node{12};
+\draw[fill=Cerulean!85] (3.5,0) circle (.3) node{11};
+\draw[fill=Cerulean!85] (4.2,0) circle (.3) node{10};
+\draw[fill=Cerulean!85] (4.9,0) circle (.3) node{ 9};
+\draw[fill=Cerulean!85] (5.6,0) circle (.3) node{ 8};
+\draw[fill=Rhodamine!30] (6.3,0) circle (.3) node{.};
+\draw[fill=Rhodamine!30] (7.0,0) circle (.3) node{.};
+\draw[fill=Rhodamine!30] (7.7,0) circle (.3) node{.};
+\draw[fill=Rhodamine!30] (8.4,0) circle (.3) node{16};
+\draw[fill=Rhodamine!30] (9.1,0) circle (.3) node{15};
+\draw[fill=Rhodamine!30] (9.8,0) circle (.3) node{14};
+\draw[fill=Rhodamine!30] (10.5,0) circle (.3) node{13};
+\draw[fill=Rhodamine!30] (11.2,0) circle (.3) node{12};
+\draw[fill=Rhodamine!30] (11.9,0) circle (.3) node{11};
+\draw[fill=Rhodamine!30] (12.6,0) circle (.3) node{10};
+\draw[fill=Rhodamine!30] (13.3,0) circle (.3) node{ 9};
+\draw[fill=Rhodamine!30] (14.0,0) circle (.3) node{ 8};
+\draw[fill=Rhodamine!30] (14.7,0) circle (.3) node{ 7};
+\draw[fill=Rhodamine!30] (15.4,0) circle (.3) node{.};
+\draw[fill=Rhodamine!30] (16.1,0) circle (.3) node{.};
+\draw[fill=Rhodamine!30] (16.8,0) circle (.3) node{ 4};
+\draw[fill=BurntOrange!85] (17.5,0) circle (.3) node{11};
+\draw[fill=BurntOrange!85] (18.2,0) circle (.3) node{10};
+\draw[fill=BurntOrange!85] (18.9,0) circle (.3) node{ 9};
+\draw[fill=BurntOrange!85] (19.6,0) circle (.3) node{ 8};
+\draw[fill=BurntOrange!85] (20.3,0) circle (.3) node{ 7};
+\draw[fill=BurntOrange!85] (21.0,0) circle (.3) node{.};
+\draw[fill=BurntOrange!85] (21.7,0) circle (.3) node{ 5};
+\draw[fill=YellowOrange!45] (0,-1) circle (.3) node{19};
+\draw[fill=YellowOrange!45] (0.7,-1) circle (.3) node{18};
+\draw[fill=YellowOrange!45] (1.4,-1) circle (.3) node{17};
+\draw[fill=YellowOrange!45] (2.1,-1) circle (.3) node{16};
+\draw[fill=YellowOrange!45] (2.8,-1) circle (.3) node{15};
+\draw[fill=YellowOrange!45] (3.5,-1) circle (.3) node{14};
+\draw[fill=Fuchsia!70] (4.2,-1) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (4.9,-1) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (5.6,-1) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (6.3,-1) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (7.0,-1) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (7.7,-1) circle (.3) node{.};
+\draw[fill=LimeGreen!40] (8.4,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (9.1,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (9.8,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (10.5,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (11.2,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (11.9,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (12.6,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (13.3,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (14.0,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (14.7,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (15.4,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (16.1,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (16.8,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (17.5,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (18.2,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (18.9,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (19.6,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (20.3,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (21.0,-1) circle (.3) node{$\star$};
+\draw[fill=LimeGreen!40] (21.7,-1) circle (.3) node{$\star$};
+\end{tikzpicture}
+\end{center}
+\caption{The inter-snippet buffer for steps $\state_{18}$ to $\state_{20}$.
+From top to bottom, left to right, bright cerulean (\protect\tikz{\protect\draw[fill=Cerulean!85] (0,0) circle (.15);})
+refers to bits from $\expmess_{16}$; light rhodamine (\protect\tikz{\protect\draw[fill=Rhodamine!30] (0,0) circle (.15);})
+refers to bits from $\expmess_{15}$ (with some additional padding); bright (burnt) orange (\protect\tikz{\protect\draw[fill=BurntOrange!85] (0,0) circle (.15);})
+bits come from $\expmess_{14}$, while light (yellow) orange (\protect\tikz{\protect\draw[fill=YellowOrange!45] (0,0) circle (.15);})
+means bits from $\expmess_{17}$. Finally, bright fuchsia (\protect\tikz{\protect\draw[fill=Fuchsia!70] (0,0) circle (.15);})
+and light lime (\protect\tikz{\protect\draw[fill=LimeGreen!40] (0,0) circle (.15);}) refer to padding bits
+and bits holding the index of a base solution respectively.}
+\label{fig:nb_packing80_1}
 \end{figure}
 
+\begin{figure}[!htb]
+\begin{center}
+\begin{tikzpicture}[scale=0.67,transform shape]
+\draw[fill=LimeGreen!40] (0,0) circle (.3) node{15};
+\draw[fill=LimeGreen!40] (0.7,0) circle (.3) node{14};
+\draw[fill=LimeGreen!40] (1.4,0) circle (.3) node{13};
+\draw[fill=LimeGreen!40] (2.1,0) circle (.3) node{12};
+\draw[fill=LimeGreen!40] (2.8,0) circle (.3) node{11};
+\draw[fill=LimeGreen!40] (3.5,0) circle (.3) node{10};
+\draw[fill=LimeGreen!40] (4.2,0) circle (.3) node{ 9};
+\draw[fill=LimeGreen!40] (4.9,0) circle (.3) node{ 8};
+\draw[fill=LimeGreen!40] (5.6,0) circle (.3) node{ 7};
+\draw[fill=LimeGreen!40] (6.3,0) circle (.3) node{ 6};
+\draw[fill=LimeGreen!40] (7.0,0) circle (.3) node{.};
+\draw[fill=LimeGreen!40] (7.7,0) circle (.3) node{ 4};
+\draw[fill=LimeGreen!40] (8.4,0) circle (.3) node{.};
+\draw[fill=LimeGreen!40] (9.1,0) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (9.8,0) circle (.3) node{17};
+\draw[fill=Fuchsia!70] (10.5,0) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (11.2,0) circle (.3) node{15};
+\draw[fill=Fuchsia!70] (11.9,0) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (12.6,0) circle (.3) node{13};
+\draw[fill=Fuchsia!70] (13.3,0) circle (.3) node{12};
+\draw[fill=Fuchsia!70] (14.0,0) circle (.3) node{11};
+\draw[fill=Fuchsia!70] (14.7,0) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (15.4,0) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (16.1,0) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (16.8,0) circle (.3) node{.};
+\draw[fill=Fuchsia!70] (17.5,0) circle (.3) node{ 6};
+\draw[fill=Fuchsia!70] (18.2,0) circle (.3) node{.};
+\draw[fill=YellowOrange!45] (18.9,0) circle (.3) node{13};
+\draw[fill=YellowOrange!45] (19.6,0) circle (.3) node{12};
+\draw[fill=YellowOrange!45] (20.3,0) circle (.3) node{11};
+\draw[fill=YellowOrange!45] (21.0,0) circle (.3) node{10};
+\draw[fill=Fuchsia!70] (21.7,0) circle (.3) node{ 0};
+\draw[fill=Cerulean!85] (0,-1) circle (.3) node{17};
+\draw[fill=Cerulean!85] (0.7,-1) circle (.3) node{.};
+\draw[fill=Cerulean!85] (1.4,-1) circle (.3) node{15};
+\draw[fill=Cerulean!85] (2.1,-1) circle (.3) node{14};
+\draw[fill=Cerulean!85] (2.8,-1) circle (.3) node{.};
+\draw[fill=Cerulean!85] (3.5,-1) circle (.3) node{12};
+\draw[fill=Cerulean!85] (4.2,-1) circle (.3) node{11};
+\draw[fill=Cerulean!85] (4.9,-1) circle (.3) node{10};
+\draw[fill=Cerulean!85] (5.6,-1) circle (.3) node{9};
+\draw[fill=Cerulean!85] (6.3,-1) circle (.3) node{8};
+\draw[fill=Cerulean!85] (7.0,-1) circle (.3) node{7};
+\draw[fill=Cerulean!85] (7.7,-1) circle (.3) node{6};
+\draw[fill=Rhodamine!30] (8.4,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (9.1,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (9.8,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (10.5,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (11.2,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (11.9,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (12.6,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (13.3,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (14.0,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (14.7,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (15.4,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (16.1,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (16.8,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (17.5,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (18.2,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (18.9,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (19.6,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (20.3,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (21.0,-1) circle (.3) node{$\star$};
+\draw[fill=Rhodamine!30] (21.7,-1) circle (.3) node{$\star$};
+\end{tikzpicture}
+\end{center}
+\caption{The inter-snippet buffer for steps $\state_{21}$ to $\state_{25}$.
+From top to bottom, left to right, light lime bits (\protect\tikz{\protect\draw[fill=LimeGreen!40] (0,0) circle (.15);})
+come from $\expmess_{18}$ (with a few trailing padding bits);
+bright fuchsia (\protect\tikz{\protect\draw[fill=Fuchsia!70] (0,0) circle (.15);})
+refers to bits from $\expmess_{20}$, including two ``flip'' bits on positions 17 and 0, and yellow-tinted orange bits (\protect\tikz{\protect\draw[fill=YellowOrange!45] (0,0) circle (.15);})
+are from $\expmess_{17}$. Bright cerulean means (\protect\tikz{\protect\draw[fill=Cerulean!85] (0,0) circle (.15);})
+bits from $\expmess_{19}$ (with two flip bits on 17 and 15), and finally light rhodamine (\protect\tikz{\protect\draw[fill=Rhodamine!30] (0,0) circle (.15);}) bits hold the index of an extended base solution.}
+\label{fig:nb_packing80_2}
+\end{figure}
 
 
 \subsection{An example of colliding message pair}
@@ -368,3 +504,14 @@ $\compress(\diff\iv,\diff\mess)$ & \tt f0 20 48 6f 07 1b f1 10 53 54 7a 86 f4 a7
 \bottomrule
 \end{tabular}
 \end{table}
+
+\subsection{Complexity of the attack}
+\label{sec:comp80}
+
+To estimate the complexity of the attack, we may as in \autoref{sec:comp76} consider the production rate of partial solutions up to $\state_{60}$ and the corresponding probability of extending
+these to a collision. However, the slower production rate (due to the higher number of conditions) would lead to a less reliable estimate than in the 76-step case. Thus, we choose instead to
+consider partial solutions up to $\state_{40}$. On a good-performing \gtx, such solutions are produced at a rate of about 1030 per second. The probability that one of these results
+in a collision is given by JLCA to be $2^{-35.58}$, leading to an expected time to collision of 577.16 days.
+Recalling that one \gtx can compute $2^{31.8}$ \shaone compression functions per second, the complexity of the attack is thus of $2^{57.37}$ on such a GPU.
+However, it should be noted that as for the 76-step attack, the average performance of the GPUs on an actual cluster slightly degrades compared to a single one. In our attack, we used
+sixteen 4-GPU machines, which combined together lead to an attack of complexity about $2^{57.5}$.
