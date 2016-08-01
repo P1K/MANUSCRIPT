@@ -1,1 +1,44 @@
 \section{Notations}
+\label{sec:not}
+
+\begin{figure}[!htb]
+{\centering\small%
+\begin{tabular}{c c}
+  \toprule
+  Symbol & Condition on ($\state$,$\diff\state$) \\
+	\midrule
+  \nodiff & $\state_t[i] = \diff\state_t[i]$  \\
+  \onediff & $\state_t[i] \neq \diff\state_t[i]$  \\
+  \onediffu & $\state_t[i] = 0$, \quad $\diff\state_t[i] = 1$  \\
+  \onediffd & $\state_t[i] = 1$, \quad $\diff\state_t[i] = 0$  \\
+  $\mnodiffz$ & $\state_t[i] = \diff\state_t[i] = 0$\\
+  $\mnodiffo$ & $\state_t[i] = \diff\state_t[i] = 1$ \\
+  \midrule
+  \equaup & $\state_t[i] = \diff\state_t[i] = A_{t-1}[i]$ \\
+  \diffup & $\state_t[i] = \diff\state_t[i] \neq A_{t-1}[i]$ \\
+	\equarightup & $\state_t[i] = \diff\state_t[i] = (A_{t-1} \circlearrowright 2)[i]$  \\
+	\diffrightup & $\state_t[i] = \diff\state_t[i] \neq (A_{t-1} \circlearrowright 2)[i]$  \\
+	\equarightupup & $\state_t[i] = \diff\state_t[i] = (A_{t-2}  \circlearrowright 2)[i]$  \\
+	\diffrightupup & $\state_t[i] = \diff\state_t[i] \neq (A_{t-2} \circlearrowright 2)[i]$  \\
+  \bottomrule
+\end{tabular}\\}
+\caption{Meaning of the bit difference symbols, for a symbol located on $\state_t[i]$. The same symbols are also used for $\expmess$, $\diff\expmess$.}\label{table:appbitconditions}
+\end{figure}
+
+% oplus
+
+% boxplus, +
+
+% circlearrow
+
+% state
+
+% mess
+
+% expmess
+
+% \compress etc.
+
+% hexadecimal
+
+% logical and, or, complementation

@@ -66,32 +66,6 @@ $i$ & $\state_i$ & $\mess_i$\\
 \caption{The differential path of the 76-step attack up to step 36.\label{fig:diff_path76}}
 \end{figure}
 
-
-
-%TODO move to Notations
-\begin{figure}
-{\centering\small%
-\begin{tabular}{c c}
-  \toprule
-  Symbol & Condition on ($\state$,$\diff\state$) \\
-	\midrule
-  \nodiff & $\state_t[i] = \diff\state_t[i]$  \\
-  \onediff & $\state_t[i] \neq \diff\state_t[i]$  \\
-  \onediffu & $\state_t[i] = 0$, \quad $\diff\state_t[i] = 1$  \\
-  \onediffd & $\state_t[i] = 1$, \quad $\diff\state_t[i] = 0$  \\
-  $\mnodiffz$ & $\state_t[i] = \diff\state_t[i] = 0$\\
-  $\mnodiffo$ & $\state_t[i] = \diff\state_t[i] = 1$ \\
-  \equaup & $\state_t[i] = \diff\state_t[i] = A_{t-1}[i]$ \\
-  \diffup & $\state_t[i] = \diff\state_t[i] \neq A_{t-1}[i]$ \\
-	\equarightup & $\state_t[i] = \diff\state_t[i] = (A_{t-1} \ggg 2)[i]$  \\
-	\diffrightup & $\state_t[i] = \diff\state_t[i] \neq (A_{t-1} \ggg 2)[i]$  \\
-	\equarightupup & $\state_t[i] = \diff\state_t[i] = (A_{t-2} \ggg 2)[i]$  \\
-	\diffrightupup & $\state_t[i] = \diff\state_t[i] \neq (A_{t-2} \ggg 2)[i]$  \\
-  \bottomrule
-\end{tabular}\\}
-\caption{Meaning of the bit difference symbols, for a symbol located on $\state_t[i]$. The same symbols are also used for $\expmess$, $\diff\expmess$.}\label{table:appbitconditions}
-\end{figure}
-
 \begingroup
 \fontsize{8pt}{9pt}\selectfont
 \begin{verbbox}

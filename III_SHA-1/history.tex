@@ -598,12 +598,12 @@ for which sixteen consecutive words are equal to $\mess$.
 
 We also note the following fact:
 \begin{fact}[The message expansion of \shaone is a quasi-cyclic code]
-If $\expmess = \expmess_0, \ldots, \expmess_{79}$ is a valid expanded message for \shaone, then for every $i \in [0, 31]$, $\expmess^{\circlearrowleft i} =
+If $\expmess = \expmess_0, \ldots,\linebreak \expmess_{79}$ is a valid expanded message for \shaone, then for every $i \in [0, 31]$, $\expmess^{\circlearrowleft i} =
 \expmess_0^{\circlearrowleft i}, \ldots, \expmess_{79}^{\circlearrowleft i}$ is a valid expanded message for \shaone.
 \end{fact}
 This fact, together with the notion of extended expanded message allows to define equivalence classes for expanded messages:
 \begin{defi}[Equivalence class for \shaone expanded messages~\cite{DBLP:journals/dcc/Manuel11}]
-Two \shaone expanded messages $\expmess$ and $\expmess'$ are equivalent if there are two pairs $(i,j)$, $(i',j')$ in $[-64, 0] \times [0, 31]$
+Two\linebreak \shaone expanded messages $\expmess$ and $\expmess'$ are equivalent if there are two pairs $(i,j)$, $(i',j')$ in $[-64, 0] \times [0, 31]$
 and an extended expanded message $\eem$ such that $\expmess = (\eem_i)^{\circlearrowleft j}$ and $\expmess' = (\eem_{i'})^{\circlearrowleft j'}$.
 \end{defi}
 In other words, two expanded messages are equivalent if they can be generated from the same, possibly rotated, extended expanded message. It should be noted

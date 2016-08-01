@@ -40,6 +40,7 @@
 \usepackage{MnSymbol}
 %\usepackage{listings}
 \usepackage[section]{minted}
+\usepackage{amsthm}
 
 %\usepackage{newtxtext}
 \usepackage[mathcal]{euscript}
@@ -94,6 +95,9 @@
 \newcommand\ie{\emph{i.e.}\xspace}
 \newcommand\eg{\emph{e.g.}\xspace}
 
+\DeclareMathOperator\bigo{\mathcal{O}}
+
+
 \newcommand\messblock{\mathfrak{m}}
 \newcommand\freeiv{\mathfrak{i}}
 \newcommand\mess{\mathcal{M}}
@@ -111,6 +115,14 @@
 \newcommand\fif{\boolF_\text{IF}}
 \newcommand\fxor{\boolF_\text{XOR}}
 \newcommand\fmaj{\boolF_\text{MAJ}}
+\newcommand\messhash{\mathfrak{m}}
+\newcommand\targ{\mathfrak{t}}
+\newcommand\dig{\mathfrak{r}}
+\newcommand\key{\mathfrak{k}}
+\newcommand\tagg{\mathfrak{t}}
+\DeclareMathOperator\ro{\mathcal{R}}
+\DeclareMathOperator\sign{\mathcal{S}}
+\DeclareMathOperator\mac{\mathcal{M}}
 
 \DeclareMathOperator\diff{\Delta}
 
@@ -143,8 +155,10 @@
 
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 
-\newtheorem{defi}{Definition}
 \newtheorem{fact}{Fact}
+\newtheorem{prop}{Proposition}
+\theoremstyle{definition}
+\newtheorem{defi}{Definition}
 \newtheorem{example}{Example}
 
 %\lstdefinestyle{customc}{
@@ -194,7 +208,7 @@ EUROCRYPT~2016~\cite{DBLP:conf/eurocrypt/StevensKP16,80stepFull}.}
 \maketitle
 
 \begin{abstract}
-It's been a while since we learned that SHA-1 is weak against collision attacks. This paper gives an account of two practical attacks on its compression
+It's been a while since we learned that SHA-1 is weak against collision attacks. This paper gives an account of two practical collision attacks on its compression
 function, including one on the full 80 steps. This is actually quite nice.
 \end{abstract}
 
