@@ -187,7 +187,7 @@ a collision for the \emph{internal state}. We will briefly see in \autoref{sec:b
 to such attacks.
 
 Another good example, which this time directly violates the security property from \autoref{def:2pre}, are the second preimage attacks for long messages, again on \merkdam functions.
-Dean~\cite{}, and later Kelsey and Schneier~\cite{} showed how one can again exploit the structure of the function and internal collisions to compute a second preimage
+Dean~\cite{dean}, and later Kelsey and Schneier~\cite{DBLP:conf/eurocrypt/KelseyS05} showed how one can again exploit the structure of the function and internal collisions to compute a second preimage
 of a long message more efficiently than with a generic algorithm. The complexity of Kelsey and Schneier's attack to find a second preimage for a message
 of $2^k$ \emph{blocks} is $\approx \bigo(2^{n-k+1})$ calls to $\hash$. This means that \merkdam hash functions are actually inherently insecure, if we adhere
 strictly to what we stated as security objectives. However, although significant, these attacks remain expensive, especially for messages of usual sizes. As such, they are not usually considered as threatening
