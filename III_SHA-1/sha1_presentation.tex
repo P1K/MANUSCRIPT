@@ -1,7 +1,7 @@
 \section{The SHA-1 hash function}
 \label{sec:description}
 
-This section gives a brief description of the \shaone hash function. We refer to the most recent NIST standard document~\cite{Nist-SHA} for a more thorough
+This section gives a brief description of the \shaone hash function, going again over some features already presented in \autoref{sec:intro}. We refer to the most recent NIST standard document~\cite{Nist-SHA} for a more thorough
 presentation.
 
 \shaone is a hash function from the ``\mdsha'' family which produces digests of $160$ bits.
@@ -25,13 +25,12 @@ $A_0$:\texttt{0x67452301} & $B_0$:\texttt{0xefcfab89} & $C_0$:\texttt{0x98badcfe
 \end{center}
 \end{table}
 
-Similarly to other members of the \mdsha family, the compression function $\compress$ is built around an \emph{ad hoc} block cipher $\blockE$ used in a Davies-Meyer construction:
-$\chain_{i+1} \defas \blockE(\messblock_{i+1},\chain_i) \boxplus \chain_i$, where $\blockE(x,y)$ is the encryption of the plaintext $y$ with the key $x$ and ``$\boxplus$'' denotes
-wordiwse addition of the five state registers (cf. below) in $\ztt$.
+Similarly to other members of the \mdsha family, the compression function $\compress$ is built around an \emph{ad hoc} block cipher $\blockE$ used in a Davies-Meyer construction.
+%$\chain_{i+1} \defas \blockE(\messblock_{i+1},\chain_i) \boxplus \chain_i$, where $\blockE(x,y)$ is the encryption of the plaintext $y$ with the key $x$ and ``$\boxplus$'' denotes
+%wordiwse addition of the five state registers (cf. below) in $\ztt$.
 %and ``$\boxplus$'' denotes word-wise addition in $\mathbf{Z}/2^{32}\,\mathbf{Z}$. 
-The block cipher itself is a five-branch generalized Feistel network using an Add-Rotate-XOR ``ARX'' step function\footnote{This step function is not, strictly speaking, a pure ARX, as it also
-uses two non-linear Boolean functions, see \autoref{tab:sha_spec}.}. In its full version, the step function is
-iterated 80 times (divided in four rounds of 20 steps).
+The block cipher itself is a five-branch generalized Feistel network using an Add-Rotate-XOR ``ARX'' step function with the addition of two non-linear Boolean functions, see \autoref{tab:sha_spec}.
+In its full version, the step function is iterated 80 times (divided in four rounds of 20 steps).
 
 The internal state of $\blockE$ consists in five 32-bit registers $(\mathcal{A}_i, \mathcal{B}_i, \mathcal{C}_i, \mathcal{D}_i, \mathcal{E}_i)$; at each step, a 32-bit \emph{expanded} message word $\expmess_i$ derived from
 a message block $\messblock$

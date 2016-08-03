@@ -734,7 +734,7 @@ However, as we have $2^{i+2} - 2^{i+1} - 2^{i} = 2^{i}$, the alternative XOR dif
 must be 0; this difference may then happen with probability $2^{-1}$.
 \end{example}
 
-We can use the effect showed in the above example to increase the probability of a successful introduction of perturbations in series of local collisions; this is however at the condition that
+We can use the effect showed in \autoref{ex:bit_comp} to increase the probability of a successful introduction of perturbations in series of local collisions; this is however at the condition that
 the ``compressed'' XOR difference obtained as a result is compatible with the following corrections, which are still located on multiple bits. Fortunately, this condition is always fulfilled
 provided: (1) That the single difference is not absorbed or flipped in a Boolean function (this is the usual condtion for a successful correction); (2) That the chain of consecutive differences
 is not broken through the bit rotations (this is a ``hard'' condition that determines if a series of neighbouring local collisions can indeed be compressed). We illustrate this by continuing
@@ -742,7 +742,7 @@ our previous example.
 
 \begin{example}[Correction of compressed differences]
 \label{ex:bit_comp2}
-Let us use modular differences again. Consider the case of Example~\ref{ex:bit_comp} and assume that the introduction of the perturbation resulted in the modular and XOR difference
+Let us use modular differences again. Consider the case of \autoref{ex:bit_comp} and assume that the introduction of the perturbation resulted in the modular and XOR difference
 $\widetilde{x} + \widetilde{y} = (x + y) + 2^{i}  = (x + y) \oplus 2^{i}$. Assume that this difference is preserved through the step function, excluding the addition of the message,
 resulting in a partial state $z, \widetilde{z}$ with $\widetilde{z} = z + 2^{i}$. This partial state is rotated to the left by $r \in \{0, 5, 30\}$ in the computation of the new state,
 and the differences in the message at this point are at positions $\alpha = i + r\mod32$, $\beta = i+1+r \mod 32$, $\gamma = i+2+r \mod 32$ and of sign opposite the ones of the initial perturbation,

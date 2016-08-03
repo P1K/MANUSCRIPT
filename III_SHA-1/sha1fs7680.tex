@@ -56,9 +56,9 @@
   urlcolor=Violet
 }
 
-\renewcommand{\thetable}{\thesection-\arabic{table}}
+\renewcommand{\thetable}{\thesection.\arabic{table}}
 \makeatletter\@addtoreset{table}{section}\makeatother
-\renewcommand{\thefigure}{\thesection-\arabic{figure}}
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
 \makeatletter\@addtoreset{figure}{section}\makeatother
 
 \renewcommand{\labelitemi}{--}
@@ -157,11 +157,11 @@
 
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 
-\newtheorem{fact}{Fact}
-\newtheorem{prop}{Proposition}
+\newtheorem{fact}{Fact}[section]
+\newtheorem{prop}{Proposition}[section]
 \theoremstyle{definition}
-\newtheorem{defi}{Definition}
-\newtheorem{example}{Example}
+\newtheorem{defi}{Definition}[section]
+\newtheorem{example}{Example}[section]
 
 %\lstdefinestyle{customc}{
 %  belowcaptionskip=1\baselineskip,
@@ -191,6 +191,10 @@
 \renewcommand{\subsectionautorefname}{Section}
 \renewcommand{\subsubsectionautorefname}{Section}
 \newcommand{\appendixref}[1]{\hyperref[#1]{Appendix~\ref*{#1}}}
+\newcommand{\defiautorefname}{Definition}
+\newcommand{\listingautorefname}{Listing}
+\newcommand{\exampleautorefname}{Example}
+%[1]{\hyperref[#1]{Appendix~\ref*{#1}}}
 
 % For custom thanks symbols
 \makeatletter
@@ -200,7 +204,7 @@
 
 
 \title{
-Practical freestart collision attacks on \textswab{SHA-1}\thanks{This article presents two recent works on practical freestart collision attacks on \shaone in a unified and expanded way:
+Practical freestart collision attacks on \textswab{SHA-1}\thanks{This article presents two recent papers on practical freestart collision attacks on \shaone in a unified and expanded way:
 the 76-step attack of Karpman \etal from CRYPTO~2015~\cite{DBLP:conf/crypto/KarpmanPS15,76stepFull} and the 80-step (full) attack of Stevens \etal from
 EUROCRYPT~2016~\cite{DBLP:conf/eurocrypt/StevensKP16,80stepFull}.}
 }

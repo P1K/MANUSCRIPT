@@ -58,7 +58,6 @@ message that needs to be signed (say ``$\messhash$'') and to sign the digest ins
 It is obvious that for such a scheme to work, the function $\hash$ needs to be at least resistant to second preimages. If this were not the case, an adversary could intercept a message $\messhash$
 signed by $A$, replace $\messhash$ by $\messhash'$ such that the two messages collide through $\hash$, and claim that $A$ signed $\messhash'$.
 Collision resistance is also important for similar reasons.
-%TODO ref TLS??
 
 \paragraph{Password hashing} is another common setting where hash functions may be useful. In this case, we assume that a certain entity wishes to allow users to authenticate themselves
 through passwords; consequently, it must remember the valid password of each user. As there would be obvious security issues with the entity storing the passwords themselves, an idea
@@ -67,14 +66,12 @@ the passwords (or some equivalent input), provided that $\hash$ is preimage-resi
 
 In this setting, second preimage and collision resistance are not strictly needed. However, it should be noted that even when built with a secure hash function,
 the scheme just described above has severe issues, which descriptions are beyond the scope of this article.
-%TODO ref??
 
-\paragraph{Hash-based signatures.} A less common use of hash functions is to utilise them to directly define signature schemes. We will not describe such schemes in detail
+\paragraph{Hash-based signatures.} A less common use of hash functions is to utilise them to directly define signature schemes (see \eg \cite{DBLP:conf/crypto/Merkle87}). We will not describe such schemes in detail
 here, but it is interesting to mention a few of their specificities. Similarly as other schemes using hash functions, only preimage resistance is needed. The main
 idea of the schemes is that the signing party makes some digests public while keeping their inputs secret; signing a message then consists in selectively revealing some of
 these inputs. Thus, being able to compute preimages for the hash function breaks the scheme, but collisions are not a threat.
-A distinguishing feature of hash-based signatures is that the hash function may only need to be used on input of short, possibly fixed size. 
-%TODO ref
+A distinguishing feature of hash-based signatures is that the hash function may only need to be used on inputs of short, possibly fixed size. 
 
 \paragraph{Message authentication codes.} The last possible usage of hash functions that we detail here is the building of \emph{message authentication codes}, or MACs, which
 can somehow be seen as the keyed variants of hash functions. A MAC takes as input a key $\key$ and a message $\messhash$ and outputs a tag $\tagg = \mac(\key, \messhash)$.
@@ -82,9 +79,8 @@ If an adversary does not know the key, it should be hard for him to find a valid
 or imposed by a challenger. These notions correspond to \emph{existential} (for the former) and \emph{universal} (for the latter) \emph{forgery}. Of course, it is also
 higly necessary that no tag collisions occur, whether or not these happen on specific messages requested by an adversary.
 
-Hash functions seem to be good candidates to build MACs, and indeed generic hash function based constructiosn such as HMAC are popular. However, the exact security of
-these constructions is not always easy to establish, and there are usually faster alternatives such as \emph{polynomial MACs}.
-%TODO ref HMAC, HMAC attacks?, one poly mac
+Hash functions seem to be good candidates to build MACs, and indeed generic hash function based constructiosn such as HMAC~\cite{DBLP:conf/crypto/BellareCK96} are popular. However, the exact security of
+these constructions is not always easy to establish, and there are usually faster alternatives such as MACs based on universal/polynomial hash functions (see \eg~\cite{DBLP:conf/crypto/BlackHKKR99}).
 
 \subsubsection{\merkdam hash functions}
 \label{sec:mdhf}
@@ -174,7 +170,6 @@ can be realized with hash functions: if a high-level construction is not secure 
 one can never hope to make it so when instantiating the oracle by a concrete hash function. However, even if a construction is secure in such a model, it is not necessarily true that
 this will still be the case once instantiated.
 
-%TODO autoref defi
 The \merkdam functions from \autoref{sec:mdhf} exhibit som of this \emph{non-ideal behaviours},
 in the sense that there are some properties that can be realised through algorithms that are more efficient for \merkdam functions than for random oracles.
 
@@ -277,18 +272,40 @@ faster functions) and security (a larger capacity giving more secure functions).
 In particular, Bertoni \etal showed in 2008 that similarly as chop-MD, the sponge construction instantiated with a random function or permutation is $\varepsilon$-indifferentiable from a random oracle
 of the same output size, with $\varepsilon \approx 2^{-c}q^2$~\cite{DBLP:conf/eurocrypt/BertoniDPA08}. To achieve the classical security requirements of a hash function, it is thus optimal to take $c = 2n$.
 
-One of the best example of a sponge function is \keccak~\cite{KeccakReference}, which became the \shathree standard in 2015~\cite{Nist-SHA3}. 
+One of the best examples of a sponge function is \keccak~\cite{KeccakReference}, which became the \shathree standard in 2015~\cite{Nist-SHA3}. 
 
 \subsection{The \mdsha family}
 \label{sec:mdsha}
+We briefly present the ``\mdsha'' hash function family, both because it is of somewhat historical importance and because, the function studied in this article, \shaone, is one of its members.
 
-% MD-SHA from MD4 (ARX+Bool, Multiple-branch Feistel)
-% SHA-0, SHA-1
-% '98 and '05 attacks
-% Note that preimage is much harder (e.g. MD4, SHA-1)
+The family originated in 1990 with the \mdfour function, introduced by Rivest~\cite{Rivest-md4}. An attack on a reduced version was quickly found by den Boer and Bosselaers~\cite{DBLP:conf/crypto/BoerB91},
+and Rivest proposed \mdfive as a stengthened version of \mdfour~\cite{Rivest-md5}. Bosselaers proposed \ripemd in 1992 as another attempt at strengthening \mdfour~\cite[Chap. 3]{DBLP:books/sp/BosselaersP95},
+and the NSA did the same the following year by introducing the first generation of the SHS/SHA algorithms~\cite{Nist-SHA0}. Both algorithms were quickly modified in 1996 and 1995 respectively~\cite{DBLP:conf/fse/DobbertinBP96,Nist-SHA1}.
+Some later algorithms such as \shatwo~\cite{Nist-SHA}, introduced in 2002, also trace their roots back to \mdfour.
+
+Their are some variations inside members of the family; notably, \ripemd uses a parallel structure for its compression function. We specifically list below features that are shared by \mdfour, \mdfive and \sha, but they are also
+true for other \mdsha functions to a large extent.
+\begin{itemize}
+\item The \merkdam construction is used as a domain extender.
+\item The compression function is built from an \emph{ad-hoc} block cipher used in a \emph{Davies-Meyer} mode. Let $\blockE(x,y)$ be the encryption of the plaintext $y$ with the key $x$ by the cipher $\blockE$, then
+the compression function is defined by
+$\chain_{i+1} \defas \blockE(\messblock_{i+1},\chain_i) \boxplus \chain_i$.
+\item The block cipher inside the compression function is an unbalanced Feistel network that uses modular additions, XORs, bit rotations, and bitwise Boolean functions as constitutive elements. Its key schedule is linear, and (very) fast to compute. 
+\end{itemize}
+
+With the advent of the NIST \shathree competition, which ran from 2007 to 2012, much more diversity was introduced to hash function design. However, the \mdsha family was still influential in many competition candidates, and it remains so today.
 
 \subsection{Contributions of this thesis}
 
+In this thesis, we present a joint work with Thomas Peyrin and Marc Stevens on freestart collisions for the \shaone hash function, \ie attacks breaking the security of the function according to \autoref{def:free_coll}. Hash function
+collisions (attacks w.r.t. \autoref{def:coll}) had already been presented by Wang \etal in 2005~\cite{DBLP:conf/crypto/WangYY05a}, but their high complexity made the explicit computation of a collision for the full function unfeasible
+at the time (and no such collision is publicly known at the time where this thesis was written). The novelty of our work comes from the fact that we were able to explicitly compute collisions for the entire compression function
+of \shaone. Furthermore, most of the methods developed during this research can be smoothly translated to the hash function case, which lead to more accurate, cheaper estimates for the cost of a hash function collision.
 
-% This work: practical freestart on GPUs
-% Another work: preimages on SHA-1
+This work was published in two papers: a first attack on \shaone reduced to 76 steps was published at CRYPTO~2015~\cite{DBLP:conf/crypto/KarpmanPS15},
+and an improved attack on the full 80-step compression function was published at EUROCRYPT~2016~\cite{DBLP:conf/eurocrypt/StevensKP16}. 
+
+\medskip
+
+In a joint work with Thomas Espitau and Pierre-Alain Fouque, we also improved the preimage attacks on \shaone. This lead to another paper published at CRYPTO~2015 \cite{DBLP:conf/crypto/EspitauFK15}. However, we do not detail this contribution
+in this manuscript.

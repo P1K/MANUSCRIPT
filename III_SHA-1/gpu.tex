@@ -266,8 +266,7 @@ significantly reducing the number of accesses to the slower global memory.
 \subsubsection{An example of snippet function}
 \label{sec:snippet}
 
-%TODO autoref
-We now illustrate the discussion of this section by providing a commented snippet from the 76-step attack given in Listing~\ref{lst:snippet_example} (written in \textsf{CUDA C/C++}), namely a function that is taking partial solutions up to $\state_{22}$  and that is
+We now illustrate the discussion of this section by providing a commented snippet from the 76-step attack given in \autoref{lst:snippet_example} (written in \textsf{CUDA C/C++}), namely a function that is taking partial solutions up to $\state_{22}$  and that is
 trying to extend them up to $\state_{23}$ using neutral bits on $\expmess_{19}$. Its structure is a straightforward application of the framework, and is fairly representative of most of the
 code of both of our attacks (although some snippets may at first seem more complex due to their use of neutral bits located on several distinct message words).
 
