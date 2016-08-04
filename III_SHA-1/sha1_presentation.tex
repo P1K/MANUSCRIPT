@@ -4,10 +4,10 @@
 This section gives a brief description of the \shaone hash function, going again over some features already presented in \autoref{sec:intro}. We refer to the most recent NIST standard document~\cite{Nist-SHA} for a more thorough
 presentation.
 
-\shaone is a hash function from the ``\mdsha'' family which produces digests of $160$ bits.
-Its high-level structure follows the Merkle-Damg{\aa}rd structure~\cite{DBLP:conf/crypto/Merkle89a,DBLP:conf/crypto/Damgard89a}: the input message to the function
-is first padded to a length multiple of a certain \emph{block size} (which is 512 bits in the case of \shaone), defining $k$ similarly-sized blocks.
-Each block $\messblock_i$ is then fed to a \emph{compression function} $\compress$ which is used to update a 160-bit \emph{chaining value} $\chain_i$:
+\shaone is a hash function from the \mdsha family which produces digests of $160$ bits.
+Its high-level structure follows the Merkle-Damg{\aa}rd framework~\cite{DBLP:conf/crypto/Merkle89a,DBLP:conf/crypto/Damgard89a}: the input message to the function
+is first padded to a length multiple of the block size, which is 512 bits, defining $k$ similarly-sized blocks.
+Each block $\messblock_i$ is then fed to a compression function $\compress$ which is used to update a 160-bit chaining value $\chain_i$:
 $\chain_{i+1} \defas \compress(\chain_i,\messblock_{i})$.
 The first chaining value $\chain_0$ is a predefined constant set to an initial value \iv given in the specifications of the function, and the last value $\chain_k$ is the final output of the hash function.
 The padding rule of \shaone is a straightforward application of \merkdam strengthening; it is at least 65-bit long and is made of one `1' bit followed by a (possibly zero)
@@ -19,7 +19,7 @@ Note that neither the padding nor the \iv actually play any role in our attacks.
 \caption{\label{tab:sha_iv}The initial value (\iv) of \shaone.}
 \begin{center}
 \begin{tabular}{c c c c c} \toprule
-$A_0$:\texttt{0x67452301} & $B_0$:\texttt{0xefcfab89} & $C_0$:\texttt{0x98badcfe} & $D_0$:\texttt{0x10325476} & $E_0$:\texttt{0xc3d2e1f0} \\ 
+$\mathcal{A}_0$:\texttt{0x67452301} & $\mathcal{B_0}$:\texttt{0xefcfab89} & $\mathcal{C_0}$:\texttt{0x98badcfe} & $\mathcal{D_0}$:\texttt{0x10325476} & $\mathcal{E_0}$:\texttt{0xc3d2e1f0} \\ 
 \bottomrule
 \end{tabular}
 \end{center}
@@ -32,7 +32,7 @@ Similarly to other members of the \mdsha family, the compression function $\comp
 The block cipher itself is a five-branch generalized Feistel network using an Add-Rotate-XOR ``ARX'' step function with the addition of two non-linear Boolean functions, see \autoref{tab:sha_spec}.
 In its full version, the step function is iterated 80 times (divided in four rounds of 20 steps).
 
-The internal state of $\blockE$ consists in five 32-bit registers $(\mathcal{A}_i, \mathcal{B}_i, \mathcal{C}_i, \mathcal{D}_i, \mathcal{E}_i)$; at each step, a 32-bit \emph{expanded} message word $\expmess_i$ derived from
+The internal state of $\blockE$ consists of five 32-bit registers $(\mathcal{A}_i, \mathcal{B}_i, \mathcal{C}_i, \mathcal{D}_i, \mathcal{E}_i)$; at each step, a 32-bit \emph{expanded} message word $\expmess_i$ derived from
 a message block $\messblock$
 is used to update the five registers:
 
@@ -48,7 +48,7 @@ is used to update the five registers:
 \right.	
 \]
 
-\noindent with $\mathcal{K}_i$ a constant and $\boolF_i$ a bitwise Boolean function (see \autoref{tab:sha_spec} for their specifications).
+\noindent with $\mathcal{K}_i$ a constant and $\boolF_i$ one of three possible bitwise Boolean functions (see \autoref{tab:sha_spec} for their specifications).
 We give a graphical representation of this step function in \autoref{fig:sha1_step}.
 From this figure and the definition of the function, one can notice that all updated registers except $\mathcal{A}_{i+1}$ are just rotated copies of another;
 thus it is possible to equivalently express \shaone's step function in a recursive way, using only (past values of) the register $\mathcal{A}$. The definition then becomes:
@@ -58,7 +58,7 @@ thus it is possible to equivalently express \shaone's step function in a recursi
 \end{equation}
 
 \noindent
-With this notation, the output of one application of the compression function is made of the last five state words, $\mathcal{A}_{76}\ldots \mathcal{A}_{80}$.
+With this notation, the output of one application of the compression function is made of the (possibly rotated) last five state words, $\mathcal{A}_{76}\ldots \mathcal{A}_{80}$.
 
 \begin{figure}[ht]
 \begin{center}

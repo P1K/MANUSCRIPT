@@ -44,8 +44,8 @@ the definition devoid of sense.
 
 \bigskip
 
-The nature of the notions used to define security for cryptographic hash functions is based on requirements from the various cases where they may be used in concrete cryptosystems or protocols.
-Depending on situation, not all three above resistance may be necessary; for instance, it may be the case that collision resistance is not required, or that, say, only second preimage resistance
+The nature of the properties used to define security for cryptographic hash functions is based on requirements from the various cases where they may be used in concrete cryptosystems or protocols.
+Depending on the situation, resistance w.r.t. all three properties from above may not be necessary; for instance, it may be the case that collision resistance is not required, or that, say, only second preimage resistance
 is relevant. However, a hash function is usually expected to be used in a certain number of settings, and it is thus understandingly expected to be secure against all attacks.
 
 We only briefly sketch some possible uses of hash functions here, as an illustration.
@@ -53,27 +53,27 @@ We only briefly sketch some possible uses of hash functions here, as an illustra
 \paragraph{Hash and sign signatures} are one of the main settings where hash functions may be employed; the objective is, given a digital signature
 algorithm $\sign$, to efficiently and securely sign \emph{long} messages. Directly doing so using $\sign$ is usually not an option, because signature algorithms are rather slow (especially compared
 to hash functions, which are typically at least $500 \sim 1000$ times faster) and may not behave well on long messages. A useful alternative is instead to first compute the digest of the
-message that needs to be signed (say ``$\messhash$'') and to sign the digest instead of the whole message. One then gives an output of the form $(\messhash, \sign(\key,\hash(\messhash)))$. 
+message that needs to be signed (say ``$\messhash$'') and to sign the digest instead of the whole message. One then gives an output of the form $(\messhash, \sign(\key,\hash(\messhash)))$, with $\key$ a private key for $\sign$. 
 
 It is obvious that for such a scheme to work, the function $\hash$ needs to be at least resistant to second preimages. If this were not the case, an adversary could intercept a message $\messhash$
 signed by $A$, replace $\messhash$ by $\messhash'$ such that the two messages collide through $\hash$, and claim that $A$ signed $\messhash'$.
 Collision resistance is also important for similar reasons.
 
 \paragraph{Password hashing} is another common setting where hash functions may be useful. In this case, we assume that a certain entity wishes to allow users to authenticate themselves
-through passwords; consequently, it must remember the valid password of each user. As there would be obvious security issues with the entity storing the passwords themselves, an idea
+through passwords. Consequently, it must remember the valid password of each user. As there would be obvious security issues with the entity storing the passwords themselves, an idea
 is to instead store their images through a hash function $\hash$. Thus, if an adversary finds the database of users and their associated (hashed) passwords, he would be unable to find
 the passwords (or some equivalent input), provided that $\hash$ is preimage-resistant.
 
-In this setting, second preimage and collision resistance are not strictly needed. However, it should be noted that even when built with a secure hash function,
+In this setting, second preimage and collision resistance are not strictly needed. However, it should be noted that even when built from a secure hash function,
 the scheme just described above has severe issues, which descriptions are beyond the scope of this article.
 
 \paragraph{Hash-based signatures.} A less common use of hash functions is to utilise them to directly define signature schemes (see \eg \cite{DBLP:conf/crypto/Merkle87}). We will not describe such schemes in detail
-here, but it is interesting to mention a few of their specificities. Similarly as other schemes using hash functions, only preimage resistance is needed. The main
+here, but it is interesting to mention a few of their specificities. Similarly as other systems using hash functions, only preimage resistance is needed. The main
 idea of the schemes is that the signing party makes some digests public while keeping their inputs secret; signing a message then consists in selectively revealing some of
 these inputs. Thus, being able to compute preimages for the hash function breaks the scheme, but collisions are not a threat.
 A distinguishing feature of hash-based signatures is that the hash function may only need to be used on inputs of short, possibly fixed size. 
 
-\paragraph{Message authentication codes.} The last possible usage of hash functions that we detail here is the building of \emph{message authentication codes}, or MACs, which
+\paragraph{Message authentication codes.} The last possible usage of hash functions that we describe here is the building of \emph{message authentication codes}, or MACs, which
 can somehow be seen as the keyed variants of hash functions. A MAC takes as input a key $\key$ and a message $\messhash$ and outputs a tag $\tagg = \mac(\key, \messhash)$.
 If an adversary does not know the key, it should be hard for him to find a valid (message, tag) pair for $\mac(\key, \cdot)$, with the message either being of his choosing
 or imposed by a challenger. These notions correspond to \emph{existential} (for the former) and \emph{universal} (for the latter) \emph{forgery}. Of course, it is also
@@ -87,23 +87,23 @@ these constructions is not always easy to establish, and there are usually faste
 
 One of the first frameworks for hash function design to have been developed is the so-called \merkdam construction, that was independently developed by
 Merkle and Damg\aa rd in 1989~\cite{DBLP:conf/crypto/Merkle89a,DBLP:conf/crypto/Damgard89a}. The idea of this construction is to make the arbitrary-length
-inputs to a hash function manageable by defining it as the iteration of \emph{compression function} with a small fixed-size (co-)domain.
+inputs to a hash function manageable by defining the latter as the iteration of a \emph{compression function} with a small fixed-size (co-)domain.
 This makes the overall design much easier, but without \emph{a priori} ensuring that the resulting function will be secure. The main contribution of
 Merkle and Damg\aa rd in that respect is to give a construction such that the security of the function can be (partially) reduced to the one of
 the compression function: they show that for \eg collision attacks, an attack on the hash function can be exploited to build an attack on the compression function.
-Taking the contrapositive, as long as there are no collision attacks on the compression function, we can be confident that the hash function is secure in that respect.
+Taking the contrapositive, as long as there are no collision attacks on the compression function, we can be confident that the hash function is secure against this kind of attacks.
 This is quite similar in a way to building symmetric cryptosystems by combining a secure block cipher and a secure mode of operation.
 
 The construction works as following. A compression function $\compress : \{0,1\}^n \times \{0,1\}^b \rightarrow \{0,1\}^n$
 takes two inputs: a \emph{chaining value} $\chain$ and a \emph{message block} $\messblock$, and produces another chaining value as output.
 The hash function $\hash$ associated with $\compress$ is built by extending the domain of the latter to $\{0,1\}^*$ (or rather $\{0,1\}^N$ for a large $N$, most of the time).
 This is done by specifying an \emph{initial value} \iv for the first chaining value $\chain_0$, which is a constant for the hash function, and by defining the image
-of a message $\mess$ by $\hash$ through the following process:
+of a message $\mess$ through $\hash$ by the following process:
 \begin{enumerate}
 \item $\mess$ is padded to a size multiple of the message block size $b$. Various padding rules may be employed, but it is obviously important that they should not
 introduce trivial collisions. Most of the time, the size (usually in bits) of the non-padded message $\mess$ is included in the padding in one way or the other.
 This is usually called \merkdam-strengthening, and it is essential to make many of the common instantiations of the framework secure\footnote{One issue that
-could arise in the absence of such strengthening is that fixed-points of the compression function could be used to produce collisions; such fixed-points
+could arise in the absence of such strengthening is that fixed-points for the compression function could be used to produce collisions; such fixed-points
 are easy to build for some popular compression function constructions (including the \emph{Davies-Meyer} construction
 of the \mdsha family described in \autoref{sec:mdsha}).}.
 \item The padded message is then iteratively fed to the compression function: call $\messblock_0||\messblock_1||\linebreak\ldots||\messblock_r$ this message (assuming
@@ -139,8 +139,8 @@ of the message, which is different. Thus $(\chain_r,\messblock_r)$ and $(\chain'
 
 Case 2: $\mess$ and $\mess'$ are of the same length. Assume w.l.o.g. that the messages fit on $r + 1$ blocks after padding.
 Call $i$ the highest block number such that $\messblock_{i} \neq \messblock'_{i}$. If $i = r$, then $(\chain_r,\messblock_r)$ and $(\chain'_{r}, \messblock'_{r})$
-are distinct and collide through $\compress$. If $i < r$, either $\chain_{i+1} = \chain'_{i+1}$, thus $(\chain_i,\messblock_i)$ and $(\chain'_{i}, \messblock'_{i})$
-form a valid collision pair for $\compress$, otherwise, we have a non-empty sequence of input pairs $(\chain_j, \messblock_j)$ and $(\chain'_j, \messblock'_j)$,
+are distinct and collide through $\compress$. If $i < r$, either $\chain_{i+1} = \chain'_{i+1}$ (thus $(\chain_i,\messblock_i)$ and $(\chain'_{i}, \messblock'_{i})$
+form a valid collision pair for $\compress$), or, we have a non-empty sequence of input pairs $(\chain_j, \messblock_j)$ and $(\chain'_j, \messblock'_j)$,
 $j = i+1\ldots r$ such that $\messblock_j = \messblock'_j$ for all $j$. As $\chain_{r+1} = \chain'_{r+1}$, at least one element of the sequence
 collides through $\compress$. The two input pairs in the first one to do so are different, and thus form a valid collision for $\compress$.
 \end{proof}
@@ -170,23 +170,23 @@ can be realized with hash functions: if a high-level construction is not secure 
 one can never hope to make it so when instantiating the oracle by a concrete hash function. However, even if a construction is secure in such a model, it is not necessarily true that
 this will still be the case once instantiated.
 
-The \merkdam functions from \autoref{sec:mdhf} exhibit som of this \emph{non-ideal behaviours},
+The \merkdam functions from \autoref{sec:mdhf} exhibit some of this \emph{non-ideal behaviours},
 in the sense that there are some properties that can be realised through algorithms that are more efficient for \merkdam functions than for random oracles.
 
 A good example of such a property is the concept of \emph{multicollision}, where one is required to find $r > 2$ messages $\messhash_{0},\ldots,\messhash_{r-1}$ which images through $\hash$
 are all equal. The generic complexity (\eg for a random oracle) of this problem is $\bigo(2^{n\times (r-1)/r})$ calls to $\hash$ for an $n$-bit function, but Joux showed how to
 find $2^r$-multicollisions in time $\bigo(r\times 2^{n/2})$ for \merkdam hash functions~\cite{DBLP:conf/crypto/Joux04}.
 The basic idea used in this attack is that collisions for a \merkdam function $\hash$ can be chained together to lead to an exponentially growing number of distinct messages hashing
-to the same value. We can easily see this with a simple case: assume that an attacker found two distinct colliding messages $\mess_0$ and $\mess'_0$ of the same length;
+to the same value. We can easily see this with a small example: assume that an attacker found two distinct colliding messages $\mess_0$ and $\mess'_0$ of the same length;
 this can be done generically at a cost of $2^{n/2}$. One then looks for a second collision for the function $\widetilde \hash$ obtained by replacing the initial chaining
 value $\chain_0$ by $\hash(\mess_0) = \hash(\mess'_0)$; this can again be obtained for a cost of $2^{n/2}$, resulting in $\mess_1$ and $\mess'_1$. Then, thanks to
 the chaining property of the \merkdam construction, we have found four colliding messages $\mess_0||\mess_1$, $\mess'_0||\mess_1$, $\mess_0||\mess'_1$, $\mess'_0||\mess'_1$\footnote{We ignore
 padding details here, but these can be easily worked out.}. It is easy to see how this generalizes to longer messages, leading to the quoted complexity of $\bigo(r \times 2^{n/2})$.
-We can observe that one of the weaknesses of the construction that is exploited here is that a hash collision (which can be obtained generically in $2^{n/2}$ time) is also
-a collision for the \emph{internal state}. We will briefly see in \autoref{sec:betterhash} that increasing the size of the state of a function is indeed a way to make it resistant
+We can observe that one of the weaknesses of the construction that is exploited here is that a hash collision is also
+a collision for the \emph{internal state} of the hash function. We will briefly see in \autoref{sec:betterhash} that increasing the size of the state of a function is indeed a way to make it resistant
 to such attacks.
 
-Another good example, which this time directly violates the security property from \autoref{def:2pre}, are the second preimage attacks for long messages, again on \merkdam functions.
+Another good example for \merkdam, which this time directly violates the security property from \autoref{def:2pre}, consists in second preimage attacks for long messages.
 Dean~\cite{dean}, and later Kelsey and Schneier~\cite{DBLP:conf/eurocrypt/KelseyS05} showed how one can again exploit the structure of the function and internal collisions to compute a second preimage
 of a long message more efficiently than with a generic algorithm. The complexity of Kelsey and Schneier's attack to find a second preimage for a message
 of $2^k$ \emph{blocks} is $\approx \bigo(2^{n-k+1})$ calls to $\hash$. This means that \merkdam hash functions are actually inherently insecure, if we adhere
@@ -195,14 +195,14 @@ the practical use of \merkdam functions, and indeed functions following this fra
 
 \bigskip
 
-We already hinted in \autoref{sec:mdhf} that an attack on a compression function would void the security reduction of a \merkdam function employing it. Thus it seems natural to also
+We already mentioned in \autoref{sec:mdhf} that an attack on a compression function would void the security reduction of a \merkdam function employing it. Thus it seems natural to also
 analyse the security of the compression functions themselves. An attack would in this case demonstrate a non-ideal behaviour of the second kind we mentioned above, not targeting
 a hash function in itself but one of its building blocks. There is a natural way to generalise the security properties expressed in \autoref{def:pre} $\sim$ \autoref{def:coll} to this context,
 leading to the notion of \emph{(semi-)freestart} attacks:
 
 \begin{defi}[Freestart preimage]
 A \emph{freestart preimage} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $(\freeiv,\messblock)$
-of an \iv and a message that $\hash_\freeiv(\messblock) = \targ$, with $\hash_\freeiv(\cdot)$ denoting
+of an \iv and a message such that $\hash_\freeiv(\messblock) = \targ$, with $\hash_\freeiv(\cdot)$ denoting
 the hash function $\hash$ with its original \iv replaced by $\freeiv$.
 \label{def:free_pre}
 \end{defi}
@@ -221,22 +221,22 @@ of two \iv and message pairs such that $\hash_\freeiv(\messblock) = \hash_{\free
 
 It can be noted that if the two messages of, say, a freestart collision pair are one-block long, the definition above becomes equivalent to the one of a collision
 on the compression function $\compress$ used to build $\hash$.
-There is little difference between the two in general, the feature of freestart attacks precisely being that they may (partially) exploit the chaining value
-of the compression function as an additional input compared to hash function attacks.
+There is little difference between the two in general, the feature of freestart attacks precisely being that compared to hash function attacks, they may (partially) exploit the additional available input offered by the chaining value
+of the compression function.
 
 
 \bigskip
 
 Lastly, a somehow loosely defined addition to the security notions presented so far is the concept of \emph{distinguishers}, which denote non-ideal behaviours
 of a hash function that are not otherwise captured by the previous definitions. We will not give a precise definition here, as these are made tricky by
-the unkeyed nature of hash functions. Instead, we just briefly mention an example of such a distinguisher for the compression function of the \shaone hash function.
+the unkeyed nature of hash functions. Instead, we just briefly mention an example of such a distinguisher for the compression function of \shaone.
 
 Jumping ahead, we will see in \autoref{sec:description} that the \iv and the message block of \shaone's compression function are made of five and sixteen
 32-bit words respectively. In 2003, Saarinen showed that \emph{slid pairs} could be found for this compression function for a cost equivalent to $2^{32}$
 function calls~\cite{DBLP:conf/fse/Saarinen03}. Such pairs are made of two \ivs $\state_{0,\ldots4}$, $\state'_{0,\ldots,4}$ and messages $\mess_{0,\ldots,15}$,
 $\mess'_{0,\ldots,15}$ with $\state'_i = \state_{i-1}$ and $\mess'_i = \mess_{i-1}$\footnote{We skip here the details of how to determine the starting values $\state'_0$ and $\mess'_0$.}, such that the
 pair of outputs of the function called on these inputs also has this property. Although it is not expected of a random function to exhibit such a property, there is no clear way to use it to mount
-an attack against the main and secondary security objectives from above.
+an attack against the main and secondary security properties defined above.
 
 
 \subsubsection{Modern hash function frameworks}
@@ -251,15 +251,15 @@ an arbitrary truncation function from $m > n$ to $n$ bits, we may define the $n$
 as $\lfloor\hash(\cdot)\rfloor_n$, with $\hash$ a standard \merkdam function built from $\compress$. Some variations are possible, for instance by considering other mappings from $m$ to $n$
 bits instead of just a truncation.
 
-One can easily see that a hash collision for such a function does not anymore imply a collision for the internal state. By choosing $m$ to be sufficiently large (for instance taking $m = 2n$),
+One can easily see that a hash collision for such a function does not anymore imply a collision for its internal state. By choosing $m$ to be sufficiently large (for instance taking $m = 2n$),
 one can achieve generic resistance to, say, multicollisions. In fact, Coron \etal proved that this construction is a secure \emph{domain extender for random oracles}, in the sense that
 if the compression function is a fixed-size random oracle, using it in a chop-MD mode yields a function that is $\varepsilon$-indifferentiable from a random oracle (in the sense of Maurer \etal~\cite{DBLP:conf/tcc/MaurerRH04})
 with $\varepsilon \approx 2^{-t}q^2$, $t = m - n$ being the number of truncated bits and $q$ the number of queries to $\compress$. In the light of \autoref{sec:refining_md}, this is a very useful result, as it
-says that no non-ideal behaviour is introduced by the domain-extending construction. Such hash functions are thus expected to behave closely to the random oracles they may be expected to instantiate, as long as
+says that unlike plain \merkdam, no non-ideal behaviour is introduced by the domain-extending construction. Such hash functions are thus expected to behave closely to the random oracles they may be expected to instantiate, as long as
 their compression functions are ``ideal'' and that they are not queried too much w.r.t. to the size of their parameters.
 
 \paragraph{Sponge construction.} The sponge construction was introduced in 2007 by Bertoni \etal~\cite{SpongeFunctions}. It is quite distinct from the \merkdam framework, notably because it does not use a compression
-function as building block, but a function of equally-sized domain and co-domain. In most work, this function is even taken to be bijective.
+function as building block, but a function of equally-sized domain and co-domain. Usually, this function is even taken to be bijective.
 
 The construction in itself is simple. Assume we want to build an $n$-bit function based on a $b$-bit permutation $\perm$. We define the \emph{rate} $r$ and the \emph{capacity} $c$ as two integers such that
 $b = r + c$. Then, hashing the message $\mess$ consists in padding it to a length multiple of $r$ and to process it iteratively
@@ -276,10 +276,10 @@ One of the best examples of a sponge function is \keccak~\cite{KeccakReference},
 
 \subsection{The \mdsha family}
 \label{sec:mdsha}
-We briefly present the ``\mdsha'' hash function family, both because it is of somewhat historical importance and because, the function studied in this article, \shaone, is one of its members.
+We now briefly present the ``\mdsha'' hash function family, both because it is of somewhat historical importance and because, the function studied in this article, \shaone, is one of its members.
 
 The family originated in 1990 with the \mdfour function, introduced by Rivest~\cite{Rivest-md4}. An attack on a reduced version was quickly found by den Boer and Bosselaers~\cite{DBLP:conf/crypto/BoerB91},
-and Rivest proposed \mdfive as a stengthened version of \mdfour~\cite{Rivest-md5}. Bosselaers proposed \ripemd in 1992 as another attempt at strengthening \mdfour~\cite[Chap. 3]{DBLP:books/sp/BosselaersP95},
+and Rivest proposed \mdfive as a stengthened version of \mdfour~\cite{Rivest-md5}. Bosselaers proposed \ripemd in 1992 as another attempt to strengthen \mdfour~\cite[Chap. 3]{DBLP:books/sp/BosselaersP95},
 and the NSA did the same the following year by introducing the first generation of the SHS/SHA algorithms~\cite{Nist-SHA0}. Both algorithms were quickly modified in 1996 and 1995 respectively~\cite{DBLP:conf/fse/DobbertinBP96,Nist-SHA1}.
 Some later algorithms such as \shatwo~\cite{Nist-SHA}, introduced in 2002, also trace their roots back to \mdfour.
 
@@ -287,19 +287,20 @@ Their are some variations inside members of the family; notably, \ripemd uses a 
 true for other \mdsha functions to a large extent.
 \begin{itemize}
 \item The \merkdam construction is used as a domain extender.
-\item The compression function is built from an \emph{ad-hoc} block cipher used in a \emph{Davies-Meyer} mode. Let $\blockE(x,y)$ be the encryption of the plaintext $y$ with the key $x$ by the cipher $\blockE$, then
+\item The compression function is built from an \emph{ad-hoc} block cipher used in a \emph{Davies-Meyer} mode: let $\blockE(x,y)$ be the encryption of the plaintext $y$ with the key $x$ by the cipher $\blockE$, then
 the compression function is defined by
 $\chain_{i+1} \defas \blockE(\messblock_{i+1},\chain_i) \boxplus \chain_i$.
 \item The block cipher inside the compression function is an unbalanced Feistel network that uses modular additions, XORs, bit rotations, and bitwise Boolean functions as constitutive elements. Its key schedule is linear, and (very) fast to compute. 
 \end{itemize}
 
-With the advent of the NIST \shathree competition, which ran from 2007 to 2012, much more diversity was introduced to hash function design. However, the \mdsha family was still influential in many competition candidates, and it remains so today.
+With the advent of the NIST \shathree competition, which ran from 2007 to 2012, much more diversity was introduced to hash function design. However, the \mdsha family still had an influence on many competition candidates, and it remains
+influential as of today.
 
 \subsection{Contributions of this thesis}
 
-In this thesis, we present a joint work with Thomas Peyrin and Marc Stevens on freestart collisions for the \shaone hash function, \ie attacks breaking the security of the function according to \autoref{def:free_coll}. Hash function
+In this chapter, we present a joint work with Thomas Peyrin and Marc Stevens on freestart collisions for the \shaone hash function, \ie attacks breaking the security of the function according to \autoref{def:free_coll}. Hash function
 collisions (attacks w.r.t. \autoref{def:coll}) had already been presented by Wang \etal in 2005~\cite{DBLP:conf/crypto/WangYY05a}, but their high complexity made the explicit computation of a collision for the full function unfeasible
-at the time (and no such collision is publicly known at the time where this thesis was written). The novelty of our work comes from the fact that we were able to explicitly compute collisions for the entire compression function
+at the time (and no such collision was publicly known at the time where this thesis was written). The novelty of our work comes from the fact that we were able to explicitly compute collisions for the entire compression function
 of \shaone. Furthermore, most of the methods developed during this research can be smoothly translated to the hash function case, which lead to more accurate, cheaper estimates for the cost of a hash function collision.
 
 This work was published in two papers: a first attack on \shaone reduced to 76 steps was published at CRYPTO~2015~\cite{DBLP:conf/crypto/KarpmanPS15},
@@ -307,5 +308,5 @@ and an improved attack on the full 80-step compression function was published at
 
 \medskip
 
-In a joint work with Thomas Espitau and Pierre-Alain Fouque, we also improved the preimage attacks on \shaone. This lead to another paper published at CRYPTO~2015 \cite{DBLP:conf/crypto/EspitauFK15}. However, we do not detail this contribution
+In a joint work with Thomas Espitau and Pierre-Alain Fouque, we also improved the preimage attacks on \shaone. This led to another paper published at CRYPTO~2015 \cite{DBLP:conf/crypto/EspitauFK15}. However, we do not detail this contribution
 in this manuscript.

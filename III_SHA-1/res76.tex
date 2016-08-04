@@ -172,7 +172,7 @@ W75:	 . G . . . . . . . . . . . . . . . . . . . . . . . . 0 . . . . .
 
 \subsection{The neutral bits}
 \label{sec:neutral_bits76}
-We give here the list of the neutral bits used in the 76-step attack.
+We give here the list of the neutral bits used in the attack.
 There are fifty-one of them over the eight message words
 $\expmess_{14}$ to $\expmess_{21}$, distributed as
 follows:
@@ -268,7 +268,8 @@ Finally, on the implementation side, we show how the neutral bits are packed tog
 bit comes from, and the number is the bit position in this original word. For instance, in \autoref{fig:nb_packing76}, \begin{tikzpicture}[scale=0.67,transform shape]\draw[fill=Cerulean!85] (0,0) circle (.3) node{13};\end{tikzpicture}
 is the value of the thirteenth bit (starting from zero) in some instance of $\expmess_{14}$ (\ie $\expmess_{14}[13]$); the fact that this circle is the leftmost one in the top sequence means that in the buffer, this information is stored as the MSB
 of the first word.
-One should note that not all consecutive bits of a message (for a certain window) are neutral; non-neutral bits do not need to be stored, but it is nonetheless useful to maintain in the packing the relative distance between the actual neutral bits.
+One should note that not all consecutive bits of a message (for a certain window) are neutral; non-neutral bits do not need to be stored, but it is nonetheless useful to maintain the relative distance between the actual neutral bits inside
+the packing.
 For instance, there is no neutral bit on $\expmess_{15}[15]$, thus this bit is not included \emph{per se} in \autoref{fig:nb_packing76}, but a padding bit is added instead.
 This is shown as \begin{tikzpicture}[scale=0.67,transform shape]\draw[fill=Rhodamine!30] (0,0) circle (.3) node{.};\end{tikzpicture}.
 

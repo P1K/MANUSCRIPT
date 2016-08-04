@@ -22,7 +22,7 @@ used in our attacks.}.
 
 %\paragraph{Number of cores and scheduling.}
 A modern GPU can feature more
-than a thousand of small cores, that are packed together in a small
+than a thousand small cores, that are packed together in a small
 number of larger ``multiprocessor'' execution units. Taking the example of the
 Nvidia \gtx for concreteness, there are 13 multiprocessors of 128 cores each,
 making 1664 cores in total~\cite{gtx970_specs}. The fastest instructions
@@ -97,7 +97,7 @@ be run in a more serial fashion, typically on CPU. Indeed, if inputs to such a p
 a highly parallel way.
 
 
-The sort of decomposition used for the GPU phase of our attack as described above is in no way constrained by the specifics of \shaone collision search.
+The sort of decomposition used for the GPU phase of our attack as described above is in no way constrained by the specific context of a \shaone collision search.
 In fact, it is quite general, and we believe that it can be successfully applied to many an implementation of (symmetric) cryptographic
 attacks. We conclude this section by giving more details of the application of this approach to the case of \shaone.
 
@@ -128,12 +128,12 @@ produced very slowly. For instance, a single \gtx produces partial solutions up 
 %\paragraph{Complete process of the attack.}
 A complete implementation of an attack mostly consists in the snippets and supporting functions, such as buffer management.
 Connecting the snippets together is straightforward; every warp tries to work with partial solutions that are up
-to the latest step for which enough solutions are available; \ie it visits the buffer of partial solutions in order from the top,
+to the latest step for which enough solutions are available, \ie it visits the buffer of partial solutions in order from the top,
 stopping at the first that is able to feed it entirely.
 In the worst case where none of the buffers are full enough, it simply resorts to using base solutions.
 
 In practice, warps spend most of their time feeding on partial solutions that are valid up to a rather late step; for instance, in the 76-step attack,
-about 90\% of the time is spent on $\state_{24}$ or higher, which is at most two steps away from the latest step where neutral bits are available.
+about 90\% of the time is spent on $\state_{24}$ or higher, which is at most two steps away from the latest one where neutral bits are available.
 Thus, work on early steps and in particular on base solutions is done only intermittently.
 
 We conclude this high-level description by giving a simplified flow chart
@@ -202,17 +202,17 @@ approach we followed in our implementations, with an added refinement.
 \medskip
 
 We have already mentioned in the past section that \eg the 76-step attack contains neutral bits acting on a wide range of steps, from $\state_{18}$
-to $\state_{26}$; the range for the 80-step attack is even wider, due to the use of boomerangs; the neutral bits themselves are located on many message
+to $\state_{26}$; the range for the 80-step attack is even wider, due to the use of boomerangs. Additionally, the neutral bits themselves are located on many message
 words. Thus, it would seem wasteful to recompute the action of paste neutral bits on message words as low as $\expmess_{14}$ while in the snippet corresponding
-\eg to $\state_{24}$. Consequently, we have a strong incentive to store intermediary partial solutions so as to save some of this recomputation.
+\eg to $\state_{24}$. Consequently, we have a strong incentive to store intermediary partial solutions in order to save some of this recomputation.
 
 In the 76-step case, there is a natural location that may be used to define what we call \emph{extended base solutions}. As we will detail in
 \autoref{sec:res_76}, neutral bits located on words $\expmess_{14}$ to $\expmess_{18}$ are only used up to $\state_{21}$, and the ones located
 on words $\expmess_{19}$ to $\expmess_{21}$ are only used in later steps. Thus, it would make sense that once the active bits up to
-$\expmess_{19}$ have all been determined, only the modified message words and the corresponding value for the state should be stored. There is
+$\expmess_{18}$ have all been determined, only the modified message words and the corresponding value for the state should be stored. There is
 however no need to keep again sixteen message words in such an extended base solution, as most of them are identical to the ones of the corresponding
 base solution (and as a base solution is in general extended into many distinct extended base solutions, it would not make sense to \eg add enough
-message words to the latter and erasing the former). There is one last subtlety in the definition of the extended base solution, which is that
+message words to the latter and erasing the former). One subtlety in the definition of this extended base solution is that
 it also includes the message word $\expmess_{20}$. Although no neutral bits on this word are yet to be used at the point where the solution is
 formed, some of its bits may need to be flipped depending on the use of neutral bits on words $\expmess_{15}$ and $\expmess_{16}$, so as to
 preserve message bit relations. A convenient way to remember this information is simply to preemptively add the possible contributions of the neutral
@@ -224,7 +224,7 @@ The ``inter-snippet'' buffers that refer to changes from a base or extended base
 segments of the message words containing neutral bits and of a reference to the associated solution.
 
 The 80-step attack uses similar representations but with a few variations. As we will show in \autoref{sec:res_80}, there are
-more possible corrections to be performed in the 80-step attack to preserve message bit relations. Consequently, some of the precomputations of
+more possible corrections on the messages to be performed in the 80-step attack to preserve message bit relations. Consequently, some of the precomputations of
 individual neutral bit contributions are stored alongside the actual neutral bits. It is also slightly less immediate to determine where to
 start defining an extended base solution, as there is no natural separation between the location of various neutral bits as there were in
 the 76-step case. This is not a major issue, however, as the location of the neutral bits of a same word shared between base and extended base solutions
@@ -249,7 +249,7 @@ synchronization mechanisms when updating the buffers' content,
 thence reducing the overhead inherent to the use of such shared data structures.
 Taken together, the buffers thus use a significant portion of the 4\,GB memory available on the \gtx, needing in the neighbourhood of 3\,GB.
 
-We also carefully took into account the presence of a limited amount of
+We carefully took into account the presence of a limited amount of
 very fast multiprocessor-specific shared memory. While the 96\,KB available per multiprocessor is
 hardly enough to store the whole buffers themselves, we take advantage of it by dissociating the storage of
 the buffers and of the meta-data used for their control logic, the latter being held in
@@ -383,7 +383,7 @@ best-performing GPU; this increases slightly to $2^{50.34}$ when considering the
 Comparatively, on a Haswell Core-i5 running at 3.2\,GHz, the OpenSSL implementation of \shaone
 can compute $2^{23.47}$ compression functions per second on one core. A CPU implementation of our attack
 on the same processor leads to an expected time to collision of 606.12 core-days, which translates to a complexity of $2^{49.1}$
-compression function calls.
+compression function calls\footnote{This could probably be improved by vectorizing part of the CPU implementation.}.
 This means that a single \gtx is worth 322 such CPU cores when computing the \shaone compression function, and 138 cores when
 running our attack program (this increases to 146 for the best-performing GPU).
 While this drop in relative efficiency was to be expected, it is somehow surprisingly small given the
