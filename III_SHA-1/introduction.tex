@@ -14,15 +14,15 @@ A \emph{cryptographic} hash function\footnote{We will obviously only consider su
 to $\hash$ that verify some conditions. There are three ``classical'' security properties that must be met (at least to some extent)
 by any secure hash function; in an informal way, they can be expressed as:
 \begin{defi}[Preimage resistance] Given a target $\targ$, an \emph{adversary} must not be able to find a message $\messhash$ such that $\hash(\messhash) = \targ$ with non-negligible probability using
-less computational ressources than what is required to compute $\hash$ $\bigo(2^n)$ times.
+less computational resources than what is required to compute $\hash$ $\bigo(2^n)$ times.
 \label{def:pre}
 \end{defi}
 \begin{defi}[Second preimage resistance] Given a message $\messhash$, an adversary must not be able to find a different message $\messhash'$ such that
-$\hash(\messhash) = \hash(\messhash')$  with non-negligible probability using less computational ressources than what is required to compute $\hash$ $\bigo(2^n)$ times.
+$\hash(\messhash) = \hash(\messhash')$  with non-negligible probability using less computational resources than what is required to compute $\hash$ $\bigo(2^n)$ times.
 \label{def:2pre}
 \end{defi}
 \begin{defi}[Collision resistance] One must not be able to find two distinct ``fresh'' messages $\messhash$ and $\messhash'$ such that $\hash(\messhash) =
-\hash(\messhash')$ with non-negligible probability using less computational ressources than what is required to compute $\hash$ $\bigo(2^{n/2})$ times.
+\hash(\messhash')$ with non-negligible probability using less computational resources than what is required to compute $\hash$ $\bigo(2^{n/2})$ times.
 \label{def:coll}
 \end{defi}
 
@@ -77,9 +77,9 @@ A distinguishing feature of hash-based signatures is that the hash function may 
 can somehow be seen as the keyed variants of hash functions. A MAC takes as input a key $\key$ and a message $\messhash$ and outputs a tag $\tagg = \mac(\key, \messhash)$.
 If an adversary does not know the key, it should be hard for him to find a valid (message, tag) pair for $\mac(\key, \cdot)$, with the message either being of his choosing
 or imposed by a challenger. These notions correspond to \emph{existential} (for the former) and \emph{universal} (for the latter) \emph{forgery}. Of course, it is also
-higly necessary that no tag collisions occur, whether or not these happen on specific messages requested by an adversary.
+highly necessary that no tag collisions occur, whether or not these happen on specific messages requested by an adversary.
 
-Hash functions seem to be good candidates to build MACs, and indeed generic hash function based constructiosn such as HMAC~\cite{DBLP:conf/crypto/BellareCK96} are popular. However, the exact security of
+Hash functions seem to be good candidates to build MACs, and indeed generic hash function based constructions such as HMAC~\cite{DBLP:conf/crypto/BellareCK96} are popular. However, the exact security of
 these constructions is not always easy to establish, and there are usually faster alternatives such as MACs based on universal/polynomial hash functions (see \eg~\cite{DBLP:conf/crypto/BlackHKKR99}).
 
 \subsubsection{\merkdam hash functions}
@@ -279,7 +279,7 @@ One of the best examples of a sponge function is \keccak~\cite{KeccakReference},
 We now briefly present the ``\mdsha'' hash function family, both because it is of somewhat historical importance and because, the function studied in this article, \shaone, is one of its members.
 
 The family originated in 1990 with the \mdfour function, introduced by Rivest~\cite{Rivest-md4}. An attack on a reduced version was quickly found by den Boer and Bosselaers~\cite{DBLP:conf/crypto/BoerB91},
-and Rivest proposed \mdfive as a stengthened version of \mdfour~\cite{Rivest-md5}. Bosselaers proposed \ripemd in 1992 as another attempt to strengthen \mdfour~\cite[Chap. 3]{DBLP:books/sp/BosselaersP95},
+and Rivest proposed \mdfive as a strengthened version of \mdfour~\cite{Rivest-md5}. Bosselaers proposed \ripemd in 1992 as another attempt to strengthen \mdfour~\cite[Chap. 3]{DBLP:books/sp/BosselaersP95},
 and the NSA did the same the following year by introducing the first generation of the SHS/SHA algorithms~\cite{Nist-SHA0}. Both algorithms were quickly modified in 1996 and 1995 respectively~\cite{DBLP:conf/fse/DobbertinBP96,Nist-SHA1}.
 Some later algorithms such as \shatwo~\cite{Nist-SHA}, introduced in 2002, also trace their roots back to \mdfour.
 

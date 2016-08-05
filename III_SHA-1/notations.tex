@@ -1,44 +1,57 @@
 \section{Notations}
 \label{sec:not}
 
-\begin{figure}[!htb]
+We use a few notations in this article. \autoref{table:symbs} gives the meaning of various standard symbols and \autoref{table:appbitconditions} shows the signification of the symbols used to denote bit differences between two states.
+Additionally, we use the following conventions: \shaone states, messages, and expanded messages are respectively denoted by $\state$, $\mess$, $\expmess$; for a variable $x$, the corresponding variable related by a specific
+difference is noted $\widetilde{x}$, the difference itself is denoted by $\diff(x,\widetilde{x})$ or $\diff x$; two different variables of the same type are noted $x$, $x'$ when their difference is not specific;
+a variable that can be seen as an array can have its words accessed through a subscript, indices starting from zero, \eg $x_2$ is the third word of $x$; a variable that can be seen as a fixed-size binary number
+can have its bits accessed through a bracket notation, indices starting from zero, \eg $x[31]$ is the thirty-second bit of $x$; 
+numbers written in hexadecimal use a fixed-space font and the \emph{0x} prefix, \eg \texttt{0x1337}; we sometimes also write numbers in base two, in which case they are written with a subscript $b$, \eg $1010_b$.
+Various additional shorthands are introduced throughout the text.
+
+\begin{table}[!htb]
+\caption{Meaning of standard symbols.}\label{table:symbs}
+\begin{center}
+\begin{tabular}{c c}
+\toprule
+Symbol & Meaning\\
+\midrule
+$\oplus$ & Bitwise exclusive or\\
+$+$ & Modular addition\\
+$\boxplus$ & Modular addition, word-wise modular addition\\
+$-$ & Modular subtraction\\
+$\vee$ & Bitwise logical or\\
+$\wedge$ & Bitwise logical and\\
+$\neg$ & Bitwise complementation\\
+$\circlearrowleft r$ & Bit rotation by $r$ to the left\\
+$\circlearrowright r$ & Bit rotation by $r$ to the right\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[!htb]
 {\centering\small%
+\caption{Meaning of the bit difference symbols, for a symbol located on $\state_t[i]$. The same symbols are also used for $\expmess$.}\label{table:appbitconditions}
 \begin{tabular}{c c}
   \toprule
-  Symbol & Condition on ($\state$,$\diff\state$) \\
+  Symbol & Condition on ($\state$,$\dstate$) \\
 	\midrule
-  \nodiff & $\state_t[i] = \diff\state_t[i]$  \\
-  \onediff & $\state_t[i] \neq \diff\state_t[i]$  \\
-  \onediffu & $\state_t[i] = 0$, \quad $\diff\state_t[i] = 1$  \\
-  \onediffd & $\state_t[i] = 1$, \quad $\diff\state_t[i] = 0$  \\
-  $\mnodiffz$ & $\state_t[i] = \diff\state_t[i] = 0$\\
-  $\mnodiffo$ & $\state_t[i] = \diff\state_t[i] = 1$ \\
+  \nodiff & $\state_t[i] = \dstate_t[i]$  \\
+  \onediff & $\state_t[i] \neq \dstate_t[i]$  \\
+  \onediffu & $\state_t[i] = 0$, \quad $\dstate_t[i] = 1$  \\
+  \onediffd & $\state_t[i] = 1$, \quad $\dstate_t[i] = 0$  \\
+  $\mnodiffz$ & $\state_t[i] = \dstate_t[i] = 0$\\
+  $\mnodiffo$ & $\state_t[i] = \dstate_t[i] = 1$ \\
   \midrule
-  \equaup & $\state_t[i] = \diff\state_t[i] = A_{t-1}[i]$ \\
-  \diffup & $\state_t[i] = \diff\state_t[i] \neq A_{t-1}[i]$ \\
-	\equarightup & $\state_t[i] = \diff\state_t[i] = (A_{t-1} \circlearrowright 2)[i]$  \\
-	\diffrightup & $\state_t[i] = \diff\state_t[i] \neq (A_{t-1} \circlearrowright 2)[i]$  \\
-	\equarightupup & $\state_t[i] = \diff\state_t[i] = (A_{t-2}  \circlearrowright 2)[i]$  \\
-	\diffrightupup & $\state_t[i] = \diff\state_t[i] \neq (A_{t-2} \circlearrowright 2)[i]$  \\
+  \equaup & $\state_t[i] = \dstate_t[i] = A_{t-1}[i]$ \\
+  \diffup & $\state_t[i] = \dstate_t[i] \neq A_{t-1}[i]$ \\
+	\equarightup & $\state_t[i] = \dstate_t[i] = (A_{t-1} \circlearrowright 2)[i]$  \\
+	\diffrightup & $\state_t[i] = \dstate_t[i] \neq (A_{t-1} \circlearrowright 2)[i]$  \\
+	\equarightupup & $\state_t[i] = \dstate_t[i] = (A_{t-2}  \circlearrowright 2)[i]$  \\
+	\diffrightupup & $\state_t[i] = \dstate_t[i] \neq (A_{t-2} \circlearrowright 2)[i]$  \\
+	\midrule
+	\dunnodiff & No condition on $\state_t[i]$, $\dstate_t[i]$\\
   \bottomrule
 \end{tabular}\\}
-\caption{Meaning of the bit difference symbols, for a symbol located on $\state_t[i]$. The same symbols are also used for $\expmess$, $\diff\expmess$.}\label{table:appbitconditions}
-\end{figure}
-
-% oplus
-
-% boxplus, +
-
-% circlearrow
-
-% state
-
-% mess
-
-% expmess
-
-% \compress etc.
-
-% hexadecimal
-
-% logical and, or, complementation
+\end{table}

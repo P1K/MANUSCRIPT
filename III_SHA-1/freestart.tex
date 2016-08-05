@@ -1,7 +1,7 @@
 \section{A framework for freestart collisions for SHA-1}
 \label{sec:framework}
 This section presents in detail our framework for freestart collision attacks on \shaone. We start by presenting our general approach to such attacks
-in \autoref{sec:why_free}, and the addition and improvements to existing techniques that were developped to make the attacks possible in \autoref{sec:attack_techs}.
+in \autoref{sec:why_free}, and the addition and improvements to existing techniques that were developed to make the attacks possible in \autoref{sec:attack_techs}.
 
 \subsection{Faster collisions by exploiting more freedom}
 \label{sec:why_free}
@@ -11,7 +11,7 @@ the attacker by providing him with an additional input. It is thus expected that
 collisions), not unlike attacking a reduced version of a function, using fewer steps.
 
 However, it is not necessarily clear in general how to efficiently exploit the additional input in a freestart attack. We describe below our strategy in that respect
-in the case of \shaone. Note that unlike hash function attacks \emph{à la} Wang, our freestart collisiosn use only one block, which has some consequences building
+in the case of \shaone. Note that unlike hash function attacks \emph{à la} Wang, our freestart collisions use only one block, which has some consequences building
 the attack.
 
 \medskip
@@ -31,7 +31,7 @@ up to a later point in the attack. Being able to do so would mechanically make t
 of satisfying potential conditions when computing backward to the corresponding \iv (this computation being eventually necessary to fully determine the colliding inputs).
 
 In the case of a freestart attack, the entire freedom of the \iv implies that no \emph{a priori} constraints are set in the middle initialization. This is in contrast to a hash function attack, where
-the necessity for the backward-computed \iv to be of a specific value makes the approach less powerful, altough potentially still useful.
+the necessity for the backward-computed \iv to be of a specific value makes the approach less powerful, although potentially still useful.
 
 
 %We briefly review below some cases of past attacks on hash functions (not necessarily freestart) using this sort of approach.
@@ -75,7 +75,7 @@ it harder to connect to the \iv with few conditions. Additionally, it may decrea
 
 \subsubsection{New constraints for the accelerating techniques.}
 The necessity of satisfying bit conditions in a backward computation also imposes some constraints on the accelerating techniques that can be used. These all have in common that they work by
-selectively changing the value of some bits of the message. As the structure of our attacks imples shifting down the free window of the message, changing a bit in this window may also impact
+selectively changing the value of some bits of the message. As the structure of our attacks implies shifting down the free window of the message, changing a bit in this window may also impact
 the value of the first few message words that are computed with the backward message expansion. This may potentially result in unwanted interactions with the ability to satisfy the backward bit conditions.
 
 In short, the selection of accelerating techniques (\eg neutral bits) must take into account their ``back effects'', which may disqualify some otherwise good candidates.
@@ -134,7 +134,7 @@ $i$ & $\state_i$ & $\mess_i$\\
 
 Through the course of the preparation of the attacks, we tried both methods for constructing the extension of the non-linear path, \ie a guess-and-determine and a meet-in-the-middle approach.
 We have found that the meet-in-the-middle approach allowed to find paths with fewer conditions, and that it allowed a better control of the position where some of these conditions were located.
-A slight downside of our meet-in-the-middle implementation, however, is that it did not give strict guarantees that the paths it produced were completely valid, as they may innclude contradictory conditions
+A slight downside of our meet-in-the-middle implementation, however, is that it did not give strict guarantees that the paths it produced were completely valid, as they may include contradictory conditions
 (for instance in the high-density part of the path where many differences are located). However, this issue could usually be resolved by considering slight variations of the impossible path, which
 we were able to do efficiently with a guess-and-determine method.
 % TODO doesn't completely reflect the 80-step. Is that a real problem tho?
@@ -156,7 +156,7 @@ yet including state differences conforming to the disturbance vector was practic
 
 \item \textsc{Do not consider path variants not used in the attack.} Originally JLCA considered the possible carry propagations for local collisions  as this improves the overall probability (the probability of variants of paths adding up). 
 However, until a certain step (say, 25), a typical attack implementation requires the partial solutions to strictly follow the main differential path, and thus variants induced by carry propagations do not add any contribution.
-For these steps JLCA would thus optimize for the wrong model, wich includes all variants.
+For these steps JLCA would thus optimize for the wrong model, which includes all variants.
 We thus improved JLCA by not adding up the probability of paths over the first 25 steps, but only by taking the maximum probability. 
 %We propose to do this by redefining the cumulative probabilities $p_{(\mathcal{P},w)}$ from~\cite[Sec 4.6]{DBLP:conf/eurocrypt/Stevens13} to:
 %\[ p_{(\mathcal{P},w)} = \max_{\widehat{\mathcal{P}}_{[0,25]}\in\mathcal{D}_{[0,25]}} 

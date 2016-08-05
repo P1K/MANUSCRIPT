@@ -11,7 +11,7 @@ for potentially complex code to be conveniently deployed on GPUs. However, the d
 
 GPUs have already been used with some success in heavy-computation cryptography, notably to aid in integer factorization or in finding discrete
 logarithms~\cite{DBLP:conf/asiacrypt/BosK12,DBLP:conf/ches/MieleBKL14,DBLP:conf/eurocrypt/BarbulescuGGM15,DBLP:phd/hal/Jeljeli15}, and also for collision attacks on reduced \shaone~\cite{cryptoeprint:2011:641}.
-Even if the latter case in particular is essentially identical to our own, we nonetheless developped our GPU framework for implementing collision attacks from scratch.
+Even if the latter case in particular is essentially identical to our own, we nonetheless developed our GPU framework for implementing collision attacks from scratch.
 
 \subsection{GPU architecture and programming model}
 
@@ -170,7 +170,7 @@ of the GPU part of the 76-step attack in \autoref{fig:attack_diagram}, made slig
 We now give more details about the implementations of the attacks. In particular, we discuss
 how partial solutions are represented at various steps in \autoref{sec:part_sol} and
 we comment the code of a snippet function in \autoref{sec:snippet}. We very briefly discuss how
-to tune GPU setttings to use them more efficiently in \autoref{sec:gpu_tune}.
+to tune GPU settings to use them more efficiently in \autoref{sec:gpu_tune}.
 
 \subsubsection{Representation of partial solutions}
 \label{sec:part_sol}

@@ -54,8 +54,8 @@ control on the message words is available. It is also a good first objective, as
 
 \medskip
 
-Let us assume that we have full control over six consecutive expanded message words $\dstate$: $\expmess_{i\ldots i + 5}$ and $\dexpmess_{i\ldots i + 5}$
-used in the computation of two related \sha states $\state$, and that we have $\expmess_j = \dexpmess_j$ for $j < i$.
+Let us assume that we have full control over six consecutive expanded message words: $\expmess_{i\ldots i + 5}$ and $\dexpmess_{i\ldots i + 5}$
+used in the computation of two related \sha states $\state$, $\dstate$ and that we have $\expmess_j = \dexpmess_j$ for $j < i$.
 
 The first step of a local collision is to introduce a difference (so that the two messages are not consistently equal, as we are not interested in any trivial equality),
 for instance in one bit. For the linear variant \shiun, the exact index where this difference is introduced does not matter much;
@@ -380,9 +380,9 @@ This was the approach taken in the original attack on \shazero, and it results i
 for the vector of \autoref{fig:shaz_dv}, and $2^{61}$ for another good disturbance vector~\cite{DBLP:conf/crypto/ChabaudJ98}.
 
 Although this is already an attack that is significantly faster than a brute-force approach, it remains fairly expensive, and no explicit collision for \shazero was computed at the time\footnote{Even
-nearly twenty years later, such an attack requires considerable ressources; it would roughly be comparable in cost with the full free-start collision for \shaone which is the main topic of
+nearly twenty years later, such an attack requires considerable resources; it would roughly be comparable in cost with the full free-start collision for \shaone which is the main topic of
 this article.}.
-A series of techniques were later developped to make such attacks considerably more efficient, which ultimately led to the first explicit collision on \shazero~\cite{DBLP:conf/eurocrypt/BihamCJCLJ05}.
+A series of techniques were later developed to make such attacks considerably more efficient, which ultimately led to the first explicit collision on \shazero~\cite{DBLP:conf/eurocrypt/BihamCJCLJ05}.
 These improvements were of two kinds: (1) Chaining multiple blocks to enable the use of better \dvs; (2) Using \emph{neutral bits} to make the probabilistic phase of the attack more efficient.
 The first improvement as originally used for \shazero was later superseded by the two-block attack structure of Wang \etal, used both for improved attacks on \shazero
 and for the first full theoretical attack on \shaone~\cite{DBLP:conf/crypto/WangYY05,DBLP:conf/crypto/WangYY05a},
@@ -403,7 +403,7 @@ This definition can be generalized by considering groups of bits that need to be
 change the sign of some bits of local collisions later in the expanded message.
 
 In general, one can distinguish two (not mutually excluding) approaches to finding neutral bits: either running a random search across many partial solutions; or using the propagation properties of the step function to identify
-good candidates. In particular, the latter approach found a powerful expression with the technique of auxiliary differential paths (or \emph{boomerangs}), first developped for \shaone~\cite{DBLP:conf/crypto/JouxP07}
+good candidates. In particular, the latter approach found a powerful expression with the technique of auxiliary differential paths (or \emph{boomerangs}), first developed for \shaone~\cite{DBLP:conf/crypto/JouxP07}
 and which led to the currently fastest attacks on \shazero~\cite{DBLP:conf/fse/ManuelP08}.
 
 A boomerang in that context is a small set of neutral bits that are particularly efficient when activated together (\ie of the first kind mentioned above), in particular because they define a local collision (or possibly
@@ -415,14 +415,14 @@ local collisions with fewer necessary corrections.
 
 We conclude this short summary on \shazero by giving an illustration of the different phases of a one-block attack on \shazero in \autoref{fig:struct_shazero}. The two main rectangles represent the state and
 expanded messages of a computation of \shazero. The diagonal lines (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=north west lines] (0,0) rectangle (1,1);\end{tikzpicture}\,,
-\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=north east lines] (0,0) rectangle (1,1);\end{tikzpicture}\,) represent areas ot the state and messages that are fixed for an attack; any state condition within this zone is deterministically fulfilled.
+\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=north east lines] (0,0) rectangle (1,1);\end{tikzpicture}\,) represent areas of the state and messages that are fixed for an attack; any state condition within this zone is deterministically fulfilled.
 The non-diagonal lines in the message represent bits that are used to generate many message pairs in the hope that one leads to a collision; horizontal lines
 (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=horizontal lines] (0,0) rectangle (1,1);\end{tikzpicture}\,) do so purely probabilistically, and vertical lines
 (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=vertical lines] (0,0) rectangle (1,1);\end{tikzpicture}\,)
 represent neutral bits which are useful to amortize the cost of finding partial solutions; the (completely determined) remainder of the expanded message is left blank.
 Finally, dots
 (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=dots] (-1,-1) rectangle (0,0);\end{tikzpicture}\,)
-represent conditions that need to be fufilled probabilistically.
+represent conditions that need to be fulfilled probabilistically.
 %; denser zones indicate a higher probability
 %of satisfying all conditions within. 
 
@@ -437,7 +437,7 @@ represent conditions that need to be fufilled probabilistically.
 \label{sec:full_sha1}
 
 Having discussed the original attacks on \shazero, we now turn our attention to \shaone for the rest of this article. Although both functions are very similar, their different message expansion makes a direct
-application of attacks on \shazero in the form discussed above unapplicable to the full \shaone. We now discuss the new techniques that were developped for that purpose and some of their
+application of attacks on \shazero in the form discussed above inapplicable to the full \shaone. We now discuss the new techniques that were developed for that purpose and some of their
 subsequent improvements:
 \begin{enumerate}
 \item The use of \emph{non-linear} differential paths and of a two-block attack structure is the main improvement that makes full attacks on \shaone possible (\autoref{sec:nl_struct}).
@@ -487,7 +487,7 @@ The main reason why this structure may be used is that a non-linear propagation 
 better \dvs.
 
 \paragraph{Non-linear model for the propagation of local collisions.}
-We have mentioned some limitations of using a purely linear model to establish the differential path in the state $\diff\state$. In a non-linear model, we do not
+We have mentioned some limitations of using a purely linear model to establish the state differential path $\diff\state$. In a non-linear model, we do not
 try to systematically avoid differences in the carry propagation of $\state$ and $\dstate$, which also implies that not every local collision will be systematically
 corrected.
 
@@ -526,13 +526,13 @@ a collision.
 \medskip
 
 The main difficulty in using non-linear paths is to find the paths themselves, as there is a large number of possible behaviours to take into account.
-The search was initially done by hand for the first attack on \shaone, but automated tools were later developped to make this process much
+The search was initially done by hand for the first attack on \shaone, but automated tools were later developed to make this process much
 more efficient. One can for instance cite the work of De~Cannière and Rechberger~\cite{DBLP:conf/asiacrypt/CanniereR06}, who used a guess-and-determine
 approach to find new non-linear paths, leading in particular to an explicit two-block collision for \shaone reduced to the at-the-time record number of 64 steps.
 
 The idea of the guess-and-determine method is to define a set of \emph{constraints} that encode a differential path, along with an efficient constraint-propagation
-algorithm. One then starts from an underdefined initial path with many unconstraint differences (but with the conditions for the \iv and for the connecting
-linear path already set) and iteratively chooses an unconstraint difference at random, assigns it a value, and propagates the consequences of this choice.
+algorithm. One then starts from an underdefined initial path with many unconstrained differences (but with the conditions for the \iv and for the connecting
+linear path already set) and iteratively chooses an unconstrained difference at random, assigns it a value, and propagates the consequences of this choice.
 A backtracking strategy is also used to escape situations where no more valid choices are possible. A path is found when every constraint is either a signed
 difference or a (possibly signed) equality.
 
@@ -712,7 +712,7 @@ as a \emph{special counting rule} and later named as such by Yajima \etal~\cite{
 improve the joint probability of two (or more) neighbouring local collisions being successful by making it as high as for a single one. In a nutshell, the idea is to introduce the initial perturbations
 using a chain of differences all
 having the same sign, except for the last one, and to let the carry propagate from the first
-perturbation to the other ones instead of preventing such a propagation everytime.
+perturbation to the other ones instead of preventing such a propagation every time.
 Let us see how this may work on an example with three neighbouring differences.
 
 \begin{example}[Compression of three differences]
@@ -732,7 +732,7 @@ must be 0; this difference may then happen with probability $2^{-1}$.
 
 We can use the effect showed in \autoref{ex:bit_comp} to increase the probability of a successful introduction of perturbations in series of local collisions; this is however at the condition that
 the ``compressed'' XOR difference obtained as a result is compatible with the following corrections, which are still located on multiple bits. Fortunately, this condition is always fulfilled
-provided: (1) That the single difference is not absorbed or flipped in a Boolean function (this is the usual condtion for a successful correction); (2) That the chain of consecutive differences
+provided: (1) That the single difference is not absorbed or flipped in a Boolean function (this is the usual condition for a successful correction); (2) That the chain of consecutive differences
 is not broken through the bit rotations (this is a ``hard'' condition that determines if a series of neighbouring local collisions can indeed be compressed). We illustrate this by continuing
 our previous example.
 
@@ -809,7 +809,7 @@ $\phantom{bouh}$
 
 \noindent
 We have just considered how the propagation of carries may influence the probability of a single local collision and of neighbouring local collisions started on the same step. We now consider how to account for similar effects
-that impact the joint success probability of local collisions sharing some common steps. We have already mentioned in \autoref{sec:dv_sha0} that an anlysis in the spirit of \autoref{sec:diffs_ana} may be done
+that impact the joint success probability of local collisions sharing some common steps. We have already mentioned in \autoref{sec:dv_sha0} that an analysis in the spirit of \autoref{sec:diffs_ana} may be done
 on closely interacting local collisions (for instance on local collisions that share some correction bits or that have some corrections interacting together through the Boolean functions).
 However, this does not take into account the effects of carries, and a more precise study is thus
 possible.
