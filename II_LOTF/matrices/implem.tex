@@ -1,0 +1,351 @@
+\section{Efficient algorithms for matrix-vector multiplication}
+\label{implem}
+
+We now turn to implementation considerations, and present two algorithms
+for matrix-vector multiplication in $\matspace_n(\Fst)$. We let the dimension
+$n$ be equal to 16 in this presentation, but the algorithms apply equally well
+to other (close) values.
+
+%This section presents software algorithms for matrix-vector multiplication over $\Fst$.
+%%We specifically discuss these when the field is $\Fst$, but they can be generalized
+%%at least to some extent.
+%We focus on square matrices of dimension 16.
+%This naturally defines linear operations on 64 bits, which can also be extended to 128 bits,
+%as it will be made clear in \autoref{sec:appli}. Both cases are a common block size for block ciphers.
+
+
+\paragraph{Targeted architecture.}
+The algorithms in this section target CPUs featuring vector instructions, including in particular a
+\emph{vector shuffle} instruction such as Intel's \pshufb{} from the SSSE3 instruction set extension~\cite{ia64}. These instructions are
+now widespread and have already been used successfully in fast cryptographic implementations, see \eg{}~\cite{hamburg,twine,sac2013}.
+We mostly considered SSSE3 when designing the algorithms, but other processor architectures
+do feature vector instructions. This is for instance the case of ARM's NEON extensions, which may also
+yield efficient implementations, see \eg{}~\cite{Bernstein}. We do not consider these explicitly in this paper, however.
+
+Because it plays an important role in our algorithms, we briefly recall the semantics of \pshufb{}.
+This instruction takes two 128-bit inputs\footnote{It can actually also be used on 64-bit operands, but we do not
+consider this possibility here.}. The first (the destination operand) is an \xmm{} SSE vector register which logically represents
+a vector of sixteen bytes. The second (the source operand) is either a similar \xmm{} register, or a 128-bit memory location. The result of calling
+$\pshufb~x~y$ is to overwrite the input $x$ with the vector $x'$ defined by:
+\[
+x'[i] = \left\{
+				\begin{array}{ll}
+				x[\lfloor y[i]\rfloor_4]  & \text{if the most significant bit of $y[i]$ is not set}\\
+				0 & \text{otherwise}
+				\end{array}
+	    \right.
+\]
+where $\lfloor\cdot\rfloor_4$ denotes truncation to the four least significant bits.
+This instruction allows to arbitrarily \emph{shuffle} a vector according to a mask, with possible repetition and omission of some of the vector
+values\footnote{We will use the word \emph{shuffle} with this precise meaning in the remainder of this chapter.}.
+Notice that this instruction can also be used to perform sixteen parallel 4-to-8-bit table lookups: let us call $T$ this table; take
+as first operand to \pshufb{} the vector $x \defas (T[i],~i = 0,\ldots,15)$, as second operand the vector
+$y \defas (a, b, c, d, \ldots)$
+on which to perform the lookup; then we see that the first byte of the result is $x[y[0]] = T[a]$, the second is $x[y[1]] = T[b]$,
+etc.
+
+Finally, let us mention that there is a three-operand variant of this instruction in the more recent AVX instruction set and onward~\cite{ia64},
+which allows not to overwrite the first operand.
+
+
+\paragraph{Targeted properties.} In this paper we focus solely on algorithms that can easily be implemented in a way that makes
+them immune to timing-attacks (see \eg \cite{timinattacks}). Specifically, we consider the matrix as a known constant but the vector as a secret, and we wish to perform
+the multiplication without secret-dependent branches or memory accesses. It might not always be important to be immune (or even partially resistant) to this type
+of attacks, but we consider that it should be important for any cryptographic primitive or structure to \emph{possibly} be implemented in such a way. Hence we try
+to find efficient such implementations for the \shark{} structure and therefore for dense matrix-vector multiplications.
+
+\bigskip
+
+We now go on to describe the algorithms.
+In all of the remainder of this section, $\veci$ and $\veco$ are two (column) vectors of $\Fst^{16}$, and $\mat$ a matrix
+of $\mappi_{16}(\Fst)$.
+%We first briefly discuss two unsatisfactory straightforward ways of implementing matrix-vector multiplication.
+We first briefly recall the principle of table implementations which are generic and efficient but unsatisfactory when timing attacks are taken into account.
+
+\subsection{Table implementation}
+
+
+% \subsubsection{Explicit multiplication.} The first obvious way to compute the multiplication $\veco = \mat\cdot\veci$ is to explicitly
+% compute the vector $\veco = (\veco_i), i \in \{0\ldots15\}$, with $\veco_i = \sum_{j=0}^{15} \mat_{i,j} \cdot \veci_j$.
+% This requires to perform about $16^2 = 256$ multiplications in $\Fst$ for a dense matrix.
+% These multiplications can in turn be performed by table lookups, logarithm tables, or with an ``xtime'' operation (which
+% is equivalent to using a linear-feedback shift register
+% (LFSR)). Whatever the technique used, the number of multiplications required makes this option rather inefficient.
+% In addition, only the in-itself quite slow LFSR multiplication can easily be made insensitive to potential timing attacks, which makes this
+% algorithm even less attractive when these are a concern.
+
+We wish to compute $\veco = \mat\veci$. The idea of table implementations is to use table lookups to perform the equivalent multiplication
+$\veco^t = \veci^t\mat^t$, \ie $\veco^t = \sum_{i = 0}^{15} \veci_i\mat^t_i$.
+This can be computed efficiently by tabulating beforehand the products $\lambda\mat^t_i, \lambda\in\Fst$ (resulting in
+sixteen tables, each of sixteen entries of 64 bits), and then for each
+multiplication by accessing the table for $\mat^t_i$ at the index $\veci_i$ and summing all the retrieved table entries together.
+This only requires sixteen table lookups per multiplication. However, the memory accesses depend on the value of $\veci$,
+which makes this algorithm inherently vulnerable to timing attacks.
+
+Note that there is a more memory-efficient alternative implementation of this algorithm which consists in explicitly computing the multiplications for each term $\lambda\mat^t_i$.
+This can be done with a single \pshufb instruction per matrix row, taking as first operand the table of multiplication by $\lambda$ and as second operand a register representing $\mat^t_i$.
+In that case, only the sixteen multiplication tables need to be stored, but their accesses
+still depend on the secret value $\veci$.
+
+
+\subsection{A generic constant-time algorithm}
+\label{bbased}
+We now describe our first algorithm, which can be seen as a variant of table multiplication that is immune to timing attacks.
+The idea consists again in computing the right multiplication $\veco^t = \veci^t\mat^t$, \ie{} $\veco^t = \sum_{i = 0}^{15} \veci_i\mat^t_i$. However, instead of tabulating
+the results of the scalar multiplication of the matrix rows $\mat^t_i$, those are always recomputed, in a way that does not explicitly depend on the value of the scalar.
+%We first present how to achieve this in a somehow abstract way, and then give an explicit sequence of instructions
+%performing this operation.
+
+\subsubsection{Description of \autoref{alg:broadcast}.}
+%We give the full description of \autoref{alg:1} in appendix \autoref{app:algo}, and focus here on the intuition.
+We start with a high-level description of the algorithm.
+Assume we want to perform the scalar multiplication $\lambda\vect$ for an unknown scalar $\lambda$ and a known, constant vector $\vect \in \Fst^{16}$.
+Let us write $\lambda$ as the polynomial
+$\lambda_3\cdot \alpha^3 + \lambda_2\cdot \alpha^2 + \lambda_1\cdot \alpha + \lambda_0$ with coefficients in $\mathbf{F}_2$.
+Then, the result of $\lambda\cdot\vect$ is simply $\lambda_3\cdot(\alpha^3\cdot\vect) + \lambda_2\cdot(\alpha^2\cdot\vect) + \lambda_1\cdot(\alpha\cdot\vect) + \lambda_0\cdot\vect$.
+Thus we just need to precompute the products $\alpha^i\cdot\vect$, select the right ones with respect to the binary representation
+of $\lambda$, and add these together.
+This can easily be achieved thanks to a \emph{broadcast} function defined as:
+\[
+\broad(x,i)_n = \left\{
+				\begin{array}{ll}
+				\mathbf{1}_n  & \text{if the $i^\text{th}$ bit of $x$ is set}\\
+				\mathbf{0}_n & \text{otherwise}
+				\end{array}
+	    \right.,
+\]
+where $\mathbf{1}_n$ and $\mathbf{0}_n$ denote the $n$-bit binary string made all of one and all of zero respectively.
+The full algorithm then just consists in using this
+scalar-vector multiplication sixteen times, one for each row of the matrix.
+
+This results in \autoref{alg:broadcast}. Note that a similar algorithm was used by Käsper and Schwabe for binary
+matrices of dimension 128~\cite{DBLP:conf/ches/KasperS09}.
+
+\begin{algorithm}[!htb]
+  \caption{Broadcast-based matrix-vector multiplication}
+\label{alg:broadcast}
+\begin{algorithmic}[1]
+  \REQUIRE $\veci \in \Fst^{16}$, $\mat \in \mappi_{16}(\Fst)$
+  \ENSURE  $\veco = \veci^t\cdot\mat^t$\\
+  Offline phase
+  \FOR{$i \in \{0\ldots15\}$}
+  \STATE $8\mat_i \defas \alpha^3\cdot\matvec^i$
+  \STATE $4\mat_i \defas \alpha^2\cdot\matvec^i$
+  \STATE $2\mat_i \defas \alpha\cdot\matvec^i$
+  \ENDFOR\\
+  Online phase
+  \STATE $\veco \defas \mathbf{0}_{64}$
+  \FOR{$i \in \{0\ldots15\}$}
+  \STATE $\upsilon_i^8 \defas 8\mat_i \wedge_{64} \broad(\veci_i,3)_{64}$
+  \STATE $\upsilon_i^4 \defas 4\mat_i \wedge_{64} \broad(\veci_i,2)_{64}$
+  \STATE $\upsilon_i^2 \defas 2\mat_i \wedge_{64} \broad(\veci_i,1)_{64}$
+  \STATE $\upsilon_i^1 \defas  \mat_i \wedge_{64} \broad(\veci_i,0)_{64}$
+  \STATE $\upsilon_i \defas \upsilon_i^8 + \upsilon_i^4 + \upsilon_i^2 + \upsilon_i^1$
+  \STATE $\veco \defas \veco + \upsilon_i$
+  \ENDFOR
+  \RETURN $\veco$
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{Implementation of \autoref{alg:broadcast} with SSSE3 instructions.}
+We now consider how to efficiently implement \autoref{alg:broadcast} in practice. The only
+non-trivial operation that is used is the $\broad$ function, and we show that it can be performed
+with only one or two \pshufb{} instructions.
+
+To compute $\broad(\lambda,i)_{64}$, with $\lambda$ a 4-bit value,
+we can use a single \pshufb{} with first operand
+$x$, such that $x[j] = 11111111_2$ if the $i^\text{th}$ bit of $j$ is set and 0 otherwise, and with second operand $y \defas (\lambda, \lambda, \ldots)$.
+The result of \pshufb{}~$x~y$ is indeed $(x[\lambda], x[\lambda], \ldots)$ which is $\mathbf{1}_{64}$ if the $i^\text{th}$
+bit of $\lambda$ is set and $\mathbf{0}_{64}$ otherwise, that is $\broad(\lambda, i)_{64}$.
+
+In practice, the vector $x$ can conveniently be constructed offline and stored in memory, but the vector $y$ might not be readily available before
+performing this computation\footnote{And because it depends on what we assume to be a secret value, it cannot either be fetched from memory.}.
+However, it can easily be computed thanks to an additional \pshufb{}. Alternatively, if the
+above computation is done with a vector $y \defas (\lambda, ?, ?, \ldots)$ instead (with $?$ denoting unknown values) and call $z$ its result $(x[\lambda], ?, ?, \ldots)$,
+then we have $\broad(\lambda, i)_n = \pshufb~z~ (0, 0, \ldots)$.
+
+\medskip
+
+In the specific case of matrices of dimension sixteen over $\Fst$, one can take advantage of the 128-bit
+wide \xmm{} registers by interleaving, say, $8\veci$ with $4\veci$, and $2\veci$ with $\veci$, and by computing a slightly more
+complex version of the $\broad$ function $\broad(x,i,j)_{2n}$ which interleaves $\broad(x,i)_n$ with $\broad(x,j)_n$.
+In that case, an implementation of one step of \autoref{alg:broadcast} only requires two $\broad$ calls, two logical \emph{and}, folding back the interleaved vectors
+(which only needs a couple of logical shift and exclusive or), and adding the folded vectors together.
+We give a snippet of such an implementation in \autoref{app:gene}.
+
+\paragraph{Scalar implementation of $\broad$.}
+On an architecture without access to \pshufb, the $\broad$ function can still be implemented rather efficiently with a few arithmetic and logical instructions.
+Let $x$ be an $n$-bit value, $n = 64$ (w.l.o.g.) represented by an unsigned integer, then the following sequence of C instructions computes $\broad(x,i)_n$:
+\begin{center}
+\begin{minted}{c}
+x = ~x;
+x >>= i;
+x &= 1;
+x -= 1ull;
+\end{minted}
+\end{center}
+In this snippet, after the third line, $x$ is equal to 0 if its $i^\text{th}$ bit was initially one, and 1 otherwise. The subtraction by one in line four thus produces the desired result.
+
+\subsection{A faster algorithm exploiting matrix structure}
+\label{shuff}
+
+\autoref{alg:broadcast} is already reasonably efficient, and has the
+advantage of being completely generic w.r.t. the matrix. Yet, better solutions may exist in more specific cases.
+We present here an alternative that can be much faster when the matrix possesses a particular structure.
+
+The idea behind this second algorithm is to take advantage of the fact that many coefficients of a matrix may be identical, thence many of the finite-field multiplications performed in
+a matrix-vector product consist in multiplications by the same constants. Thus, we may be tempted
+to take advantage of this fact by performing those in parallel.
+A motivation of this approach is that it leads to multiplications by constants, as these are the known coefficients of the matrix.
+Consequently, these multiplications can be performed by \pshufb-implemented table lookups, which is more efficient than
+the process from \autoref{alg:broadcast}.
+
+\subsubsection{Description of \autoref{alg:shuffle}}
+We first give a high-level idea of the algorithm.
+Let us first consider a small example, and compute $\mat\veci$ defined as:
+\begin{equation}
+\label{matey}
+	\begin{pmatrix}
+	    1 & 0 & 2 & 2 \\
+		3 & 1 & 2 & 3 \\
+		2 & 3 & 3 & 2 \\
+		0 & 2 & 3 & 1 \\
+	\end{pmatrix}\cdot
+	\begin{pmatrix}
+	x_0 \\
+	x_1 \\
+	x_2 \\
+	x_3 \\
+	\end{pmatrix}.
+\end{equation}
+It is obvious that this is equal to:
+\[
+	\begin{pmatrix}
+	x_0 \\
+	x_1 \\
+	0 \\
+	x_3 \\
+	\end{pmatrix}
+	+~
+	2\cdot
+	\begin{pmatrix}
+	x_2 \\
+	x_2 \\
+	x_0 \\
+	x_1 \\
+	\end{pmatrix}
+	+~
+	2\cdot
+	\begin{pmatrix}
+	x_3 \\
+	0 \\
+	x_3 \\
+	0 \\
+	\end{pmatrix}
+	+~
+	3\cdot
+	\begin{pmatrix}
+	0 \\
+	x_0 \\
+	x_1 \\
+	x_2 \\
+	\end{pmatrix}
+	+
+	3\cdot
+	\begin{pmatrix}
+	0 \\
+	x_3 \\
+	x_2 \\
+	0 \\
+	\end{pmatrix},
+\]
+where both the constant multiplications of the vector $(x_0, x_1, x_2, x_3)^t$ and the shuffles of its coefficients can be computed
+with a single \pshufb{} instruction each, while none of these operations directly depends on the value of the vector.
+This type of decomposition can be done for any matrix, but the number of operations depends on the value of its coefficients.
+
+\medskip
+
+We now sketch one way of obtaining an optimal decomposition as above.
+We consider a matrix product $\mat\veci$ with $\mat$ constant and $\veci$ unknown,
+where $\veci$ is seen as the formal arrangement of variables $\veci_i$.
+Let us define $\shuff(\mat, \lambda)$ as one of the minimal sets of shuffles of coefficients of $\veci$, such that
+there exists a unique vector $\vect \in \shuff(\mat, \lambda)$ with $\vect_i = \veci_j$ iff $\mat_{i,j} = \lambda$.
+For instance, in the above example, we have $\shuff(\mat,2) = \{(x_2,x_2,x_0,x_1)^t, (x_3,0,x_3,0)^t\}$. Equivalently, we could have taken
+$\shuff(\mat, 2) = \{(x_3,x_2,x_3,0)^t, (x_2,0,x_0,x_1)^t\}$.
+These sets are straightforward to compute from this particular matrix, and so are they in the general case.
+
+From the definition of $\shuff$, it is clear that we have $\mat\veci = \sum_{\lambda \in \Fst^*}\sum_{\vect \in \shuff(\mat,\lambda)} \lambda\cdot \vect$.
+Once the values of the sets $\shuff$ have been determined, it is clear that we only need to compute this sum to get our result, and 
+this is precisely what this second algorithm does.
+
+We give a complete description of this shuffle-based process in \autoref{alg:shuffle}.
+
+\begin{algorithm}[!h]
+  \caption{Shuffle-based matrix-vector multiplication}
+\label{alg:shuffle}
+\begin{algorithmic}[1]
+  \REQUIRE $\veci \in \Fst^{16}$, $\mat \in \mappi_{16}(\Fst)$
+  \ENSURE  $\veco = \mat\cdot\veci$\\
+  Offline phase
+  \FOR{$i \in \{1\ldots15\}$}
+  \STATE $s_i[\,] \defas \shuff(M, i)$ $\triangleright$ \emph{Initialize the array $s_i$ with one of the possible sets of shuffles.}
+  \ENDFOR\\
+  Online phase
+  \STATE $\veco \defas \mathbf{0}_{64}$
+  \FOR{$i \in \{1\ldots15\}$}
+  \FOR{$j < \#s_i$}
+  \STATE $\veco \defas \veco + i\cdot s_i[j]$
+  \ENDFOR
+  \ENDFOR
+  \RETURN $\veco$
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Cost of \autoref{alg:shuffle}.} The cost of computing a matrix-vector product with \autoref{alg:shuffle} depends
+on the coefficients of the matrix, since the size of the sets $\shuff(\mat, \lambda)$ depends both on the density
+of the matrix and of how its coefficients are arranged.
+
+If we suppose that a vector implementation of this algorithm is used, and if the dimension and the field of the matrix are well chosen,
+we can assume that both the scalar multiplication of $\veci$ by a constant and a shuffle can be computed with a single
+\pshufb{} each, and a few ancillary instructions. We take the number of calls to \pshufb as a basis to define a cost function for matrices with respect to their implementations with \autoref{alg:shuffle}.
+It is defined as:
+%\[
+%\cost(M) \defas \big(\sum_{\lambda \in \Fst^*} \indic(\shuff(\mat, \lambda)) + \#\shuff(\mat, \lambda)\big) - \indic(\shuff(\mat, 1)),
+%\]
+\[
+\cost(M) \defas \sum_{\lambda \in \Fst^*}\#\shuff(\mat, \lambda) + \sum_{\lambda \in \Fst^*-\{1\}}\indic(\shuff(\mat, \lambda)).
+\]
+The first term corresponds to the number of shuffles that need to be performed for each constant value, and the second to the number
+of constant multiplications to do.
+We may notice that $\#\shuff(\mat, \lambda)$ is equal to the maximum number of occurrence of $\lambda$ in a single row of $\mat$, and the $\cost$ function
+is therefore easy to compute. As an example the cost of the matrix $\mat$ from \autoref{matey} is 7. In the special case of a matrix that has a diagonal
+with identical non-zero coefficients, the actual cost is one less than computed with $\cost$.
+
+\medskip
+
+A matrix with minimal cost w.r.t. $\cost$ is one that
+minimizes the sum of the maximum number of occurrence of $\lambda$ for every $\lambda \in \Fst^*$.
+A simple observation is that for matrices with the same number of non-zero coefficients, this amount is the smallest when every row can be deduced by permutation of a single one;
+this is for instance the case for circulant matrices, by definition.
+More generally, we can heuristically hope that the cost of a matrix will be low if all of its rows can be obtained from the permutation of, say, only two rows.
+
+We can try to estimate the minimum cost of an arbitrary dense circulant matrix of dimension sixteen over $\Fst$.
+If the coefficients of the (unique, up to permutation) row are chosen at random, we should expect them to be made of about $2/3$ of the elements of $\Fst$.
+Additionally, fifteen permutations of the input will need to be computed (all rows need to be different for the matrix to be of full rank ---which is something we will
+desire in our applications--- but the coefficients on the diagonal are constant).
+Thus we can estimate the cost of such a random matrix to be about 25.
+
+\medskip
+
+Before concluding this section, let us notice that special cases of this algorithm have already been used for circulant matrices, namely in the case of the \AES{} \mc{} matrix~\cite{hamburg}.
+
+\subsubsection{Implementation of \autoref{alg:shuffle} with SSSE3 instructions.}
+
+The implementation of \autoref{alg:shuffle} is quite straightforward. We give nonetheless a small code snippet in \autoref{app:spec}.
+
+\subsection{Performance}
+
+In \autoref{tbl:perf} of \autoref{sec:appli}, we give a few performance figures for ciphers with a \shark{} structure using assembly implementations of \autoref{alg:broadcast} and \autoref{alg:shuffle}  for their linear mapping.
+From there it can be seen without surprise that \autoref{alg:shuffle} is more efficient if the matrix is well chosen. However, \autoref{alg:broadcast}
+still performs reasonably well, without imposing any condition on the matrix.
