@@ -258,7 +258,7 @@ with $\varepsilon \approx 2^{-t}q^2$, $t = m - n$ being the number of truncated 
 says that unlike plain \merkdam, no non-ideal behaviour is introduced by the domain-extending construction. Such hash functions are thus expected to behave closely to the random oracles they may be expected to instantiate, as long as
 their compression functions are ``ideal'' and that they are not queried too much w.r.t. to the size of their parameters.
 
-\paragraph{Sponge construction.} The sponge construction was introduced in 2007 by Bertoni \etal~\cite{SpongeFunctions}. It is quite distinct from the \merkdam framework, notably because it does not use a compression
+\paragraph{Sponge construction.} The sponge construction was introduced in 2007 by Bertoni \etal \cite{SpongeFunctions}. It is quite distinct from the \merkdam framework, notably because it does not use a compression
 function as building block, but a function of equally-sized domain and co-domain. Usually, this function is even taken to be bijective.
 
 The construction in itself is simple. Assume we want to build an $n$-bit function based on a $b$-bit permutation $\perm$. We define the \emph{rate} $r$ and the \emph{capacity} $c$ as two integers such that

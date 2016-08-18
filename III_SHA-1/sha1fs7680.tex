@@ -1,24 +1,23 @@
-\documentclass[11pt]{article}
+\documentclass[11pt]{scrartcl}
 
 \usepackage{etex}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[greek,english]{babel}
+\usepackage[english]{babel}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{graphicx}
-\usepackage{color}
+%\usepackage{color}
 \usepackage{url}
 \usepackage{appendix}
 \usepackage{placeins}
 \usepackage{float}
-\usepackage{multirow}
-\usepackage{array}
-\usepackage{comment}
-\usepackage{amsmath,amssymb}
-%\usepackage{pstricks}
-%\usepackage{epic}
-%\usepackage[ruled]{algorithm2e}
-%\usepackage{mathtools}
+%\usepackage{newtxtext}
+%\usepackage{multirow}
+%\usepackage{array}
+%\usepackage{comment}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{xspace}
 \usepackage{tikz}
 \usetikzlibrary{arrows}
@@ -40,12 +39,9 @@
 \usepackage{MnSymbol}
 %\usepackage{listings}
 \usepackage[section]{minted}
-\usepackage{amsthm}
 
-%\usepackage{newtxtext}
 \usepackage[mathcal]{euscript}
 
-%\usepackage{marginnote}
 
 \usepackage[a4paper,hmargin=3cm,vmargin=2.5cm]{geometry}
 
@@ -53,7 +49,7 @@
   colorlinks=true,
   citecolor=NavyBlue,
   linkcolor=ForestGreen,
-  urlcolor=Violet
+  urlcolor=Fuchsia
 }
 
 \renewcommand{\thetable}{\thesection.\arabic{table}}
@@ -66,7 +62,6 @@
 \renewcommand{\labelitemiii}{--}
 \renewcommand{\labelitemiv}{--}
 
-\newcommand{\aes}                  {AES\xspace}
 \newcommand{\shazero}              {SHA-0\xspace}
 \newcommand{\shaone}               {SHA-1\xspace}
 \newcommand{\shatwo}               {SHA-2\xspace}
@@ -77,8 +72,6 @@
 \newcommand{\md} 			   	   {MD\xspace}
 \newcommand{\sha} 			 	   {SHA\xspace}
 \newcommand{\ripemd} 			   {RIPEMD\xspace}
-\newcommand{\ripemdote} 		   {RIPEMD-128\xspace}
-\newcommand{\ripemdosz}			   {RIPEMD-160\xspace}
 \newcommand{\hmac}			       {HMAC\xspace}
 \newcommand{\shiun}			       {SHI-1\xspace}
 \newcommand{\groestl}			       {Gr\o stl\xspace}
@@ -97,7 +90,6 @@
 \newcommand\eg{\emph{e.g.}\xspace}
 
 \DeclareMathOperator\bigo{\mathcal{O}}
-
 
 \newcommand\messblock{\mathfrak{m}}
 \newcommand\freeiv{\mathfrak{i}}
@@ -129,7 +121,7 @@
 \DeclareMathOperator\diff{\Delta}
 
 \newcommand\nodiff{\textopenbullet\hspace{.22mm}}
-\newcommand\nodiffz{$\smalltriangledown$\xspace}
+\newcommand\nodiffz{\ensuremath{\smalltriangledown\xspace}}
 \newcommand\nodiffo{$\smalltriangleup$\xspace}
 \newcommand\onediff{\textbullet\hspace{.22mm}}
 \newcommand\onediffd{$\filledtriangledown$\xspace}
@@ -155,7 +147,7 @@
 
 \newcommand\defas{:=}
 
-\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+%\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 
 \newtheorem{fact}{Fact}[section]
 \newtheorem{prop}{Proposition}[section]
@@ -204,25 +196,22 @@
 
 
 \title{
-Practical freestart collision attacks on \textswab{SHA-1}\thanks{This article presents two recent papers on practical freestart collision attacks on \shaone in a unified and expanded way:
-the 76-step attack of Karpman \etal from CRYPTO~2015~\cite{DBLP:conf/crypto/KarpmanPS15,76stepFull} and the 80-step (full) attack of Stevens \etal from
-EUROCRYPT~2016~\cite{DBLP:conf/eurocrypt/StevensKP16,80stepFull}.}
+Practical freestart collision attacks on \textswab{SHA-1}
+%\thanks{This article presents two recent papers on practical freestart collision attacks on \shaone in a unified and expanded way:
+%the 76-step attack of Karpman \etal from CRYPTO~2015~\cite{DBLP:conf/crypto/KarpmanPS15,76stepFull} and the 80-step (full) attack of Stevens \etal from
+%EUROCRYPT~2016~\cite{DBLP:conf/eurocrypt/StevensKP16,80stepFull}.}
 }
 
-\author{Pierre Karpman}%\thanks{Some of the material also by Marc Stevens and Thomas Peyrin.}}
+\author{Pierre Karpman}
 
 \maketitle
 
-\begin{abstract}
-It's been a while since we learned that SHA-1 is weak against collision attacks. This paper gives an account of two practical collision attacks on its compression
-function, including one on the full 80 steps. This is actually quite nice.
-\end{abstract}
+%\begin{abstract}
+%It's been a while since we learned that SHA-1 is weak against collision attacks. This paper gives an account of two practical collision attacks on its compression
+%function, including one on the full 80 steps. This is actually quite nice.
+%\end{abstract}
 
 \setcounter{footnote}{0}
-
-%\begin{center}
-%\textbf{Note:} in all of this article, we assume that $2^{\aleph_0} = \aleph_{27}$.
-%\end{center}
 
 \tableofcontents
 
@@ -248,12 +237,6 @@ function, including one on the full 80 steps. This is actually quite nice.
 
 
 \FloatBarrier
-
-%\section*{Software disclosure policy}
-%To allow verification and improve understanding of our new results, we intend to release our engineered freestart attack code for graphic cards at \url{https://sites.google.com/site/itstheshappening/}. 
-%
-%However, this source code does not directly enable the engineering of a SHA-1 collision attack. Any cryptanalytic tools needed for engineering a full SHA-1 collision attack will be released independently in a responsible manner.
-
 
 \bibliographystyle{amsalpha_nolower_eev2}
 
