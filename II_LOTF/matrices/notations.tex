@@ -1,0 +1,147 @@
+\section{Preliminaries}
+\label{not}
+
+We introduce a few notations, definitions and background notions that are used in this chapter. We illustrate some of these with classical examples, such as \emph{Reed-Solomon} codes. However,
+our goal is not to provide a detailed exposition on coding theory, and we refer the reader to any good textbook such as \cite{vanlint} for a thorough treatment.
+
+\subsection{Notations}
+We write `$\defas$' equality by definition.
+We note $\Fq$ an arbitrary finite field and \Ftwom the finite field with $2^m$ elements. We often consider $\Fst$, and implicitly use this specific field if not mentioned otherwise.
+W.l.o.g. we use the representation
+$\Fst \cong \mathbf{F}_2[\alpha]/(\alpha^4 + \alpha + 1)$ when a specific one is needed. We freely use ``integer representation'' for elements of $\Ftwom \cong \Ftwom[\alpha]/I(\alpha)$
+by writing $n \in \{0\ldots2^n-1\} = \sum_{i = 0}^{n-1} a_i 2^i$ to represent the element
+$x \in \Ftwom = \sum_{i = 0}^{n-1} a_i \alpha^i$. In the remainder of this section, and especially in \autoref{sec:ag}, we usually consider an arbitrary algebraically closed field, written $k$
+(it will usually be clear from the context whether $k$ is a field or the dimension of a linear code, see \autoref{def:lincode} below).
+
+Bold variables denote vectors (in the sense of elements of a vector space), and subscripts are used to denote their $i^\text{th}$ coordinate, starting from zero. For instance,
+let $\veci \defas (1, 2, 7)$, then  $\veci_2 = 7$.
+If $\mat$ is a matrix of $n$ columns, we call $\mat_i \defas (\mat_{i,j},~j = 0\ldots n - 1)$ the row vector formed from the coefficients of
+its $i^\text{th}$ row.
+We use angle brackets ``$\langle$'' and ``$\rangle$'' to write ordered sets.
+
+Arrays, or tables, (in the sense of software data structures) are denoted by regular variables such as $x$ or $T$, and their elements are accessed by using square brackets.
+For instance, $T[i]$ is the $i^\text{th}$ element of the table $T$, starting from zero.
+
+% We may use the term ``vector'' as well to denote such variables,
+% but the notation should make it clear if we mean a logical array or an element of a vector space; sometimes both notions might coincide.
+
+%Other notations or specific variables are introduced when they are needed, and keep their meaning through the remainder of the text if not otherwise stated.
+%Some background notions might not be redefined if they are not deemed to be essential for the understanding of the paper.
+
+\subsection{Linear codes}
+
+\begin{defi}[Hamming weight, Hamming distance]
+Let $\veci$ be a vector of $k^n$. Its \emph{Hamming weight} $\weight(\veci) \in [0,\ldots,n]$ is $\#\{\veci_i, i = 0,\ldots n-1| \veci_i \neq 0\}$,
+the number of its coordinates which are non-zero.
+The \emph{Hamming distance} $\hdist(\veci,\veco)$ between two vectors is defined as $\weight(\veci - \veco)$.
+\end{defi}
+
+
+\begin{defi}[Linear code]
+\label{def:lincode}
+A \emph{linear code} of \emph{length} $n$, \emph{dimension} $k$ and \emph{minimal distance} $d$ over the alphabet $\Fq$ is a $k$-dimensional linear subspace of $\Fq^n$ such that $\veci, \veco \in \code \Rightarrow \hdist(\veci, \veco) \geq d$
+and $\exists \veci, \veco \in \code,  \hdist(\veci, \veco) = d$.
+The last conditions can equivalently be expressed as $\veci \neq \nullvec \in \code \Rightarrow \weight(\veci) \geq d$ and $\exists \veci \in \code, \weight(\veci) = d$.
+We use the usual ``NKD'' notation to characterize codes: an $[n, k, d]_{\Fq}$ code $\code$ is a code of ength $n$, dimension $k$ and minimum distance $d$
+with symbols in \Fq.
+\end{defi}
+
+We only consider linear codes in this manuscript and we will therefore omit this qualifier in the remainder of the text. 
+We usually view a code as a set, and call \emph{codewords} its elements. By an abuse of terminology, we may call \emph{messages} the elements of $\Fq^k$.
+
+\begin{defi}[Dual code]
+Let $\code$ be an $[n, k, d]_{\Fq}$ code over $\Fq$ equipped with a scalar product $\langle\cdot,\cdot\rangle$. The \emph{dual}
+$\code^\bot$ of $\code$ is defined as $\{\veci \in \Fq | \forall \veco \in \code, \langle\veci,\veco\rangle = \nullvec\}$.
+\end{defi}
+
+A code $\code$ equal to its dual $\code^\bot$ is called \emph{self-dual}.
+
+
+\begin{defi}[Generator matrix, systematic form]
+A \emph{generator matrix} $G$ of an $[n, k, d]_{\Fq}$ code $\code$ is a matrix of $\matspace_{k,n}(\Fq)$ such that
+$\code = \{\veci G, \veci \in \Fq^k\}$. It is in \emph{systematic form} if it is of the form $(I_k~A)$ with
+$I_k$ the identity matrix of dimension $k$. 
+\end{defi}
+
+If $(I_k~A)$ is a generator matrix for a code $\code$, then $(-A^t~I_{n-k})$ (or equivalently $(I_{n-k}~-A^t)$)
+is a generator matrix for its dual $\code^\bot$. It follows that if $\code$ is self-dual, $A$ is symmetric; it is
+also orthogonal.
+% TODO why not just A.A^t diagonal?
+
+\begin{defi}[MDS code, MDS matrix]
+An $[n,k,d]_{\Fq}$ code $\code$ is called \emph{maximum distance separable}, or simply \emph{MDS}, if $d = n - k + 1$.
+By abuse of definition, if $n = 2k$ and $(I_k~A)$ is a generator matrix of $\code$, we call $A$ an \emph{MDS matrix}.
+\end{defi}
+
+It is easy to see that this is the highest possible minimum distance that can be achieved by a code with a
+systematic generator matrix, as all rows of such a matrix have weight at most $n - k + 1$.
+
+A useful alternative characterization of MDS matrices is given by the following theorem.
+
+\begin{thm}[\cite{mdsConj}]
+\label{thm:mds_minors}
+A matrix $M$ is MDS if and only if all of its minors are non-zero (\ie all the square sub-matrices of $M$ are invertible).
+\end{thm}
+
+A consequence of this is that the dual of an MDS code is also MDS.
+We also have the following:
+
+\begin{conj}[MDS conjecture]
+There is no MDS code with symbols in $\Fq$ of length $n > \#\Fq$.
+\end{conj}
+
+The next definition rephrases and generalizes some of the above concepts in a way that is more suitable to cryptographic applications.
+We assume in this case that $\Fq = \Ftwom$ for some $m$.
+
+\begin{defi}[Branch number~\cite{aes}]
+Let $A$ be the matrix of a linear mapping over $\Fu$.
+The \emph{differential branch number} of $A$
+is equal to $\min_{\veci \neq 0}(\weight(\veci) + \weight(\veci A))$,
+and the \emph{linear branch number} of $A$ is equal to $\min_{\veci \neq 0}(\weight(\veci) + \weight(\veci A^t))$.
+\end{defi}
+
+If $A$ is such that $(I_k~A)$ is a generator matrix of a code of minimum distance $d$ which dual has minimum distance $d'$,
+then $A$ has a differential (resp. linear) branch number of $d$ (resp. $d'$).
+
+\subsubsection{Evaluation codes}
+
+The algebraic-geometry codes that we use in this chapter are conveniently defined as instantiations of the general framework of \emph{evaluation codes}, for which
+we give a brief overview.
+We start with a general definition:
+
+\begin{defi}[Evaluation code]
+Let $\funcspace$ be an $\Fq$-vector space of dimension $k$ of functions $\fun : \dom \rightarrow \Fq$ (the \emph{function space}). Let $\points \defas \langle P_0,\ldots, P_{n-1}\rangle$
+be an ordered subset of $\dom$ of cardinality $n$ (the \emph{evaluation domain}). Let $\evmap_\points : \funcspace \rightarrow \Fq^n$ be the \emph{evaluation map}
+defined as $\evmap_\points(\fun) \defas (\fun(P_0),\ldots,\fun(P_{n-1}))$.
+The \emph{evaluation code} $\evcode(\funcspace,\points)$ for an injective evaluation map $\evmap_\points$ is defined as $\{\evmap_\points(\fun)~|~\fun \in \funcspace\}$.
+It is an $[n,k,\ast]_{\Fq}$ code.
+\end{defi}
+
+A generator matrix $G$ of an evaluation code can easily be constructed by evaluating a basis for $\funcspace$ on $\points$. Call $(\fun_0,\ldots,\fun_{k-1})$
+such a basis, $G = (\evmap_\points(\fun_0),\ldots,\evmap_\points(\fun_{k-1}))$.
+If the code admits a systematic generator matrix, it can simply be obtained by computing the reduced row echelon form of $G$.
+
+We use ordered sets for the evaluation domain $\points$ in this definition. Although the order that is chosen does not impact the parameters of the code (hence we
+may sometimes abuse our definition and talk about \emph{the} code for any of the codes based on the same $\funcspace$ and $\dom$), it may have
+an influence on the performance of explicit instantiations, through \eg properties of the generator matrices. Most of our work is actually based on this fact,
+as it will become clear later in this chapter. 
+
+The probably best-known evaluation codes are the \emph{Reed-Solomon codes} (``RS codes''):
+
+\begin{defi}[Reed-Solomon codes]
+An $[n,k,\ast]_{\Fq}$ \emph{Reed-Solomon} code is an evaluation code obtained by taking $\funcspace$ to be the polynomials $\Fq[x]$
+of degree less than $k-1$ and $\points$ any ordered subset of $\Fq$. 
+\end{defi}
+
+As we must have $n \geq k$ by definition of a code, all polynomials of $\funcspace$
+can be uniquely interpolated on any $n$ points, hence $\evmap_\points$ is injective and Reed-Solomon codes are well-defined.
+Furthermore, for any $\points$, any non-zero polynomial of $\funcspace$ is zero on at most $k - 1$ positions. The minimal distance of a Reed-Solomon code is thus $n - (k - 1)$, which makes them MDS codes.
+
+
+% => section AG codes
+
+% Affine and projective spaces
+% Algebraic curves
+% Divisors
+% Riemann-Roch
+% AG codes
