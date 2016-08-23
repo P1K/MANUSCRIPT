@@ -1,0 +1,59 @@
+\section{Introduction}
+
+The use of \emph{MDS} matrices over finite fields as linear mappings in block cipher design is an old trend, followed by many prominent algorithms such as the \AES/\rijndael{} family~\cite{aes}.
+These matrices are called MDS as they are derived from \emph{maximum distance separable} linear error-correcting codes, which achieve the highest minimum distance possible
+for a given length and dimension. This notion of minimum distance coincides with the one of \emph{branch number} of a mapping~\cite{aes}, which is a measure of the effectiveness
+of a diffusion layer.
+MDS matrices thus have an optimal diffusion, in a cryptographic sense, which makes them attractive for cipher design.
+
+The good security properties that can be derived from MDS matrices are often counter-balanced by the cost of their computation. The standard matrix-vector product is
+quadratic in the dimension of the vector, and finite field operations are not always efficient.
+For that reason, there is often a focus on finding matrices allowing efficient implementations. For instance, the \AES{} matrix is circulant and has small coefficients.
+More recently, the \photon{} hash function~\cite{photon} introduced the use of matrices that can be obtained as the power of a companion matrix, which sparsity may be useful in
+lightweight hardware implementations. The topic of finding such so-called recursive diffusion layers has been quite active in the past years, and led to a series
+of papers investigating some of their various aspects~\cite{recursive1,recursive2,recursive3}. One recent development shows how to systematically construct some of these matrices
+from BCH codes~\cite{recursive4}. This allows in particular to construct very large recursive MDS matrices, for instance of dimension sixteen over $\Fth$. This defines a linear mapping over
+a full 128-bit block with excellent diffusion properties, at a moderate hardware implementation cost.
+
+As interesting as it may be in hardware, the cost in software of a large linear mapping tends to make these designs rather less attractive than more balanced solutions.
+An early attempt to use a large matrix was the block cipher \shark{}, a \rijndael{} predecessor~\cite{shark}; the same kind of design
+was also later used for \khazad. Both are  64-bit ciphers which use an MDS matrix of dimension
+eight over $\Fth$ for their linear diffusion. The usual technique for implementing such a mapping in software is to rely on a table of precomputed multiples of
+the matrix rows. However, table-based implementations now tend to be frown upon as they may lead to \emph{timing attacks}~\cite{timinattacks}, and this could
+leave ciphers with a structure similar to \shark{}'s without reasonable software implementations when resistance to these attacks is required.
+Yet, such designs also have advantages of their own; their diffusion acts on the whole state at every round, and therefore makes structural attacks harder,
+while also ensuring that many S-Boxes are kept active.
+Additionally, the simplicity of the structure makes it arguably easier to analyze than in the case of most ciphers.
+
+\paragraph{Our contributions.}
+
+In this chapter, we revisit the use of a \emph{\shark{} structure} for block cipher design and endeavour to find good matrices and appropriate algorithms
+to achieve both a linear mapping with very good diffusion and efficient software implementations that are not prone to timing attacks.
+To be more specific on this latter point, we target software running on 32 or 64-bit CPUs featuring an SIMD vector unit.
+
+An interesting way of trying to meet both of these goals is to decrease the size of the field from $\Fth$ to $\Fst$. However, according to the \emph{MDS conjecture},
+there is no MDS code over $\Fst$ of length greater than seventeen, and no such code is known~\cite{mdsConj}. Because a diffusion matrix of dimension $n$ is typically
+obtained from a code of length $2n$, MDS matrices over $\Fst$ are therefore restricted to dimensions less than eight. Hence, the prospect
+of finding an MDS matrix over $\Fst$ diffusing on more than $8\times4 = 32$ bits is hopeless.
+Obviously,
+32 bits is not enough for a large mapping \emph{à la} \shark{}. We must therefore search for codes with a slightly smaller minimum distance
+in the hope that they can be made longer.
+
+Our proposed solution to this problem is to use \emph{algebraic-geometry codes}, as they precisely offer this tradeoff.
+One way of defining these codes is as evaluation codes on algebraic curves; thus our proposal brings a nice connection between these objects and
+symmetric cryptography: although elliptic and hyperelliptic curves are now commonplace in public-key cryptography, we show an application of
+a hyperelliptic curve to the design of block ciphers. We present a specific code of length 32 and dimension 16 over $\Fst$ with minimum distance 15, which is only
+two less than what an MDS code would achieve\footnote{This is also much better than a random code for these alphabet, length and dimension. Such a code
+would typically have an expected minimum distance of 11.}.
+This lets us deriving a very good diffusion matrix on $16\times4 = 64$ bits in a straightforward way. Interestingly, this matrix can also be applied
+to vectors over an extension of $\Fst$ such as $\Fth$, while keeping the same good diffusion properties.
+This allows for instance to increase the diffusion to $16\times8 = 128$ bits.
+
+We also study two simple yet efficient algorithms for implementing the matrix-vector multiplication needed in a \shark{}
+structure, when a \emph{vector permute} instruction is available. From one of these, we derive conditions on the matrix to make the product
+faster to compute, in the form of a cost function; we then search for matrices with a low cost, both randomly, and by using automorphisms of the code and of the hyperelliptic
+curve on which it is based. The use of codes automorphisms to derive efficient encoders is not new~\cite{sysgrob,grobarch},
+but it is not generally applied to the architecture and dimensions that we consider in our case.
+
+We conclude the chapter by presenting examples of performance figures of assembly implementations of our algorithms when used as the linear mapping of
+a block cipher.

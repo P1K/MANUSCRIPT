@@ -1,0 +1,315 @@
+\setcounter{section}{0}
+\renewcommand\thesection{\Alph{section}}
+
+\section{Examples of diffusion matrices of dimension 16 over $\Fst$}
+
+\subsection{A matrix of cost 52}
+\label{app:matt1}
+The $\cagh$ matrix of \autoref{fig:matblock} was found thanks to the automorphisms described in \autoref{sec:autos}.
+It has a cost 52 (w.r.t. \autoref{shuff}), and both a differential and a linear branch number of 15.
+It is a block matrix made of sixteen square matrices of dimension four, eight of them being distinct.
+The different blocks are highlighted by different colours in the figure.
+
+\begin{figure}[!htb]
+\[
+\begin{pmatrix}
+\color{Rhodamine} 5 & \color{Rhodamine}2 & \color{Rhodamine}1 & \color{Rhodamine}3 & \color{NavyBlue} 8 & \color{NavyBlue} 5 &  \color{NavyBlue} 1 &  \color{NavyBlue}5 &  \color{YellowOrange}12 & \color{YellowOrange}10 & \color{YellowOrange}14 & \color{YellowOrange}6 & \color{Emerald}7 & \color{Emerald}11 & \color{Emerald}4 & \color{Emerald}11 & \\
+\color{Rhodamine} 2 & \color{Rhodamine}2 & \color{Rhodamine}4 & \color{Rhodamine}1 & \color{NavyBlue} 5 & \color{NavyBlue} 12 & \color{NavyBlue}  2 & \color{NavyBlue} 1 &  \color{YellowOrange}9 & \color{YellowOrange}15 & \color{YellowOrange}8 & \color{YellowOrange}11 & \color{Emerald}7 & \color{Emerald}6 &  \color{Emerald}9 &  \color{Emerald}3 & \\
+\color{Rhodamine} 1 & \color{Rhodamine}4 & \color{Rhodamine}4 & \color{Rhodamine}3 & \color{NavyBlue} 1 & \color{NavyBlue} 2 &  \color{NavyBlue} 15 & \color{NavyBlue} 4 &  \color{YellowOrange}5 & \color{YellowOrange}13 & \color{YellowOrange}10 & \color{YellowOrange}12 &\color{Emerald} 9 &\color{Emerald} 6 & \color{Emerald}7 & \color{Emerald}13 & \\
+\color{Rhodamine} 3 & \color{Rhodamine}1 & \color{Rhodamine}3 & \color{Rhodamine}3 & \color{NavyBlue} 5 & \color{NavyBlue} 1 &  \color{NavyBlue} 4 &  \color{NavyBlue}10 &  \color{YellowOrange}14 & \color{YellowOrange}2 & \color{YellowOrange}14 & \color{YellowOrange}8 & \color{Emerald}15 &\color{Emerald} 13 &\color{Emerald} 7 &\color{Emerald} 6 & \\
+\color{NavyBlue}8 & \color{NavyBlue}5 & \color{NavyBlue}1 & \color{NavyBlue}5 & \color{Rhodamine}5 & \color{Rhodamine}2 & \color{Rhodamine}1 & \color{Rhodamine}3 & \color{Emerald}7 & \color{Emerald}11 &  \color{Emerald}4 & \color{Emerald}11 &\color{YellowOrange} 12 &\color{YellowOrange} 10 &\color{YellowOrange} 14 &\color{YellowOrange} 6 & \\
+\color{NavyBlue}5 & \color{NavyBlue}12 &\color{NavyBlue} 2 &\color{NavyBlue} 1 &\color{Rhodamine} 2 &\color{Rhodamine} 2 &\color{Rhodamine} 4 &\color{Rhodamine} 1 &\color{Emerald} 7 & \color{Emerald}6 &  \color{Emerald}9 & \color{Emerald}3 & \color{YellowOrange}9 & \color{YellowOrange}15 & \color{YellowOrange}8 & \color{YellowOrange}11 & \\
+\color{NavyBlue}1 & \color{NavyBlue}2 & \color{NavyBlue}15 &\color{NavyBlue} 4 &\color{Rhodamine} 1 &\color{Rhodamine} 4 &\color{Rhodamine} 4 &\color{Rhodamine} 3 &\color{Emerald} 9 & \color{Emerald}6 &  \color{Emerald}7 & \color{Emerald}13 &\color{YellowOrange} 5 & \color{YellowOrange}13 & \color{YellowOrange}10 & \color{YellowOrange}12 & \\
+\color{NavyBlue}5 & \color{NavyBlue}1 & \color{NavyBlue}4 & \color{NavyBlue}10 &\color{Rhodamine} 3 &\color{Rhodamine} 1 &\color{Rhodamine} 3 &\color{Rhodamine} 3 &\color{Emerald} 15 &\color{Emerald} 13 &\color{Emerald} 7 &\color{Emerald} 6 &\color{YellowOrange} 14 &\color{YellowOrange} 2 & \color{YellowOrange}14 & \color{YellowOrange}8 & \\
+\color{DarkOrchid}12 &\color{DarkOrchid} 9 & \color{DarkOrchid}5 & \color{DarkOrchid}14 & \color{ProcessBlue}7   &\color{ProcessBlue} 7 &\color{ProcessBlue} 9 & \color{ProcessBlue}15 &\color{RedOrange} 7 & \color{RedOrange}6 & \color{RedOrange}11 &\color{RedOrange} 3 &\color{YellowGreen} 15 &\color{YellowGreen} 5 &\color{YellowGreen} 13 &\color{YellowGreen} 7 & \\
+\color{DarkOrchid}10 &\color{DarkOrchid} 15 &\color{DarkOrchid} 13 &\color{DarkOrchid} 2 & \color{ProcessBlue} 11&\color{ProcessBlue} 6 &\color{ProcessBlue} 6 & \color{ProcessBlue}13 &\color{RedOrange} 6 & \color{RedOrange}6 & \color{RedOrange}7 & \color{RedOrange}9 & \color{YellowGreen}5 & \color{YellowGreen}10 & \color{YellowGreen}2 & \color{YellowGreen}14 & \\
+\color{DarkOrchid}14 &\color{DarkOrchid} 8 & \color{DarkOrchid}10 & \color{DarkOrchid}14 & \color{ProcessBlue} 4 &\color{ProcessBlue} 9 &\color{ProcessBlue} 7 & \color{ProcessBlue}7 & \color{RedOrange}11 & \color{RedOrange}7 & \color{RedOrange}7 & \color{RedOrange}6 & \color{YellowGreen}13 & \color{YellowGreen}2 & \color{YellowGreen}8 & \color{YellowGreen} 4& \\
+\color{DarkOrchid}6 & \color{DarkOrchid}11 & \color{DarkOrchid}12 & \color{DarkOrchid}8 &  \color{ProcessBlue}11 &\color{ProcessBlue} 3 &\color{ProcessBlue} 13 &\color{ProcessBlue} 6 &\color{RedOrange} 3 & \color{RedOrange}9 & \color{RedOrange}6 & \color{RedOrange}6 & \color{YellowGreen}7 & \color{YellowGreen}14 & \color{YellowGreen}4 & \color{YellowGreen}12 & \\
+\color{ProcessBlue}7 & \color{ProcessBlue}7 & \color{ProcessBlue}9 & \color{ProcessBlue}15 & \color{DarkOrchid}12 &\color{DarkOrchid} 9 & \color{DarkOrchid}5 & \color{DarkOrchid}14 & \color{YellowGreen}15 & \color{YellowGreen}5 & \color{YellowGreen}13 &\color{YellowGreen} 7 &\color{RedOrange} 7 &\color{RedOrange} 6 &\color{RedOrange} 11 &\color{RedOrange} 3 & \\
+\color{ProcessBlue}11 &\color{ProcessBlue} 6 &\color{ProcessBlue} 6 & \color{ProcessBlue}13& \color{DarkOrchid}10 &\color{DarkOrchid} 15 &\color{DarkOrchid} 13 &\color{DarkOrchid} 2 &\color{YellowGreen} 5 & \color{YellowGreen}10 &\color{YellowGreen} 2 &\color{YellowGreen} 14 \color{RedOrange}& \color{RedOrange}6 & \color{RedOrange}6 &\color{RedOrange} 7 &\color{RedOrange} 9 & \\
+\color{ProcessBlue}4 & \color{ProcessBlue}9 & \color{ProcessBlue}7 & \color{ProcessBlue} 7 & \color{DarkOrchid}14 &\color{DarkOrchid} 8 & \color{DarkOrchid}10 & \color{DarkOrchid}14 &\color{YellowGreen} 13 &\color{YellowGreen} 2 &\color{YellowGreen} 8 &\color{YellowGreen} 4 &\color{RedOrange} 11 \color{RedOrange}& \color{RedOrange}7 & \color{RedOrange}7 & \color{RedOrange}6 & \\
+\color{ProcessBlue}11 &\color{ProcessBlue} 3 &\color{ProcessBlue} 13 &\color{ProcessBlue} 6& \color{DarkOrchid}6 & \color{DarkOrchid}11 & \color{DarkOrchid}12 & \color{DarkOrchid}8 & \color{YellowGreen}7 & \color{YellowGreen}14 & \color{YellowGreen}4 & \color{YellowGreen}12 &\color{RedOrange} 3 &\color{RedOrange} 9 &\color{RedOrange} 6 &\color{RedOrange} 6 & \\
+\end{pmatrix}
+\]
+\caption{A diffusion block matrix.\label{fig:matblock}}
+\end{figure}
+
+\subsection{A matrix of cost 43}
+\label{app:matt2}
+The $\cagh$ matrix of \autoref{fig:matrand} was found 
+by randomly testing permutations of the points of the curve. It has a cost 43,
+and so does its transpose.
+
+\begin{figure}
+\[
+\begin{pmatrix}
+11& 6& 1& 6& 10& 14& 10& 9& 13& 3& 3& 12& 9& 15& 2& 9\\
+6& 12& 0& 4& 2& 8& 9& 2& 5& 11& 9& 5& 4& 1& 15& 6\\
+9& 11& 2& 2& 1& 11& 13& 15& 13& 3& 2& 1& 14& 1& 3& 10\\
+0& 0& 9& 8& 11& 6& 2& 1& 11& 10& 15& 10& 10& 15& 1& 14\\
+13& 13& 3& 15& 3& 1& 11& 2& 9& 2& 10& 14& 1& 11& 1& 2\\
+1& 9& 8& 4& 14& 10& 2& 5& 15& 2& 12& 12& 9& 10& 1& 9\\
+5& 9& 11& 2& 15& 1& 12& 4& 6& 0& 6& 4& 5& 8& 2& 9\\
+1& 4& 14& 9& 13& 2& 10& 12& 0& 6& 6& 9& 2& 0& 11& 10\\
+13& 10& 3& 9& 2& 15& 6& 6& 11& 1& 9& 9& 12& 14& 10& 3\\
+0& 10& 6& 12& 11& 0& 4& 9& 1& 14& 10& 2& 9& 2& 13& 6\\
+2& 0& 5& 6& 9& 0& 1& 5& 15& 12& 13& 15& 1& 11& 13& 11\\
+11& 2& 10& 1& 1& 15& 0& 8& 0& 9& 14& 10& 10& 6& 11& 15\\
+12& 14& 10& 11& 3& 10& 6& 0& 5& 11& 1& 8& 2& 9& 2& 3\\
+15& 2& 2& 5& 1& 10& 9& 4& 1& 8& 9& 9& 12& 10& 14& 12\\
+15& 1& 12& 5& 13& 11& 0& 6& 2& 5& 11& 1& 15& 0& 9& 13\\
+5& 6& 11& 0& 2& 9& 14& 11& 12& 10& 3& 2& 8& 10& 3& 1\\
+\end{pmatrix}
+\]
+\caption{An unstructured diffusion matrix\label{fig:matrand}}
+\end{figure}
+
+It can easily be obtained as follows. First, define a basis of $\rrs(17P_\infty)$, for instance:
+$(1, x, x^2, y, x^3, xy, x^4, x^2 y, x^5, x^3 y, x^6, x^4 y, x^7, x^5 y, x^8, x^6 y)$. Then, arrange the
+affine points of the curve on which $\cagh$ is defined in the order:
+$\langle$\,(8, 7), (13, 2), (4, 5), (0, 0), (14, 5), (15, 6), (7, 3), (1, 7), (2, 2), (11, 3), (3, 3), (10, 7), (6, 4),
+(5, 5), (9, 5), (12, 6), (3, 2), (11, 2), (12, 7), (13, 3), (4, 4), (0, 1), (1, 6), (7, 2), (9, 4), (6, 5), (2, 3),
+(5, 4), (15, 7), (10, 6), (14, 4), (8, 6)\,$\rangle$. Finally, evaluate the basis of $\rrs(17P_\infty)$ on these
+points and compute the reduced row echelon form of this matrix;
+the right square matrix of dimension 16 of the result is the matrix above.
+
+\FloatBarrier
+
+\section{Statistical distribution of the cost of matrices of $\cagh$}
+\label{app:stats}
+
+\autoref{tbl:randomsearch} gives the repartition of random matrices by their cost w.r.t. \autoref{shuff}.
+
+\begin{table}[!htb]
+\caption{Statistical distribution of the cost of $2^{38}$ randomly-generated generator matrices of $\cagh$.
+\label{tbl:randomsearch}}
+\begin{center}
+\begin{tabularx}{\textwidth}{l X X X}
+\toprule
+cost & \#matrices & cumulative \#matrices & cumulative proportion of the search space \\
+\midrule
+43	& 146\,482 &	146\,482	& 0.00000053 \\
+
+44	& 73\,220	& 219\,702	& 0.00000080 \\
+
+45	& 218\,542 &	438\,244	& 0.0000016 \\
+
+46	& 879\,557 &	1\,317\,801	& 0.0000048 \\
+
+47	& 1\,978\,159 &	3\,295\,960	& 0.000012 \\
+
+48	& 5\,559\,814 &	8\,855\,774	& 0.000032 \\
+
+49	& 21\,512\,707 &	30\,368\,481 &	0.00011 \\
+
+50	& 93\,289\,020	& 123\,657\,501	& 0.00045 \\
+
+51	& 356\,848\,829	& 480\,506\,330	& 0.0017 \\
+
+52	& 1\,282\,233\,658 &	1\,762\,739\,988	& 0.0064 \\
+
+53	& 3\,534\,412\,567 &	5\,297\,152\,555	& 0.019 \\
+
+54	& 8\,141\,274\,412 &	13\,438\,426\,967	& 0.049 \\
+
+55	& 15\,433\,896\,914 &	28\,872\,323\,881	& 0.11 \\
+
+56	& 24\,837\,735\,898 &	53\,710\,059\,779	& 0.20 \\
+
+57	& 33\,794\,051\,687 &	87\,504\,111\,466	& 0.32 \\
+
+58	& 38\,971\,338\,149 &	126\,475\,449\,615 &	0.46 \\
+
+59	& 38\,629\,339\,524 &	165\,104\,789\,139 &	0.60 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{table}
+
+\FloatBarrier
+
+\section{Excerpts of assembly implementations of matrix-vector multiplication}
+
+We give two snippets of assembly implementation of encoders for $\cagh$
+using the two algorithms of \autoref{implem}.
+
+\subsection{Excerpt of an implementation of \autoref{alg:broadcast}}
+\label{app:gene}
+{\small
+\begin{listing}[!htb]
+\begin{center}
+\caption{Part of an encoder for $\cagh$ using \autoref{alg:broadcast}}
+\begin{minted}[breaklines]{nasm}
+; cleaning mask
+cle: dq 0x0f0f0f0f0f0f0f0f, 0x0f0f0f0f0f0f0f0f
+; mask for the selection of v, 2v
+oe1: dq 0xff0ff000ff0ff000, 0xff0ff000ff0ff000
+; mask for the selection of 4v, 8v
+oe2: dq 0xf0f0f0f000000000, 0xffffffff0f0f0f0f
+; m0 and 2m0 interleaved
+c01: dq 0x91a7efa76c126cb5, 0x9124fd91cb3636d9
+; 4m0 and 8m0 interleaved
+c02: dq 0x24efd9efb548b5a7, 0x248391245acbcb12
+; etc.
+c11: dq 0x249183244800cb6c, 0x6cfd12485a91b55a
+c12: dq 0x83246c8336005ab5, 0xb59148367e24a77e
+c21: dq 0xfdd9b5122424b591, 0xa73612ef122436d9
+c22: dq 0x9112a7488383a724, 0xefcb48d94883cb12
+; [...]
+
+; macro for one matrix row multiplication and accumulation
+; (nasm syntax)
+
+; 1 is input
+; 2, 3, 4, 5 are storage
+; 6 is constant zero
+; 7 is accumulator
+; 8 is index
+%macro m_1_row 8
+  ; selects the right double-masks
+  movdqa %2, [oe1]
+  movdqa %3, [oe2]
+  pshufb %2, %1 
+  pshufb %3, %1
+  ; shift the input for the next round
+  psrldq %1, 1
+  ; expand
+  pshufb %2, %6
+  pshufb %3, %6
+  ; select the rows with the double-masks
+  pand   %2, [c01 + %8*16*2]
+  pand   %3, [c02 + %8*16*2]
+\end{minted}
+\end{center}
+\end{listing}
+}
+
+
+
+{\small
+\begin{listing}[!htb]
+\begin{center}
+\caption{Part of an encoder for $\cagh$ using \autoref{alg:broadcast} (continued)}
+\begin{minted}[breaklines]{nasm}
+  ; shift and xor the rows together
+  movdqa %4, %2
+  movdqa %5, %3
+  psrlq  %2, 4
+  psrlq  %3, 4
+  pxor   %4, %5
+  pxor   %2, %3
+  ; accumulate everything
+  pxor   %2, %4 
+  pxor   %7, %2
+%endmacro
+
+; the input is in xmm0, with only the four lsb of each byte set
+_m64:
+  ; constant zero
+  pxor xmm5, xmm5
+  ; accumulator
+  pxor xmm6, xmm6
+.mainstuff:
+  m_1_row xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, 0
+  m_1_row xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, 1
+  m_1_row xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, 2
+  ; [...]
+.fin:
+  ; the result is in xmm0, and still of the same form
+  pand xmm6, [cle]
+  movdqa xmm0, xmm6
+  ret
+\end{minted}
+\end{center}
+\end{listing}
+}
+  
+
+
+\FloatBarrier
+
+\subsection{Excerpt of an implementation of \autoref{alg:shuffle}}
+\label{app:spec}
+{\small
+\begin{listing}[!htb]
+\begin{center}
+\caption{Part of an encoder for $\cagh$ using \autoref{alg:shuffle}}
+\begin{minted}[breaklines]{nasm}
+; multiplication tables (in the order where we need them)
+ttim2 : dq 0x0e0c0a0806040200, 0x0d0f090b05070103
+ttim8 : dq 0x0d050e060b030800, 0x0109020a070f040c
+; [...]
+
+; shuffles
+; 0xff for not selected nibbles (it will zero them)
+pp10: dq 0x0005000507040d02, 0x0f01040a03060809
+pp11: dq 0xffff0e0c0e0bffff, 0xff0b08ff040cffff 
+pp12: dq 0xffffff0eff0dffff, 0xffffffffffffffff
+
+pp20: dq 0x050306070602040e, 0x0408010c01000b04
+pp21: dq 0x0c0e0909ff0307ff, 0x0bff020effff0dff
+pp22: dq 0xffffff0fff0affff, 0xffffffffffffffff
+
+pp30: dq 0xffffff02ff09ff09, 0x0affff04ffffff02
+pp31: dq 0xffffff04ff0eff0a, 0x0effff0fffffff0f
+; [...]
+
+; 2 useful macros (nasm syntax)
+
+; 1 is the location of the vector,
+; 2 is storage for the multiplied thingy,
+; 3 is the constant index
+%macro vec_mul 3
+  movdqa %2, [ttim2 + %3*16]
+  pshufb %2, %1
+  movdqa %1, %2
+%endmacro
+
+; 1 is the accumulator,
+; 2 is the multiplied vector,
+; 3 is storage for the shuffled thingy,
+; 4 is the index for the shuffle
+%macro pp_accu 4
+  movdqa %3, %2
+  pshufb %3, [pp10 + %4*16]
+  pxor   %1, %3
+%endmacro
+
+\end{minted}
+\end{center}
+\end{listing}
+}
+
+{\small
+\begin{listing}[!htb]
+\begin{center}
+\caption{Part of an encoder for $\cagh$ using \autoref{alg:shuffle} (continued)}
+\begin{minted}[breaklines]{nasm}
+; the input is in xmm0, with only the four lsb of each byte set
+_m64:
+  pxor xmm1, xmm1 ; init the accumulator
+.mainstuff:
+  ; 1.x
+  pp_accu xmm1, xmm0, xmm2, 0
+  pp_accu xmm1, xmm0, xmm2, 1
+  pp_accu xmm1, xmm0, xmm2, 2
+  ; 2.x
+  vec_mul xmm0, xmm2, 0
+  pp_accu xmm1, xmm0, xmm2, 3
+  pp_accu xmm1, xmm0, xmm2, 4
+  pp_accu xmm1, xmm0, xmm2, 5
+  ; 3.x
+  vec_mul xmm0, xmm2, 1
+  pp_accu xmm1, xmm0, xmm2, 6
+  pp_accu xmm1, xmm0, xmm2, 7
+; [...]
+.fin:
+  ; the result is in xmm0, and still of the same form
+  movdqa xmm0, xmm1
+  ret
+\end{minted}
+\end{center}
+\end{listing}
+}
+
+\renewcommand\thesection{\arabic{section}}

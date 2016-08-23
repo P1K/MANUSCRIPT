@@ -65,7 +65,7 @@ We now define projective varieties.
 
 \begin{defi}[Projective variety]
 A \emph{projective variety} in the projective space $\projec^n(k)$ over an algebraically closed field $k$ is the set of common zeros
-of a prime ideal $\mathcal{I} \defas \{f_0, \ldots, f_m\}$ of homogenous polynomials of $k[x_0,\ldots,x_n]$ (a polynomial is called \emph{homogenous}
+of a prime ideal $\mathcal{I} \defas \{f_0, \ldots, f_m\}$ of homogeneous polynomials of $k[x_0,\ldots,x_n]$ (a polynomial is called \emph{homogeneous}
 if all its monomials have the same degree).
 \end{defi}
 
@@ -105,7 +105,7 @@ The \emph{local ring} $\locring_P$ of a point $P$ of a variety $\curve$ is the s
 It has a unique maximal ideal $\maxi_P \defas \{f \in \locring_P ~|~ f(P) = 0\}$. 
 \end{defi}
 
-The local ring and its maximal ideal are in particular useful to define the \emph{tangent space} at a point $P$, which in turn allows to define smooth and singular points
+The local ring and its maximal ideal are in particular useful to define the \emph{tangent space} at a point $P$, which in turn allows to define smooth and singular points,
 depending on its dimension.
 We will not give the general definition here, mentioning instead  the following convenient alternative characterization in the specific case of curves:
 
@@ -164,7 +164,7 @@ $-\sum a_iP_i \defas \sum -a_iP_i$) forms a group.
 A divisor $D \defas \sum a_iP_i$ is called \emph{effective} ($D \geq 0$) if $\forall i,~a_i \geq 0$.
 
 \noindent
-The \emph{degree} $\deg(D)$ of $D \defas \sum a_iP_i$ is defined as $\sum a_i$
+The \emph{degree} $\deg(D)$ of $D = \sum a_iP_i$ is defined as $\sum a_i$
 \end{defi}
 
 \begin{defi}[Divisor of a rational function (principal divisor)]
@@ -249,11 +249,11 @@ A projective plane curve $\curve$ is in \emph{special position} if:
 \end{defi}
 
 Curves in special positions are useful as there is a bijection between their places and their points (even if they are potentially singular); thus they can always be considered
-as if smooth w.r.t. to the discussions of this section. Additionally, if one considers the space $\rrs(aP_\infty)$, $a > 0$ of functions having poles only at the point at infinity,
+``as if smooth'' w.r.t. to the discussions of this section. Additionally, if one considers the space $\rrs(aP_\infty)$, $a > 0$ of functions having poles only at the point at infinity,
 its elements can be mapped to polynomials of the coordinate ring of $\curve_A$. In other words, one can perform all the computations in $\rrs(aP_\infty)$ with the affine curve
 only (we discuss how to explicitly compute bases for such spaces next). The main curve used in this chapter is a singular curve in special position.
 
-\subsubsection{Computatation of a basis of $\rrs(aP_\infty)$ for a curve in special position}
+\subsubsection{Computation of a basis of $\rrs(aP_\infty)$ for a curve in special position}
 
 We conclude this brief presentation of algebraic curves and their function fields by showing how to compute a basis of $\rrs(aP_\infty$), $a > 0$
 for a plane curve in special position.
@@ -266,8 +266,8 @@ homogeneous) and $\forall \alpha,~\alpha_i\ord_{P_\infty}(f) + \alpha_j\ord_{P_\
 than $a$).
 A generating family for $\rrs(aP_\infty)$ is thus (omitting the homogenising terms $(z/z)^{\alpha_k}$ for convenience) $\{f^ig^j~|~i\times\ord_{P_\infty}(f) + j\times\ord_{P_\infty}(g) \leq a\}$; if we keep only a single monomial
 with any given pole order, it forms a basis.
-As $P_\infty$ is the only place at infinity, we can switch to the affine case for all computations by considering points in affine coordinates and dehomogeneising $E$ and the basis functions; notably, the latter effectively become polynomials rather
-than rational fractions. Indeed, a basis for $\rrs{aP_\infty} \subseteq k[\curve]$ is formed by $\{x^iy^j~|~i\times\ord_{P_\infty}(f) + j\times\ord_{P_\infty}(g) \leq a\}$.
+As $P_\infty$ is the only place at infinity, we can switch to the affine case for all computations by considering points in affine coordinates and dehomogenising $E$ and the basis functions; notably, the latter effectively become polynomials rather
+than rational fractions. Indeed, a basis for $\rrs(aP_\infty) \subseteq k[\curve]$ is formed by $\{x^iy^j~|~i\times\ord_{P_\infty}(f) + j\times\ord_{P_\infty}(g) \leq a\}$.
 
 \medskip
 
@@ -316,7 +316,7 @@ Hence we indeed have $\ord_{P_\infty}(x/z) = 2$ and $\ord_{P_\infty}(y/z) = 5$.
 
 We are now ready to define the class of AG codes that we will use in the remainder of this work.
 
-Let $\curve$ be a projective curve defined by an equation in $\Fq$ such that the set of its rational places $\curve(\Fq)$ is non-empty.
+Let $\curve$ be a smooth projective curve defined by an equation in $\Fq$ such that the set of its rational places $\curve(\Fq)$ is non-empty.
 Let $D \in \cdiv(\curve)$ be a divisor on $\curve$ and $\points \defas \langle P_0, \ldots, P_{n-1}\rangle \subset \curve(\Fq)$ be $n$ places not in the support of $D$.
 This defines a code $\evcode(\rrs(D), \points)$.
 
@@ -330,7 +330,7 @@ One can see that this will always be the case as long as $\deg(D) < \deg(S)$.
 Assuming that we defined a code using this construction, one of our main concerns would be to determine its parameters $k$ and $d$ (or at least provide an estimate).
 By definition of the minimal distance, $n - d$ is the maximal number of zeros that a function of $\rrs(D)$ can have
 over $\points$; we already showed that the latter is upper-bounded by $\deg(D)$, so we have $d \geq n - \deg(D)$. This lower-bound
-$n - \deg(D)$ for $d$ is the deisgned minimum distance $d^*$ for the code.
+$n - \deg(D)$ for $d$ is the designed minimum distance $d^*$ for the code.
 
 The dimension of the code is simply $\ell(D)$, which can be computed from the Riemann-Roch theorem. In particular, for $\deg(D) > 2g -2$, $g$ the genus of
 $\curve$, we have $k = \ell(D) = \deg(D) + 1 - g$. We can then rephrase the lower-bound on $d$ in terms of $k$ as $d \geq n - k + 1 - g$, which is indeed
@@ -341,6 +341,7 @@ what we promised at the beginning of the section.
 We give two concrete examples of AG codes, the second of which being the code used to define the diffusion matrices presented in this chapter.
 
 \begin{example}[An AG code from a curve of genus 1]
+\label{ex:genus1}
 Let $\curve$ be the plane projective curve of genus 1 of equation $x^2z + xz^2 = y^3 + yz^2$. It is smooth, in special position,
 with a unique point at infinity $P_\infty \defas [1:0:0]$, and has 24 $\Fst$-rational affine points. The pole order
 of $x/z$ and $y/z$ at $P_\infty$ is 3 and 2 respectively (as computed in \autoref{ex:order_gen1}).

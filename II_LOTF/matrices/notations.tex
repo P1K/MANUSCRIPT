@@ -6,26 +6,27 @@ our goal is not to provide a detailed exposition on coding theory, and we refer 
 
 \subsection{Notations}
 We write `$\defas$' equality by definition.
-We note $\Fq$ an arbitrary finite field and \Ftwom the finite field with $2^m$ elements. We often consider $\Fst$, and implicitly use this specific field if not mentioned otherwise.
+We note $\Fq$ an arbitrary finite field and \Ftwom{} the finite field with $2^m$ elements. We often consider $\Fst$, and implicitly use this specific field if not mentioned otherwise.
 W.l.o.g. we use the representation
 $\Fst \cong \mathbf{F}_2[\alpha]/(\alpha^4 + \alpha + 1)$ when a specific one is needed. We freely use ``integer representation'' for elements of $\Ftwom \cong \Ftwom[\alpha]/I(\alpha)$
 by writing $n \in \{0\ldots2^n-1\} = \sum_{i = 0}^{n-1} a_i 2^i$ to represent the element
 $x \in \Ftwom = \sum_{i = 0}^{n-1} a_i \alpha^i$. In the remainder of this section, and especially in \autoref{sec:ag}, we usually consider an arbitrary algebraically closed field, written $k$
 (it will usually be clear from the context whether $k$ is a field or the dimension of a linear code, see \autoref{def:lincode} below).
+$\mathfrak{S}_n$ denotes the group of permutations of $n$ elements.
 
 Bold variables denote vectors (in the sense of elements of a vector space), and subscripts are used to denote their $i^\text{th}$ coordinate, starting from zero. For instance,
 let $\veci \defas (1, 2, 7)$, then  $\veci_2 = 7$.
 If $\mat$ is a matrix of $n$ columns, we call $\mat_i \defas (\mat_{i,j},~j = 0\ldots n - 1)$ the row vector formed from the coefficients of
 its $i^\text{th}$ row.
-We use angle brackets ``$\langle$'' and ``$\rangle$'' to write ordered sets.
+We use angle brackets ``$\langle$'' and ``$\rangle$'' to delimit ordered sets.
 
 Arrays, or tables, (in the sense of software data structures) are denoted by regular variables such as $x$ or $T$, and their elements are accessed by using square brackets.
 For instance, $T[i]$ is the $i^\text{th}$ element of the table $T$, starting from zero.
 
-The operator ``$\wedge_{64}$'' denotes the  \emph{logical and} on 64-bit values. We use $\mathbf{0}_{n}$ and $\mathbf{0}_n$ for binary vectors of length $n$ all made of
+The operator ``$\wedge_{64}$'' denotes the  \emph{logical and} on 64-bit values. We use $\mathbf{0}_{n}$ and $\mathbf{1}_n$ for binary vectors of length $n$ all made of
 zeros and ones respectively. If $n$ is a multiple of a power of two, these vectors may freely be interpreted as elements of the relevant vector spaces.
 The function $\indic(\cdot)$ takes as input a set and returns one if it is non-empty, zero otherwise; $\#$ denotes the cardinality of a set.
-We may also use subscript to show the base in which a number is written when it is not ten, \eg $1010_2$ is the number 10 written in base two.
+We may also use subscripts to show the base in which a number is written when it is not ten, \eg $1010_2$ is the number 10 written in base two.
 
 % We may use the term ``vector'' as well to denote such variables,
 % but the notation should make it clear if we mean a logical array or an element of a vector space; sometimes both notions might coincide.
@@ -36,7 +37,7 @@ We may also use subscript to show the base in which a number is written when it 
 \subsection{Linear codes}
 
 \begin{defi}[Hamming weight, Hamming distance]
-Let $\veci$ be a vector of $k^n$. Its \emph{Hamming weight} $\weight(\veci) \in [0,\ldots,n]$ is $\#\{\veci_i, i = 0,\ldots n-1| \veci_i \neq 0\}$,
+Let $\veci$ be a vector of $k^n$. Its \emph{Hamming weight} $\weight(\veci) \in [0,\ldots,n]$ is $\#\{\veci_i, i = 0,\ldots,n-1~|~ \veci_i \neq 0\}$,
 the number of its coordinates which are non-zero.
 The \emph{Hamming distance} $\hdist(\veci,\veco)$ between two vectors is defined as $\weight(\veci - \veco)$.
 \end{defi}
@@ -47,7 +48,7 @@ The \emph{Hamming distance} $\hdist(\veci,\veco)$ between two vectors is defined
 A \emph{linear code} of \emph{length} $n$, \emph{dimension} $k$ and \emph{minimal distance} $d$ over the alphabet $\Fq$ is a $k$-dimensional linear subspace of $\Fq^n$ such that $\veci, \veco \in \code \Rightarrow \hdist(\veci, \veco) \geq d$
 and $\exists \veci, \veco \in \code,  \hdist(\veci, \veco) = d$.
 The last conditions can equivalently be expressed as $\veci \neq \nullvec \in \code \Rightarrow \weight(\veci) \geq d$ and $\exists \veci \in \code, \weight(\veci) = d$.
-We use the usual ``NKD'' notation to characterize codes: an $[n, k, d]_{\Fq}$ code $\code$ is a code of ength $n$, dimension $k$ and minimum distance $d$
+We use the usual ``NKD'' notation to characterize codes: an $[n, k, d]_{\Fq}$ code $\code$ is a code of length $n$, dimension $k$ and minimum distance $d$
 with symbols in \Fq.
 \end{defi}
 
@@ -69,8 +70,8 @@ $I_k$ the identity matrix of dimension $k$.
 \end{defi}
 
 If $(I_k~A)$ is a generator matrix for a code $\code$, then $(-A^t~I_{n-k})$ (or equivalently $(I_{n-k}~-A^t)$)
-is a generator matrix for its dual $\code^\bot$. It follows that if $\code$ is self-dual, $A$ is symmetric; it is
-also orthogonal.
+is a generator matrix for its dual $\code^\bot$. It follows that if $\code$ is self-dual, $A$ is symmetric and
+orthogonal.
 % TODO why not just A.A^t diagonal?
 
 \begin{defi}[MDS code, MDS matrix]
@@ -123,13 +124,13 @@ It is an $[n,k,\ast]_{\Fq}$ code.
 \end{defi}
 
 A generator matrix $G$ of an evaluation code can easily be constructed by evaluating a basis for $\funcspace$ on $\points$. Call $(\fun_0,\ldots,\fun_{k-1})$
-such a basis, $G = (\evmap_\points(\fun_0),\ldots,\evmap_\points(\fun_{k-1}))$.
+such a basis, then $G = (\evmap_\points(\fun_0),\ldots,\evmap_\points(\fun_{k-1}))$.
 If the code admits a systematic generator matrix, it can simply be obtained by computing the reduced row echelon form of $G$.
 
 We use ordered sets for the evaluation domain $\points$ in this definition. Although the order that is chosen does not impact the parameters of the code (hence we
 may sometimes abuse our definition and talk about \emph{the} code for any of the codes based on the same $\funcspace$ and $\dom$), it may have
-an influence on the performance of explicit instantiations, through \eg properties of the generator matrices. Most of our work is actually based on this fact,
-as it will become clear later in this chapter. 
+an influence on the performance of explicit instantiations, through \eg properties of the generator matrices. Most of the work
+of this chapter is actually based on this fact.
 
 The probably best-known evaluation codes are the \emph{Reed-Solomon codes} (``RS codes''):
 

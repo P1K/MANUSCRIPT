@@ -1,0 +1,192 @@
+\section{Applications and performance}
+\label{sec:appli}
+% TODO
+% - perfs of table implems
+% - perfs of circulant MDS on F_256
+
+This last section presents the performance of straightforward assembly implementations of both of our
+algorithms when applied to a fast encoder of the code $\cagh$ from \autoref{matt}.
+In all of the remainder, $\matdiff$ denotes the matrix from \autoref{fig:matrand}; it is
+of dimension 16 over $\Fst$ and has a differential and linear branch number of 15.
+We use this matrix in the design of the \samneric couple of toy block ciphers; \sam
+is a 64-bit block cipher that uses $\matdiff$ \emph{as is} with a four-bit S-box,
+and \eric uses $\matdiff$ over $\Fth$ together with an eight-bit S-box to define
+a 128-bit block cipher.
+
+We do not actually specify complete block ciphers (in particular, we do not
+give key schedules); our objective is rather to evaluate the performance
+of round functions following these structures, in order to assess the utility
+of large diffusion mappings for block cipher design. Consequently, our security
+analysis of \samneric is minimal, and only serves to give a realistic estimate
+of how many rounds are needed to achieve good security. 
+
+%We do this study in the context of block ciphers, by assuming that $\matdiff$ is used
+%as the linear mapping of two ciphers with a \shark{} structure: one with 4-bit S-Boxes
+%and a 64-bit block, and one with 8-bit S-Boxes and a 128-bit block.
+%What we wish to
+%measure in both cases is the speed in cycles per byte of such hypothetical ciphers, so as to
+%be able to gauge the efficiency of this linear mapping and of the resulting ciphers.
+%In order to do this, we need to estimate how many rounds would be needed for
+%the ciphers to be secure.
+%% We do this with the following basic analyses of
+%% linear and differential properties of such algorithms.
+
+\subsection{The \sam block cipher}
+The round function of \sam is taken to be $\matdiff \circ \sapp \circ \adkey$, where $\adkey$ adds
+a 64-bit round key to its input and $\sapp$ is the parallel application of sixteen (identical)
+4-bit S-boxes (taken to be any optimal S-box of this size, see \eg \cite{4bit1,4bit2}).
+
+We use standard $\emph{wide-trail}$ considerations to study differential and linear properties of a \sam instance~\cite{aes}.
+This is very easy to do thanks to the simple structure of the cipher.
+The branch number of $\matdiff$ is 15, which means that at least 15 S-boxes are active in any two rounds of
+a differential path or linear characteristic, while the best 4-bit S-boxes have a maximum differential probability
+and a maximal linear bias of $2^{-2}$. By using
+such S-boxes, one can upper-bound the probability of a single differential path or linear characteristic
+for $2 n$ rounds by $2^{-2\cdot 15 n}$. This is smaller than $2^{-64}$
+as soon as $n > 2$. Hence we conjecture that 6 to 8 rounds are enough to make a cipher resistant
+to standard statistical attacks.
+
+The most powerful attacks against \sam may in fact not be statistical; algebraic attacks may be more
+efficient in exploiting the fact that the round function is defined at a granularity of four bits,
+and that the degree of an invertible 4-bit S-box is at most three. Applying the upper-bound
+from Boura \etal~\cite[Thm. 2]{DBLP:conf/fse/BouraCC11}, we get that seven rounds are necessary to
+obtain a permutation of maximal degree. Thus, eight full rounds plus an additional half-round
+consisting of only $\sapp$ would probably be necessary to avoid attacks based on the low degree
+of the cipher.
+
+On the other hand, we would expect \sam to be more resistant than most ciphers to structural attacks such as
+impossible-differential or integral attacks, as its round function diffuses over the full block.
+
+We give software performance figures for an 8-round version of \sam in \autoref{tbl:perf_sam}.
+We include data both for a strict SSSE3 implementation and for one using AVX extensions, which
+can be seen to bring a considerable benefit. Note that the last round is complete and includes the linear mapping, unlike \eg{}
+\AES{}.
+As the parallel application of the S-Boxes of $\sapp$ can be implemented very efficiently with
+a single \pshufb{}, this part of the round function has virtually no impact on the performance, and one
+could for instance add an extra half-round essentially for free.
+
+\begin{table}
+\caption{Performance of software implementations of \sam, given in cycles per byte (cpb). Figures in parentheses are for an AVX implementation (when applicable).
+\label{tbl:perf_sam}}
+\begin{center}
+\begin{tabularx}{\textwidth}{@{\extracolsep{2mm} } l c  X  X}
+\toprule
+Processor type & \# rounds &  cpb (Alg. 1) &  cpb (Alg. 2)\\
+\midrule
+Intel Xeon E5-2650 @ 2.00GHz & 8 &  66.5 (60.2) & 44.5 (31.9)\\
+\midrule
+Intel Xeon E5-2609 @ 2.40GHz & 8 &  95.3 (84.7)  & 63.3 (45.6)\\
+\midrule
+Intel Xeon E5649 @ 2.53GHz & 8 & 111.3 & 59.8 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{table}
+
+\subsection{The \eric block cipher}
+% In fact, could use circulant MDS w/o cost penalty?
+Although the code $\cagh$ from which the matrix $\matdiff$ is built was initially defined with $\Fst$ as an alphabet, this latter
+can be replaced by an algebraic extension of $\Fst$ such as $\Fth$, to yield a code $\cagh'$ with the same parameters,
+namely a $[32, 16, 15]_{\Fth}$ code. One way of seeing this is that by constructing $\Fth$ as an extension of $\Fst$
+(for instance by letting $\Fst \cong \mathbf{F}_2[\alpha]/(\alpha^4 + \alpha^3 + \alpha^2 + \alpha + 1)$;
+$\Fth \cong \Fst[t]/(t^2 + t + \alpha)$), an
+element of $\Fth$ is represented as a degree-one polynomial $at + b$ over $\Fst$.
+It follows that the minimum weight of a codeword $w \defas (a_i t + b_i),\,i \in \{0\ldots31\}$ of $\cagh'$ is at least equal to the
+minimum weight of words $(a_i),\,i = 0\ldots31$ and $(b_i),\,i \in \{0\ldots31\}$.
+If those are taken among codewords
+of $\cagh$, their minimum weight is 15, and thus so is the one of $w$.
+
+An efficient encoder can also be built for $\cagh'$, with only small changes from an encoder for $\cagh$.
+If we consider finite field multiplications as performed by linear feedback shift registers (LFSRs), the multiplication by
+a constant is done by summing shifts of the multiplicand and (possibly shifted) copies of the retroaction polynomial. Such a
+multiplication, say on eight bits can obviously be tabulated in a table of 256 8-bit entries, but smaller tables can also
+be used, exploiting the linearity. For instance, one can compute the multiplication from two tables of 16 8-bit entries which store the partial
+multiplication of the constant by the four most and least significant bits respectively; performing the complete multiplication
+simply consists in accessing these tables with the right inputs and summing their results. We give an example of such
+an approach
+in \autoref{lst:mulex}.
+
+\begin{listing}[!htb]
+\begin{center}
+\begin{minted}[breaklines]{c}
+uint8_t m71(uint8_t x)
+{
+    uint8_t lo[16] = {0x00,0x71,0xE2,0x93,0xDF,0xAE,0x3D,0x4C
+                     ,0xA5,0xD4,0x47,0x36,0x7A,0x0B,0x98,0xE9};
+    uint8_t hi[16] = {0x00,0x51,0xA2,0xF3,0x5F,0x0E,0xFD,0xAC
+                     ,0xBE,0xEF,0x1C,0x4D,0xE1,0xB0,0x43,0x12};
+
+    return (lo[x & 0xF] ^ hi[x >> 4]);
+}
+\end{minted}
+\end{center}
+\caption{Multiplication by \texttt{0x71} in $\mathbf{F}_{2}[x]/<x^8+x^4+x^3+x+1>$\label{lst:mulex}}
+\end{listing}
+
+Table lookups from four to eight bits can be performed efficiently with \pshufb; multiplication
+by a constant in $\Fth$ is thus twice as expansive as multiplication in $\Fst$, but it operates
+on twice the amount of data. An implementation of a diffusion matrix
+$\matdiff'$ from $\cagh'$ is thus comparatively as efficient as for the original code. 
+
+\medskip 
+
+The round function of \eric is taken to be $\matdiff' \circ \sapp' \circ \adkey'$, where $\adkey'$ adds a
+128-bit round key to its input and $\sapp'$ is the parallel application of sixteen (identical) cryptographically
+strong 8-bit S-boxes.
+
+From wide-trail considerations, the resistance of an \eric cipher to statistical attacks is comparatively better than \sam,
+when an appropriate 8-bit S-Box is used.
+For instance, the $\AES$ S-box has a maximal differential probability and linear bias of $2^{-6}$~\cite{aes}.
+This implies that the probability of a single differential path or linear characteristic for $2n$ rounds
+is upper-bounded by $2^{-6\cdot15 n}$, which is already much smaller than $2^{-128}$ as soon
+as $n > 1$.
+\eric is also likely to be more resistant to algebraic attacks; at least five rounds are necessary to reach
+full degree (for an S-box of degree seven), which is two less than \sam.
+Thus, eight (and a half) rounds of an \eric cipher should bring adequate security, and six (and a half) rounds might be enough.
+We provide performance figures for SSSE3 and an AVX implementations in \autoref{tbl:perf_eric}, for both six and eight full rounds.
+Note that in the case of 8-bit S-Boxes,
+the S-Box application is usually rather more complex and expensive a step than with 4-bit S-Boxes. In these test programs, we used the efficient vector
+implementation of the \AES{} S-Box from Hamburg~\cite{hamburg}\footnote{Better performance may be attained by using cryptographically
+weaker but more efficient S-boxes, such as \whirlpool's second S-box \cite{whirlpool}.}.
+
+\begin{table}
+\caption{Performance of software implementations of \eric, in cycles per byte (cpb). Figures in parentheses are for an AVX implementation (when applicable).
+\label{tbl:perf_eric}}
+\begin{center}
+\begin{tabularx}{\textwidth}{@{\extracolsep{2mm} } l c  X  X}
+\toprule
+%\cline{3-6}
+\multicolumn{2}{c}{} & \multicolumn{2}{c}{128-bit Block} \\
+\cmidrule(lr){3-4}
+Processor type & \# rounds & cpb (Alg. 1) & cpb (Alg. 2)\\
+\midrule
+ \multirow{2}{*}{Intel Xeon E5-2650 @ 2.00GHz} & 6 & 58 (52.3) &  32.7 (26.5) \\
+ %\cline{2-6}
+ & 8 &  76.8 (69.6) &  43.8 (35.7) \\
+\midrule
+
+ \multirow{2}{*}{Intel Xeon E5-2609 @ 2.40GHz } & 6 & 79.8 (75.6) &  47.1 (36.8) \\
+% \cline{2-6}
+ & 8 & 106.6 (97.1)  &  62.1 (50.3) \\
+\midrule
+
+ \multirow{2}{*}{Intel Xeon E5649 @ 2.53GHz} & 6 & 84.5 & 47 \\
+% \cline{2-6}
+ & 8 & 111 & 61.9 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{table}
+
+
+\subsection{Discussion.}
+The performance figures given in \autoref{tbl:perf_sam}, \autoref{tbl:perf_eric} are average for a block cipher. For instance, it compares favourably with
+the optimized vector implementations of
+64-bit ciphers \led and \piccolo in sequential mode from~\cite{sac2013}, which run at speeds between 70 and 90 cpb., depending on the CPU.
+It is however slower than Hamburg's vector implementation of \AES{}, with reported speeds of 6 to 22 cpb. (9 to 25 for the inverse cipher)~\cite{hamburg,twine}.
+
+Yet, we conjecture that the strong structure of the round function makes \samneric more suitable to speed-ups from derivative constructions. For instance,
+the \emph{leak extraction} approach from \lex allowed a 2.5-time speed-up from the \AES by leaking a quarter of the state of the cipher as keystream every round~\cite{DBLP:conf/sacrypt/Biryukov06}.
+Although this original proposal was later broken~\cite{DBLP:conf/asiacrypt/DunkelmanK08a}, we believe that the stronger diffusion in \samneric may protect
+leak extraction variants against similar attacks; these could for instance lead to two-time speed-ups for an eight-round \eric with leaks of
+the same amount as the ones of \lex. 
