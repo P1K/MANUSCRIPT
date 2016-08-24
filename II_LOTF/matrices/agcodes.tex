@@ -12,8 +12,10 @@ We first give an intuition of the construction used in AG codes. We have seen th
 and that they can be instantiated for many lengths and dimensions. One limitation of the construction
 is that the maximal length of the code is limited by the cardinality of the alphabet $\Fq$: we
 cannot evaluate the functions on more points than there are elements in $\Fq$ without introducing some
-repetition (doing so would still define a code, but not a very useful one). This is consistent with the MDS conjecture,
-and we thus have little hope of finding a similar construction free of this issue. However, we may want to
+repetition; we can still slightly increase this maximal length by one (two for some
+values of $k$ and $q$) by defining an \emph{extended} RS code, which is still MDS. However, by the MDS
+conjecture, we do not expect to be able to do better than that.
+Yet we may want to
 have a tradeoff between the maximal length of a code construction and its \emph{designed minimal distance} $d^* \leq d$.
 
 A natural way to increase the maximal length of an evaluation code is to consider functions over domains

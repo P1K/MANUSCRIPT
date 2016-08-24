@@ -90,10 +90,11 @@ A matrix $M$ is MDS if and only if all of its minors are non-zero (\ie all the s
 \end{thm}
 
 A consequence of this is that the dual of an MDS code is also MDS.
-We also have the following:
+We also have the following (in simplified form):
 
 \begin{conj}[MDS conjecture]
-There is no MDS code with symbols in $\Fq$ of length $n > \#\Fq$.
+There is no MDS code with symbols in $\Fu$ of length $n$ with $n > \#\Fu + 1$\footnote{This maximal length can be increased by one
+for some values of $q$ and $k$.}.
 \end{conj}
 
 The next definition rephrases and generalizes some of the above concepts in a way that is more suitable to cryptographic applications.
@@ -142,12 +143,3 @@ of degree less than $k-1$ and $\points$ any ordered subset of $\Fq$.
 As we must have $n \geq k$ by definition of a code, all polynomials of $\funcspace$
 can be uniquely interpolated on any $n$ points, hence $\evmap_\points$ is injective and Reed-Solomon codes are well-defined.
 Furthermore, for any $\points$, any non-zero polynomial of $\funcspace$ is zero on at most $k - 1$ positions. The minimal distance of a Reed-Solomon code is thus $n - (k - 1)$, which makes them MDS codes.
-
-
-% => section AG codes
-
-% Affine and projective spaces
-% Algebraic curves
-% Divisors
-% Riemann-Roch
-% AG codes
