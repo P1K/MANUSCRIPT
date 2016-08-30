@@ -1,0 +1,147 @@
+\section{Block ciphers}
+
+A \emph{block cipher} is a family of injective mappings over finite domains and co-domains, indexed by a finite set of \emph{keys}. This very broad definition will
+in fact always be specialized, taking domains and co-domains of identical sizes, and all parameters living in the binary world. Hence, a block cipher
+is a mapping $\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ such that for all $k \in \{0,1\}^\kappa$, $\E(k,\cdot)$ is a permutation.
+We call $\kappa$ the \emph{key size} and $n$ the \emph{block size} of $\E$. Typical parameter sizes are $\kappa \in \{64, 80, 128, 192, 256\}$ (though
+64 and 80-bit keys are now considered to be too short to provide adequate security) and $n \in \{64, 128, 256\}$.
+We usually require for $\E$ and its inverse $\E^{-1}$ to be efficently computable (depending on the intended application, it may be enough for only
+one of these to be efficient).
+
+The most immediate purpose of block ciphers is to provide confidentiality of communications. Two parties $A$ and $B$ who share a key $k$\footnote{We
+completely ignore the problem of obtaining such a shared key.} for the same
+block cipher are able to send encrypted messages $c \defas \E(k,p)$, $c' \defas \E(k,p')$, etc. The non-key input to $\E$ is generally called
+the \emph{plaintext}, and the output of $\E$ is called the \emph{ciphertext}.
+
+If $\E$ is such that the permutations $\E(k,\cdot)$ are hard to invert when $k$ is unknown, $A$ and $B$ may suppose that a secure channel of communication
+between them consists in injecting their messages to strings $m_0||m_1||\ldots||m_\ell$ of sizes multiple of $n$ and sending encrypted messages
+$\E(k,m_0)||\E(k,m_1)||\ldots||\E(k,m_\ell)$. There are two major problems with this scheme, however, regardless of the security of the block
+cipher: 1) The scheme is not \emph{randomised}, \ie encrypting the same plaintext twice always results in the same ciphertext. An eavesdropper
+(a ``passive adversary'') on the channel between $A$ and $B$ can thus detect when identical message blocks have been sent. 2) The
+communication is not authenticated. An active adversary on the channel may delete or modify some of the blocks of a message, append to a message
+some blocks from a previous message, or add randomly generated blocks. All of this can be done without $A$ and $B$ noticing that someone
+is maliciously tampering with the channel. 
+
+Problems such as the ones above are solved by designing secure \emph{modes of operation}. We do not study this topic in this thesis, but
+we mention some elements related to modes in \autoref{sec:bc_modes}. But first, we make the intuition behind the evaluation of the security
+of block ciphers themselves more explicit in \autoref{sec:bc_sec}.
+
+\section{Security of block ciphers}
+\label{sec:bc_sec}
+
+We keep this section relatively informal. Our goal is to be able to specify what it means for $\E$ to be a good block cipher from
+a practical point of view. Yet, we start by defining the useful notion of \emph{ideal block cipher}.
+
+\begin{defi}[Ideal block cipher]
+An \emph{ideal block cipher} $\E$ is a mapping $\{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ s.t. all the permutations
+$\E(k,\cdot)$ are drawn independently and uniformly at random among the permutations of $\{0,1\}^n$.
+\end{defi}
+
+This definition intuitively corresponds to the best we can achieve from the definition of a block cipher. For small values of $n$
+(\eg up to $20 \sim 32$ depending on the desired performance), one can implement ideal block ciphers by using an appropriate
+shuffling algorithm (such as the one variously attributed to Fisher, Yates, Knuth, etc.~\cite{uniform_shuffle}, which we will
+call ``FYK''). As this method
+requires $\bigo(2^n)$ setup time and memory per key, is is obviously impractical for cryptographically common sizes of $n \geq 64$.
+Even for small values of $n$, running the FYK shuffle requires a considerable amount of randomness parameterized by the keys, which
+is not something trivial to fulfill. All of this leads to the fact that we are forced most of the time to use ``approximations'' of
+ideal block ciphers. A useful (mostly theoretical) way of quantifying the security of a specific block cipher is to measure ``how far'' it
+is from being ideal. Informally, this is done by upper-bounding the \emph{advantage} (over a random answer) that any adversary
+(with some bounded resources)
+has of distinguishing whether he is given black-box access to a randomly-drawn permutation or to an instance of the block cipher
+with a randomly chosen (unknown) key. This statement can be made more precise in the form of the following definition
+(similar to the one that can be found \eg in \cite{DBLP:journals/jcss/BellareKR00}):
+
+\begin{defi}[Pseudo-random permutations (PRP)]
+We consider a block ciper $\E$ of key size $\kappa$ and block size $n$.
+We write $\Pi_{2^n}$ for the set of permutations on binary strings of length $n$; $x \overset{\$}{\leftarrow} \mathcal{S}$
+the action of drawing $x$ uniformly at random among elements of the set $\mathcal{S}$; $\mathcal{A}^{f}$ an algorithm with
+oracle (black-box) access to the function $f$ which outputs a single bit.
+Then we define the \emph{PRP advantage} of $\mathcal{A}$ over $\E$, written $\Adv^{\text{PRP}}_{\E}(\mathcal{A})$ as:
+\[
+\Adv^{\text{PRP}}_{\E}(\mathcal{A}) = |\Pr[\mathcal{A}^f = 1~|~f \overset{\$}{\leftarrow} \Pi_{2^n}] - \Pr[\mathcal{A}^f = 1~|~f \defas \E(k,\cdot), k \overset{\$}{\leftarrow} \{0,1\}^\kappa]|.
+\]
+The \emph{PRP security} of $\E$ w.r.t. the \emph{data complexity} $q$ and \emph{time complexity} $t$ is:
+\[
+\Adv^{\text{PRP}}_{\E}(q,t) \defas \max_{\mathcal{A}\,\in\,\text{Alg}^{f\backslash q, \E\backslash t}} \{\Adv^{\text{PRP}}_{\E}(\mathcal{A})\}.
+\]
+Here, $\text{Alg}^{f\backslash q, \E\backslash t}$ is the set of all algorithms $\mathcal{A}$ with oracle access to $f$ that perform at most $q$ oracle accesses
+and which run in time $\bigo(t)$, with the time unit being the time necessary to compute $\E$ once.
+\label{def:prp}
+\end{defi}
+There exists a related notion of \emph{strong pseudo-random permutation} (SPRP) where one considers algorithms given oracle access both to $f$ and its inverse.
+
+\medskip
+
+\autoref{def:prp} is quite useful in some contexts, for instance to prove that a construction using a block cipher is not significantly less secure than the latter. This is
+typically done by defining an advantage function similar to PRP security for the higher-level construction (this being for instance CBC-MAC in the case of \cite{DBLP:journals/jcss/BellareKR00}) and by showing that
+it is not more than the PRP security of the block cipher plus some (reasonably small) extra terms.
+
+However, this definition is not constructive, in the sense that it does not provide any (efficient)
+way of computing the PRP security of a block cipher in general (some results do exist for specific block cipher constructions (usually modulo access to a lower-level primitive such as a
+``random permutation'') such as the one due to Even and Mansour~\cite{evenmansour}, which we will see again in \autoref{chap:emrka}). 
+A major topc in symmetric cryptography is to analyse explicit block ciphers in order to assess their concrete security against attacks. In the language of \autoref{def:prp}, this
+consists in finding algorithms for which $q$, $t$ and the PRP advantage is known. Any such attack on a block cipher $\E$ allows to lower-bound its PRP-security at a given point.
+In reality, though, the world of block cipher cryptanalysis is more nuanced than what \autoref{def:prp} may lead us to believe; practically important characteristics of an attack
+are also its memory complexity, distinguishing between its online and offline time complexity, whether it applies equally well to all keys or if it is only successful
+for some ``weak'' subset thereof, whether it also recovers $k$ when $f$ was instantiated from $\E$, or an algorithm equivalent to $\E(k,\cdot)$, etc. We devote the remainder of this
+section to sketching some typical elements of attacks on block ciphers.
+
+\subsection{Distinguishers and attacks}
+The core of many concrete attacks on block ciphers is made of \emph{distinguishers}, which can be defined as algorithms using reasonable resources which have a non-negligible advantage according to \autoref{def:prp}.
+There is no easy answer as to what ``reasonable'' and ``non-negligible'' should mean in the context of actual cryptanalysis, as the key and block size of a specific cipher are fixed values. While some ciphers or potential distinguishers
+may be parameterized in a way that helps to make the definition meaningful, this does not have to be the case. Sometimes, one is easily convinced by the performance of an algorithm so that there is
+consensus that it can be called a distinguisher (\eg distinguishing $\E$ of key and block size $2^{128}$ with $q = 2$, $t = 2^{20}$, probability $\approx 1$), while some other times the picture is much less clear
+(\eg $q = t =  2^{120}$ and probability $\approx 1$). We will ignore this issue altogether and assume that all the attacks of this chapter are consensual.
+
+\subsubsection{Classes of distinguishers for block ciphers}
+ 
+We now briefly describe two examples of types of distinguishers, which exploit ``non-ideal'' behaviours of different nature.
+
+\bigskip
+
+We start with \emph{differential distinguishers}, which are part of the broader class of \emph{statistical} distinguishers.
+The basic idea of the latter is to define an event that is statistically more likely to occur for the target (the block cipher $\E$)
+than for a random permutation. Running the distinguisher then consists in collecting a certain number of samples (obtained through
+the oracle) and deciding from which distribution (the one entailed by $\E$ or the one entailed by a random permutation) those are the
+most likely to have been drawn.
+A differential distinguisher instantiates this idea by considering a certain type of statistical events. Another major class of
+statistical distinguishers is the one of \emph{linear distinguishers}.
+
+Consider a block cipher $\E$; a \emph{differential} on $\E$ is a pair $(\Delta,\delta)$ of input and output \emph{differences},
+according to some group law $+$\footnote{We implicitly only consider non-trivial differences where $\Delta \neq 0$.}.
+In the huge majority of cases, $+$ is the addition in $\mathbf{F}_2^n$,
+\ie the bitwise exclusive OR (XOR); in this case we usually use the alternative notation $\oplus$. Sometimes, $+$
+is taken to be the addition in $\mathbf{Z}/2^n\mathbf{Z}$, and some other times differences according to the two laws may be jointly used.
+A \emph{differential pair} for the difference $(\Delta,\delta)$ is an ordered pair of plaintexts and their corresponding ciphertexts (for some
+key $k$)
+$p$, $c \defas \E(k,p)$, $p'$, $c' \defas \E(k,p')$ such that $p - p' = \Delta$, $c - c' = \delta$. When differences are over $\mathbf{F}_2^n$,
+subtraction coincides with addition and the pair can be unordered. We consider this to be the case in the remainder of this chapter.
+
+The most important property of a differential is its \emph{expected differential probability} (EDP), defined for a key $k$ as
+$\EDP_k(\Delta,\delta) \defas \Pr_{p\,\in\,\{0,1\}^n}[\E(k,p) \oplus \E(k,p \oplus \Delta) = \delta]$, \ie the probability for a random pair of plaintexts with
+difference $\Delta$ to be differential pair for $(\Delta,\delta)$. A common assumption is that the EDP of a given differential is independent of $k$, except possibly
+for some keys from a small subset of $\{0,1\}^k$.
+
+
+\bigskip
+
+\subsubsection{Extending distinguishers to key-recovery attacks}
+
+% have to assume some structure for the BC, typ. be iterative.
+
+% Note : not all KR attacks are based on distinguishers, ex. MiTM.
+
+\subsubsection{Unreasonable attack models}
+
+% brief
+
+\section{Using block ciphers}
+\label{sec:bc_modes}
+
+% brief
+
+% mode, AE
+
+%IND-CPA/CCA
+
+% REFS.... Where???
