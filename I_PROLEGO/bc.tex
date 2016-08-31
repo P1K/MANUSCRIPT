@@ -100,9 +100,11 @@ We now briefly describe two examples of types of distinguishers, which exploit `
 \bigskip
 
 We start with \emph{differential distinguishers}, which are part of the broader class of \emph{statistical} distinguishers.
-The basic idea of the latter is to define an event that is statistically more likely to occur for the target (the block cipher $\E$)
+The basic idea of the latter is to define an event which has a different probability distribution for the target (the block cipher $\E$)
 than for a random permutation drawn from $\Pi_{2^n}$. Running the distinguisher then consists in collecting a certain number of samples (obtained through
-the oracle) and deciding from which distribution (the one entailed by $\E$ or the one entailed by a random permutation) those are the
+the oracle) and deciding from which distribution
+%(the one entailed by $\E$ or the one entailed by a random permutation)
+those are the
 most likely to have been drawn.
 A differential distinguisher instantiates this idea by considering a certain type of statistical events. Another major class of
 statistical distinguishers is the one of \emph{linear distinguishers}.
@@ -120,14 +122,17 @@ subtraction coincides with addition and the pair can be unordered. We consider t
 We call \emph{differential probability} of a differential w.r.t. a permutation $\Perm$ the probability of obtaining a differential pair
 for $\Perm$:
 $\DP^{\Perm}(\Delta,\delta) \defas \Pr_{p\,\in\,\{0,1\}^n}[\Perm(k,p) \oplus \Perm(k,p \oplus \Delta) = \delta]$.
-The most important characteristic of a differential pair for a block cipher is its \emph{expected differential probability}, which
-is simply the differential probability of $\E(k,\cdot)$ averaged over $k$:
+The most important characteristic of a differential for a block cipher is its \emph{expected differential probability}, which
+is simply its differential probability for $\E(k,\cdot)$ averaged over $k$:
 $\EDP^{\E}(\Delta,\delta) \defas 2^{-\kappa}\sum_{k\,\in\,\{0,1\}^\kappa} \DP^{\E(k,\cdot)}(\Delta,\delta)$.
 A common assumption is that for most keys and differentials, the fixed-key DP is close to the average EDP.
-The DP of a random differential w.r.t. a random permutation is
-drawn according to a {\color{red}* LAW CENTERED ON *}; its $\EDP^{\Pi_{2^n}}$ over all permutations is {\color{red}$2^{n-x}$?}.
-For a distinguisher on $\E$ to be of any use, we need its EDP to be different than {\color{red}$2^{n-x}$?}. If it is far enough
-from that (\eg $2^{3n/4}$), we usually make the simplifying working hypothesis that all DPs are equal to their associated EDPs.
+The DP of a random differential w.r.t. a random permutation can be approximated by
+a Poisson distribution: the (approximate) number of differential pairs is $\sim \poi(2^{-1})$, of mean and variance $2^{-1}$
+(see~\cite{DBLP:journals/jmc/DaemenR07}, using an earlier result~\cite{DBLP:journals/joc/OConnor95}).
+As there are $2^{n-1}$ possible pairs, the expected DP is thus $2^{-n}$\footnote{Note however that the DP is in fact restricted to values multiple of $2^{-n+1}$.}.
+For a distinguisher on $\E$ to be of any use, we need its EDP not to be equal to $2^{-n}$. If it is far enough
+from that (\eg $2^{-3n/4}$), we usually make the simplifying working hypothesis that all DPs are equal to their expected value (or rather the nearest
+possible values).
 In such a case, using the distinguisher consists in collecting $\propto 1/\EDP^{\E}(\Delta,\delta)$ plaintext pairs verifying
 the input difference and counting how many of them verify the output difference. We decide that we are interacting with $\E$ if and only if this is one or more.
 
