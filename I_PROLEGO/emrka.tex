@@ -17,33 +17,21 @@
 
 \section{Introduction}
 
-This short chapter presents a few common elements of symmetric-key cryptography and illustrates them with a simple ---albeit real--- example
-We wish in particular to highlight the widespread notion of \emph{distinguisher}, and the importance of the choice of a proper model for an attack.
- 
-\begin{center}
-\aldineleft
-\end{center}
-
-\subsection{Distinguishers and their uses in cryptanalysis}
-Informally, a \emph{distinguisher} on a cryptographic primitive $P$ is a property that provides some \emph{advantage} (over a random guess)
-to an attacker who wishes to decide if he is interacting with $P$ itself or an idealized version of it. Distinguishers can take many
-forms
-
 
 The Even-Mansour scheme is arguably the simplest way to construct a block cipher from publicly available
 components. It defines the encryption $\E((k_1, k_0), p)$ of the plaintext $p$ under the (possibly equal) keys $k_0$
 and $k_1$ as $\Perm(p \oplus k_0) \oplus k_1$, where $\Perm$ is a public permutation. Even and Mansour proved
 in~1991 that for a permutation of size $n$, the probability of recovering the keys
-is upper-bounded by $\bigo(DT \cdot 2^{-n})$ when the attacker considers the permutation as a black box,
-where $D$ is the data complexity and $T$ is the time
+is upper-bounded by $\bigo(qt \cdot 2^{-n})$ when the attacker considers the permutation as a black box,
+where $q$ is the data complexity and $t$ is the time
 complexity of the attack~\cite{EM}. Although
 of considerable interest, this bound also shows at the same time that the construction is not ideal,
 as one gets security only up to $\bigo(2^\frac{n}{2})$ queries, which
 is less than the $\bigo(2^n)$ one would expect for an $n$-bit block cipher. For this
 reason, much later work investigated the security of variants of the Even-Mansour cipher. A simple
-one is the iterated Even-Mansour scheme with independent keys and independent permutations,
-with its $r$-round version defined as
-$\IEM^r((k_r, k_{r-1}, \ldots, k_0), p) := \Perm_{r-1}(\Perm_{r-2}(\ldots\Perm_0\linebreak[1](p \oplus k_0) \oplus k_1)\ldots) \oplus k_r$,
+one is the iterated Even-Mansour scheme ($\IEM$). When using independent keys and independent permutations,
+its $r$-round version is defined as
+$\IEM^r((k_r, k_{r-1}, \ldots, k_0), p) \defas \Perm_{r-1}(\Perm_{r-2}(\ldots\Perm_0\linebreak[1](p \oplus k_0) \oplus k_1)\ldots) \oplus k_r$,
 and it has been established that this construction is secure up to $\bigo(2^\frac{rn}{r+1})$ queries~\cite{CS14}.
 On the other hand, in a related-key model, the same construction lends itself to trivial
 distinguishing attacks, and one must consider alternatives if security in this model is necessary.
@@ -58,22 +46,22 @@ single-key setting, it is a widely accepted
 model that may provide useful results on primitives studied in a general context,
 especially as related keys may naturally arise in some protocols.
 
-\subsubsection{Our contribution.}
-We show that the distinguishing attacks on Even-Mansour ciphers in a related-key
-model can be extended to much more powerful key-recovery attacks by considering modular
-additive differences instead of XOR differences. This applies both to the trivial
-distinguishers on iterated Even-Mansour with independent keys and to the more complex distinguisher
-of Cogliati and Seurin for 2-round Even-Mansour with a linear key-schedule. While these observations
-are somewhat elementary, they eventually lead to a key-recovery attack
-on the authenticated-encryption scheme and \caesar candidate \proestotr in a related-key model. This improves on the recent work
-from FSE~2015 of Dobraunig, Eichlseder and Mendel who use similar methods but only produce forgeries~\cite{DEM15}.
+%\subsubsection{Our contribution.}
+%We show that the distinguishing attacks on Even-Mansour ciphers in a related-key
+%model can be extended to much more powerful key-recovery attacks by considering modular
+%additive differences instead of XOR differences. This applies both to the trivial
+%distinguishers on iterated Even-Mansour with independent keys and to the more complex distinguisher
+%of Cogliati and Seurin for 2-round Even-Mansour with a linear key-schedule. While these observations
+%are somewhat elementary, they eventually lead to a key-recovery attack
+%on the authenticated-encryption scheme and \caesar candidate \proestotr in a related-key model. This improves on the recent work
+%from FSE~2015 of Dobraunig, Eichlseder and Mendel who use similar methods but only produce forgeries~\cite{DEM15}.
 
 \section{Notation}
 
 We use $||$ to denote string concatenation, $\alpha^i$ with $i$ an integer
 to denote the string
 made of the concatenation of $i$ copies of the character $\alpha$, and $\alpha^*$
-to denote any string of the set $\{\alpha^i, i \in \mathbb{N}\}$, $\alpha^0$
+to denote any string of the set $\{\alpha^i, i \in \mathbf{N}\}$, $\alpha^0$
 denoting the empty string $\varepsilon$. For any string $s$, we use
 $s[i]$ to denote its $i^\text{th}$ element (starting from zero).
 
@@ -82,14 +70,13 @@ $0^{n-i-1} || 1 || 0^{i - 1}$. The superscript $n$ will always
 be clear from the context and therefore omitted.
 
 Finally, we identify strings of length $n$ over the binary alphabet $\{0,1\}$ with elements of
-the vector-space $\mathbb{F}_2^n$ and with the binary representation of elements of
-the group $\mathbb{Z}/2^n\mathbb{Z}$. The addition operation on these structures
+the vector-space $\mathbf{F}_2^n$ and with the binary representation of elements of
+the group $\mathbf{Z}/2^n\mathbf{Z}$. The addition operation on these structures
 are respectively denoted by $\oplus$ (bitwise exclusive or (XOR)) and $+$ (modular addition).
 
 \section{Generic related-key key-recovery attacks on Even-Mansour ciphers}
 \label{sec:gen}
 
-%TODO Also, collisions with many related keys => n/2 sec. 
 
 Since the work of Bellare and Kohno~\cite{BK03}, it is well known that no block cipher can resist
 related-key attacks (RKA) when an attacker may request encryptions under related keys
@@ -104,10 +91,10 @@ and $\E(k \oplus \Delta_i, p)$. For $i < \kappa - 1$, the plaintext
 $p$ is encrypted under the same key if
 $k[i] = 0$, then resulting in the same ciphertext, and is
 encrypted under different keys if $k[i] = 1$, then resulting in different ciphertexts
-with an overwhelming probability.
+with overwhelming probability.
 Doing this test for every bit of $k$ thus allows to recover the whole key
-with a complexity linear in $\kappa$, except its most significant bit. Indeed,
-the carry of a modular addition on this bit never propagates and thus there will never be a difference between the related keys.
+with a complexity linear in $\kappa$, except its most significant bit, as
+the carry of a modular addition on the MSB never propagates.% and thus never there will never be a difference between the related keys.
 This key bit can of course easily be recovered once all the others have been determined.
 
 In the same paper, Bellare and Kohno also show that no such trivial generic attack exists when
@@ -117,9 +104,14 @@ cipher is in this case resistant to RKA. Taken together, these results mean in e
 that a related-key attack on a block cipher $\E$ using both classes $\xrka(k)$ and $\arka(k)$ does not say
 much on $\E$, as nearly all ciphers fall to an attack
 in the same model. On the other hand, an attack using either of $\xrka$ or $\arka$ \emph{is} meaningful,
-because an ideal cipher is secure in that case.
+because an ideal cipher is secure in that case\footnote{When
+queries with many different related keys are allowed, this security remains lower than in a single-key model,
+because of the ability to create collisions. One can
+for instance query $\E(k\oplus\Delta_i,p)$ with $2^{k/2}$ different values for $\Delta_i$ and a constant $p$
+and then computes $\E(\gamma_i,p)$ with $2^{k/2}$ guesses $\gamma_i$ for $k$. With high probability, one
+of the $\gamma_i$s will be equal to one of the $k\oplus\Delta_i$s, which allows to recover $k$.}.
 
-\subsection{Key-recovery attacks on $r$-round $\IEM$ with independent keys}
+\subsection{Key-recovery attacks on $\IEM^r$ with independent keys}
 
 Going back to Even-Mansour ciphers, we explicit the
 trivial related-key distinguishers mentioned in the introduction. These distinguishers exist
@@ -132,8 +124,14 @@ is obvious to see that the two values $\E((k_{r-1}, k_{r-2},\linebreak[1] \ldots
 and $\E((k_{r-1}, k_{r-2}, \ldots, k_0 \oplus \delta), p \oplus \delta)$ are equal for any
 difference $\delta$ when
 $\E = \IEM^r$ and that this equality does not hold in general, thence allowing to distinguish
-$\IEM^r$ from an ideal cipher.
+$\IEM^r$ from an ideal cipher. This is illustrated for the original Even-Mansour scheme in \autoref{fig:em3}.
 
+\begin{figure}[!htb]
+\begin{center}
+\input{../I_PROLEGO/em3.tex}
+\caption{A related-key distinguisher on $\IEM^1$. Dashed lines represent datapaths where a difference is injected and not canceled.\label{fig:em3}}
+\end{center}
+\end{figure}
 
 \medskip
 
@@ -145,6 +143,22 @@ the value of the bit $k_0[i]$ by querying $\E((k_1, k_0), p)$ and
 $\E((k_1, k_0 + \Delta_i), p \oplus \Delta_i)$
 and by comparing their values. These  differ with overwhelming probability
 if $k_0[i] = 1$ and are equal otherwise.
+This is illustrated in \autoref{fig:em4.1.tex} and \autoref{fig:em4.2.tex}
+
+\begin{figure}[!htb]
+\begin{center}
+\input{../I_PROLEGO/em4.1.tex}
+\caption{Related-key queries to $\IEM^1$ with no output difference.\label{fig:em4.1.tex}}
+\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+\begin{center}
+\input{../I_PROLEGO/em4.2.tex}
+\caption{Related-key queries to $\IEM^1$ with an output difference.\label{fig:em4.2.tex}}
+\end{center}
+\end{figure}
+
 
 A similar attack works on the variant of the (iterated) Even-Mansour cipher
 that uses modular addition instead of XOR for the combination of the key with the plaintext.
@@ -157,25 +171,27 @@ Both attacks use a single difference class for the related keys (either $\xrka$ 
 and they are therefore meaningful as related-key attacks. They simply emulate the attack that uses both
 classes simultaneously by taking advantage of the fact that the usage of key material is very simple in
 Even-Mansour ciphers.
-Finally, we can see that in the particular case of a one-round construction, the attack still works if one
+Finally, we can see that in the particular case of a one-round construction, the attack still works without
+adaptation if one
 chooses the keys $k_1$ and $k_0$ to be equal.
 
-\subsection{Extension to 2-round Even-Mansour with a linear key schedule}
+\subsection{Extension to $\IEM^2$ with a linear key schedule}
 
-As has been shown by Cogliati and Seurin~\cite{CS15}, it is also possible to very efficiently distinguish the
-2-round Even-Mansour with related keys, even when the keys are equal or derived
-from a master key by a linear key schedule. Similarly as for $\IEM$, we can adapt
+Cogliati and Seurin~\cite{CS15} showed that it is also possible to very efficiently distinguish
+$\IEM^2$ with related keys, even when the keys are equal or derived
+from a master key by a linear key schedule. Similarly as for independent-key $\IEM$, we can adapt
 the distinguisher and transform it into a key-recovery attack. The idea remains the same: one
 replaces the $\xrka$ class of the original distinguisher with $\arka$, which makes its success
 conditioned on the value of a few key bits, hence allowing their recovery. We give
-the description of our modified distinguisher for $\E(k, p) := \Perm(\Perm(k \oplus p) \oplus k) \oplus k$:
+the description of our modified distinguisher for $\E(k, p) := \Perm(\Perm(k \oplus p) \oplus k) \oplus k$,
+where we let the $\Delta_i$s denote arbitrary differences:
 
 \begin{enumerate}[leftmargin=4em]
-	\item Query $y_1 := \E(k + \Delta_1, x_1)$
-	\item Set $x_2$ to $x_1 \oplus \Delta_1 \oplus \Delta_2$ and query $y_2 := \E(k + \Delta_2, x_2)$
-	\item Set $y_3$ to $y_1 \oplus \Delta_1 \oplus \Delta_3$ and query $x_3 := \E^{-1}(k + \Delta_3, y_3)$
-	\item Set $y_4$  to $y_2 \oplus \Delta_1 \oplus \Delta_3$ and query $x_4 := \E^{-1}(k + (\Delta_1 \oplus \Delta_2 \oplus \Delta_3), y_4)$
-	\item Test if $x_4 = x_3 \oplus \Delta_1 \oplus \Delta_2$
+	\item Query $y_1 := \E(k + \Delta_1, x_1)$.
+	\item Set $x_2$ to $x_1 \oplus \Delta_1 \oplus \Delta_2$ and query $y_2 := \E(k + \Delta_2, x_2)$.
+	\item Set $y_3$ to $y_1 \oplus \Delta_1 \oplus \Delta_3$ and query $x_3 := \E^{-1}(k + \Delta_3, y_3)$.
+	\item Set $y_4$  to $y_2 \oplus \Delta_1 \oplus \Delta_3$ and query $x_4 := \E^{-1}(k + (\Delta_1 \oplus \Delta_2 \oplus \Delta_3), y_4)$.
+	\item Test if $x_4 = x_3 \oplus \Delta_1 \oplus \Delta_2$.
 \end{enumerate}
 
 If the test is successful, it means that with overwhelming probability
@@ -225,12 +241,13 @@ From the final expressions of $x_3$ and $x_4$, we see that their XOR difference 
 \section{Application to \proestotr}
 \label{sec:appli}
 
-We apply the simple generic key-recovery attack to the \caesar candidate \proestotr, which is an authenticated-encryption
+We now apply the simple generic key-recovery attack of \autoref{sec:gen} to the \caesar candidate \proestotr, which is an authenticated-encryption
 scheme member of the \proest family~\cite{proest}. This family is based on the \proest permutation and defines
 three schemes instantiating as many modes of operation, namely COPA, OTR and APE. Only
-the latter can readily be instantiated with a permutation, and both COPA and OTR rely on a keyed primitive. For that purpose
-they use a block cipher defined as a one-round Even-Mansour cipher with identical keys
-$\E(k,p) := \Perm(p \oplus k) \oplus k$
+the latter can readily be instantiated with a permutation, and both COPA and OTR rely on a keyed primitive. In order
+to be instantiated with \proest, the permutation is expanded to a block cipher
+defined as a one-round Even-Mansour scheme with identical keys
+$\E(k,p) := \Perm(p \oplus k) \oplus k$,
 with the \proest permutation as $\Perm$. We will denote this cipher as \proestem.
 
 Although the attack of Section~\ref{sec:gen} could readily be applied to \proestem, this cipher is only
@@ -243,7 +260,8 @@ which is precisely what we describe now for the latter.
 Because our attack solely relies on the Even-Mansour structure of the cipher, we refer the interested reader to the
 submission document of \proest for the definition of its permutation.
 The same goes for the OTR mode~\cite{M14}, as we only need to focus on a small part to describe the attack.
-Consequently, we just describe how the encryption of the first block of plaintext is performed in \proestotr.
+Consequently, we just describe how the encryption of the first block of plaintext is performed in \proestotr\footnote{This is not necessarily the
+same as encrypting the first block in all instantiations of OTR, as there is some flexibility in the definition of the mode.}.
 
 \medskip
 
@@ -252,7 +270,7 @@ The mode of operation OTR is nonce-based; it takes as input a key $k$, a nonce $
 to the encryption of the message with $k$, and a tag $t$ authenticating $m$ and
 $a$ together with the key $k$. It is important for the security of the mode to ensure
 that one cannot encrypt twice using the same nonce. However, there are no
-specific restriction as to their value, and we consider throughout that one
+specific restriction as to their value, and we consider that one
 can freely choose them.
 
 The encryption of the first block of ciphertext $c_1$ by \proestotr is defined as a function
@@ -329,7 +347,7 @@ Let us now apply the attack from Section~\ref{sec:gen}.
 \caption{\label{fig:otr}The encryption of the first two blocks of message in \proestotr.}
 \end{figure}
 
-\subsubsection{Step 1: Recovering the most significant half of the key.}
+\subsection{Step 1: Recovering the most significant half of the key.}
 
 It is straightforward to see that one can recover the value
 of the bit $k[i]$ by performing only two queries with related keys
@@ -341,6 +359,23 @@ then the value $\hat{\ell}$ obtained in the computation of $\hat{c}_1$ is equal 
 $\ell \oplus \Delta_i$ and $\hat{\ell'} = \ell' \oplus \pi(\Delta_i)$, hence
 $\hat{c}_1 = c_1 \oplus \Delta_i$. If $k[i] = 1$, the latter equality does not
 hold with overwhelming probability.
+We illustrate the propagation of differences in the computation of $\ell'$ and $\hat{\ell'}$ in
+\autoref{fig:otr21} and \autoref{fig:otr22}.
+
+
+\begin{figure}[!htb]
+\begin{center}
+\input{../I_PROLEGO/otr2.1.tex}
+\caption{Related-key queries to \proestotr with predictible output difference.\label{fig:otr21}}
+\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+\begin{center}
+\input{../I_PROLEGO/otr2.2.tex}
+\caption{Related-key queries to \proestotr with unpredictible output difference.\label{fig:otr22}}
+\end{center}
+\end{figure}
 
 Yet this does not allow to recover the whole key because the nonce in \proestotr is restricted to a length
 half of the width of the block cipher $\E$ (or equivalently of the underlying \proest permutation),
@@ -356,16 +391,16 @@ point on the tradeoff curve of generic attacks, which in that case has a much hi
 $2^\frac{\kappa}{2}$.
 
 
-\subsubsection{Step 2: Recovering the least significant half of the key.}
+\subsection{Step 2: Recovering the least significant half of the key.}
 
 Even though the generic attack in its most simple form does not allow to recover the full key
 of \proestotr,
 we can use the fact that the padding of the nonce is done on the least significant
-bits to our advantage, and by slightly adapting the procedure we can iteratively recover the value
+bits to our advantage, and by slightly adapting the procedure of the first step, we can iteratively recover the value
 of the least significant half of the key with no more effort than for the most significant half.
 
 Let us first show how we can recover the most significant bit of the least significant half of
-the key $k[\msbtwo]$ (\ie the first bit for which we cannot use the procedure of Step~1)
+the key $k[\msbtwo]$ (\ie the first bit for which we cannot use the previous method)
 after a single encryption by $\E$. 
 %For the sake of simplicity, we assume for now that
 %unlike in \proestem the two keys of $\E$ are independent, and we omit to write the second (outer) key in the queries to $\E$.
@@ -377,9 +412,9 @@ iff $k[\msbtwo] = 1$. Indeed, in that case,
 the carry in the addition $(k - k^\MSB) + \Delta_\msbtwo$ propagates by exactly one position and is ``cancelled'' by
 the difference in $p$, and there is no carry propagation in $(k - k^\MSB) - \Delta_\msbtwo$.
 The result of the two queries are therefore equal to
-$\mathsf{C} \oplus (k - k^\MSB + \Delta_\msbtwo) = \mathsf{C} \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo \oplus \Delta_\msbtwoone)$ and
-$\mathsf{C} \oplus (k - k^\MSB - \Delta_\msbtwo) = \mathsf{C} \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo)$
-with $\mathsf{C} = \Perm(p \oplus (k - k^\MSB - \Delta_\msbtwo))$.
+$\mathfrak{C} \oplus (k - k^\MSB + \Delta_\msbtwo) = \mathfrak{C} \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo \oplus \Delta_\msbtwoone)$ and
+$\mathfrak{C} \oplus (k - k^\MSB - \Delta_\msbtwo) = \mathfrak{C} \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo)$
+with $\mathfrak{C} \defas \Perm(p \oplus (k - k^\MSB - \Delta_\msbtwo))$.
 Consequently, the XOR difference between the two results is known and equal to $\Delta_\msbtwoone$.
 If on the other hand
 $k[\msbtwo] = 0$, the carry in $(k - k^\MSB) - \Delta_\msbtwo)$ propagates all the way to the most significant bit of $k$, whereas only
@@ -392,7 +427,7 @@ it should propagate up to $k_{\msbtwoone}$, the position where we cancel it with
 (resp. up to the most significant bit); this can easily be achieved by adding two terms to both keys.
 Let us define $\gamma_i$ as the value of the key $k$ only on positions $\msbtwo\ldots\msbtwoone - i$, completed with zeros left and right;
 that is $\gamma_i[j] = k[j]$ if $\msbtwo \geq j \geq \msbtwoone - i$, and $\gamma_i[j] = 0$ otherwise.
-Let us also define $\widetilde{\gamma_i}$ as the binary complement of $\gamma_i$ on its non-zero support;
+Let us also define $\widetilde{\gamma_i}$ as the binary complement of $\gamma_i$ on its non-zero support,
 that is $\widetilde{\gamma_i}[j] = \widetilde{k[j]}$ if $\msbtwo \geq j \geq \msbtwoone - i$, and $\widetilde{\gamma_i}[j] = 0$ otherwise.
 The modified queries then become $\E(k - k^\MSB + \Delta_{\msbtwo - i} + \widetilde{\gamma_i}, p \oplus \Delta_{\msbtwoone})$ and
 $\E(k - k^\MSB - \Delta_{\msbtwo - i} - \gamma_i, p)$, for which the propagation of the carries is ensured. Note that
@@ -415,13 +450,13 @@ and $\fun(k + \Delta_i^-, n, m_1 \oplus \permi(\Delta_{\msbtwoone}), m_2)$, whic
 with overwhelming probability.
 
 All in all, one can retrieve the whole key of size
-$\kappa$ using only $2\kappa$ related-key encryption requests, ignoring
+$\kappa$ using only $2\kappa$ chosen-nonce related-key encryption requests (with $\kappa$ different keys), ignoring
 everything in the output (including the tag) apart from the value of the first block
-of ciphertext. We give the entire procedure to do so in \autoref{alg:kr}. Note that it makes use
+of ciphertext. We give the full attack in \autoref{alg:kr}. Note that it makes use
 of a procedure \textsc{Refresh} which picks fresh values for two message words and (most importantly)
 for the nonce. Because
-the attack is entirely practical, it can easily be tested. We give an implementation of the attack
-for a 64-bit toy cipher in the Appendix~\ref{sec:toy}\footnote{The code is also available at \url{https://github.com/P1K/EMRKA}.}.
+the attack is very fast, it can easily be tested. We give an implementation
+for a 64-bit toy cipher in the \autoref{sec:toy}.
 
 \begin{algorithm}[h]
 \LinesNumbered
@@ -475,7 +510,7 @@ be applicable to general ciphers when using only the $\arka$ class, and it is pr
 However, one could always imagine using a related-key class using an addition operation reading the bits in reverse. While
 admittedly unorthodox, this would not result in a stronger model than using $\arka$, strictly speaking.
 
-\subsubsection{Discussion.}
+\paragraph{Discussion.}
 
 In a recent independent work, Dobraunig, Eichlseder and Mendel use similar methods to produce forgeries for \proestotr by considering
 related keys with XOR differences~\cite{DEM15}. On the one hand, one could argue that the class $\xrka$ is more natural than $\arka$
@@ -488,12 +523,12 @@ much more powerful key recovery attack.
 
 We made a simple observation that allows to convert related-key distinguishing attacks on some Even-Mansour ciphers into much more
 powerful key-recovery attacks, and we used this observation to derive an extremely efficient key-recovery attack on the
-\proestotr \caesar candidate.
+\proestotr \caesar candidate, in the related-key model.
 
 Primitives based on the Even-Mansour construction are quite common, and it is natural to wonder if we could mount similar
 attacks on other ciphers. A natural first target would be \proestcopa which is also based on the \proestem cipher.
 However, in this mode,
-encryption and tag generation depend on the encryption of a fixed plaintext $\ell = \E(k, 0)$ which is different
+encryption and tag generation depend on the encryption of a fixed plaintext $\ell \defas \E(k, 0)$ which is different
 for different keys with overwhelming probability and makes our attack fail. The forgery attacks of
 Dobraunig~\etal seem to fail in that case for the same reason.
 Keeping with \caesar candidates, another good target would be \minalpher~\cite{minalpher}, which also
@@ -519,10 +554,11 @@ of a simple related-key distinguisher when designing a primitive, as this a very
 attack (in fact, this is for instance the approach taken by PRINCE, among others~\cite{PRINCE}, which admits
 a trivial distinguisher due to its FX construction).
 What we have shown is that one must be
-extremely careful when contemplating such a decision for Even-Mansour ciphers, as in that case it is actually
+careful when contemplating such a decision for Even-Mansour ciphers (and FX constructions, to some extent), as in that case it is actually
 equivalent to allowing key recovery, the most powerful of all attacks.
 
-%\appendix
+\setcounter{section}{0}
+\renewcommand\thesection{\Alph{section}}
 
 \section{Proof-of-concept implementation for a 64-bit permutation}
 \label{sec:toy}
@@ -530,9 +566,6 @@ equivalent to allowing key recovery, the most powerful of all attacks.
 We give the source of a C program that recovers a 64-bit key from a design similar to \proestotr where
 the permutation has been replaced by a small ARX, for compactness. For the sake of simplicity,
 we do not ensure that the nonce does not repeat in the queries.
-
-\noindent
-This code is also available at \url{https://github.com/P1K/EMRKA}.
 
 \begin{minted}[breaklines]{c}
 #include <stdio.h>
@@ -643,3 +676,5 @@ int main()
 	return 0;
 }
 \end{minted}
+
+\renewcommand\thesection{\arabic{section}}

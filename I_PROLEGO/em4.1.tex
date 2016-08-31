@@ -1,0 +1,45 @@
+\begin{tikzpicture}[scale=2,transform shape, thick]
+
+\hspace{.5mm}
+  \tikzstyle{every node}=[transform shape];
+  \tikzstyle{every node}=[node distance=1.2cm];
+
+	% data path
+    \node (XOR-1)[XOR,scale=0.8,thick] {};
+    \node [left of=XOR-1] (p) {$p$};
+	\node (f-1) [right of=XOR-1,draw,rectangle,very thick,minimum width=1cm,minimum height=1cm] {$\Perm$};
+	\draw (XOR-1) edge (f-1);
+
+    \node (XOR-2)[right of=f-1,XOR,scale=0.8,thick] {};
+	\draw (f-1) edge (XOR-2);
+	\node (f-2) [right of=XOR-2] {};
+	\path[line] (XOR-2) edge (f-2) ;
+	\node [right of=XOR-2,node distance=1.2cm] {$c$};
+
+	%% Subkeys
+	\node (k-0) [above=1.2cm of XOR-1]{\small $k_{0}$} ;
+
+	\node (k-1) [above=1.2cm of XOR-2]{\small $k_{1}$};
+	\draw (k-1) edge (XOR-2);
+
+	% Diff
+	\coordinate [above=7.17mm of p] (d);
+	\node (delta) [right=2.68mm of d] {$\Delta_i$};
+	\node (XOR-3)[below=2.65mm of k-0,ADD,scale=0.8] {};
+    \node (XOR-4)[right=2.25mm of p,XOR,scale=0.8] {};
+	
+	% moar datapath
+	\draw (p) edge (XOR-4);
+	\draw[dashed] (XOR-4) edge (XOR-1);
+	%
+	\draw (k-0) edge (XOR-3);
+	\draw[dashed] (XOR-3) edge (XOR-1);
+	%
+	\coordinate[right=9.5mm of d] (dp) ;
+	\draw[dashed] (dp) edge (XOR-3);
+	\draw[dashed] (delta) edge (XOR-4);
+
+	% cap
+	\node [right=.25cm of k-0,scale=0.7] {\emph{If $k_0[i] = 0$}};
+	
+\end{tikzpicture}

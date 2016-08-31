@@ -1,0 +1,60 @@
+\begin{tikzpicture}[scale=2,transform shape, thick]
+
+\hspace{-2.5mm}
+  \tikzstyle{every node}=[transform shape];
+  \tikzstyle{every node}=[node distance=1.2cm];
+
+	% data path
+    \node (XOR-1)[XOR,scale=0.8,thick] {};
+	\node (f-1) [right=4mm of XOR-1,draw,rectangle,very thick,minimum width=1cm,minimum height=1cm] {$\Perm$};
+    \node (XOR-2)[right=4mm of f-1,XOR,scale=0.8,thick] {};
+    \node [left of=XOR-1] (p) {$n$};
+	\draw[dashed] (XOR-1) edge (f-1);
+
+	\draw[dashed] (f-1) edge (XOR-2);
+	\node (f-2) [right of=XOR-2,node distance=.5cm] {$\hat{\ell}$};
+	\node (XOR-6) [right of=f-2,node distance=.5cm,MUL,scale=0.8] {};
+	\node (f-3) [right of=XOR-6,node distance=.7cm] {$\hat{\ell'}$};
+	\draw[dashed] (XOR-2) edge (f-2);
+	\draw[dashed] (f-2) edge (XOR-6);
+	\draw[line,dashed] (XOR-6) edge (f-3);
+
+	%% Subkeys
+	\node (k-0) [above=1.2cm of XOR-1]{\small $k$} ;
+	\node (k-1) [above=1.2cm of XOR-2]{\small $k$};
+
+	% cst
+	\node (four) [above=1.2cm of XOR-6]{\small 4};
+	\draw (four) -- (XOR-6);
+
+	% Diff
+	\coordinate [above=7.51mm of p] (d);
+	\node (delta) [right=2.68mm of d] {$\Delta_i$};
+	\node (XOR-3)[below=2.65mm of k-0,ADD,scale=0.8] {};
+    \node (XOR-4)[right=2.25mm of p,XOR,scale=0.8] {};
+	\node (XOR-5)[below=2.65mm of k-1,ADD,scale=0.8] {};
+	
+	% moar datapath
+	\draw (p) edge (XOR-4);
+	\draw[dashed] (XOR-4) edge (XOR-1);
+	%
+	\draw (k-0) edge (XOR-3);
+	\draw[dashed] (XOR-3) edge (XOR-1);
+	%
+	\coordinate[right=9.5mm of d] (dp) ;
+	\draw[dashed] (dp) edge (XOR-3);
+	\draw[dashed] (delta) edge (XOR-4);
+	%
+	\draw[dashed] (XOR-3) -- (XOR-5);
+	%
+	\draw (k-1) -- (XOR-5);
+	\draw[dashed] (XOR-5) -- (XOR-2);
+
+	% cap
+	\node [right=.25cm of k-0,scale=0.7] {\emph{If $k[i] = 1$}};
+	\node (cap2) [below=.2cm of XOR-6,scale=0.7] {$\hat{\ell'} = \ell'\oplus \$$};
+
+	% white square
+	\node [below=.3mm of f-1] {};
+	
+\end{tikzpicture}
