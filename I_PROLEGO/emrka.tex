@@ -18,7 +18,7 @@
 \section{Introduction}
 
 
-The Even-Mansour scheme is arguably the simplest way to construct a block cipher from publicly available
+The Even-Mansour scheme (, ``Even-Mansour'', or \EM) is arguably the simplest way to construct a block cipher from publicly available
 components. It defines the encryption $\E((k_1, k_0), p)$ of the plaintext $p$ under the (possibly equal) keys $k_0$
 and $k_1$ as $\Perm(p \oplus k_0) \oplus k_1$, where $\Perm$ is a public permutation. Even and Mansour proved
 in~1991 that for a permutation of size $n$, the probability of recovering the keys
@@ -28,23 +28,23 @@ complexity of the attack~\cite{EM}. Although
 of considerable interest, this bound also shows at the same time that the construction is not ideal,
 as one gets security only up to $\bigo(2^\frac{n}{2})$ queries, which
 is less than the $\bigo(2^n)$ one would expect for an $n$-bit block cipher. For this
-reason, much later work investigated the security of variants of the Even-Mansour cipher. A simple
+reason, much later work investigated the security of variants of the original construction. A simple
 one is the iterated Even-Mansour scheme ($\IEM$). When using independent keys and independent permutations,
 its $r$-round version is defined as
 $\IEM^r((k_r, k_{r-1}, \ldots, k_0), p) \defas \Perm_{r-1}(\Perm_{r-2}(\ldots\Perm_0\linebreak[1](p \oplus k_0) \oplus k_1)\ldots) \oplus k_r$,
-and it has been established that this construction is secure up to $\bigo(2^\frac{rn}{r+1})$ queries~\cite{CS14}.
+and it has been established by Chen and Steinberger that this construction is secure up to $\bigo(2^\frac{rn}{r+1})$ queries~\cite{CS14}.
 On the other hand, in a related-key model, the same construction lends itself to trivial
 distinguishing attacks, and one must consider alternatives if security in this model is necessary.
 Yet until the recent work of Cogliati and Seurin~\cite{CS15} and Farshim and Procter~\cite{FP14},
-no variant of the Even-Mansour construction was proved to be secure in the related-key model. This is not the case
+no variant of Even-Mansour was proved to be secure in the related-key model. This is not the case
 anymore and it has now been proven that one can reach a non-trivial level of related-key security for $\IEM^r$
 starting from $r = 3$ when using keys linearly derived from a single master key (instead
 of using independent keys), or even when $r = 1$
 when this derivation is non-linear and meets some conditions.
 While related-key analysis obviously gives much more power to the attacker than the
 single-key setting, it is a widely accepted
-model that may provide useful results on primitives studied in a general context,
-especially as related keys may naturally arise in some protocols.
+model that may provide useful results on primitives studied in a general context.
+%especially as related keys may naturally arise in some protocols.
 
 %\subsubsection{Our contribution.}
 %We show that the distinguishing attacks on Even-Mansour ciphers in a related-key
@@ -74,7 +74,7 @@ the vector-space $\mathbf{F}_2^n$ and with the binary representation of elements
 the group $\mathbf{Z}/2^n\mathbf{Z}$. The addition operation on these structures
 are respectively denoted by $\oplus$ (bitwise exclusive or (XOR)) and $+$ (modular addition).
 
-\section{Generic related-key key-recovery attacks on Even-Mansour ciphers}
+\section{Generic related-key key-recovery attacks on $\IEM$}
 \label{sec:gen}
 
 
@@ -113,9 +113,9 @@ of the $\gamma_i$s will be equal to one of the $k\oplus\Delta_i$s, which allows 
 
 \subsection{Key-recovery attacks on $\IEM^r$ with independent keys}
 
-Going back to Even-Mansour ciphers, we explicit the
+Going back to $\IEM$, we explicit the
 trivial related-key distinguishers mentioned in the introduction. These distinguishers exist
-for $r$-round iterated Even-Mansour block ciphers with independent keys, for any value of $r$.
+for $r$-round iterated Even-Mansour schemes with independent keys, for any value of $r$.
 As they only use keys related with, say, the $\xrka$ class,
 they are therefore meaningful when considering the related-key security of $\IEM$.
 
@@ -124,12 +124,12 @@ is obvious to see that the two values $\E((k_{r-1}, k_{r-2},\linebreak[1] \ldots
 and $\E((k_{r-1}, k_{r-2}, \ldots, k_0 \oplus \delta), p \oplus \delta)$ are equal for any
 difference $\delta$ when
 $\E = \IEM^r$ and that this equality does not hold in general, thence allowing to distinguish
-$\IEM^r$ from an ideal cipher. This is illustrated for the original Even-Mansour scheme in \autoref{fig:em3}.
+$\IEM^r$ from an ideal cipher. This is illustrated for the original \EM in \autoref{fig:em3}.
 
 \begin{figure}[!htb]
 \begin{center}
 \input{../I_PROLEGO/em3.tex}
-\caption{A related-key distinguisher on $\IEM^1$. Dashed lines represent datapaths where a difference is injected and not canceled.\label{fig:em3}}
+\caption{A related-key distinguisher on \EM. Dashed lines represent datapaths where a difference is injected and not canceled.\label{fig:em3}}
 \end{center}
 \end{figure}
 
@@ -160,17 +160,17 @@ This is illustrated in \autoref{fig:em4.1.tex} and \autoref{fig:em4.2.tex}
 \end{figure}
 
 
-A similar attack works on the variant of the (iterated) Even-Mansour cipher
+A similar attack works on the variant of the (iterated) \EM 
 that uses modular addition instead of XOR for the combination of the key with the plaintext.
 This variant was first analyzed by Dunkelman, Keller and Shamir~\cite{DKS12} and offers the same security bounds as the
-original Even-Mansour cipher. An attack in that case works similarly
+original Even-Mansour. An attack in that case works similarly
 by querying \eg $\E((k_1, k_0), \Delta_i)$ and
 $\E((k_1, k_0 \oplus \Delta_i), 0^\kappa)$.
 
 Both attacks use a single difference class for the related keys (either $\xrka$ or $\arka$),
 and they are therefore meaningful as related-key attacks. They simply emulate the attack that uses both
 classes simultaneously by taking advantage of the fact that the usage of key material is very simple in
-Even-Mansour ciphers.
+Even-Mansour.
 Finally, we can see that in the particular case of a one-round construction, the attack still works without
 adaptation if one
 chooses the keys $k_1$ and $k_0$ to be equal.
@@ -366,14 +366,14 @@ We illustrate the propagation of differences in the computation of $\ell'$ and $
 \begin{figure}[!htb]
 \begin{center}
 \input{../I_PROLEGO/otr2.1.tex}
-\caption{Related-key queries to \proestotr with predictible output difference.\label{fig:otr21}}
+\caption{Related-key queries to \proestotr with predictable output difference.\label{fig:otr21}}
 \end{center}
 \end{figure}
 
 \begin{figure}[!htb]
 \begin{center}
 \input{../I_PROLEGO/otr2.2.tex}
-\caption{Related-key queries to \proestotr with unpredictible output difference.\label{fig:otr22}}
+\caption{Related-key queries to \proestotr with unpredictable output difference.\label{fig:otr22}}
 \end{center}
 \end{figure}
 
@@ -456,7 +456,7 @@ of ciphertext. We give the full attack in \autoref{alg:kr}. Note that it makes u
 of a procedure \textsc{Refresh} which picks fresh values for two message words and (most importantly)
 for the nonce. Because
 the attack is very fast, it can easily be tested. We give an implementation
-for a 64-bit toy cipher in the \autoref{sec:toy}.
+for a 64-bit toy cipher in \autoref{sec:toy}.
 
 \begin{algorithm}[h]
 \LinesNumbered
@@ -521,11 +521,11 @@ much more powerful key recovery attack.
 
 \section{Conclusion}
 
-We made a simple observation that allows to convert related-key distinguishing attacks on some Even-Mansour ciphers into much more
+We made a simple observation that allows to convert related-key distinguishing attacks on some Even-Mansour schemes into much more
 powerful key-recovery attacks, and we used this observation to derive an extremely efficient key-recovery attack on the
 \proestotr \caesar candidate, in the related-key model.
 
-Primitives based on the Even-Mansour construction are quite common, and it is natural to wonder if we could mount similar
+Primitives based on \EM are quite common, and it is natural to wonder if we could mount similar
 attacks on other ciphers. A natural first target would be \proestcopa which is also based on the \proestem cipher.
 However, in this mode,
 encryption and tag generation depend on the encryption of a fixed plaintext $\ell \defas \E(k, 0)$ which is different
@@ -552,9 +552,9 @@ Therefore, any primitive for which resistance to related-key attacks is importan
 to the distinguishing attacks and thus to ours. Yet it would be reasonable to allow the presence
 of a simple related-key distinguisher when designing a primitive, as this a very weak type of
 attack (in fact, this is for instance the approach taken by PRINCE, among others~\cite{PRINCE}, which admits
-a trivial distinguisher due to its FX construction).
+a trivial distinguisher due to its \textsf{FX} construction).
 What we have shown is that one must be
-careful when contemplating such a decision for Even-Mansour ciphers (and FX constructions, to some extent), as in that case it is actually
+careful when contemplating such a decision for \EM (and \textsf{FX} constructions, to some extent), as in that case it is actually
 equivalent to allowing key recovery, the most powerful of all attacks.
 
 \setcounter{section}{0}

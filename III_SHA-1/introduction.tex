@@ -1,4 +1,4 @@
-\section{Introduction}
+\section{Hash functions}
 \label{sec:intro}
 
 A (binary) hash function is a mapping from bit strings of arbitrary length (the messages) to strings of a fixed predetermined length (the digests, or hashes):
@@ -7,8 +7,6 @@ Many hash functions do not strictly adhere to this definition, as they upper-bou
 no impact in practice, as all potential inputs to a hash function are much shorter than these upper limits; it is of course debatable whether this will always remain the case. 
 The typical output length of hash functions is of a few hundred bits, often a multiple of thirty-two; popular hash functions of the present and the past may be found with
 $n \in \{128, 160, 224, 256, 384, 512\}$.
-
-\subsection{Cryptographic hash functions}
 
 A \emph{cryptographic} hash function\footnote{We will obviously only consider such functions from now on.} is a hash function $\hash$ that verifies a certain number of \emph{security properties}, which express the difficulty of computing inputs
 to $\hash$ that verify some conditions. There are three ``classical'' security properties that must be met (at least to some extent)
@@ -42,7 +40,7 @@ exclude (generic) algorithms that simply return two constant colliding messages,
 they do not say anything about the security of the functions (not the least because of their generic nature). Consequently, they are usually considered irrelevant in a cryptographic context, and they do not make
 the definition devoid of sense.
 
-\bigskip
+\subsection{Applications of hash functions}
 
 The nature of the properties used to define security for cryptographic hash functions is based on requirements from the various cases where they may be used in concrete cryptosystems or protocols.
 Depending on the situation, resistance w.r.t. all three properties from above may not be necessary; for instance, it may be the case that collision resistance is not required, or that, say, only second preimage resistance
@@ -82,7 +80,7 @@ highly necessary that no tag collisions occur, whether or not these happen on sp
 Hash functions seem to be good candidates to build MACs, and indeed generic hash function based constructions such as HMAC~\cite{DBLP:conf/crypto/BellareCK96} are popular. However, the exact security of
 these constructions is not always easy to establish, and there are usually faster alternatives such as MACs based on universal/polynomial hash functions (see \eg~\cite{DBLP:conf/crypto/BlackHKKR99}).
 
-\subsubsection{\merkdam hash functions}
+\section{\merkdam hash functions}
 \label{sec:mdhf}
 
 One of the first frameworks for hash function design to have been developed is the so-called \merkdam construction, that was independently developed by
@@ -153,7 +151,7 @@ Let $\mess$ be a message fitting on $r+1$ blocks after padding s.t. $\hash(\mess
 Then $\compress(\chain_r, \messblock_r) = \targ$, and $(\chain_r, \messblock_r)$ is thus a valid preimage input for $\compress$.
 \end{proof}
 
-\subsubsection{Refining the security}
+\section{Refining the security of hash functions}
 \label{sec:refining_md}
 
 The three security notions of collision and preimage resistance can be refined and completed with additional ones. These are not always directly relevant to actual uses of hash functions, but they may nonetheless be useful to evaluate the security
@@ -239,7 +237,7 @@ pair of outputs of the function called on these inputs also has this property. A
 an attack against the main and secondary security properties defined above.
 
 
-\subsubsection{Modern hash function frameworks}
+\section{Modern hash function frameworks}
 \label{sec:betterhash}
 
 We have mentioned some generic weaknesses of the \merkdam framework in \autoref{sec:refining_md}. As a consequence of these, modern hash function designs are usually based on alternative,
@@ -274,7 +272,7 @@ of the same output size, with $\varepsilon \approx 2^{-c}q^2$~\cite{DBLP:conf/eu
 
 One of the best examples of a sponge function is \keccak~\cite{KeccakReference}, which became the \shathree standard in 2015~\cite{Nist-SHA3}. 
 
-\subsection{The \mdsha family}
+\section{The \mdsha family}
 \label{sec:mdsha}
 We now briefly present the ``\mdsha'' hash function family, both because it is of somewhat historical importance and because, the function studied in this article, \shaone, is one of its members.
 
@@ -296,17 +294,17 @@ $\chain_{i+1} \defas \blockE(\messblock_{i+1},\chain_i) \boxplus \chain_i$.
 With the advent of the NIST \shathree competition, which ran from 2007 to 2012, much more diversity was introduced to hash function design. However, the \mdsha family still had an influence on many competition candidates, and it remains
 influential as of today.
 
-\subsection{Contributions of this thesis}
-
-In this chapter, we present a joint work with Thomas Peyrin and Marc Stevens on freestart collisions for the \shaone hash function, \ie attacks breaking the security of the function according to \autoref{def:free_coll}. Hash function
-collisions (attacks w.r.t. \autoref{def:coll}) had already been presented by Wang \etal in 2005~\cite{DBLP:conf/crypto/WangYY05a}, but their high complexity made the explicit computation of a collision for the full function unfeasible
-at the time (and no such collision was publicly known at the time where this thesis was written). The novelty of our work comes from the fact that we were able to explicitly compute collisions for the entire compression function
-of \shaone. Furthermore, most of the methods developed during this research can be smoothly translated to the hash function case, which lead to more accurate, cheaper estimates for the cost of a hash function collision.
-
-This work was published in two papers: a first attack on \shaone reduced to 76 steps was published at CRYPTO~2015~\cite{DBLP:conf/crypto/KarpmanPS15},
-and an improved attack on the full 80-step compression function was published at EUROCRYPT~2016~\cite{DBLP:conf/eurocrypt/StevensKP16}. 
-
-\medskip
-
-In a joint work with Thomas Espitau and Pierre-Alain Fouque, we also improved the preimage attacks on \shaone. This led to another paper published at CRYPTO~2015 \cite{DBLP:conf/crypto/EspitauFK15}. However, we do not detail this contribution
-in this manuscript.
+%\subsection{Contributions of this thesis}
+%
+%In this chapter, we present a joint work with Thomas Peyrin and Marc Stevens on freestart collisions for the \shaone hash function, \ie attacks breaking the security of the function according to \autoref{def:free_coll}. Hash function
+%collisions (attacks w.r.t. \autoref{def:coll}) had already been presented by Wang \etal in 2005~\cite{DBLP:conf/crypto/WangYY05a}, but their high complexity made the explicit computation of a collision for the full function unfeasible
+%at the time (and no such collision was publicly known at the time where this thesis was written). The novelty of our work comes from the fact that we were able to explicitly compute collisions for the entire compression function
+%of \shaone. Furthermore, most of the methods developed during this research can be smoothly translated to the hash function case, which lead to more accurate, cheaper estimates for the cost of a hash function collision.
+%
+%This work was published in two papers: a first attack on \shaone reduced to 76 steps was published at CRYPTO~2015~\cite{DBLP:conf/crypto/KarpmanPS15},
+%and an improved attack on the full 80-step compression function was published at EUROCRYPT~2016~\cite{DBLP:conf/eurocrypt/StevensKP16}. 
+%
+%\medskip
+%
+%In a joint work with Thomas Espitau and Pierre-Alain Fouque, we also improved the preimage attacks on \shaone. This led to another paper published at CRYPTO~2015 \cite{DBLP:conf/crypto/EspitauFK15}. However, we do not detail this contribution
+%in this manuscript.
