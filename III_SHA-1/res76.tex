@@ -448,31 +448,33 @@ $\state_{-2},\ldots,\state_{-4}$, the last three \iv words are rotated by two to
 \begin{table}[!htb]
 \caption{A freestart collision for 76-step \shaone. Message and \iv bytes with differences are highlighted with \framebox{\color{LimeGreen}coloured boxes}.}\label{tbl:fscoll76}
 \centering
-\begin{tabular}{c c}
+\begin{tabular}{l l}
 \toprule
  & Message 1\\
 \midrule
-\iv &  \hspace{-1.95mm}\texttt{81 bf 23 06  41 b8 3b \framebox{\color{Cerulean}5c  03} e9 a7 8f  ba 50 28 d5  fc 50 87 88} \\
+\iv &  \hspace{-8mm}\texttt{81 bf 23 06  41 b8 3b \framebox{\color{Cerulean}5c  03} e9 a7 8f  ba 50 28 d5  fc 50 87 88} \\
 \midrule
 $\mess$ & \texttt{\hspace{1.15mm}46\hspace{1.25mm} fa 5a \framebox{\color{Cerulean}88  f4} f0 c7 \framebox{\color{Cerulean}f0  b8} de db \framebox{\color{Cerulean}ec  95} 1e 25 \framebox{\color{Cerulean}88}}\\
         & \texttt{\framebox{\color{Cerulean}77} 34 fd \framebox{\color{Cerulean}f5 4c} 42 c4 \framebox{\color{Cerulean}97 52} d7 d8 \framebox{\color{Cerulean}f9 5f} 14 52 \framebox{\color{Cerulean}ea}} \\
 		& \texttt{\framebox{\color{Cerulean}b4} 9e 93 \framebox{\color{Cerulean}b2 91} c2 30 \framebox{\color{Cerulean}71 c7} 0f 35 \framebox{\color{Cerulean}9b 8a} ba cf \framebox{\color{Cerulean}af}} \\
 		& \texttt{\framebox{\color{Cerulean}b3} 7f fb \framebox{\color{Cerulean}27 3d} fe 7f \framebox{\color{Cerulean}ad 7a} de 56 \framebox{\color{Cerulean}95 20} fd 7c \framebox{\color{Cerulean}ea}} \\
 \midrule
-$\compress(\iv,\mess)$ & \texttt{af 49 5d 10  52 82 35 03  e4 9e 46 78  dc e7 f3 b3  d6 da a3 24} \\
+$\compress(\iv,\mess)$ & \texttt{af 49 5d 10  52 82 35 03  e4 9e 46 78}\\
+& \texttt{dc e7 f3 b3  d6 da a3 24} \\
 \bottomrule\\
 
 \toprule
  & Message 2 \\
 \midrule
-$\diff$\iv & \hspace{-1.95mm}\texttt{81 bf 23 06  41 b8 3b \framebox{\color{RubineRed}5d  83} e9 a7 8f  ba 50 28 d5  fc 50 87 88}\\
+$\diff$\iv & \hspace{-8mm}\texttt{81 bf 23 06  41 b8 3b \framebox{\color{RubineRed}5d  83} e9 a7 8f  ba 50 28 d5  fc 50 87 88}\\
 \midrule
 $\diff\mess$ & \texttt{\hspace{1.15mm}46\hspace{1.25mm} fa 5a \framebox{\color{RubineRed}98  f0} f0 c7 \framebox{\color{RubineRed}ec  7a} de db \framebox{\color{RubineRed}f8  99} 1e 25 \framebox{\color{RubineRed}8a}}\\
       		 & \texttt{\framebox{\color{RubineRed}b7} 34 fd \framebox{\color{RubineRed}e5 f8} 42 c4 \framebox{\color{RubineRed}8b 6e} d7 d8 \framebox{\color{RubineRed}fd e3} 14 52 \framebox{\color{RubineRed}f0}} \\
 			 & \texttt{\framebox{\color{RubineRed}94} 9e 93 \framebox{\color{RubineRed}a2 b5} c2 30 \framebox{\color{RubineRed}6d 2b} 0f 35 \framebox{\color{RubineRed}8f 86} ba cf \framebox{\color{RubineRed}ad}} \\
 			 & \texttt{\framebox{\color{RubineRed}73} 7f fb \framebox{\color{RubineRed}37 89} fe 7f \framebox{\color{RubineRed}b1 56} de 56 \framebox{\color{RubineRed}91 9c} fd 7c \framebox{\color{RubineRed}f2}} \\
 \midrule
-$\compress(\diff\iv,\diff\mess)$ & \texttt{af 49 5d 10  52 82 35 03  e4 9e 46 78  dc e7 f3 b3  d6 da a3 24}\\
+$\compress(\diff\iv,\diff\mess)$ & \texttt{af 49 5d 10  52 82 35 03  e4 9e 46 78}\\
+ & \texttt{dc e7 f3 b3  d6 da a3 24}\\
 \bottomrule
 \end{tabular}
 \end{table}
