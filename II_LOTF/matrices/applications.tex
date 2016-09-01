@@ -106,7 +106,7 @@ simply consists in accessing these tables with the right inputs and summing thei
 an approach
 in \autoref{lst:mulex}.
 
-\begin{listing}[!htb]
+\begin{figure}[!htb]
 \begin{center}
 \begin{minted}[breaklines]{c}
 uint8_t m71(uint8_t x)
@@ -121,7 +121,7 @@ uint8_t m71(uint8_t x)
 \end{minted}
 \end{center}
 \caption{Multiplication by \texttt{0x71} in $\mathbf{F}_{2}[x]/<x^8+x^4+x^3+x+1>$\label{lst:mulex}}
-\end{listing}
+\end{figure}
 
 Table lookups from four to eight bits can be performed efficiently with \pshufb; multiplication
 by a constant in $\Fth$ is thus twice as expansive as multiplication in $\Fst$, but it operates

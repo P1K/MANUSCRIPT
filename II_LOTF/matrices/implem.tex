@@ -20,7 +20,7 @@ The algorithms in this section target CPUs featuring vector instructions, includ
 now widespread and have already been used successfully in fast cryptographic implementations, see \eg{}~\cite{hamburg,twine,sac2013}.
 We mostly considered SSSE3 when designing the algorithms, but other processor architectures
 do feature vector instructions. This is for instance the case of ARM's NEON extensions, which may also
-yield efficient implementations, see \eg{}~\cite{Bernstein}. We do not consider these explicitly in this paper, however.
+yield efficient implementations, see \eg{}~\cite{Bernstein}. We do not consider these explicitly in this chapter, however.
 
 Because it plays an important role in our algorithms, we briefly recall the semantics of \pshufb{}.
 This instruction takes two 128-bit inputs\footnote{It can actually also be used on 64-bit operands, but we do not
@@ -48,7 +48,7 @@ Finally, let us mention that there is a three-operand variant of this instructio
 which allows not to overwrite the first operand.
 
 
-\paragraph{Targeted properties.} In this paper we focus solely on algorithms that can easily be implemented in a way that makes
+\paragraph{Targeted properties.} In this chapter we focus solely on algorithms that can easily be implemented in a way that makes
 them immune to timing-attacks (see \eg \cite{timinattacks}). Specifically, we consider the matrix as a known constant but the vector as a secret, and we wish to perform
 the multiplication without secret-dependent branches or memory accesses. It might not always be important to be immune (or even partially resistant) to this type
 of attacks, but we consider that it should be important for any cryptographic primitive or structure to \emph{possibly} be implemented in such a way. Hence we try
@@ -123,27 +123,27 @@ matrices of dimension 128~\cite{DBLP:conf/ches/KasperS09}.
 \begin{algorithm}[!htb]
   \caption{Broadcast-based matrix-vector multiplication}
 \label{alg:broadcast}
-\begin{algorithmic}[1]
-  \REQUIRE $\veci \in \Fst^{16}$, $\mat \in \mappi_{16}(\Fst)$
-  \ENSURE  $\veco = \veci^t\cdot\mat^t$\\
-  Offline phase
-  \FOR{$i \in \{0\ldots15\}$}
-  \STATE $8\mat_i \defas \alpha^3\cdot\mat_i$
-  \STATE $4\mat_i \defas \alpha^2\cdot\mat_i$
-  \STATE $2\mat_i \defas \alpha\cdot\mat_i$
-  \ENDFOR\\
-  Online phase
-  \STATE $\veco \defas \mathbf{0}_{64}$
-  \FOR{$i \in \{0\ldots15\}$}
-  \STATE $\upsilon_i^8 \defas 8\mat_i \wedge_{64} \broad(\veci_i,3)_{64}$
-  \STATE $\upsilon_i^4 \defas 4\mat_i \wedge_{64} \broad(\veci_i,2)_{64}$
-  \STATE $\upsilon_i^2 \defas 2\mat_i \wedge_{64} \broad(\veci_i,1)_{64}$
-  \STATE $\upsilon_i^1 \defas  \mat_i \wedge_{64} \broad(\veci_i,0)_{64}$
-  \STATE $\upsilon_i \defas \upsilon_i^8 + \upsilon_i^4 + \upsilon_i^2 + \upsilon_i^1$
-  \STATE $\veco \defas \veco + \upsilon_i$
-  \ENDFOR
-  \RETURN $\veco$
-\end{algorithmic}
+  \KwIn{ $\veci \in \Fst^{16}$, $\mat \in \mappi_{16}(\Fst)$}
+  \KwOut{  $\veco = \veci^t\cdot\mat^t$}
+  Offline phase\\
+  \For{$i \in \{0\ldots15\}$}
+  {
+  $8\mat_i \defas \alpha^3\cdot\mat_i$\\
+  $4\mat_i \defas \alpha^2\cdot\mat_i$\\
+  $2\mat_i \defas \alpha\cdot\mat_i$\\
+  }
+  Online phase\\
+  $\veco \defas \mathbf{0}_{64}$\\
+  \For{$i \in \{0\ldots15\}$}
+  {
+  $\upsilon_i^8 \defas 8\mat_i \wedge_{64} \broad(\veci_i,3)_{64}$\\
+  $\upsilon_i^4 \defas 4\mat_i \wedge_{64} \broad(\veci_i,2)_{64}$\\
+  $\upsilon_i^2 \defas 2\mat_i \wedge_{64} \broad(\veci_i,1)_{64}$\\
+  $\upsilon_i^1 \defas  \mat_i \wedge_{64} \broad(\veci_i,0)_{64}$\\
+  $\upsilon_i \defas \upsilon_i^8 + \upsilon_i^4 + \upsilon_i^2 + \upsilon_i^1$\\
+  $\veco \defas \veco + \upsilon_i$\\
+  }
+  \Return{$\veco$}
 \end{algorithm}
 
 
@@ -286,22 +286,24 @@ We give a complete description of this shuffle-based process in \autoref{alg:shu
 \begin{algorithm}[!h]
   \caption{Shuffle-based matrix-vector multiplication}
 \label{alg:shuffle}
-\begin{algorithmic}[1]
-  \REQUIRE $\veci \in \Fst^{16}$, $\mat \in \mappi_{16}(\Fst)$
-  \ENSURE  $\veco = \mat\cdot\veci$\\
-  Offline phase
-  \FOR{$i \in \{1\ldots15\}$}
-  \STATE $s_i[\,] \defas \shuff(M, i)$ $\triangleright$ \emph{Initialize the array $s_i$ with one of the possible sets of shuffles.}
-  \ENDFOR\\
-  Online phase
-  \STATE $\veco \defas \mathbf{0}_{64}$
-  \FOR{$i \in \{1\ldots15\}$}
-  \FOR{$j < \#s_i$}
-  \STATE $\veco \defas \veco + i\cdot s_i[j]$
-  \ENDFOR
-  \ENDFOR
-  \RETURN $\veco$
-\end{algorithmic}
+  \LinesNumbered
+  \KwIn{   $\veci \in \Fst^{16}$, $\mat \in \mappi_{16}(\Fst)$}
+  \KwOut{  $\veco = \mat\cdot\veci$}
+  Offline phase\\
+  \For{$i \in \{1\ldots15\}$}
+  {
+  $s_i[\,] \defas \shuff(M, i)$ $\triangleright$ \emph{Initialize the array $s_i$ with one of the possible sets of shuffles.}
+  }
+  Online phase\\
+  $\veco \defas \mathbf{0}_{64}$\\
+  \For{$i \in \{1\ldots15\}$}
+  {
+  \For{$j < \#s_i$}
+  {
+  $\veco \defas \veco + i\cdot s_i[j]$
+  }
+  }
+  \Return{$\veco$}
 \end{algorithm}
 
 \subsubsection{Cost of \autoref{alg:shuffle}.} The cost of computing a matrix-vector product with \autoref{alg:shuffle} depends
