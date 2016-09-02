@@ -1,0 +1,86 @@
+\part[Nouvelles constructions linéaires et non-linéaires pour chiffres par bloc]
+	{New linear and non-linear mappings for block ciphers}
+\label{part:constructions}
+
+\section*{Overview}
+A matrix and an S-box.
+
+This paper investigates large linear mappings with very good diffusion and efficient software implementations, that
+can be used as part of a block cipher design.
+The mappings are derived from linear codes
+over a small field (typically $\Fst$) with a high dimension (typically 16) and a high minimum distance. This results in
+diffusion matrices with equally high dimension and a large branch number.
+Because we aim for parameters for which no MDS code is known to exist, we propose to use more flexible \emph{algebraic-geometry} codes.
+
+We present two simple yet efficient algorithms for the software implementation of matrix-vector multiplication in this context, and derive
+conditions on the generator matrices of the codes to yield efficient encoders. We then specify an appropriate code and use its automorphisms as well as random sampling
+to find good such matrices.
+
+We provide concrete examples of parameters and implementations, and
+the corresponding assembly code. We also give performance figures in an example of application
+which show the interest of our approach.
+
+
+\cleardoublepage
+\chapter*{Contents}
+\parttoc
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%\chapter[Matrices de diffusions issues de codes géométriques]{Diffusion matrices from algebraic-geometry codes with efficent vector implementations}
+\chapter[Matrices de diffusions issues de codes géométriques]{Efficient diffusion matrices from algebraic-geometry codes}
+\label{cha:difmat}
+
+\input{../II_LOTF/matrices/introduction}
+
+\input{../II_LOTF/matrices/notations}
+
+\input{../II_LOTF/matrices/agcodes}
+
+\input{../II_LOTF/matrices/implem}
+
+\input{../II_LOTF/matrices/diffag}
+
+\input{../II_LOTF/matrices/applications}
+
+\input{../II_LOTF/matrices/conclusion}
+
+\input{../II_LOTF/matrices/appendix}
+
+\FloatBarrier
+
+\chapter[La boîte-S \littlun et le chiffre \fly]{The \littlun S-box and the \fly block cipher}
+\label{cha:difmat}
+
+\input{../II_LOTF/littlun/introduction}
+
+\input{../II_LOTF/littlun/preliminaries}
+
+\input{../II_LOTF/littlun/construction}
+
+\input{../II_LOTF/littlun/implementation}
+
+\input{../II_LOTF/littlun/application}
+
+\FloatBarrier
+
+\setcounter{section}{0}
+\renewcommand\thesection{\Alph{section}}
+
+\input{../II_LOTF/littlun/stats}
+\FloatBarrier
+
+\input{../II_LOTF/littlun/implemplus}
+
+\input{../II_LOTF/littlun/avrimplem}
+\FloatBarrier
+
+\input{../II_LOTF/littlun/hwimplem}
+
+\input{../II_LOTF/littlun/testvectors}
+
+\input{../II_LOTF/littlun/maskedimplem}
+
+\renewcommand\thesection{\arabic{section}}

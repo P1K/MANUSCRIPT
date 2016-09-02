@@ -1,0 +1,44 @@
+\part[Collisions explicites pour la fonction de compression de \shaone]
+    {Practical freestart collision attacks for \shaone} 
+\label{part:sha-1}
+
+\section*{Overview}
+It's been a while since we learned that SHA-1 is weak against collision attacks. This paper gives an account of two practical collision attacks on its compression
+function, including one on the full 80 steps. This is actually quite nice.
+
+
+\cleardoublepage
+\chapter*{Contents}
+\parttoc
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{../III_SHA-1/notations.tex}
+
+\chapter[Contexte sur \shaone]
+        {Background on \shaone}
+\label{cha:shaone_cont}
+
+\input{../III_SHA-1/sha1_presentation.tex}
+
+\input{../III_SHA-1/history.tex}
+
+\chapter[Collisions à initialisation libres pour \shaone]
+        {Freestart collision attacks for \shaone}
+\label{cha:shaone_new}
+
+\input{../III_SHA-1/freestart.tex}
+
+\input{../III_SHA-1/gpu.tex}
+
+\input{../III_SHA-1/res76.tex}
+
+\input{../III_SHA-1/res80.tex}
+
+\FloatBarrier
+
+\input{../III_SHA-1/conclusion.tex}
+
+
+\FloatBarrier
