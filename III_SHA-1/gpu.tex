@@ -270,9 +270,6 @@ We now illustrate the discussion of this section by providing a commented snippe
 trying to extend them up to $\state_{23}$ using neutral bits on $\expmess_{19}$. Its structure is a straightforward application of the framework, and is fairly representative of most of the
 code of both of our attacks (although some snippets may at first seem more complex due to their use of neutral bits located on several distinct message words).
 
-%\begin{lstlisting}[style=customc]
-\begin{listing}[tbh]
-\begin{center}
 \begin{minted}[linenos,breaklines]{c}
 __device__ void stepQ23(uint32_t thread_rd_idx)
 {
@@ -318,11 +315,10 @@ __device__ void stepQ23(uint32_t thread_rd_idx)
 	WARP_TMP_BUF.flush2(Q23SOLBUF, Q23SOLCTL);
 }
 \end{minted}
-\end{center}
+\begin{figure}[tbh]
 \caption{The \emph{stepQ23} function from the 76-step attack.}
 \label{lst:snippet_example}
-\end{listing}
-%\end{lstlisting}
+\end{figure}
 
 \medskip
 

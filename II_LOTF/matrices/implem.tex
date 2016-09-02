@@ -17,7 +17,7 @@ to other (close) values.
 \paragraph{Targeted architecture.}
 The algorithms in this section target CPUs featuring vector instructions, including in particular a
 \emph{vector shuffle} instruction such as Intel's \pshufb{} from the SSSE3 instruction set extension~\cite{ia64}. These instructions are
-now widespread and have already been used successfully in fast cryptographic implementations, see \eg{}~\cite{hamburg,twine,sac2013}.
+now widespread and have already been used successfully in fast cryptographic implementations, see \eg{}~\cite{vpaes,twine,sac2013}.
 We mostly considered SSSE3 when designing the algorithms, but other processor architectures
 do feature vector instructions. This is for instance the case of ARM's NEON extensions, which may also
 yield efficient implementations, see \eg{}~\cite{Bernstein}. We do not consider these explicitly in this chapter, however.
@@ -342,7 +342,7 @@ Thus we can estimate the cost of such a random matrix to be about 25.
 
 \medskip
 
-Before concluding this section, let us notice that special cases of this algorithm have already been used for circulant matrices, namely in the case of the \AES{} \mc{} matrix~\cite{hamburg}.
+Before concluding this section, let us notice that special cases of this algorithm have already been used for circulant matrices, namely in the case of the \AES{} \mc{} matrix~\cite{vpaes}.
 
 \subsubsection{Implementation of \autoref{alg:shuffle} with SSSE3 instructions.}
 

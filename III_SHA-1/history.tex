@@ -180,7 +180,7 @@ message, we can ensure that this is always the case for successful introductions
 $\state_{i+1}$ and $\dstate_{i+1}$) by analysing what may happen in the four possible cases  of an introduction (depending on the signs of the involved differences), at the level of one bit:
 \begin{enumerate}
 \item \onediffu (the difference in $\diff\expmess_i$, introducing the perturbation) + \nodiffz (the ``difference'' in the same position of the partial sum used to compute $\diff\state_{i+1}$) = \onediffu,
-with no different carry propagation in the remainder of $\diff\state_{i+1}$). 
+with no different carry propagation in the remainder of $\diff\state_{i+1}$).
 \item \onediffu  + \nodiffo = \onediffd, with different carry propagation.
 \item \onediffd  + \nodiffz = \onediffd, with no different carry propagation.
 \item \onediffd  + \nodiffo = \onediffu, with different carry propagation.
@@ -208,7 +208,7 @@ with $\boolF_\text{XOR}$);
 the difference is preserved, but its sign is changed (this never happens with $\fmaj$); the difference is preserved and its sign is not changed.
 As we already mentioned, knowing the sign of a difference is important if we want to cancel it with another one; thus, the possibility of
 unpredictable changes of signs decreases the success probability of a local collision.
-Let us see in general how this latter is impacted by the behaviours of the different Boolean functions. 
+Let us see in general how this latter is impacted by the behaviours of the different Boolean functions.
 \begin{itemize}
 \item $\diff\state_{i+3}$: the difference is on the first input ($x$) of the Boolean function. With $\fif$, there is a probability $2^{-1}$ that it is absorbed and $2^{-2}$
 that the sign is changed otherwise, for a total success probability of $2^{-2}$ ($2^{-1}$ on the MSB, where a change of sign has no consequence).
@@ -243,7 +243,7 @@ $x$ = \nodiffz & $y$ = \nodiffz & $y$ = \nodiffo & $y$ = \onediffu & $y$ = \oned
 $z$ = \nodiffz & \nodiffz & \nodiffz & \nodiffz & \nodiffz &                   & $z$ = \nodiffz & \nodiffz & \nodiffo & \onediffu & \onediffd\\
 $z$ = \nodiffo & \nodiffo & \nodiffo & \nodiffo & \nodiffo &                   & $z$ = \nodiffo & \nodiffz & \nodiffo & \onediffu & \onediffd\\
 $z$ = \onediffu & \onediffu & \onediffu & \onediffu & \onediffu &                   & $z$ = \onediffu & \nodiffz & \nodiffo & \onediffu & \onediffd\\
-$z$ = \onediffd & \onediffd & \onediffd & \onediffd & \onediffd &                   & $z$ = \onediffd & \nodiffz & \nodiffo & \onediffu & \onediffd\\ 
+$z$ = \onediffd & \onediffd & \onediffd & \onediffd & \onediffd &                   & $z$ = \onediffd & \nodiffz & \nodiffo & \onediffu & \onediffd\\
 \midrule
 $x$ = \onediffu & $y$ = \nodiffz & $y$ = \nodiffo & $y$ = \onediffu & $y$ = \onediffd & & $x$ = \onediffd & $y$ = \nodiffz & $y$ = \nodiffo & $y$ = \onediffu & $y$ = \onediffd \\
 \hline
@@ -266,7 +266,7 @@ $x$ = \nodiffz & $y$ = \nodiffz & $y$ = \nodiffo & $y$ = \onediffu & $y$ = \oned
 $z$ = \nodiffz & \nodiffz & \nodiffo & \onediffu & \onediffd &                   & $z$ = \nodiffz & \nodiffo & \nodiffz & \onediffd & \onediffu\\
 $z$ = \nodiffo & \nodiffo & \nodiffz & \onediffu & \onediffd &                   & $z$ = \nodiffo & \nodiffz & \nodiffo & \onediffd & \onediffu\\
 $z$ = \onediffu & \onediffu & \onediffd & \nodiffz & \nodiffo &                   & $z$ = \onediffu & \onediffd & \onediffu & \nodiffo & \nodiffz\\
-$z$ = \onediffd & \onediffd & \onediffu & \nodiffo & \nodiffz &                   & $z$ = \onediffd & \onediffu & \onediffd & \nodiffz & \nodiffo\\ 
+$z$ = \onediffd & \onediffd & \onediffu & \nodiffo & \nodiffz &                   & $z$ = \onediffd & \onediffu & \onediffd & \nodiffz & \nodiffo\\
 \midrule
 $x$ = \onediffu & $y$ = \nodiffz & $y$ = \nodiffo & $y$ = \onediffu & $y$ = \onediffd & & $x$ = \onediffd & $y$ = \nodiffz & $y$ = \nodiffo & $y$ = \onediffu & $y$ = \onediffd \\
 \hline
@@ -289,7 +289,7 @@ $x$ = \nodiffz & $y$ = \nodiffz & $y$ = \nodiffo & $y$ = \onediffu & $y$ = \oned
 $z$ = \nodiffz & \nodiffz & \nodiffz & \nodiffz & \nodiffz &                   & $z$ = \nodiffz & \nodiffz & \nodiffo & \onediffu & \onediffd\\
 $z$ = \nodiffo & \nodiffz & \nodiffo & \onediffu & \onediffd &                   & $z$ = \nodiffo & \nodiffo & \nodiffo & \nodiffo & \nodiffo\\
 $z$ = \onediffu & \nodiffz & \onediffu & \onediffu & \nodiffz &                   & $z$ = \onediffu & \onediffu & \nodiffo & \onediffu & \nodiffo\\
-$z$ = \onediffd & \nodiffz & \onediffd & \nodiffz & \onediffd &                   & $z$ = \onediffd & \onediffd & \nodiffo & \nodiffo & \onediffd\\ 
+$z$ = \onediffd & \nodiffz & \onediffd & \nodiffz & \onediffd &                   & $z$ = \onediffd & \onediffd & \nodiffo & \nodiffo & \onediffd\\
 \midrule
 $x$ = \onediffu & $y$ = \nodiffz & $y$ = \nodiffo & $y$ = \onediffu & $y$ = \onediffd & & $x$ = \onediffd & $y$ = \nodiffz & $y$ = \nodiffo & $y$ = \onediffu & $y$ = \onediffd \\
 \hline
@@ -309,7 +309,7 @@ $z$ = \onediffd & \nodiffz & \nodiffo & \onediffu & \onediffd &                &
 
 We have seen how using a local collision allows one to create a pair of different messages which may lead to a pair of \sha states that are identical at some point during the
 computation of their respective digests. Given enough control on the message (which implies control on the state), one may obtain such an equality with probability one, and it is quite easy to derive sufficient conditions
-for a single local collision to happen, which allows to derive the success probability of uncontrolled independent local collisions. 
+for a single local collision to happen, which allows to derive the success probability of uncontrolled independent local collisions.
 
 In order to mount a complete attack and obtain a collision on the actual digest, we need to ensure that the last five state words are free of differences: this means that no local collision
 must have been started after step 75. Of course, we also need the colliding messages to be valid expanded messages, and this is where local collisions become really useful: the idea is to
@@ -382,7 +382,7 @@ for the vector of \autoref{fig:shaz_dv}, and $2^{61}$ for another good disturban
 
 Although this is already an attack that is significantly faster than a brute-force approach, it remains fairly expensive, and no explicit collision for \shazero was computed at the time\footnote{Even
 nearly twenty years later, such an attack requires considerable resources; it would roughly be comparable in cost with the full free-start collision for \shaone which is the main topic of
-this article.}.
+this part.}.
 A series of techniques were later developed to make such attacks considerably more efficient, which ultimately led to the first explicit collision on \shazero~\cite{DBLP:conf/eurocrypt/BihamCJCLJ05}.
 These improvements were of two kinds: (1) Chaining multiple blocks to enable the use of better \dvs; (2) Using \emph{neutral bits} to make the probabilistic phase of the attack more efficient.
 The first improvement as originally used for \shazero was later superseded by the two-block attack structure of Wang \etal, used both for improved attacks on \shazero
@@ -397,7 +397,7 @@ the cost of finding good message pairs, which makes the attack faster. To make t
 
 \begin{defi}[Neutral bits]
 A bit $b$ of $\expmess_{0 \leq i < 16}$ is a \emph{neutral bit} for a disturbance vector $\mathcal{V}$ at step $n$ with probability $p$ if the probability (taken over the message space) that it does not interact
-with any necessary condition for $\mathcal{V}$ up to step $n$ is equal to $p$. 
+with any necessary condition for $\mathcal{V}$ up to step $n$ is equal to $p$.
 \end{defi}
 
 This definition can be generalized by considering groups of bits that need to be flipped together. This may be done either because it makes these bits being more effective, or because not doing so would
@@ -425,7 +425,7 @@ Finally, dots
 (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=dots] (-1,-1) rectangle (0,0);\end{tikzpicture}\,)
 represent conditions that need to be fulfilled probabilistically.
 %; denser zones indicate a higher probability
-%of satisfying all conditions within. 
+%of satisfying all conditions within.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -433,17 +433,17 @@ represent conditions that need to be fulfilled probabilistically.
 \end{center}
 \caption{The structure of a one-block attack on \shazero.\label{fig:struct_shazero}}
 \end{figure}
- 
+
 \subsection{Collision attacks on the full \shaone}
 \label{sec:full_sha1}
 
-Having discussed the original attacks on \shazero, we now turn our attention to \shaone for the rest of this article. Although both functions are very similar, their different message expansion makes a direct
+Having discussed the original attacks on \shazero, we now turn our attention to \shaone for the rest of this chapter. Although both functions are very similar, their different message expansion makes a direct
 application of attacks on \shazero in the form discussed above inapplicable to the full \shaone. We now discuss the new techniques that were developed for that purpose and some of their
 subsequent improvements:
 \begin{enumerate}
 \item The use of \emph{non-linear} differential paths and of a two-block attack structure is the main improvement that makes full attacks on \shaone possible (\autoref{sec:nl_struct}).
 \item The different message expansion of \shaone makes the search for good disturbance vectors more complex (\autoref{sec:sha1_dvs}).
-\item Better cost functions were defined for the disturbance vectors (\autoref{sec:chain_lc}). 
+\item Better cost functions were defined for the disturbance vectors (\autoref{sec:chain_lc}).
 \end{enumerate}
 It is important to note that although these improvements were somehow necessary to attack \shaone and led to the first theoretical attack on this function~\cite{DBLP:conf/crypto/WangYY05a},
 the same technique can, and were, applied to improve the existing attacks on \shazero as well~\cite{DBLP:conf/crypto/WangYY05}, and also other functions of the \mdsha family.
@@ -452,7 +452,7 @@ Let us also mention for completeness that the original attacks of Wang \etal use
 by identifying changes in message words controlled by the attacker that only impact (say) a single necessary condition for a local collision located at a point where no direct control is possible.
 This can be used during the probabilistic phase of the attack to carefully fulfill some of the conditions independently of each other, which increases the probability of success. However, it is not
 clear whether this technique has a significant advantage over neutral bits (especially when including boomerangs), and it is somehow harder to implement efficiently, especially on a parallel architecture. Thus, we will not detail it
-further in this article. 
+further in this chapter.
 
 \subsubsection{The two-block structure and non-linear paths}
 \label{sec:nl_struct}
@@ -464,7 +464,7 @@ With the benefit of hindsight, looking back on the case of \shazero, we can iden
 \item Using a purely linearized model for the propagation of differences in the round function similarly imposes the condition that the first
 five negative bits of the \dv have to be zero, and that there are no consecutive bits during the IF round. A way to remove these conditions
 is to switch to a non-linear propagation model for (part of) the first round.
-\end{enumerate} 
+\end{enumerate}
 We now discuss these two improvements in more detail.
 
 \paragraph{The two-block structure.}
@@ -545,7 +545,7 @@ The advantages of an automatic search of the non-linear part of the differential
 attack instances, which allows for example to experiment quickly with several \dvs. This is particularly useful if one wants both to mount
 attacks for the full function (even without running the attack completely) and attacks for a high number of reduced steps, the best \dvs in each case
 being likely different. (2) The ability to generate many non-linear paths allows to search for ones that have few constraints (for instance leading
-to more available neutral bits) or that can incorporate more preset constraints (that may for instance aid in the use of boomerang neutral bits). 
+to more available neutral bits) or that can incorporate more preset constraints (that may for instance aid in the use of boomerang neutral bits).
 
 % advantage is twofold: faster to mount new attacks, to experiment with several dvs; may lead to better paths or paths satisfying predefined constraints
 
@@ -617,67 +617,67 @@ a disturbance vector is eventually used to define the difference between two mes
 \begin{center}
 \begin{tabular}{cc}
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \\
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff& 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff&
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \\
 \end{tabular}
@@ -832,7 +832,7 @@ the amount of paths to consider makes this task computationally intractable in g
 (equivalence) classes of message differences. A reduced path is essentially obtained from its non-reduced analogue by removing differences not interacting with the initial and final differences. Such
 paths can easily be enumerated, and most importantly it is possible to compute their associated ``cumulative probabilities'' which is (for a given reduced path and a given message difference) the sum of
 the probabilities of all possible complements to the reduced path that result in a valid overall path. Although the number of possible message differences to consider may be big, Stevens also shows how
-to find equivalence classes yielding the same probability for all their members. It is then enough to perform the computation for one representative of every class. 
+to find equivalence classes yielding the same probability for all their members. It is then enough to perform the computation for one representative of every class.
 
 %This is essentially an exhaustive analysis taking into account all local collisions together, using which one can determine the highest possible success probability.
 %This analysis also produces a minimal set of sufficient conditions which, when all fulfilled, ensure that a pair of messages follows the linear path;

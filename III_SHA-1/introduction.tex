@@ -63,7 +63,7 @@ is to instead store their images through a hash function $\hash$. Thus, if an ad
 the passwords (or some equivalent input), provided that $\hash$ is preimage-resistant.
 
 In this setting, second preimage and collision resistance are not strictly needed. However, it should be noted that even when built from a secure hash function,
-the scheme just described above has severe issues, which descriptions are beyond the scope of this article.
+the scheme just described above has severe issues, which descriptions are beyond the scope of this introduction.
 
 \paragraph{Hash-based signatures.} A less common use of hash functions is to utilise them to directly define signature schemes (see \eg \cite{DBLP:conf/crypto/Merkle87}). We will not describe such schemes in detail
 here, but it is interesting to mention a few of their specificities. Similarly as other systems using hash functions, only preimage resistance is needed. The main
@@ -274,7 +274,7 @@ One of the best examples of a sponge function is \keccak~\cite{KeccakReference},
 
 \section{The \mdsha family}
 \label{sec:mdsha}
-We now briefly present the ``\mdsha'' hash function family, both because it is of somewhat historical importance and because, the function studied in this article, \shaone, is one of its members.
+We now briefly present the ``\mdsha'' hash function family, both because it is of somewhat historical importance and because, the function studied in this part, \shaone, is one of its members.
 
 The family originated in 1990 with the \mdfour function, introduced by Rivest~\cite{Rivest-md4}. An attack on a reduced version was quickly found by den Boer and Bosselaers~\cite{DBLP:conf/crypto/BoerB91},
 and Rivest proposed \mdfive as a strengthened version of \mdfour~\cite{Rivest-md5}. Bosselaers proposed \ripemd in 1992 as another attempt to strengthen \mdfour~\cite[Chap. 3]{DBLP:books/sp/BosselaersP95},

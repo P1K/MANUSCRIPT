@@ -20,7 +20,7 @@ cipher: 1) The scheme is not \emph{randomised}, \ie encrypting the same plaintex
 (a ``passive adversary'') on the channel between $A$ and $B$ can thus detect when identical message blocks have been sent. 2) The
 communication is not authenticated. An active adversary on the channel may delete or modify some of the blocks of a message, append to a message
 some blocks from a previous message, or add randomly generated blocks. All of this can be done without $A$ and $B$ noticing that someone
-is maliciously tampering with the channel. 
+is maliciously tampering with the channel.
 
 Problems such as the ones above are solved by designing secure \emph{modes of operation}. We do not study this topic in this thesis, but
 we mention some elements related to modes in \autoref{sec:bc_modes}. But first, we make the intuition behind the evaluation of the security
@@ -78,7 +78,7 @@ it is not more than the PRP security of the block cipher plus some (reasonably s
 
 However, this definition is not constructive, in the sense that it does not provide any (efficient)
 way of computing the PRP security of a block cipher in general (some results do exist for specific block cipher constructions (usually modulo access to a lower-level primitive such as a
-``random permutation'') such as the one due to Even and Mansour~\cite{evenmansour}, which we will see again in \autoref{chap:emrka}). 
+``random permutation'') such as the one due to Even and Mansour~\cite{EM}, which we will see again in \autoref{chap:emrka}).
 A major topic in symmetric cryptography is to analyse explicit block ciphers in order to assess their concrete security against attacks. In the language of \autoref{def:prp}, this
 consists in finding algorithms for which $q$, $t$ and the PRP advantage is known. Any such attack on a block cipher $\E$ allows to lower-bound its PRP-security at a given point.
 In reality, though, the world of block cipher cryptanalysis is more nuanced than what \autoref{def:prp} may lead us to believe; practically important characteristics of an attack
@@ -94,7 +94,7 @@ consensus that it can be called a distinguisher (\eg distinguishing $\E$ of key 
 (\eg $q = t =  2^{120}$ and probability $\approx 1$). We will ignore this issue altogether and assume that all the attacks of this chapter are consensual.
 
 \subsubsection{Classes of distinguishers for block ciphers}
- 
+
 We now briefly describe two examples of types of distinguishers, which exploit ``non-ideal'' behaviours of different nature.
 
 \bigskip
@@ -185,7 +185,7 @@ be so powerful that they allow to attack (almost) every cipher; speaking of the 
 
 The potential problems arising from ill-defined related-key models are a useful reminder that attacks should be specified in a well-founded way. While some of them may be
 considered too unrealistic to be of practical significance (this is in fact a rather common reproach to related-key attacks at large), this question is only secondary to their not allowing to trivially
-attack any cipher. 
+attack any cipher.
 
 \section{Using block ciphers}
 \label{sec:bc_modes}
@@ -208,6 +208,6 @@ trend is to favour the former approach, as it tends to lead to more efficient sc
 We conclude this chapter by highlighting the prevalence of the \emph{birthday bound} (coming from the so-called \emph{birthday paradox}, which we will
 only define in \autoref{chap:hashfun}) in cryptography by stating the following fact: when using a block cipher of block size $n$, most modes of operation are only
 secure up to the encryption of $\approx 2^{n/2}$ blocks, even if the key size of the block cipher can be much bigger than that.
- 
+
 
 % TODO REFS.... Where???

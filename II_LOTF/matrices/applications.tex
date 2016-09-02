@@ -34,7 +34,7 @@ of how many rounds are needed to achieve good security.
 \subsection{The \sam block cipher}
 The round function of \sam is taken to be $\matdiff \circ \sapp \circ \adkey$, where $\adkey$ adds
 a 64-bit round key to its input and $\sapp$ is the parallel application of sixteen (identical)
-4-bit S-boxes (taken to be any optimal S-box of this size, see \eg \cite{4bit1,4bit2}).
+4-bit S-boxes (taken to be any optimal S-box of this size, see \eg \cite{4bit1,class4bit}).
 
 We use standard $\emph{wide-trail}$ considerations to study differential and linear properties of a \sam instance~\cite{aes}.
 This is very easy to do thanks to the simple structure of the cipher.
@@ -49,7 +49,7 @@ to standard statistical attacks.
 The most powerful attacks against \sam may in fact not be statistical; algebraic attacks may be more
 efficient in exploiting the fact that the round function is defined at a granularity of four bits,
 and that the degree of an invertible 4-bit S-box is at most three. Applying the upper-bound
-from Boura \etal~\cite[Thm. 2]{DBLP:conf/fse/BouraCC11}, we get that seven rounds are necessary to
+from Boura \etal~\cite[Thm. 2]{permdegree}, we get that seven rounds are necessary to
 obtain a permutation of maximal degree. Thus, eight full rounds plus an additional half-round
 consisting of only $\sapp$ would probably be necessary to avoid attacks based on the low degree
 of the cipher.
@@ -146,7 +146,7 @@ Thus, eight (and a half) rounds of an \eric cipher should bring adequate securit
 We provide performance figures for SSSE3 and an AVX implementations in \autoref{tbl:perf_eric}, for both six and eight full rounds.
 Note that in the case of 8-bit S-Boxes,
 the S-Box application is usually rather more complex and expensive a step than with 4-bit S-Boxes. In these test programs, we used the efficient vector
-implementation of the \AES{} S-Box from Hamburg~\cite{hamburg}\footnote{Better performance may be attained by using cryptographically
+implementation of the \AES{} S-Box from Hamburg~\cite{vpaes}\footnote{Better performance may be attained by using cryptographically
 weaker but more efficient S-boxes, such as \whirlpool's second S-box \cite{whirlpool}.}.
 
 \begin{table}
@@ -183,7 +183,7 @@ Processor type & \# rounds & cpb (Alg. 1) & cpb (Alg. 2)\\
 The performance figures given in \autoref{tbl:perf_sam}, \autoref{tbl:perf_eric} are average for a block cipher. For instance, it compares favourably with
 the optimized vector implementations of
 64-bit ciphers \led and \piccolo in sequential mode from~\cite{sac2013}, which run at speeds between 70 and 90 cpb., depending on the CPU.
-It is however slower than Hamburg's vector implementation of \AES{}, with reported speeds of 6 to 22 cpb. (9 to 25 for the inverse cipher)~\cite{hamburg,twine}.
+It is however slower than Hamburg's vector implementation of \AES{}, with reported speeds of 6 to 22 cpb. (9 to 25 for the inverse cipher)~\cite{vpaes,twine}.
 
 Yet, we conjecture that the strong structure of the round function makes \samneric more suitable to speed-ups from derivative constructions. For instance,
 the \emph{leak extraction} approach from \lex allowed a 2.5-time speed-up from the \AES by leaking a quarter of the state of the cipher as keystream every round~\cite{DBLP:conf/sacrypt/Biryukov06}.
