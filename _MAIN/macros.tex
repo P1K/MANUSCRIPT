@@ -1,0 +1,532 @@
+\makeatletter
+
+\newcommand{\dedication}[1]{%
+{\cleardoublepage\thispagestyle{empty}\mbox{}\vspace{\stretch{1}}\flushright {#1} \par\vspace{\stretch{2}}\clearpage}}
+
+\newsavebox{\mybox}
+\newcolumntype{h}{>{\begin{lrbox}{\mybox}\sffamily}{r}<{\end{lrbox}\eqparbox{md4tabh}{\hfill\sffamily\usebox{\mybox}}}}
+
+\makechapterstyle{test}{
+   \renewcommand\chapnamefont{\normalfont\Large\scshape\raggedleft}
+   \renewcommand\chaptitlefont{\normalfont\Huge\bfseries\boldmath\sffamily}
+   \renewcommand\chapternamenum{}
+   \renewcommand\printchapternum{%
+     \makebox[0pt][l]{%
+       \hspace{0.4em}
+       \resizebox{!}{4ex}{\chapnamefont\bfseries\sffamily\thechapter}
+     }
+   }
+   \renewcommand\afterchapternum{\par\hspace{1.5cm}\hrule\vskip\midchapskip}
+   \renewcommand{\printchaptertitle}[1]{%
+     \chaptitlefont \textbf{##1}} 
+%   \renewcommand{\printchapternonum}{\raggedleft}
+}
+
+\makeheadstyles{test}{%
+  \chapterstyle{test}%
+  \setbeforesecskip{-3.5ex \@plus -1ex \@minus -.2ex}%
+  \setaftersecskip{2.3ex \@plus .2ex}%
+  \setsecheadstyle{\normalfont\Large\sffamily\bfseries\boldmath\raggedright}%
+  \setbeforesubsecskip{-3.25ex \@plus -1ex \@minus -.2ex}%
+  \setaftersubsecskip{1.5ex \@plus .2ex}%
+  \setsubsecheadstyle{\normalfont\large\sffamily\bfseries\boldmath\raggedright}%
+%   \setbeforesubsubsecskip{-3.25ex \@plus -1ex \@minus -.2ex}%
+%   \setaftersubsubsecskip{1.5ex \@plus .2ex}%
+%   \setsubsubsecheadstyle{\normalfont\normalsize\sffamily\bfseries\raggedright}%
+%   \setbeforeparaskip{3.25ex \@plus 1ex \@minus .2ex}%
+%   \setafterparaskip{-1em}%
+%   \setparaheadstyle{\normalfont\normalsize\sffamily\bfseries}%
+  \setbeforesubsubsecskip{-3ex \@plus -1ex \@minus -.2ex}%
+  \setaftersubsubsecskip{1ex \@plus .2ex}%
+%  \setbeforesubsubsecskip{3.25ex \@plus 1ex \@minus .2ex}%
+%  \setaftersubsubsecskip{-1em}%
+  \setsubsubsecheadstyle{\normalfont\normalsize\sffamily\bfseries\boldmath}%
+  %\setparaindent{\parindent}%
+  \setbeforeparaskip{3.25ex \@plus 1ex \@minus .2ex}%
+  \setafterparaskip{-1em}%
+  \setparaheadstyle{\normalfont\normalsize\sffamily\itshape}
+%  \setparaheadstyle{\normalfont\normalsize\sffamily\scshape}
+  \setsubparaindent{\parindent}%
+  \setbeforesubparaskip{3.25ex \@plus 1ex \@minus .2ex}%
+  \setaftersubparaskip{-1em}%
+  \setsubparaheadstyle{\normalfont\normalsize\itshape\addperiod}%
+%
+  \let\beforeparttoc\empty%
+  \let\beforepartlof\empty%
+  \let\beforepartlot\empty%
+%
+  \let\afterparttoc\empty%
+  \let\afterpartlof\empty%
+  \let\afterpartlot\empty%
+%  
+  \noptcrule%
+  \mtcsetdepth{parttoc}{2}%
+%
+  \renewcommand{\printpartname}{\hrulefill ~ \partnamefont \partname}%
+  \renewcommand{\partnamenum}{\space}%
+  \renewcommand{\printpartnum}{\partnumfont \numtoName{\c@part} \hrulefill}%
+  \renewcommand{\parttitlefont}{\Huge\bfseries\boldmath\sffamily}%
+  \renewcommand{\partnamefont}{\LARGE\scshape\sffamily}%
+  \renewcommand{\partnumfont}{\LARGE\scshape\sffamily}%
+  \renewcommand*{\beforepartskip}{\null}%
+  \renewcommand*{\afterpartskip}{\vskip 2\onelineskip \hrule \vskip
+    4\onelineskip}%\incrementptc \section*{Contents}\parttoc\decrementptc}%
+  \renewcommand{\midpartskip}{\par\vskip 2\onelineskip}%
+  \renewcommand{\afterchaptertitle}{\par\nobreak\vskip \afterchapskip}%
+}
+
+\setlength{\cftpartnumwidth}{2em}
+
+%\newlistof{tabledesmatieres}{tdm}{Table des matières}
+\newlistof{tabledesmatieres}{tdm}{Sommaire}
+\newlistentry[chapter]{fsection}{tdm}{0}
+\cftsetindents{fsection}{2em}{1.5em}
+%\setcounter{tdmdepth}{200}
+
+\newlistof{tablecontents}{tct}{Contents}
+\newlistentry[chapter]{tchapter}{tdm}{0}
+\newlistentry[section]{tsection}{tdm}{0}
+\cftsetindents{tsection}{3em}{2.5em}
+
+% \newlistentry[chapter]{section}{tdm}{0}
+% \newlistentry[section]{subsection}{tdm}{1}
+% \newlistentry[subsection]{subsubsection}{tdm}{2}
+% \newlistentry[subsubsection]{paragraph}{tdm}{3}
+% \newlistentry[paragraph]{subparagraph}{tdm}{4}
+
+% \newlistentry[chapter]{section}{tct}{0}
+% \newlistentry[section]{subsection}{tct}{1}
+% \newlistentry[subsection]{subsubsection}{tct}{2}
+% \newlistentry[subsubsection]{paragraph}{tct}{3}
+% \newlistentry[paragraph]{subparagraph}{tct}{4}
+
+% \let\old@part=\part
+% \let\old@chapter=\chapter
+
+\newcommand\mem@chapter{%
+  \@ifstar{\@m@mschapter}{\@m@mchapter}}
+
+\newcommand{\mem@part}{%
+  \secdef\@part\@spart}
+
+% \renewcommand*{\float@listhead}[1]{%
+%   \def\@tempa{\section*}%
+%   \@tempa{#1\@mkboth{\MakeUppercase{#1}}{\MakeUppercase{#1}}}}%
+
+% \renewcommand{\chapter}[1][]{%
+%   \@ifstar{}{%
+%     \addtocounter{chapter}{1}%
+%     \addcontentsline{tdm}{fsection}{%
+%       \protect\numberline{\thechapter}#1}%
+%     \addtocounter{chapter}{-1}%
+%   }%
+%   \iflanguage{french}{\frenchchapter{#1}}{\old@chapter}%
+% }
+
+\newif\ifthesis@french
+
+\newcommand{\setfrench}{
+  \global\thesis@frenchtrue
+  \selectlanguage{french}
+  \selectbiblanguage{french}
+  \global\let\myoldsection\section
+  \newcommand{\frsection}[2][]{\myoldsection[##2][##1]{##1}}
+  \newcommand{\fssection}[2][]{\myoldsection*{##1}}
+  \renewcommand{\section}{\@ifstar{\fssection}{\frsection}}
+}
+
+\newcommand{\setenglish}{
+  \global\thesis@frenchfalse
+  \selectlanguage{english}
+  \selectbiblanguage{english}
+  \global\let\section\myoldsection
+}
+
+
+\let\old@chapter\chapter
+
+\def\chapter{%
+  \@ifstar{\old@chapter*}{\my@chapter}}
+
+\def\my@chapter[#1]#2{%
+  \ifthesis@french%
+  \old@chapter[#1][#1]{#1}%
+  \else%
+  \old@chapter[#2][#2]{#2}%
+  \fi%
+  \addcontentsline{tdm}{fsection}{\protect\numberline{\thechapter}#1}%
+  \addcontentsline{tct}{tchapter}{\protect\numberline{\thechapter}#2}%
+}
+
+\def\chapterabbr[#1][#2]#3{%
+  \ifthesis@french%
+  \old@chapter[#1][#1]{#1}%
+  \else%
+  \old@chapter[#2][#2]{#3}%
+  \fi%
+  \addcontentsline{tdm}{fsection}{\protect\numberline{\thechapter}#1}%
+  \addcontentsline{tct}{tchapter}{\protect\numberline{\thechapter}#2}%
+}
+
+\let\old@part\part
+
+\def\part[#1]#2{%
+  \ifthesis@french%
+  \old@part{#1}%
+  \else%
+  \old@part{#2}%
+  \fi%
+  \addcontentsline{tdm}{part}{\protect\partnumberline{\thepart}#1}%
+  \addcontentsline{tct}{part}{\protect\partnumberline{\thepart}#2}%
+}
+
+\let\old@section\section
+
+\def\section{%
+  \@ifstar{\my@star@section}{\my@section}}
+
+\def\my@star@section{%
+  \old@section*
+}
+
+\def\my@section{%
+  \@ifnextchar[{\my@@@section}{\my@@section}}
+
+\def\my@@@section[#1]#2{%
+  \ifthesis@french%
+  \old@section{#1}%
+  \else%
+  \old@section{#2}%
+  \fi%
+%  \addcontentsline{tdm}{section}{\protect\numberline{\thesection}#1}%
+  \addcontentsline{tct}{tsection}{\protect\numberline{\thesection}#2}%
+}
+
+\def\my@@section#1{%
+  \old@section{#1}%
+  \ifthesis@french%
+%  \addcontentsline{tdm}{section}{\protect\numberline{\thesection}#1}%
+  \else%
+  \addcontentsline{tct}{tsection}{\protect\numberline{\thesection}#1}%
+  \fi%
+}
+
+\renewcommand*{\descriptionlabel}[1]{\hspace\labelsep
+                                     \normalfont\sffamily #1}
+
+\newcommand{\property}[1]{\statement{#1:}}
+\newcommand{\statement}[1]{{\par\noindent\sffamily\bfseries\boldmath#1}}
+
+\headstyles{test}
+\pagestyle{ruled}
+\nopartblankpage
+
+% \renewcommand*{\l@chapter}{\@dottedtocline{0}{2em}{2.3em}}
+% \renewcommand*{\l@chapter}[2]{\framebox{#1}\hfill#2}
+% \newcommand{\chapternumberline}[1]{~~#1~~}
+%\let\chapternumberline=\numberline
+
+%\cftpagenumberson{chapter}
+%\mtcsetpagenumbers{*}{on}
+
+\newif\ifdraft
+\newif\if@fr@chaptername
+
+
+\newsavebox{\fmbox}
+\newenvironment{figbox}%
+  {\begin{lrbox}{\fmbox}\begin{minipage}{.7\textwidth}}%
+  {\end{minipage}\end{lrbox}%
+   \setlength{\fboxsep}{1.5ex}%
+   \centerline{\fbox{\usebox{\fmbox}}}}
+
+\makeatother
+
+\newcommand{\sof}{\shorthandoff{;:?!}}
+\newcommand{\son}{\shorthandon{;:?!}}
+
+\setlist{leftmargin=*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Theorem styles
+
+%\theoremstyle{plain}
+%\newtheorem{theorem}{Theorem}[chapter]
+%\newtheorem{lemma}{Lemma}[chapter]
+%\newtheorem{corollary}{Corollary}[chapter]
+%\newtheorem{proposition}{Proposition}[chapter]
+%\newtheorem{conjecture}{Conjecture}[chapter]
+%
+%\theoremstyle{definition}
+%\newtheorem{definition}{Definition}[chapter]
+%\newtheorem{example}{Example}[chapter]
+%
+%\theoremstyle{remark}
+%\newtheorem{remark}{Remark}[chapter]
+\newtheoremstyle{newdef}{}{}{\normalfont}{}{\normalfont\sffamily\bfseries\boldmath}{\addperiod}{ }{}
+\newtheoremstyle{newthm}{}{}{\normalfont\itshape}{}{\normalfont\sffamily\bfseries\boldmath}{\addperiod}{ }{}
+
+\theoremstyle{newthm}
+\newtheorem{fact}{Fact}[chapter]
+\newtheorem{prop}{Proposition}[chapter]
+\newtheorem{thm}{Theorem}[chapter]
+\newtheorem{conj}{Conjecture}[chapter]
+\newtheorem{obs}{Observation}
+%\theoremstyle{definition}
+\theoremstyle{newdef}
+\newtheorem{defi}{Definition}[chapter]
+\newtheorem{example}{Example}[chapter]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Global Macros
+
+\renewcommand{\labelitemi}{--}
+\renewcommand{\labelitemii}{--}
+\renewcommand{\labelitemiii}{--}
+\renewcommand{\labelitemiv}{--}
+
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+%\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\setcounter{MaxMatrixCols}{20}
+
+\newcommand\Ftwo{\ensuremath{\mathbf{F}_{2}}}
+\newcommand\Ftwom{\ensuremath{\mathbf{F}_{2^m}}}
+\newcommand\Fst{\mathbf{F}_{2^4}}
+\newcommand\Fth{\mathbf{F}_{2^8}}
+\newcommand\Fu{\mathbf{F}_{2^m}}
+\newcommand\Fq{\ensuremath{\mathbf{F}_{q}}}
+
+% Primitives
+\newcommand\AES{AES\xspace}
+\newcommand\whirlpool{\textsc{Whirlpool}\xspace}
+\newcommand\mc{MixColumn\xspace}
+\newcommand\shark{SHARK\xspace}
+\newcommand\khazad{\textsc{Khazad}\xspace}
+\newcommand\rijndael{Rijndael\xspace}
+\newcommand\photon{PHOTON\xspace}
+\newcommand\piccolo{Piccolo\xspace}
+\newcommand\led{LED\xspace}
+\newcommand{\shazero}              {SHA-0\xspace}
+\newcommand{\shaone}               {SHA-1\xspace}
+\newcommand{\shatwo}               {SHA-2\xspace}
+\newcommand{\shathree}             {SHA-3\xspace}
+\newcommand{\mdfive} 			   {MD5\xspace}
+\newcommand{\mdfour} 			   {MD4\xspace}
+\newcommand{\mdsha} 			   {MD-SHA\xspace}
+\newcommand{\md} 			   	   {MD\xspace}
+\newcommand{\sha} 			 	   {SHA\xspace}
+\newcommand{\ripemd} 			   {RIPEMD\xspace}
+\newcommand{\hmac}			       {HMAC\xspace}
+\newcommand{\shiun}			       {SHI-1\xspace}
+\newcommand{\groestl}			       {Gr\o stl\xspace}
+\newcommand{\keccak}			       {\textsc{Keccak}\xspace}
+\newcommand{\samneric} {\textsc{Samneric}\xspace}
+\newcommand{\sam} {\textsc{Sam}\xspace}
+\newcommand{\eric} {\textsc{Eric}\xspace}
+\newcommand{\lex} {LEX\xspace}
+\newcommand\proest{\textsc{Pr\o st}\xspace}
+\newcommand\proestotr{\textsc{Pr\o st-OTR}\xspace}
+\newcommand\proestcopa{\textsc{Pr\o st-COPA}\xspace}
+\newcommand\proestape{\textsc{Pr\o st-APE}\xspace}
+\newcommand\proestem{\textsc{Pr\o st/SEM}\xspace}
+\newcommand\minalpher{Minalpher\xspace}
+\newcommand\caesar{\textsc{Caesar}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SHA-1
+
+\newcommand{\gtx}              {GTX\,970\xspace}
+
+\newcommand\merkdam{Merkle-Damg{\aa}rd\xspace}
+\newcommand\iv{\textit{IV}\xspace}
+\newcommand\ivs{\textit{IVs}\xspace}
+\newcommand\dv{\textit{DV}\xspace}
+\newcommand\dvs{\textit{DVs}\xspace}
+
+\newcommand{\etal}{\mbox{\emph{et al.}}\xspace}
+\newcommand\ie{\emph{i.e.}\xspace}
+\newcommand\eg{\emph{e.g.}\xspace}
+
+\DeclareMathOperator\bigo{\mathcal{O}}
+
+\newcommand\messblock{\mathfrak{m}}
+\newcommand\freeiv{\mathfrak{i}}
+\newcommand\mess{\mathcal{M}}
+\newcommand\eem{\mathfrak{W}}
+\newcommand\chain{\mathfrak{c}}
+\newcommand\mainmess{\mathcal{M}}
+\newcommand\expmess{\mathcal{W}}
+\newcommand\dexpmess{\mathcal{\widetilde W}}
+\newcommand\state{\mathcal{A}}
+\newcommand\dstate{\mathcal{\widetilde A}}
+\DeclareMathOperator\compress{\mathfrak{H}}
+\DeclareMathOperator\hash{\mathcal{H}}
+\DeclareMathOperator\blockE{\mathfrak{E}}
+\DeclareMathOperator\boolF{\varphi}
+\newcommand\fif{\boolF_\text{IF}}
+\newcommand\fxor{\boolF_\text{XOR}}
+\newcommand\fmaj{\boolF_\text{MAJ}}
+\newcommand\messhash{\mathfrak{m}}
+\newcommand\targ{\mathfrak{t}}
+\newcommand\dig{\mathfrak{r}}
+\newcommand\key{\mathfrak{k}}
+\newcommand\tagg{\mathfrak{t}}
+\DeclareMathOperator\ro{\mathcal{R}}
+\DeclareMathOperator\sign{\mathcal{S}}
+\DeclareMathOperator\mac{\mathcal{T}}
+\DeclareMathOperator\perm{\mathfrak{p}}
+
+\DeclareMathOperator\diff{\Delta}
+
+\newcommand\nodiff{\ensuremath{\circ}}
+\newcommand\nodiffz{\ensuremath{\smalltriangledown\xspace}}
+\newcommand\nodiffo{$\smalltriangleup$\xspace}
+\newcommand\onediff{\ensuremath{\bullet}}
+\newcommand\onediffd{$\filledtriangledown$\xspace}
+\newcommand\onediffu{$\filledtriangleup$\xspace}
+\newcommand\monediff{\bullet}
+\newcommand\mnodiff{\circ}
+\newcommand\monediffd{\filledtriangledown\hspace{-0.32mm}}
+\newcommand\monediffu{\filledtriangleup\hspace{-0.32mm}}
+\newcommand\mnodiffz{\smalltriangledown\hspace{-0.32mm}}
+\newcommand\mnodiffo{\smalltriangleup\hspace{-0.32mm}}
+%\newcommand\dunnodiff{{\fontsize{2.34mm}{2.34mm}$\circledast$}}
+%\newcommand\dunnodiff{{\fontsize{3.34mm}{3.34mm}$\ast$}}
+%\newcommand\dunnodiff{{\fontsize{3.84mm}{3.84mm}$\ast$}}
+\newcommand\dunnodiff{{\fontsize{3.23mm}{3.23mm}$\ast$}}
+\newcommand\equaup{$\smallstar$\hspace{-.32mm}}
+\newcommand\diffup{$\filledstar$\hspace{-.32mm}}
+\newcommand\equarightup{$\smalldiamond$}
+\newcommand\diffrightup{$\filleddiamond$}
+\newcommand\equarightupup{$\smallsquare$\hspace{.1mm}}
+\newcommand\diffrightupup{$\filledsquare$\hspace{.1mm}}
+
+\newcommand\ftwo{\Ftwo}
+\newcommand\ztt{\mathbf{Z}/2^{32}\mathbf{Z}}
+
+\newcommand\defas{:=}
+
+%\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% EMRKA
+\newcommand\msbtwo{{\kappa/2 - 1\xspace}}
+\newcommand\msbtwoone{{\kappa/2\xspace}}
+\newcommand\MSB{{\mathsf{MSB}\xspace}}
+
+\DeclareMathOperator\rka{\phi}
+\DeclareMathOperator\xrka{\phi^{\oplus}}
+\DeclareMathOperator\arka{\phi^{+}}
+\DeclareMathOperator\E{\mathcal{E}}
+\DeclareMathOperator\R{\mathcal{R}}
+\DeclareMathOperator\F{\mathcal{F}}
+\DeclareMathOperator\Perm{\mathcal{P}}
+\DeclareMathOperator\permi{\pi}
+\DeclareMathOperator\IEM{\mathsf{IEM}}
+\DeclareMathOperator\Adv{\mathbf{Adv}}
+\DeclareMathOperator\EDP{EDP}
+\DeclareMathOperator\DP{DP}
+\DeclareMathOperator\poi{Poi}
+
+\newcommand\EM{\textsf{EM}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Matrices
+
+
+\newcommand\affi{\mathbf{A}}
+\newcommand\projec{\mathbf{P}}
+\newcommand\curve{\mathcal{X}}
+\newcommand\nscurve{\widetilde{\curve}}
+\newcommand\code{\mathcal{C}}
+\newcommand\evcode{\mathcal{C}_\mathit{ev}}
+\newcommand\mat{M}
+\newcommand\matdiff{{\mathcal{M}}}
+\newcommand\veci{\mathbf{x}}
+\newcommand\veco{\mathbf{y}}
+\newcommand\vect{\mathbf{z}}
+\newcommand\nullvec{\mathbf{0}}
+\newcommand\cmess{\mathbf{m}}
+\newcommand\matvec{\mathbf{m}}
+\newcommand\amatvec{\mathbf{a}}
+\newcommand\pshufb{\mintinline{c}{pshufb}\xspace}
+\newcommand\xmm{\mintinline{c}{xmm}\xspace}
+\newcommand\sapp{{\mathcal{S}}}
+\newcommand\adkey{{\mathcal{K}}}
+
+\newcommand\frob{\ensuremath{F}}
+\DeclareMathOperator{\broad}{\text{\emph{broadcast}}}
+\DeclareMathOperator{\bn}{\text{\emph{branch-number}}}
+\DeclareMathOperator{\shuff}{\mathcal{S}}
+\DeclareMathOperator{\cost}{\text{\emph{cost2}}}
+\DeclareMathOperator{\indic}{\mathbb{1}}
+\DeclareMathOperator{\crs}{\mathcal{C}_{\text{RS}}}
+\DeclareMathOperator{\cag}{\mathcal{C}_{\text{AG}}}
+\DeclareMathOperator{\cagh}{\mathcal{C}_2}
+\DeclareMathOperator{\rrs}{\mathcal{L}}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\val}{\mathit{v}}
+\DeclareMathOperator{\cdiv}{Div}
+\DeclareMathOperator{\aut}{\text{Aut}}
+\DeclareMathOperator{\sub}{\text{Sub}}
+%\DeclareMathOperator{\round}{R_\sharp}
+\DeclareMathOperator{\mappi}{\mathcal{M}}
+\DeclareMathOperator{\matspace}{\mathcal{M}}
+\DeclareMathOperator{\weight}{\mathfrak{w}}
+\DeclareMathOperator{\hdist}{\mathfrak{d}}
+\DeclareMathOperator{\fun}{\mathit{f}}
+\DeclareMathOperator{\evmap}{\mathrm{Ev}}
+
+\newcommand\funcspace{\ensuremath{\mathcal{F}}}
+\newcommand\dom{\ensuremath{\mathcal{D}}}
+\newcommand\points{\ensuremath{\mathcal{P}}}
+\newcommand\locring{\ensuremath{\mathcal{O}}}
+\newcommand\maxi{\ensuremath{\mathfrak{m}}}
+
+\setcounter{MaxMatrixCols}{20}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Littlun
+
+\newcommand\littlun{\textsc{Littlun}\xspace}
+\newcommand\littlunOne{\textsc{Littlun-1}\xspace}
+\newcommand\littlunS{\textsc{Littlun-S4}\xspace}
+\newcommand\pride{\textsc{Pride}\xspace}
+\newcommand\littlunpride{\textsc{Fly}\xspace}
+\newcommand\fly{\littlunpride}
+\newcommand\flyrk{\fly_{RK}}
+\newcommand\idea{\textsc{IDEA}\xspace}
+\newcommand\aes{\textsc{AES}\xspace}
+\newcommand\serpent{\textsc{Serpent}\xspace}
+\newcommand\present{\textsc{Present}\xspace}
+\newcommand\robin{\textsc{Robin}\xspace}
+\newcommand\fantomas{\textsc{Fantomas}\xspace}
+\newcommand\shiftrow{\textsc{Shiftrow}\xspace}
+\newcommand\noekeon{\textsc{Noekeon}\xspace}
+\newcommand\rectangle{\textsc{Rectangle}\xspace}
+\newcommand\fox{\textsc{Fox}\xspace}
+\newcommand\simon{\textsc{Simon}\xspace}
+\newcommand\speck{\textsc{Speck}\xspace}
+\newcommand\simonC{\textsc{Simon}64-128\xspace}
+\newcommand\speckC{\textsc{Speck}64-128\xspace}
+
+\newcommand\C{\texttt{C}\xspace}
+
+%\DeclareMathOperator\fun{\mathcal{F}}
+\DeclareMathOperator\sbo{\mathcal{S}}
+\DeclareMathOperator\wt{wt}
+\DeclareMathOperator\Ldiff{\delta}
+\DeclareMathOperator\LdiffU{\Delta}
+\DeclareMathOperator\lin{\mathcal{L}}
+\DeclareMathOperator\linU{\ell}
+\DeclareMathOperator\rfly{\mathcal{R}_\fly}
+\DeclareMathOperator\blit{\textsc{Bls}}
+\DeclareMathOperator\ark{\textsc{Ark}}
+\DeclareMathOperator\rot{\textsc{Rot}}
+\DeclareMathOperator\ksOne{\textsc{KS1}}
+\DeclareMathOperator\ksTwo{\textsc{KS2}}
+\DeclareMathOperator\Lperm{\pi}
+\DeclareMathOperator\rott{\circlearrowleft}
