@@ -72,7 +72,7 @@ these inputs. Thus, being able to compute preimages for the hash function breaks
 A distinguishing feature of hash-based signatures is that the hash function may only need to be used on inputs of short, possibly fixed size. 
 
 \paragraph{Message authentication codes.} The last possible usage of hash functions that we describe here is the building of \emph{message authentication codes}, or MACs, which
-can somehow be seen as the keyed variants of hash functions. A MAC takes as input a key $\key$ and a message $\messhash$ and outputs a tag $\tagg = \mac(\key, \messhash)$.
+can somehow be seen as the keyed variants of hash functions. A MAC $\mac$ takes as input a key $\key$ and a message $\messhash$ and outputs a tag $\tagg \defas \mac(\key, \messhash)$.
 If an adversary does not know the key, it should be hard for him to find a valid (message, tag) pair for $\mac(\key, \cdot)$, with the message either being of his choosing
 or imposed by a challenger. These notions correspond to \emph{existential} (for the former) and \emph{universal} (for the latter) \emph{forgery}. Of course, it is also
 highly necessary that no tag collisions occur, whether or not these happen on specific messages requested by an adversary.
@@ -113,7 +113,7 @@ We give an illustration of this process in \autoref{fig:merkdam}.
 \begin{figure}[!htb]
 \begin{center}
 \input{figures/merkle-damgaard.tex}
-\caption{A \merkdam hash function processing a four-block input. Figure adapted from \cite{TiKZ:Cryptographers}.\label{fig:merkdam}}
+\caption[A \merkdam hash function processing a four-block input.]{A \merkdam hash function processing a four-block input. Figure adapted from \cite{TiKZ:Cryptographers}.\label{fig:merkdam}}
 \end{center}
 \end{figure} 
 

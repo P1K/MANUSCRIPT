@@ -234,7 +234,7 @@ results in a difference
 in $\diff\expmess_{i+2}$ will actually introduce a difference.
 
 \begin{table}[ht]
-\caption{Signed difference analysis of $\boolF_\text{IF}(x,y,z)$\label{tbl:diff_if}}
+\caption{Signed difference analysis of $\boolF_\text{IF}(x,y,z)$.\label{tbl:diff_if}}
 \begin{center}
 \begin{tabularx}{\textwidth}{c | c c c c  X  c | c c c c}
 \toprule
@@ -257,7 +257,7 @@ $z$ = \onediffd & \onediffd & \nodiffo & \nodiffo & \onediffd &                &
 \end{table}
 
 \begin{table}[ht]
-\caption{Signed difference analysis of $\boolF_\text{XOR}(x,y,z)$\label{tbl:diff_xor}}
+\caption{Signed difference analysis of $\boolF_\text{XOR}(x,y,z)$.\label{tbl:diff_xor}}
 \begin{center}
 \begin{tabularx}{\textwidth}{c | c c c c  X  c | c c c c}
 \toprule
@@ -280,7 +280,7 @@ $z$ = \onediffd & \nodiffo & \nodiffz & \onediffd & \onediffu &                &
 \end{table}
 
 \begin{table}[ht]
-\caption{Signed difference analysis of $\boolF_\text{MAJ}(x,y,z)$\label{tbl:diff_maj}}
+\caption{Signed difference analysis of $\boolF_\text{MAJ}(x,y,z)$.\label{tbl:diff_maj}}
 \begin{center}
 \begin{tabularx}{\textwidth}{c | c c c c  X  c | c c c c}
 \toprule
@@ -367,7 +367,7 @@ With this refined cost function in mind, two good disturbance vectors where foun
 \onediff \onediff \nodiff \onediff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \onediff \nodiff \onediff \nodiff \nodiff \onediff \nodiff
 \onediff \nodiff \onediff \nodiff \nodiff \nodiff \onediff \nodiff \onediff \onediff \onediff \nodiff \nodiff \onediff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff
 \end{center}
-\caption{A good (one bit) disturbance vector for \shazero, with a basic cost of $2^{68}$. Bit zero is shown on the top left.\label{fig:shaz_dv}}
+\caption[A good (one bit) disturbance vector for \shazero.]{A good (one bit) disturbance vector for \shazero, with a basic cost of $2^{68}$. Bit zero is shown on the top left.\label{fig:shaz_dv}}
 \end{figure}
 
 \subsubsection{Accelerating techniques for collision search}
@@ -520,7 +520,7 @@ a collision.
 \begin{figure}[!htb]
 \begin{centering}
 \input{figures/SHA1_col.tex}
-\caption{The structure of a two-block collision attack for \sha. Figure adapted from~\cite{TiKZ:Cryptographers}\label{fig:two_blocks}}
+\caption[The structure of a two-block collision attack for \sha.]{The structure of a two-block collision attack for \sha. Figure adapted from~\cite{TiKZ:Cryptographers}\label{fig:two_blocks}}
 \end{centering}
 \end{figure}
 
@@ -596,7 +596,7 @@ for which sixteen consecutive words are equal to $\mess$.
 We also note the following fact:
 \begin{fact}[The message expansion of \shaone is a quasi-cyclic code]
 If $\expmess = \expmess_0, \ldots,\linebreak \expmess_{79}$ is a valid expanded message for \shaone, then for every $i \in [0, 31]$, $\expmess^{\circlearrowleft i} \defas
-\expmess_0^{\circlearrowleft i}, \ldots, \expmess_{79}^{\circlearrowleft i}$ is a valid expanded message for \shaone.
+\expmess_0^{\circlearrowleft i}, \ldots,\linebreak \expmess_{79}^{\circlearrowleft i}$ is a valid expanded message for \shaone.
 \end{fact}
 This fact, together with the notion of extended expanded message allows to define equivalence classes for expanded messages:
 \begin{defi}[Equivalence class for \shaone expanded messages~\cite{DBLP:journals/dcc/Manuel11}]
@@ -682,7 +682,7 @@ a disturbance vector is eventually used to define the difference between two mes
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \\
 \end{tabular}
 \end{center}
-\caption{The messages defining the class of type I (left) and type II (right) disturbance vectors, given as sixteen 32-bit words $\mess_0, \ldots, \mess_{15}$,
+\caption[Type I and type II disturbance vectors.]{The messages defining the class of type I (left) and type II (right) disturbance vectors, given as sixteen 32-bit words $\mess_0, \ldots, \mess_{15}$,
 with $\mess_0$ on top.\label{fig:dv_types}}
 \end{figure}
 
@@ -708,7 +708,7 @@ $\phantom{bouh}$
 \medskip
 
 \noindent
-A first new kind of interaction between local collisions that is favourable to the cryptanalyst is the effect used in the technique of \emph{bit compression} introduced by Wang \etal~\cite{DBLP:conf/crypto/WangYY05a}
+A first new kind of interaction between local collisions that is favourable to the cryptanalyst is the effect used in the technique of \emph{bit compression} introduced by Wang \etal \cite{DBLP:conf/crypto/WangYY05a}
 as a \emph{special counting rule} and later named as such by Yajima \etal~\cite{DBLP:conf/ccs/YajimaINSSKO08}. Under certain conditions, this technique allows to significantly
 improve the joint probability of two (or more) neighbouring local collisions being successful by making it as high as for a single one. In a nutshell, the idea is to introduce the initial perturbations
 using a chain of differences all
@@ -815,7 +815,7 @@ on closely interacting local collisions (for instance on local collisions that s
 However, this does not take into account the effects of carries, and a more precise study is thus
 possible.
 
-We now summarize the \emph{joint local collision analysis} (JLCA) approach of Stevens~\cite{phdstevens,DBLP:conf/eurocrypt/Stevens13}, which allows to compute the exact best probability of a disturbance vector
+We now summarize the \emph{joint local collision analysis} (JLCA) approach of Stevens \cite{phdstevens,DBLP:conf/eurocrypt/Stevens13}, which allows to compute the exact best probability of a disturbance vector
 by considering all interactions between non-disjoint local collisions. This results in a very good ``exact'' cost function for \dvs of \shaone.
 
 \medskip

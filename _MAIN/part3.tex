@@ -3,9 +3,23 @@
 \label{part:sha-1}
 
 \section*{Overview}
-It's been a while since we learned that SHA-1 is weak against collision attacks. This paper gives an account of two practical collision attacks on its compression
-function, including one on the full 80 steps. This is actually quite nice.
 
+The \shaone hash function was one of the first widely-deployed hash functions. It was designed by the NSA in 1995 as a modified version of 1993's \shazero (which itself
+was more loosely inspired by 1990's \mdfour). In 2005, Wang \etal presented the first major attack on \shaone, giving a method to find colliisions for the hash function
+in time equivalent to $\approx 2^{69}$ evaluations of the compression function, which is significantly faster than the $\approx 2^{80}$ required by a generic process.
+However, the high cost of the attack implied that no explicit collision was computed at the time. This remains the case today, even if improvements to the attack
+and ever more efficient hardware would make such an endeavour more affordable than it was in 2005.
+The considerable amount of work that followed Wang \etal's original contribution then mostly focused on first getting a better understanding of the attack process and
+second bringing innovations allowing to explicitly provide collisions for reduced versions of \shaone with the highest number of steps. 
+
+\bigskip
+
+In the third and last part of this thesis, we describe explicit collision attacks for the full compression function of \shaone. While this comes short of a practical
+attack on the \emph{hash function}, this is the first explicit result on \shaone for a standard security notion. Furthermore, the efficient implementation framework that was developed
+for this work could also be reused for hash function attacks, which have a very similar (and in some respect simpler) structure than our ``freestart'' case.
+
+Collision attacks on \shaone \emph{à la} Wang have a rather specific structure, full of small technicalities. Thus, we start with a presentation of this topic in \autoref{cha:shaone_cont},
+that we hope to be self-contained. Our contributions are presented next in \autoref{cha:shaone_new}.
 
 \cleardoublepage
 \chapter*{Contents}

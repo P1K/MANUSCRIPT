@@ -156,7 +156,7 @@ of the GPU part of the 76-step attack in \autoref{fig:attack_diagram}, made slig
   \end{center}
 %\end{minipage}
 %\end{sideways}
-  \caption{Simplified flow chart for the GPU part of the attack. The start of this infinite loop is
+  \caption[Simplified flow chart for the GPU part of the attack.]{Simplified flow chart for the GPU part of the attack. The start of this infinite loop is
   in the top left corner. Rectangles ``\,\protect\rectanMac\,'' represent
   snippets, ellipses ``\,\protect\elliMac\,''
   represent shared buffers, plain lines ``\,\protect\plainMac~''
@@ -250,7 +250,7 @@ thence reducing the overhead inherent to the use of such shared data structures.
 Taken together, the buffers thus use a significant portion of the 4\,GB memory available on the \gtx, needing in the neighbourhood of 3\,GB.
 
 We carefully took into account the presence of a limited amount of
-very fast multiprocessor-specific shared memory. While the 96\,KB available per multiprocessor is
+very fast multii\-processor-specific shared memory. While the 96\,KB available per multiprocessor is
 hardly enough to store the whole buffers themselves, we take advantage of it by dissociating the storage of
 the buffers and of the meta-data used for their control logic, the latter being held in
 shared memory. This improves the overall latency of buffer manipulations, especially in case of

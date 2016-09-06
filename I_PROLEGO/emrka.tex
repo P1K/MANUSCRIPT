@@ -18,7 +18,7 @@
 \section{Introduction}
 
 
-The Even-Mansour scheme (, ``Even-Mansour'', or \EM) is arguably the simplest way to construct a block cipher from publicly available
+The Even-Mansour scheme (``Even-Mansour'', or \EM) is arguably the simplest way to construct a block cipher from publicly available
 components. It defines the encryption $\E((k_1, k_0), p)$ of the plaintext $p$ under the (possibly equal) keys $k_0$
 and $k_1$ as $\Perm(p \oplus k_0) \oplus k_1$, where $\Perm$ is a public permutation. Even and Mansour proved
 in~1991 that for a permutation of size $n$, the probability of recovering the keys
@@ -129,7 +129,7 @@ $\IEM^r$ from an ideal cipher. This is illustrated for the original \EM in \auto
 \begin{figure}[!htb]
 \begin{center}
 \input{../I_PROLEGO/em3.tex}
-\caption{A related-key distinguisher on \EM. Dashed lines represent datapaths where a difference is injected and not canceled.\label{fig:em3}}
+\caption[A related-key distinguisher on \EM.]{A related-key distinguisher on \EM. Dashed lines represent datapaths where a difference is injected and not canceled.\label{fig:em3}}
 \end{center}
 \end{figure}
 

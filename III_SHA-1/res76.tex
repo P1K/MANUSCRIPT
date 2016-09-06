@@ -163,7 +163,7 @@ W75:	 . G . . . . . . . . . . . . . . . . . . . . . . . . 0 . . . . .
 \begin{figure}[ht]
 \centering
   \theverbbox
-  \caption{The message bit-relations used in the attack for words $\expmess_{36}$ to $\expmess_{75}$ (graphical representation).
+  \caption[The message bit-relations used in the attack for words $\expmess_{36}$ to $\expmess_{75}$ (graphical representation).]{The message bit-relations used in the attack for words $\expmess_{36}$ to $\expmess_{75}$ (graphical representation).
   A dot (``\texttt{.}'') means an absence of condition. A zero (``\texttt{0}'') or one (``\texttt{1}'') character represents a bit unconditionally set to 0 or 1.
   A pair of two identical letters $x$ means that the two bits have the same value. A pair of two
   letters $x$ and $X$ means that the two bits have different values.
@@ -200,7 +200,7 @@ $\expmess_{19}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodi
 $\expmess_{20}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff \\
 $\expmess_{21}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
 \end{tabular}
-  \caption{The fifty-one neutral bits of the 76-step attack, using (with some abuse) a ``difference'' notation.
+  \caption[The fifty-one neutral bits of the 76-step attack.]{The fifty-one neutral bits of the 76-step attack, using (with some abuse) a ``difference'' notation.
   A ``\nodiff'' (resp. ``\onediff'') symbol means the absence (resp. presence) of a neutral bit on the corresponding bit.
   The message words are (as usual) written left to right from MSB to LSB.
   \label{fig:neutbits76}}
@@ -258,7 +258,7 @@ $\expmess_{21}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodi
 $\state_{26}$\\
 $\expmess_{20}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff \\
 \end{tabular}
-  \caption{The fifty-one neutral bits regrouped by the first state where they start to interact. A ``\onediff'' represents the presence
+  \caption[The fifty-one neutral bits regrouped by the first state where they start to interact.]{The fifty-one neutral bits regrouped by the first state where they start to interact. A ``\onediff'' represents the presence
   of a neutral bit, and a ``\nodiff'' the absence thereof. The LSB position is the rightmost one.
   \label{fig:neutbits76_2}}
 \end{figure}
@@ -342,7 +342,7 @@ This is shown as \begin{tikzpicture}[scale=0.67,transform shape]\draw[fill=Rhoda
 \draw[fill=LimeGreen!40] (21.7,-1) circle (.3) node{$\star$};
 \end{tikzpicture}
 \end{center}
-\caption[tototototototo]{The inter-snippet buffer for steps $\state_{18}$ to $\state_{21}$.
+\caption[The inter-snippet buffer for steps $\state_{18}$ to $\state_{21}$.]{The inter-snippet buffer for steps $\state_{18}$ to $\state_{21}$.
 From top to bottom, left to right, bright cerulean (\protect\tikz{\protect\draw[fill=Cerulean!85] (0,0) circle (.15);})
 refers to bits from $\expmess_{14}$; light rhodamine (\protect\tikz{\protect\draw[fill=Rhodamine!30] (0,0) circle (.15);})
 refers to bits from $\expmess_{15}$; bright (burnt) orange (\protect\tikz{\protect\draw[fill=BurntOrange!85] (0,0) circle (.15);})
@@ -422,7 +422,7 @@ and bits holding the index of a base solution respectively.}
 \draw[fill=Fuchsia!70] (21.7,-1) circle (.3) node{$\star$};
 \end{tikzpicture}
 \end{center}
-\caption{The inter-snippet buffer for steps $\state_{23}$ to $\state_{26}$.
+\caption[The inter-snippet buffer for steps $\state_{23}$ to $\state_{26}$.]{The inter-snippet buffer for steps $\state_{23}$ to $\state_{26}$.
 From top to bottom, left to right, the two lime bits (\protect\tikz{\protect\draw[fill=LimeGreen!40] (0,0) circle (.15);})
 are bits of padding that do not hold any meaningful data;
 bright cerulean (\protect\tikz{\protect\draw[fill=Cerulean!85] (0,0) circle (.15);})
@@ -446,7 +446,7 @@ of \shaone, \ie they are not (all) equal to the corresponding state values $\sta
 $\state_{-2},\ldots,\state_{-4}$, the last three \iv words are rotated by two to the right.
 
 \begin{table}[!htb]
-\caption{A freestart collision for 76-step \shaone. Message and \iv bytes with differences are highlighted with \framebox{\color{LimeGreen}coloured boxes}.}\label{tbl:fscoll76}
+\caption[A freestart collision for 76-step \shaone.]{A freestart collision for 76-step \shaone. Message and \iv bytes with differences are highlighted with \framebox{\color{LimeGreen}coloured boxes}.}\label{tbl:fscoll76}
 \centering
 \begin{tabular}{l l}
 \toprule

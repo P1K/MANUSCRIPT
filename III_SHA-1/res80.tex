@@ -182,7 +182,7 @@ W79:	 . J . . . . . . . . . . . . . . . . . . . . . . . . 0 . . . . .
 \begin{figure}[!htb]
 \centering
   \theverbbox
-  \caption{The message bit-relations used in the attack for words $\expmess_{29}$ to $\expmess_{79}$ (graphical representation).
+  \caption[The message bit-relations used in the attack for words $\expmess_{29}$ to $\expmess_{79}$ (graphical representation).]{The message bit-relations used in the attack for words $\expmess_{29}$ to $\expmess_{79}$ (graphical representation).
   A dot (``\texttt{.}'') means an absence of condition. A zero (``\texttt{0}'') or a one (``\texttt{1}'') character represents a bit unconditionally set to 0 or 1.
   A pair of two letters $x$ means that the two bits have the same value. A pair of two
   letters $x$ and $X$ means that the two bits have different values.
@@ -218,7 +218,7 @@ $\expmess_{18}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodi
 $\expmess_{19}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\onediff\onediff\onediff\onediff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
 $\expmess_{20}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\onediff\onediff\onediff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
 \end{tabular}
-  \caption{The sixty neutral bits of the 80-step attack, using (with some abuse) a ``difference'' notation.
+  \caption[The sixty neutral bits of the 80-step attack.]{The sixty neutral bits of the 80-step attack, using (with some abuse) a ``difference'' notation.
   A ``\nodiff'' (resp. ``\onediff'') symbol means the absence (resp. presence) of a neutral bit on the corresponding bit.
   The message words are (as usual) written left to right from MSB to LSB.
   \label{fig:neutbits80}}
@@ -271,7 +271,7 @@ $\expmess_{20}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nod
 $\state_{25}$ \\
 $\expmess_{20}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\onediff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
 	\end{tabular}
-  \caption{The sixty neutral bits regrouped by the first state where they start to interact. A ``\onediff'' represents the presence
+  \caption[The sixty neutral bits regrouped by the first state where they start to interact.]{The sixty neutral bits regrouped by the first state where they start to interact. A ``\onediff'' represents the presence
   of a neutral bit, and a ``\nodiff'' the absence thereof. The LSB position is the rightmost one.
   \label{fig:neutbits80_2}}
 \end{figure}
@@ -296,7 +296,7 @@ $\expmess_{14}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodi
 $\expmess_{15}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$\equaup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
 $\expmess_{16}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\equarightup\nodiff\nodiff\nodiff\nodiff\nodiff \\
 \end{tabular}
-  \caption{The local collision patterns for each of the four boomerangs, using ``difference'' symbols by an abuse of notation. The position of the first difference to be introduced is highlighted
+  \caption[The local collision patterns for each of the four boomerangs.]{The local collision patterns for each of the four boomerangs, using ``difference'' symbols by an abuse of notation. The position of the first difference to be introduced is highlighted
   with a difference (black) symbol; the associated correcting differences (identified by the corresponding white symbols) must then have a sign different from this one. Note that boomerang ``\diffup'' uses one more difference than the others.
   \label{fig:boom_coll}}
 \end{figure}
@@ -375,7 +375,7 @@ The representation of the packing is done similarly as in \autoref{sec:neutral_b
 \draw[fill=LimeGreen!40] (21.7,-1) circle (.3) node{$\star$};
 \end{tikzpicture}
 \end{center}
-\caption{The inter-snippet buffer for steps $\state_{18}$ to $\state_{20}$.
+\caption[The inter-snippet buffer for steps $\state_{18}$ to $\state_{20}$.]{The inter-snippet buffer for steps $\state_{18}$ to $\state_{20}$.
 From top to bottom, left to right, bright cerulean (\protect\tikz{\protect\draw[fill=Cerulean!85] (0,0) circle (.15);})
 refers to bits from $\expmess_{16}$; light rhodamine (\protect\tikz{\protect\draw[fill=Rhodamine!30] (0,0) circle (.15);})
 refers to bits from $\expmess_{15}$ (with some additional padding); bright (burnt) orange (\protect\tikz{\protect\draw[fill=BurntOrange!85] (0,0) circle (.15);})
@@ -455,7 +455,7 @@ and bits holding the index of a base solution respectively.}
 \draw[fill=Rhodamine!30] (21.7,-1) circle (.3) node{$\star$};
 \end{tikzpicture}
 \end{center}
-\caption{The inter-snippet buffer for steps $\state_{21}$ to $\state_{25}$.
+\caption[The inter-snippet buffer for steps $\state_{21}$ to $\state_{25}$.]{The inter-snippet buffer for steps $\state_{21}$ to $\state_{25}$.
 From top to bottom, left to right, light lime bits (\protect\tikz{\protect\draw[fill=LimeGreen!40] (0,0) circle (.15);})
 come from $\expmess_{18}$ (with a few trailing padding bits);
 bright fuchsia (\protect\tikz{\protect\draw[fill=Fuchsia!70] (0,0) circle (.15);})
@@ -474,7 +474,7 @@ This shows the two (message, \iv) pairs with their (identical) resulting digest.
 This table is formatted in the same way as the one of \autoref{sec:colli_ex76}.
 
 \begin{table}[!htb]
-\caption{A freestart collision for 80-step \shaone. Message and \iv bytes with differences are highlighted with \framebox{\color{LimeGreen}coloured boxes}.}\label{tbl:fscoll80}
+\caption[A freestart collision for 80-step \shaone.]{A freestart collision for 80-step \shaone. Message and \iv bytes with differences are highlighted with \framebox{\color{LimeGreen}coloured boxes}.}\label{tbl:fscoll80}
 \centering
 \begin{tabular}{l l}
 \toprule

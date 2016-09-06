@@ -3,23 +3,48 @@
 \label{part:constructions}
 
 \section*{Overview}
-A matrix and an S-box.
 
-This paper investigates large linear mappings with very good diffusion and efficient software implementations, that
-can be used as part of a block cipher design.
-The mappings are derived from linear codes
-over a small field (typically $\Fst$) with a high dimension (typically 16) and a high minimum distance. This results in
+A widespread design type for block ciphers is the \emph{SPN} structure. Initially, this stood for \emph{substitution-permutation network},
+with ``permutation'' referring to ``bit'' permutations; in its current usage, this term generally denotes arbitrary (\ftwo-)linear
+mappings.
+
+The rationale behind the SPN structure is that one may obtain a good block cipher round function by alternating a substitution
+mapping made of the parallel application of \emph{S-boxes} (short for ``substitution boxes'') and a linear mapping. The role
+of both mappings are complementary, and each is also usually selected to interact well with the other. While the S-boxes
+are expected to break any exploitable structure (linear and algebraic, in particular) at the local level, the permutation
+should spread the effects of the S-boxes at the global level, in particular to ensure that no local change remains so through
+the entire cipher execution.
+
+An advantage of SPNs over some other design structures is that they lend themselves relatively well to analysis, in particular w.r.t.
+statistical attacks; this is exemplified by the \emph{wide-trail strategy} used in the design of the \aes. Another notable point
+about them is that they offer many possible tradeoffs in their instantiations. One can choose between large and small S-boxes
+(large S-boxes are comparatively stronger than small ones, but also more expensive); best-performing S-boxes or cheaper
+``average'' ones; bit permutations (particularly efficient in hardware) or (non-permutation) matrices; ``optimally diffusing'' (MDS)
+matrices or not; state-wide matrices or not, etc.; the design space of SPNs is thus quite large.
+
+\bigskip
+
+In the second part of this thesis, we will study two mappings intended to be used as part of an SPN round function (the second
+of them being also instantiated in a complete block cipher design).
+
+In \autoref{cha:difmat}, we present large linear mappings with very good diffusion and efficient software implementations
+(given their sizes). They are derived from linear codes over a small field (typically $\Fst$) with a high dimension
+(typically 16) and a high minimum distance. This results in
 diffusion matrices with equally high dimension and a large branch number.
 Because we aim for parameters for which no MDS code is known to exist, we propose to use more flexible \emph{algebraic-geometry} codes.
-
 We present two simple yet efficient algorithms for the software implementation of matrix-vector multiplication in this context, and derive
 conditions on the generator matrices of the codes to yield efficient encoders. We then specify an appropriate code and use its automorphisms as well as random sampling
 to find good such matrices.
 
-We provide concrete examples of parameters and implementations, and
-the corresponding assembly code. We also give performance figures in an example of application
-which show the interest of our approach.
-
+In \autoref{cha:littlun}, we present
+the construction and implementation of an 8-bit S-box with a differential and linear branch number of 3.
+We show an application by designing \littlunpride: a simple block cipher
+based on bitsliced evaluations of the S-box and bit rotations which is designed to be efficient on 8-bit microcontrollers in particular.
+The round function of \fly achieves good performance on its target platform, in terms of number of instructions per round and overall
+code size, while providing good cryptographic properties.
+The S-box also has an efficient implementation with SIMD instructions, a low implementation cost in hardware
+and it can be masked efficiently thanks to its sparing use of non-linear gates and to the fact that it has a natural expression in
+terms of a single 4-bit S-box.
 
 \cleardoublepage
 \chapter*{Contents}
@@ -52,7 +77,7 @@ which show the interest of our approach.
 \FloatBarrier
 
 \chapter[La boîte-S \littlun et le chiffre \fly]{The \littlun S-box and the \fly block cipher}
-\label{cha:difmat}
+\label{cha:littlun}
 
 \input{../II_LOTF/littlun/introduction}
 
