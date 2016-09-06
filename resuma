@@ -1,0 +1,43 @@
+Cette thèse a pour objet d'étude les algorithmes de chiffrement par bloc
+et les fonctions de hachage cryptograpiques, qui sont deux primitives
+essentielles de la cryptographie dite «\,symétrique\,».
+
+Dans une première partie, nous étudions des éléments utiles
+pour la conception de chiffres par bloc: tout d'abord des
+matrices de diffusion de grande dimension issues de codes
+correcteurs géométriques, puis une boîte de substitution
+offrant une bonne diffusion. Dans le second cas, nous
+montrons aussi comment utiliser cet élément pour construire
+un chiffre compact et efficace sur petits processeurs.
+
+Dans une seconde partie, nous nous intéressons à
+des attaques en collision à initialisation libre sur
+la fonction de hachage SHA-1. Nous montrons comment
+les attaques classiques sur cette fonction peuvent être
+rendues plus efficaces en exploitant la liberté supplémentaire
+offerte par ce modèle. Ceci nous permet en particulier de
+calculer explicitement des collisions pour la fonction
+de compression de SHA-1 non réduite.
+
+*
+
+This thesis is about block ciphers and cryptographic
+hash functions, which are two essential primitives
+of symmetric-key cryptography.
+
+In the first part of this manuscript, we study
+useful building blocks for block cipher design.
+We first consider large diffusion matrices built
+from algebraic-geometry codes, and then construct
+a small S-box with good diffusion. In the second
+case, we show how the S-box can be used to define
+a compact and efficient block cipher targetting
+small processors.
+
+In the second part, we focus on the SHA-1 hash function,
+for which we develop a freestart collision attack.
+We show how classical collision attacks can be made
+more efficient by exploiting the additional freedom
+provided by the model. This allows us in particular
+to compute explicit collisions for the full compression
+function of SHA-1.
