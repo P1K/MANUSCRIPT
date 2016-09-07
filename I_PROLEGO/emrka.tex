@@ -250,7 +250,7 @@ defined as a one-round Even-Mansour scheme with identical keys
 $\E(k,p) := \Perm(p \oplus k) \oplus k$,
 with the \proest permutation as $\Perm$. We will denote this cipher as \proestem.
 
-Although the attack of Section~\ref{sec:gen} could readily be applied to \proestem, this cipher is only
+Although the attack of \autoref{sec:gen} could readily be applied to \proestem, this cipher is only
 meant to be embedded into a specific instantiation of a mode such as OTR, and attacking it out of context may not
 be relevant to its intended use.
 Hence we must
@@ -279,8 +279,8 @@ of $k$, $n$, and the first two blocks of plaintext $m_1$ and $m_2$:
 let $\ell := \E(k, n || 10^*)$ be the encryption of the padded nonce and
 $\ell' := \permi(\ell)$, with $\permi$ a linear permutation (the multiplication by $4$ in some finite field),
 then $c_1$ is simply equal to $\E(k, \ell' \oplus m_1) \oplus m_2$. We show this schematically along with the encryption
-of the second block in Figure~\ref{fig:otr}.
-Let us now apply the attack from Section~\ref{sec:gen}.
+of the second block in \autoref{fig:otr}.
+Let us now apply the attack from \autoref{sec:gen}.
 
 \begin{figure}[ht]
 \begin{center}
