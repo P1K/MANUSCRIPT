@@ -583,9 +583,9 @@ Il est à noter qu'un quatrième type d'instance de type clef publique (que nous
 Gilbert \etal à CRYPTO~2015~\cite{DBLP:conf/crypto/GilbertPT15}.
  
 La base de nos attaques consiste à exploiter des faiblesses du degré algébrique en sortie des composants de la structure \asasa. Nous détaillons brièvement cette idée dans le cas de l'instance
-chiffrement par bloc. On considère les formes algébriques normales (FANs) associées à aux bits de sortie après la seconde application $S'$ (juste avant l'application de la dernière couche $A''$)~;
-celles-ci sont de degré au plus 49, car les boîtes des couches $S$ sont sur huit bits et inversibles. Si on multiplie deux de ces FANs issues de boîtes différentes de $S'$, le degré du résultat
-sera très probablement supérieur à 49~; ce n'est par contre pas le cas si les FANs sont issues de la même boîte, le degré restant alors toujours borné par le haut par 49.
+chiffrement par bloc. On considère les formes algébriques normales (ANFs) associées à aux bits de sortie après la seconde application $S'$ (juste avant l'application de la dernière couche $A''$)~;
+celles-ci sont de degré au plus 49, car les boîtes des couches $S$ sont sur huit bits et inversibles. Si on multiplie deux de ces ANFs issues de boîtes différentes de $S'$, le degré du résultat
+sera très probablement supérieur à 49~; ce n'est par contre pas le cas si les ANFs sont issues de la même boîte, le degré restant alors toujours borné par le haut par 49.
 À la suite de cette observation, il est possible de définir un système d'équation dont la résolution fournit la couche $A''$, à équivalence prêt (essentiellement,
 les coefficients de $A''$ sont les inconnues, et les contraintes consistent à forcer les produits de deux sorties des mêmes boîtes S à sommer à zéro sur un certain nombre de cubes)~; il ne reste alors plus qu'à par exemple
 appliquer la fin de l'attaque sur les constructions \sasas de Biryukov et Shamir~\cite{DBLP:conf/eurocrypt/BiryukovS01}. La complexité totale de notre attaque est dominée par le calcul
@@ -595,14 +595,91 @@ des cubes, et équivalente à environ $2^{63}$ appels à l'algorithme de chiffre
 
 Nous décrivons ici un article publié à ISC~2015.
 
+\medskip
+
+En 1991, à ASIACRYPT, Even et Mansour ont proposé une construction générique de chiffrement par bloc qui porte désormais leur nom~\cite{EM}. Partant d'une permutation «\,aléatoire\,» fixe
+et publiquement connue $\Perm$, on définit le chiffrement $\E((k_1,k_0),p)$ du texte clair $p$ comme $\Perm(p \oplus k_0) \oplus k_1$. Soit $n$ la taille de bloc de ce chiffre
+et en supposant qu'on accède à $\Perm$ en boîte noire, on peut montrer que la probabilité de retrouver les clefs d'une instance inconnue de $\E$ est inférieure à
+$\bigo(qt \cdot 2^{-n})$, avec $q$ le nombre d'accès à l'oracle de chiffrement et $t$ le nombre d'accès à la permutation~; de plus, on connaît une attaque atteignant cette borne.
+
+Si on considère un modèle d'attaque \emph{à clefs liées}, la construction Even-Mansour est cependant beaucoup plus faible. En effet, supposant un accès à deux oracles de chiffrement
+$\oracle$ et $\oracle'$, l'un avec la clef $(k_1,k_0)$ et l'autre avec la clef $(k_1,k_0\oplus\delta)$ avec $\delta$ une constante non nulle connue de l'attaquant,
+il est bien connu que celui-ci peut facilement distinguer $\E$ d'une construction aléatoire en vérifiant que $\oracle(p) = \oracle'(p \oplus \delta)$.
+Nous avons alors fait l'observation élémentaire que ce distingueur peut-être rendu conditionnel à la valeur des bits de la clef en utilisant des clefs liées par l'addition
+modulaire plutôt que le XOR. Nous présentons cette idée dans le cas simple (mais répandu) où $k \defas k_0 = k_1$. Soit $\oracle(\cdot) \defas \E(k, \cdot)$, $\oracle_i(\cdot)
+\defas \E(k \boxplus \Delta_i,\cdot)$ avec $\Delta_i = 2^i$ (représenté par une chaîne binaire de $n$ bits valant tous zéro sauf celui en position $i$), on peut alors
+apprendre la valeur du $i^\text{ème}$ bit de $k$ en comparant $x \defas \oracle(p)$ et $y \defas \oracle_i(p \oplus \Delta_i)$: si celui-ci vaut zéro, alors la valeur
+en entrée de la permutation $\Perm$ pour $\oracle_i$ est la même que pour $\oracle$, et on a $y - x = \Delta_i$~; s'il vaut un, les entrées de $\Perm$ sont différentes
+pour les deux oracles, et la différence de leur sorties est très probablement différente de $\Delta_i$~; les deux cas peuvent donc se distinguer efficacement au coût
+d'une requête à chaque oracle. Un attaquant ayant accès à $\oracle$ et $\oracle_i$, $i \in \{0,\ldots,n - 2\}$, peut donc retrouver l'ensemble de la clef $k$ 
+avec un nombre de requête linéaire en sa taille. 
+
+Nous avons appliqué l'attaque en clef liée décrite ci-dessus à l'algorithme de chiffrement authentifié \proestotr~\cite{proest}, qui est une instance du mode de chiffrement
+OTR avec un chiffre de type Even-Mansour.  L'utilisation d'un padding sur la moitié du bloc fait qu'une application directe de notre idée ne permet de retrouver que la moitié
+de la clef~; toutefois, nous montrons comment exploiter la propagation de retenue dans l'addition modulaire ainsi que la position du padding pour également retrouver la seconde moitié pour le même coût.
 
 \section[Conception de primitives]{Primitive design}
 
-\subsection{Construction de matrices de diffusion issues de codes géométriques~\cite{DBLP:conf/sacrypt/AugotFK14}}
+\subsection[{Construction de matrices de diffusion issues de codes géométriques \cite{DBLP:conf/sacrypt/AugotFK14}}]{Construction de matrices de diffusion issues de codes géométriques~\cite{DBLP:conf/sacrypt/AugotFK14}}
+
+Nous décrivons ici des travaux effectués avec Daniel Augot et Pierre-Alain Fouque, publiés à SAC 2014.
+
+\medskip
+
+Une structure classique utilisée dans la conception de chiffres par bloc est celle des réseaux de substitution-permutation (SPNs), qui alternent applications linéaires et non-linéaires (ces dernières étant
+généralement définies comme l'application parallèle de boîtes S de petites tailles). Les applications linéaires utilisées peuvent diversement consister en des permutations binaires, des matrices sur
+un corps fini (généralement $\Ftwo$, $\Fst$ ou $\Fth$), ou une composition des deux\footnote{Bien sûr, toute application linéaire peut être représentée par une matrice sur une structure bien choisie. Ce n'est
+cependant pas toujours la représentation la plus naturelle.}.
+
+Dans ces travaux, nous nous sommes intéressés à la conception de matrices (denses)
+de grande dimension pouvant être utilisées pour assurer toute la diffusion dans un SPN, c'est à dire qu'elles agissent sur l'ensemble du bloc. Concrètement, les matrices que nous
+avons étudié ont une dimension de 16
+et permettent de définir des algorithmes avec des blocs de 64 bits (quand définies sur $\Fst$) ou 128 bits (quand définies sur $\Fth$).
+Utiliser une matrice de grande dimension permet d'assurer une diffusion très rapide, à condition qu'elle possède un \emph{branch number} (BN) élevé~; cette notion correspond à la
+distance minimale d'un code généré par la matrice\footnote{Techniquement, la matrice correspond seulement à la partie de redondance d'une matrice génératrice sous forme systématique.}.
+Le lien entre matrices de diffusion et codes correcteurs fait qu'il est naturel de construire les premières à partir des seconds. En particulier, il est courant de sélectionner
+des codes \emph{MDS}, atteignant la borne de Singleton. Malheureusement, on ne connaît pas de tels codes au delà d'une certaine dimension (fonction de la taille du corps), et en particulier
+aucun code MDS de dimension 16 sur $\Fst$ n'est connu.
+
+Nos travaux ont donc particulièrement consisté à explorer l'utilisation de codes géométriques pour définir des matrices de diffusion
+de grande dimension et de BN en pratique seulement légèrement inférieur à celui d'une hypothétique matrice MDS de même taille.
+Un code géométrique est (dans notre cas) un code construit à partir d'une courbe algébrique, qui permet de définir à la fois un ensemble
+de points (ou plus précisément de places) et des espaces de fonction associés à ses diviseurs~; on peut alors définir des codes
+comme l'évaluation d'un certain espace sur un sous-ensemble des places.
+En choisissant correctement la courbe et l'espace de fonction, on peut par exemple construire une matrice de dimension 16 sur
+$\Fst$ de BN 15, soit deux de moins que la borne de Singleton. Cependant, implémenter efficacement la multiplication par une telle
+matrice n'est pas immédiat, et nous proposons aussi un algorithme vectoriel rapide qui répond à ce besoin.
 
 \subsection{L'algorithme de chiffrement léger \fly \cite{fly}}
 
+Nous décrivons ici des travaux préliminaires réalisés avec Benjamin Grégoire.
+
+\medskip
+
+Nous nous intéressons toujours à la structure SPN, mais cette fois dans le cas d'un algorithme ciblant des plateformes dont les ressources
+sont limitées, ce qui place des contraintes sur les éléments constitutifs de sa fonction de tour. Notamment, les grandes matrices
+denses étudiées précédemment sont trop coûteuses dans ce contexte, et il est par exemple plus approprié d'utiliser une couche linéaire
+constituée d'une simple permutation de bits. Une conséquence d'un tel choix est cependant qu'une partie de la diffusion doit maintenant
+être assurée par les boîtes S elles mêmes~; on peut ainsi définir une notion de BN pour les boîtes S similaire à celle utilisée pour
+les applications linéaires.
+
+Pour obtenir une fonction de tour de SPN efficace sur de petites architectures, nous avons construit une boîte S sur huit bits avec
+un BN de trois qui s'implémente efficacement «\,en tranche\,», et qui peut être couplée avec une permutation elle aussi facile
+d'implémentation. La structure obtenue possède une régularité qui rend l'analyse de certaines propriétés de sécurité
+relativement aisée. Une caractéristique intéressante de notre fonction de tour est aussi qu'elle n'est pas trop coûteuse à protéger
+contre un certain nombre d'attaques physiques, celles-ci représentant une menace particulièrement pertinente dans le contexte
+de la cryptographie embarquée.
+
 \subsection{\pc et \cdb : deux primitives prouvablement incompressibles \cite{puppycipher}}
+
+Nous décrivons ici des travaux communs avec Pierre-Alain Fouque, Paul Kirchner et Brice Minaud, acceptés à ASIACRYPT 2016.
+
+\medskip
+
+L'idée de la cryptographie en boîte blanche a été introduite par Chow \etal en 2002~\cite{DBLP:conf/sacrypt/ChowEJO02},
+et correspond à l'objectif de fournir une implémentation complète d'un algorithme symétrique (par exemple \aes) déjà paramétré par
+une clef, tout en rendant celle-ci difficile à extraire.
+
 
 \section[Nouvelles attaques sur la fonction de hachage \shaone]{New attacks on \shaone}
 
