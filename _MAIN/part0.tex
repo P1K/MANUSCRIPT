@@ -8,518 +8,717 @@
 \chapter*{Table des matières}
 \parttoc
 
-%\addcontentsline{toc}{xpart}{}
-%\addcontentsline{tdm}{section}{Tututututu}
 
 \chapter[Introduction]{Introduction}
 
-
-\section{Block ciphers}
-
-A \emph{block cipher} is a family of injective mappings over finite domains and co-domains, indexed by a finite set of \emph{keys}. This very broad definition will
-in fact always be specialized, taking domains and co-domains of identical sizes, and all parameters living in the binary world. Hence, a block cipher
-is a mapping $\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ such that for all $k \in \{0,1\}^\kappa$, $\E(k,\cdot)$ is a permutation.
-We call $\kappa$ the \emph{key size} and $n$ the \emph{block size} of $\E$. Typical parameter sizes are $\kappa \in \{64, 80, 128, 192, 256\}$ (though
-64 and 80-bit keys are now considered to be too short to provide adequate security) and $n \in \{64, 128, 256\}$.
-We usually require $\E$ and its inverse $\E^{-1}$ to be efficiently computable (depending on the intended application, it may be enough for only
-one of these to be efficient).
-
-The most immediate purpose of block ciphers is to provide confidentiality of communications. Two parties $A$ and $B$ who share a key $k$\footnote{We
-completely ignore the problem of obtaining such a shared key.} for the same
-block cipher are able to send encrypted messages $c \defas \E(k,p)$, $c' \defas \E(k,p')$, etc. The non-key input to $\E$ is generally called
-the \emph{plaintext}, and the output of $\E$ is called the \emph{ciphertext}.
-
-If $\E$ is such that the permutations $\E(k,\cdot)$ are hard to invert when $k$ is unknown, $A$ and $B$ may suppose that a secure channel of communication
-between them consists in injecting their messages to strings $m_0||m_1||\ldots||m_\ell$ of sizes multiple of $n$ and sending encrypted messages
-$\E(k,m_0)||\E(k,m_1)||\ldots||\E(k,m_\ell)$. There are two major problems with this scheme, however, regardless of the security of the block
-cipher: 1) The scheme is not \emph{randomised}, \ie encrypting the same plaintext twice always results in the same ciphertext. An eavesdropper
-(a ``passive adversary'') on the channel between $A$ and $B$ can thus detect when identical message blocks have been sent. 2) The
-communication is not authenticated. An active adversary on the channel may delete or modify some of the blocks of a message, append to a message
-some blocks from a previous message, or add randomly generated blocks. All of this can be done without $A$ and $B$ noticing that someone
-is maliciously tampering with the channel.
-
-Problems such as the ones above are solved by designing secure \emph{modes of operation}. We do not study this topic in this thesis, but
-we mention some elements related to modes in \autoref{sec:bc_modes}. But first, we make the intuition behind the evaluation of the security
-of block ciphers themselves more explicit in \autoref{sec:bc_sec}.
-
-\subsection{Security of block ciphers}
-
-We keep this section relatively informal. Our goal is to be able to specify what it means for $\E$ to be a good block cipher from
-a practical point of view. Yet, we start by defining the useful notion of \emph{ideal block cipher}.
-
-\begin{defi}[Ideal block cipher]
-An \emph{ideal block cipher} $\E$ is a mapping $\{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ s.t. all the permutations
-$\E(k,\cdot)$ are drawn independently and uniformly at random among the permutations of $\{0,1\}^n$.
-\end{defi}
-
-This definition intuitively corresponds to the best we can achieve from the definition of a block cipher. For small values of $n$
-(\eg up to $20 \sim 32$ depending on the desired performance), one can implement ideal block ciphers by using an appropriate
-shuffling algorithm (such as the one variously attributed to Fisher, Yates, Knuth, etc.~\cite{uniform_shuffle}, which we will
-call ``FYK''). As this method
-requires $\bigo(2^n)$ setup time and memory per key, it is obviously impractical for cryptographically common block sizes of $n \geq 64$.
-Even for small values of $n$, running the FYK shuffle requires a considerable amount of randomness parameterized by the keys, which
-is not something trivial to fulfill. All of this leads to the fact that we are forced most of the time to use ``approximations'' of
-ideal block ciphers. A useful (mostly theoretical) way of quantifying the security of a specific block cipher is to measure ``how far'' it
-is from being ideal. Informally, this is done by upper-bounding the \emph{advantage} (over a random answer) that any adversary
-(with some bounded resources)
-has of distinguishing whether he is given black-box access to a randomly-drawn permutation or to an instance of the block cipher
-with a randomly chosen (unknown) key. This statement can be made more precise in the form of the following definition
-(similar to the one that can be found \eg in \cite{DBLP:journals/jcss/BellareKR00}):
-
-\begin{defi}[Pseudo-random permutations (PRP)]
-We consider a block cipher $\E$ of key size $\kappa$ and block size $n$.
-We write $\Pi_{2^n}$ for the set of permutations on binary strings of length $n$; $x \overset{\$}{\leftarrow} \mathcal{S}$
-the action of drawing $x$ uniformly at random among elements of the set $\mathcal{S}$; $\mathcal{A}^{f}$ an algorithm with
-oracle (black-box) access to the function $f$ and which outputs a single bit.
-Then we define the \emph{PRP advantage} of $\mathcal{A}$ over $\E$, written $\Adv^{\text{PRP}}_{\E}(\mathcal{A})$ as:
-\[
-\Adv^{\text{PRP}}_{\E}(\mathcal{A}) = |\Pr[\mathcal{A}^f = 1~|~f \overset{\$}{\leftarrow} \Pi_{2^n}] - \Pr[\mathcal{A}^f = 1~|~f \defas \E(k,\cdot), k \overset{\$}{\leftarrow} \{0,1\}^\kappa]|.
-\]
-The \emph{PRP security} of $\E$ w.r.t. the \emph{data complexity} $q$ and \emph{time complexity} $t$ is:
-\[
-\Adv^{\text{PRP}}_{\E}(q,t) \defas \max_{\mathcal{A}\,\in\,\text{Alg}^{f\backslash q, \E\backslash t}} \{\Adv^{\text{PRP}}_{\E}(\mathcal{A})\}.
-\]
-Here, $\text{Alg}^{f\backslash q, \E\backslash t}$ is the set of all algorithms $\mathcal{A}$ with oracle access to $f$ that perform at most $q$ oracle accesses
-and which run in time $\bigo(t)$, with the time unit being the time necessary to compute $\E$ once.
-\end{defi}
-There exists a related notion of \emph{strong pseudo-random permutation} (SPRP) where one considers algorithms given oracle access both to $f$ and its inverse.
+Ce chapitre présente brièvement les deux principaux objets étudiés pendant cette thèse~: les algorithmes
+de chiffrement par bloc et les fonctions de hachage cryptographiques. Il est une traduction
+des deux premiers chapitres de la première partie de ce manuscrit.
 
 \medskip
 
-\autoref{def:prp} is quite useful in some contexts, for instance to prove that a construction using a block cipher is not significantly less secure than the latter. This is
-typically done by defining an advantage function similar to PRP security for the higher-level construction (this being for instance CBC-MAC in the case of \cite{DBLP:journals/jcss/BellareKR00}) and by showing that
-it is not more than the PRP security of the block cipher plus some (reasonably small) extra terms.
+\begin{center}
+\aldineleft
+\end{center}
 
-However, this definition is not constructive, in the sense that it does not provide any (efficient)
-way of computing the PRP security of a block cipher in general (some results do exist for specific block cipher constructions (usually modulo access to a lower-level primitive such as a
-``random permutation'') such as the one due to Even and Mansour~\cite{EM}, which we will see again in \autoref{chap:emrka}).
-A major topic in symmetric cryptography is to analyse explicit block ciphers in order to assess their concrete security against attacks. In the language of \autoref{def:prp}, this
-consists in finding algorithms for which $q$, $t$ and the PRP advantage is known. Any such attack on a block cipher $\E$ allows to lower-bound its PRP-security at a given point.
-In reality, though, the world of block cipher cryptanalysis is more nuanced than what \autoref{def:prp} may lead us to believe; practically important characteristics of an attack
-are also its memory complexity, distinguishing between its online and offline time complexity, whether it applies equally well to all keys or if it is only successful
-for some ``weak'' subset thereof, whether it also recovers $k$ when $f$ was instantiated from $\E$, or an algorithm equivalent to $\E(k,\cdot)$, etc. We devote the remainder of this
-section to sketching some typical elements of attacks on block ciphers.
+\medskip
 
-\subsection{Distinguishers and attacks}
-The core of many concrete attacks on block ciphers is made of \emph{distinguishers}, which can be defined as algorithms using reasonable resources which have a non-negligible advantage according to \autoref{def:prp}.
-There is no easy answer as to what ``reasonable'' and ``non-negligible'' should mean in the context of actual cryptanalysis, as the key and block size of a specific cipher are fixed values. While some ciphers or potential distinguishers
-may be parameterized in a way that helps to make the definition meaningful, this does not have to be the case. Sometimes, one is easily convinced by the performance of an algorithm so that there is
-consensus that it can be called a distinguisher (\eg distinguishing $\E$ of key and block size $2^{128}$ with $q = 2$, $t = 2^{20}$, probability $\approx 1$), while some other times the picture is much less clear
-(\eg $q = t =  2^{120}$ and probability $\approx 1$). We will ignore this issue altogether and assume that all the attacks of this chapter are consensual.
 
-\subsubsection{Classes of distinguishers for block ciphers}
+\section{Algorithmes de chiffrement par bloc}
 
-We now briefly describe two examples of types of distinguishers, which exploit ``non-ideal'' behaviours of different nature.
+Un \emph{algorithme de chiffrement par bloc} (ou chiffrement (par bloc), ou chiffre (par bloc)) est une famille d'applications
+injectives de domaine et codomaine finis. On adoptera en fait toujours ici une vision plus spécifique de ces objets,
+considérant des domaines et codomaines de même taille, et tous les paramètres impliqués étant définis sur un alphabet
+binaire. Ainsi, on considère qu'un chiffre par bloc est une application
+$\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$
+telle que pour tout $k \in \{0,1\}^\kappa$, $\E(k,\cdot)$ est une permutation.
+On appelle
+$\kappa$ la \emph{taille de clef} et $n$ la \emph{taille de bloc} de $\E$. Usuellement, ces paramètres on pour valeur
+$\kappa \in \{64, 80, 128, 192, 256\}$ (bien que les clefs de 64 ou 80 bits ne sont plus considérées de nos jours
+comme apportant une sécurité suffisante) et 
+$n \in \{64, 128, 256\}$.
+On requiert aussi que $\E$ est son inverse $\E^{-1}$ soient calculables efficacement (bien qu'en fonction des applications
+il puisse être suffisant qu'un seul des deux le soit). 
+
+L'emploi le plus direct d'un chiffre par bloc est de permettre d'assurer la confidentialité de communications.
+Deux partis $A$ et $B$ partageant une clef $k$ pour le même chiffre \footnote{Nous ne nous intéresserons pas ici à la question de savoir
+comment obtenir un tel partage.} sont capable d'envoyer des messages chiffrés $c \defas \E(k,p)$
+$c' \defas \E(k,p')$, etc. Le second argument $p$ de $\E$ est généralement appelé 
+le \emph{texte clair}, et sa sortie le \emph{texte chiffré}.
+
+Si $\E$ est tel que la permutation $\E(k,\cdot)$ est difficile à inverse quand $k$ est inconnu, $A$ et $B$
+pourrait s'attendre à ce qu'un canal de communication sûr consiste à injecter leurs messages
+vers les chaînes
+$m_0||m_1||\ldots||m_\ell$ de tailles multiples de $n$ et envoyer les chiffrés
+$\E(k,m_0)||\E(k,m_1)||\ldots||\E(k,m_\ell)$.
+Ce schéma comporte cependant deux problèmes de taille, indépendamment de la sécurité du chiffrement choisi~:
+1) Le schéma est déterministe, c'est à dire que chiffrer le même texte clair plusieurs fois résulte toujours en le
+même chiffré. Un adversaire passif espionnant la conversation sur le canal entre $A$ et $B$ peut donc
+détecter quand deux messages identiques ont été envoyés. 2) La communication n'est pas authentifiée. Un
+adversaire actif présent sur le canal peut supprimer et modifier certains des blocs d'un message,
+ajouter des blocs d'un précédent message, ou encore ajouter des blocs générés aléatoirement. Tout ceci peut
+être fait sans que $A$ et $B$ détecte que quelqu'un altère le canal avec des intentions hostiles. 
+
+Des problèmes tels que ceux ci-dessus sont résolus en concevant des \emph{modes d'opération} sûrs. Nous n'étudions
+pas ceux-ci dans ce manuscrit, mais mentionnons tout de même certains éléments qui leur sont liés dans
+la section \ref{sec:cf_modes}. Dans l'immédiat, nous nous consacrons à rendre l'intuition derrière les critères de sécurité
+d'un chiffre par bloc plus explicites. 
+
+\subsection{Sécurité des chiffres par bloc}
+
+Comme le reste de cette introduction, cette section est relativement informelle. Notre but est d'expliquer en
+quoi consiste un bon chiffre par bloc, d'un point de vue pratique. Nous commençons toutefois par d'abord
+définir une idéalisation (non-pratique) de cette primitive, sous la forme du modèle du \emph{chiffre idéal}.
+
+\begin{fdefi}[Chiffre par bloc idéal]
+Un \emph{chiffre par bloc idéal} $\E$ est une application
+$\{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ telle que toutes les permutations
+$\E(k,\cdot)$ sont tirées aléatoirement et uniformément parmi les permutations de $\{0,1\}^n$.
+\end{fdefi}
+
+Cette notion correspond intuitivement à ce qu'on peut atteindre de mieux étant donnée la définition d'un chiffre par bloc.
+Pour de petites valeurs de $n$ (par exemple jusqu'à $20 \sim 32$ en fonction de la performance souhaitée), on peut
+implémenter un chiffre idéal en utilisant un algorithme de mélange approprié (par exemple celui attribué de façon
+variable à Fisher, Yates, Knuth, etc.~\cite{uniform_shuffle}, que nous appellerons «\,FYK\,»).
+Cette méthode ayant une complexité de création d'une instance en $\bigo{2^n}$ temps et mémoire, par clef, elle n'est
+évidemment pas envisageable pour les tailles classiques de blocs $n \geq 64$ utilisées en cryptographie.
+Même pour de petites valeurs de $n$, utiliser FYK requiert une quantité considérable d'aléas paramétrisé par les clefs,
+ce qui n'est pas quelque chose d'évident à obtenir. 
+Tout ceci fait qu'en pratique nous sommes généralement forcés d'utiliser des «\,approximations\,» de chiffres idéaux.
+Une façon utile (bien qu'essentiellement théorique) de quantifier la sécurité d'un chiffre par bloc est alors précisément
+de mesurer à quel point celui-ci est éloigné d'un chiffre idéal.
+Informellement, ceci est fait en bornant par le haut l'\emph{avantage} (sur un choix aléatoire) qu'un adversaire
+(avec des ressources bornées de façon appropriée) a de distinguer s'il interagi avec une permutation tirée aléatoirement
+ou avec une instance du chiffre paramétré avec une clef aléatoire (et inconnue). Cette proposition peut être précisée
+sous la forme suivante (similaire à celle qui peut être trouvée par exemple dans~\cite{DBLP:journals/jcss/BellareKR00})~:
+
+\begin{fdefi}[Permutations pseudo-aléatoires (PRP)]
+Soit $\E$ un chiffre par bloc de taille de clef $\kappa$ et de taille de bloc $n$.
+On note 
+$\Pi_{2^n}$ l'ensemble des permutations sur les chaînes binaires de longueur $n$~; $x \overset{\$}{\leftarrow} \mathcal{S}$
+l'action de tirer $x$ aléatoirement et uniformément parmi les éléments de l'ensemble $\mathcal{S}$~; $\mathcal{A}^{f}$
+un algorithme ayant accès à un oracle $f$ et qui retourne un unique bit.
+On définit alors 
+l' \emph{avantage PRP} de $\mathcal{A}$ pour $\E$, écrit $\Adv^{\text{PRP}}_{\E}(\mathcal{A})$ comme~:
+\[
+\Adv^{\text{PRP}}_{\E}(\mathcal{A}) = |\Pr[\mathcal{A}^f = 1~|~f \overset{\$}{\leftarrow} \Pi_{2^n}] - \Pr[\mathcal{A}^f = 1~|~f \defas \E(k,\cdot), k \overset{\$}{\leftarrow} \{0,1\}^\kappa]|.
+\]
+La \emph{sécurité PRP} de $\E$ pour une \emph{complexité en donnée} $q$ et une \emph{complexité en temps} $t$ est~:
+\[
+\Adv^{\text{PRP}}_{\E}(q,t) \defas \max_{\mathcal{A}\,\in\,\text{Alg}^{f\backslash q, \E\backslash t}} \{\Adv^{\text{PRP}}_{\E}(\mathcal{A})\}.
+\]
+Ici, 
+$\text{Alg}^{f\backslash q, \E\backslash t}$ est l'ensemble des algorithmes $\mathcal{A}$ qui ont accès à un oracle $f$ auquel ils font au plus $q$ accès,
+et qui tourne en temps inférieur à
+$\bigo(t)$, l'unité de temps étant le temps nécessaire pour calculer $\E$ une fois.
+\label{def:fprp}
+\end{fdefi}
+Il existe également une notion similaire de \emph{permutation fortement pseudo-aléatoire} (SPRP) qui considère des algorithmes ayant accès à la fois à l'oracle $f$ et à son inverse.
+
+\medskip
+
+
+La notion de PRP est utile dans certains contextes, par exemple pour prouver qu'une construction utilisant un chiffre par bloc n'est pas significativement moins
+sûre que ce dernier. Un tel résultat est typiquement obtenu en définissant une fonction d'avantage pour la construction de haut niveau (celle-ci
+étant par exemple CBC-MAC dans le cas de \cite{DBLP:journals/jcss/BellareKR00}) similaire à celle utilisée dans la sécurité PRP, et en montrant
+que cet avantage n'est pas plus qu'une fonction «\,raisonnable\,» de la sécurité PRP.
+
+Toutefois, cette définition n'est pas constructive, dans le sens où elle ne donne pas de procédure efficace permettant de calculer la sécurité PRP
+d'un chiffre par bloc en général (certains résultats existent pour des constructions spécifiques, nécessitant généralement l'accès à une
+primitive idéale de bas niveau comme une «\,permutation aléatoire\,»)
+Un des objectifs majeurs de la cryptographie symétrique consiste à analyser explicitement des chiffres par blocs dans le but d'établir leur sécurité
+concrète contre certaines attaques. S'inspirant de la terminologie de la définition~\ref{def:fprp}, ceci revient à trouver
+des algorithmes pour lesquels $q$, $t$ et l'avantage PRP sont connus. Une telle attaque sur un chiffre $\E$ permet alors de borner par le bas sa sécurité PRP
+en un certain point.
+Cependant, en réalité, le monde de la cryptanalyse des chiffres par bloc est plus nuancé que ce que la définition~\ref{def:fprp} pourrait nous faire croire.
+Des caractéristiques importantes d'une attaque sont aussi sa complexité en mémoire~; le découpage de sa complexité en ligne et hors ligne~; savoir si elle s'applique
+aussi bien à toutes les clefs ou à seulement certaines d'entre elles~; savoir si elle permet de retrouver $k$ quand $f$ est une instance de $\E$, ou un algorithme
+équivalent à $\E(k,\cdot)$, etc.
+Nous consacrons le reste de cette section à introduire quelques éléments typiques de telles attaques concrètes sur des chiffres par bloc.
+
+\subsection{Distingueurs et attaques}
+
+L'essence de beaucoup d'attaques concrètes sur les chiffres par blocs est faite de \emph{distingueurs}, qui peuvent être définis comme des algorithmes utilisant des ressources
+raisonnables qui ont un avantage non négligeable d'après la définition~\ref{def:fprp}.
+Il n'existe pas de réponse évident à ce que «\,raisonnable\,» et «\,non négligeable\,» signifient dans le contexte d'attaques réelles, notamment parce que les tailles de clefs
+et de blocs sont fixes. Si certains chiffres ou distingueurs potentiels peuvent être paramétrés pour aider à donner du sens à cette définition, ce n'est pas toujours le cas.
+On peut aussi parfois être facilement convaincu par la performance d'un algorithme, et il n'y a alors pas de doutes sur le fait qu'il constitue en un distingueur
+(par exemple distinguer $\E$ de clef et bloc de taille 128 avec $q = 2$, $t = 2^{20}$, probabilité $\approx 1$), tandis que dans d'autres cas la situation est bien
+moins claire (par exemple $q = t = 2^{120}$ et probabilité $\approx 1$). Nous ignorons entièrement ces problèmes potentiels dans le reste de cette introduction et considérons
+que toutes les attaques mentionnées sont consensuelles.
+
+\subsubsection{Classes de distingueurs}
+
+Nous décrivons brièvement deux types de distingueurs qui exploitent des comportements non idéaux de différentes natures.
 
 \bigskip
 
-We start with \emph{differential distinguishers}, which are part of the broader class of \emph{statistical} distinguishers.
-The basic idea of the latter is to define an event which has a different probability distribution for the target (the block cipher $\E$)
-than for a random permutation drawn from $\Pi_{2^n}$. Running the distinguisher then consists in collecting a certain number of samples (obtained through
-the oracle) and deciding from which distribution
-%(the one entailed by $\E$ or the one entailed by a random permutation)
-those are the
-most likely to have been drawn.
-A differential distinguisher instantiates this idea by considering a certain type of statistical events. Another major class of
-statistical distinguishers is the one of \emph{linear distinguishers}.
+Nous commençons par présenter les \emph{distingueurs différentiels}, qui font partie de la classe plus générale des distingueurs
+dits \emph{statistiques}.
+L'idée de base correspondant à cette dernière est de définir un événement dont la distribution de probabilité pour sa cible
+(le chiffre par bloc $\E$) est différente par rapport à une permutation tirée aléatoirement dans $\Pi_{2^n}$.
+Appliquer le distingueur correspond alors à collecter un certain nombre d'échantillons (obtenus grâce à un oracle)
+et à déterminer quelle est la distribution d'après laquelle ils ont le plus probablement été tirés.
+Un distingueur différentiel réalise cette idée en considérant un certain type d'événement statistique. Une autre classe
+majeur de distingueurs statistique est celle des \emph{distingueurs linéaires}.
 
-Consider a block cipher $\E$; a \emph{differential} for $\E$ is a pair $(\Delta,\delta)$ of input and output \emph{differences},
-according to some group law $+$\footnote{We implicitly only consider non-trivial differences where $\Delta \neq 0$.}.
-In the huge majority of cases, $+$ is the addition in $\mathbf{F}_2^n$,
-\ie the bitwise exclusive OR (XOR); in this case we usually use the alternative notation $\oplus$. Sometimes, $+$
-is taken to be the addition in $\mathbf{Z}/2^n\mathbf{Z}$, and some other times differences according to the two laws may be jointly used.
-A \emph{differential pair} for the difference $(\Delta,\delta)$ is an ordered pair of plaintexts and their corresponding ciphertexts (for some
-key $k$)
-$p$, $c \defas \E(k,p)$, $p'$, $c' \defas \E(k,p')$ such that $p - p' = \Delta$, $c - c' = \delta$. When differences are over $\mathbf{F}_2^n$,
-subtraction coincides with addition and the pair can be unordered. We consider this to be the case in the remainder of this description.
+Soit un chiffre par bloc $\E$~; une \emph{différentielle} pour $\E$ est une paire
+$(\Delta,\delta)$ de différences d'entrée et de sortie associées à une certaine loi de groupe
+$+$\footnote{On considérera toujours des différences non triviales avec $\Delta \neq 0$.}.
+Dans la grande majorité des cas, $+$ est l'addition sur $\mathbf{F}_2^n$,
+c'est à dire le OU exclusif bit à bit (XOR)~; dans ce cas, on utilisera souvent la notation alternative $\oplus$ pour cette loi.
+Parfois, $+$ est l'addition dans $\mathbf{Z}/2^n\mathbf{Z}$, et d'autres fois les différences peuvent être considérées suivant plusieurs lois à la fois.
+Une \emph{paire différentielle} pour la différence $(\Delta,\delta)$ est une paire ordonnée de textes clairs et de leurs chiffrés correspondant (pour une certaine clef $k$)
+$p$, $c \defas \E(k,p)$, $p'$, $c' \defas \E(k,p')$ tel que $p - p' = \Delta$, $c - c' = \delta$. Quand la différence est sur $\mathbf{F}_2^n$,
+la soustraction coïncide avec l'addition et la paire peut être non ordonnée. Nous nous plaçons dans un tel cas pour le reste de cette description.
 
-We call \emph{differential probability} of a differential w.r.t. a permutation $\Perm$ the probability of obtaining a differential pair
-for $\Perm$:
+On appelle \emph{probabilité différentielle} d'une différentielle pour une permutation $\Perm$ la probabilité d'obtenir une
+paire différentielle pour $\Perm$~:
 $\DP^{\Perm}(\Delta,\delta) \defas \Pr_{p\,\in\,\{0,1\}^n}[\Perm(k,p) \oplus \Perm(k,p \oplus \Delta) = \delta]$.
-The most important characteristic of a differential for a block cipher is its \emph{expected differential probability}, which
-is simply its differential probability for $\E(k,\cdot)$ averaged over $k$:
+La caractéristique la plus importante d'une différentielle pour un chiffre par bloc est sa \emph{probabilité différentielle attendue},
+qui est simplement la moyenne sur $k$ de ses probabilités différentielles pour $\E(k,\cdot)$~:
 $\EDP^{\E}(\Delta,\delta) \defas 2^{-\kappa}\sum_{k\,\in\,\{0,1\}^\kappa} \DP^{\E(k,\cdot)}(\Delta,\delta)$.
-A common assumption is that for most keys and differentials, the fixed-key DP is close to the average EDP.
-The DP of a random differential w.r.t. a random permutation can be approximated by
-a Poisson distribution: the (approximate) number of differential pairs is $\sim \poi(2^{-1})$, of mean and variance $2^{-1}$
-(see~\cite{DBLP:journals/jmc/DaemenR07}, using an earlier result~\cite{DBLP:journals/joc/OConnor95}).
-As there are $2^{n-1}$ possible pairs, the expected DP is thus $2^{-n}$\footnote{Note however that the DP is in fact restricted to values multiple of $2^{-n+1}$.}.
-For a distinguisher on $\E$ to be of any use, we need its EDP not to be equal to $2^{-n}$. If it is far enough
-from that (\eg $2^{-3n/4}$), we usually make the simplifying working hypothesis that all DPs are equal to their expected value (or rather the nearest
-possible values).
-In such a case, using the distinguisher consists in collecting $\propto 1/\EDP^{\E}(\Delta,\delta)$ plaintext pairs verifying
-the input difference and counting how many of them verify the output difference. We decide that we are interacting with $\E$ if and only if this is one or more.
+Une hypothèse courante est que pour la plupart des clefs et des différentielles, la probabilité DP à clef fixée
+est proche de la moyenne EDP.
+La DP d'une différentielle aléatoire pour une permutation aléatoire peut être approchée par une loi de Poisson~:
+le nombre (approché) de paires différentielles est
+$\sim \poi(2^{-1})$, de moyenne et variance $2^{-1}$
+(voir~\cite{DBLP:journals/jmc/DaemenR07}, se basant sur un résultat antérieur~\cite{DBLP:journals/joc/OConnor95}).
+Puisqu'il y a
+$2^{n-1}$ paires possibles, la DP attendue est de $2^{-n}$\footnote{On notera cependant que la DP a forcément valeur dans les multiples de $2^{-n+1}$.}.
+Pour qu'un distingueur sur $\E$ soit utile, il faut donc que son EDP soit différente de $2^{-n}$. Si elle en est suffisamment éloignée
+(par exemple $2^{-3n/4}$), on fait généralement l'hypothèse simplificatrice que toutes les DPs sont égales à leur espérance (ou plutôt la valeur
+possible la plus proche).
+Dans ce cas,
+utiliser un distingueur consiste à accumuler
+$\propto 1/\EDP^{\E}(\Delta,\delta)$ textes clairs vérifiant la différence d'entrée et à compter combien d'entre eux vérifient la différence de sortie. On décide
+qu'on interagit avec $\E$ si et seulement si cette valeur est au moins un.
 
 \bigskip
 
-Another kind of distinguishers is based on \emph{algebraic} representations of block ciphers. One can always redefine a block cipher
-$\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ as an ordered set of functions $\F_i : \{0,1\}^{\kappa+n} \rightarrow \{0,1\}$ that project
-$\E$ on its $i^\text{th}$ output bit: $\E \equiv \langle \F_0, \ldots, \F_{n-1} \rangle$. The $\F_i$s can be understood as Boolean functions
-$\mathbf{F}_{2^{\kappa + n}} \rightarrow \Ftwo$ which are themselves in bijection with elements of $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
-\ie multivariate polynomials in $\kappa + n$ variables over $\Ftwo$. The polynomial to which a Boolean function is mapped is called its \emph{algebraic normal form} (ANF);
-the ANF of $\E$ is the ordered set of ANFs of its projections.
+Un autre type de distingueur est basé sur une représentation \emph{algébrique} des chiffres par bloc.
+Il est toujours possible de redéfinir un chiffre 
+$\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ comme un ensemble ordonné de fonctions $\F_i : \{0,1\}^{\kappa+n} \rightarrow \{0,1\}$ projetant
+$\E$ sur son $i^\text{ème}$ bit de sortie~: $\E \equiv \langle \F_0, \ldots, \F_{n-1} \rangle$. Les $\F_i$s peuvent être vues comme des fonctions booléennes
+$\mathbf{F}_{2^{\kappa + n}} \rightarrow \Ftwo$ qui sont elles mêmes en bijection avec les éléments de $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
+c'est à dire des polynômes en $\kappa + n$ variables sur $\Ftwo$. Le polynôme correspondant à une fonction booléenne est appelé sa \emph{forme algébrique normale}
+(ANF)~;
+l'ANF de $\E$ est l'ensemble ordonné des ANFs de ses projections.
 
-An important characteristic of an ANF is its (maximal) degree, which can be used to define simple yet efficient distinguishers. The degree
-of (the ANF of) an $n$-bit permutation is at most $n - 1$, and it is expected of a random permutation to be of maximal degree. If a block cipher
-has degree $d < n - 1$, it can be distinguished by differentiating it on enough values. This simply requires to evaluate the oracle on $2^d$ properly chosen
-values (essentially a cube of dimension $d$) and to sum them together. If the result is the all-zero ciphertext, the oracle is likely to be of degree less than
-$d$ and is hence assumed to be $\E$; if this is not the case, it is necessarily of degree strictly more than $d$ and hence assumed to be a random permutation.
+Une caractéristique importante d'une ANF est son degré, qui peut être utilisé pour définir des distingueurs simples mais efficaces.
+Le degré de l'ANF d'une permutation sur $n$ bits est au plus $n - 1$, et il est attendu d'une permutation aléatoire d'être de degré
+maximal. Si un chiffre par bloc a un degré $d < n - 1$, il peut être distingué en le dérivant en suffisamment de points.
+Ceci nécessite simplement d'évaluer l'oracle sur $2^d$ valeurs bien choisies (essentiellement un cube de dimension $d$) et de toute les additionner.
+Si le résultat vaut zéro sur chaque bit, l'oracle est probablement de degré moins que $d$ et est donc supposé être $\E$~; si ce n'est pas le cas, il est
+nécessairement de degré plus que $d$ et est donc supposé être une permutation aléatoire.
 
-\subsubsection{Extending distinguishers to key-recovery attacks}
+\subsubsection{\'Etendre un distingueur pour retrouver une clef}
 
-In the definition of PRP security, we were content with the notion of distinguisher. In actual attacks on block ciphers, however, the end objective
-would ideally be to recover the unknown key used by the oracle. The context of a concrete attack is also different from a PRP security game as one usually knows that he is interacting with a specific
-cipher $\E$ and not a random permutation, and there is seemingly no point in running a distinguisher at all.
-Despite these observations, distinguishers are in fact useful in many cases, and are often at the basis of key-recovery attacks\footnote{Some attacks
-are not distinguisher-based. Though many of them are quite interesting, we do not describe them here.}. We briefly explain
-the basic idea of this conversion; to do this, we need to assume that $\E$ possesses a certain structure (this is completely without loss of generality).
+En définissant la sécurité PRP, nous étions satisfait de la notion de distingueur. Cependant, dans le cas d'attaques concrètes, l'objectif
+final est idéalement de retrouver la clef inconnue utilisée par l'oracle.
+Le contexte d'une attaque est aussi généralement différent de celui d'un jeu de sécurité PRP, car l'attaquant connaît généralement déjà
+le chiffre $\E$ avec lequel il interagit, et sait également que celui ci n'est pas une permutation aléatoire~; il peut donc paraître finalement inutile
+d'appliquer un distingueur.
+Malgré ces observations, les distingueurs sont utiles dans bien des cas, et sont souvent à la base d'attaques retrouvant la clef\footnote{Toutes ces
+attaques ne sont pas pour autant basées sur des distingueurs. Bien que beaucoup d'entre elles sont intéressantes, nous ne les décrivons pas ici.}.
+Nous expliquons maintenant brièvement l'idée derrière ces conversions de distingueurs en attaques plus complètes. Pour ceci, nous devons faire
+certaines hypothèses sur la structure de $\E$ (toujours valables en pratique).
 
-An \emph{iterative block cipher} is a cipher $\E$ that can be described as the multiple composition of a \emph{round function} $\R$ (possibly with additional
-composition of an initialization or finalization function that we ignore here) : $\E \equiv \R \circ \cdots \circ \R$. Let us assume that a ``full''
-application of $\E$ is made of $r$ rounds. A distinguisher-based key-recovery attack first consists in finding a distinguisher on
-a \emph{reduced-round} version of $\E$ made of the composition of $d < r$ round functions. The next step simply consists in querying the oracle on inputs verifying the distinguisher condition (for instance
-plaintexts with difference $\Delta$, in a differential case); as one obtains encryption with the full block cipher, one is not expected to be able to directly run the distinguisher
-on these values. The main idea comes from the third step, where one guesses values for part of the unknown key $k$ of $\E$ which allow him to partially decrypt the ciphertexts by $r-d$ rounds. Then, if
-the guess was correct, he obtains ciphertexts for the cipher reduced to $d$ rounds, on which the distinguisher is expected to be successful. On the other hand, if the guess was incorrect, one obtains
-ciphertexts somehow equivalent to the ones of a $(2r-d)$-round cipher and the distinguisher should fail. Thus, this overall approach gives us a method to verify a guess for part of the unknown key.
+Un  \emph{chiffre par bloc itératif} est un chiffre $\E$ pouvant être décrit comme la composition multiple
+d'une \emph{fonction de tour} $\R$ (possiblement aussi composée avec une fonction d'initialisation et une fonction de finalisation
+que nous ignorons ici)~:
+$\E \equiv \R \circ \cdots \circ \R$. On note $r$ le nombre total d'applications de $\R$ dans $\E$ pour une version «\,complète\,» de ce dernier.
+Une attaque recouvrant la clef basée sur un distingueur consiste tout d'abord à trouver un distingueur sur une version
+réduite de $\E$ constituée de la composition de $d < r$ fonctions de tour. L'étape suivante consiste alors à interroger l'oracle sur
+des entrées vérifiant les conditions du distingueur (par exemple des textes clairs de différence $\Delta$)~; les réponses obtenues étant chiffrées
+avec une version complète de du chiffrement, il n'est pas attendu du distingueur qu'il produise un résultat utile quand utilisé sur ces valeurs.
+L'idée principale consiste en l'étape suivante, où l'attaquant fait une hypothèse sur la valeur d'une partie de la clef inconnue $k$ de $\:E$
+qui lui permet de déchiffrer partiellement les textes chiffrés sur $r-d$ tours. Ainsi, si son hypothèse est correcte, il obtient des chiffrés pour le
+chiffre réduit à $d$ tours, sur lequel le distingueur est supposé être efficace. En revanche, si l'hypothèse est fausse,
+il obtient des chiffrés environ équivalent à ceux d'un chiffre sur $2r - d$ tours, et le distingueur échouera probablement. Finalement, on peut donc
+voir que cette approche donne une méthode pour vérifier une hypothèse sur une partie de la clef inconnue. 
 
-The procedure as described above calls for several comments. 1) The cost of guessing part of the key obviously adds to the complexity of the distinguisher, so that the overall complexity of the attack
-is higher than the latter. Thus, only distinguishers that leave a sufficient ``margin'' may be converted to key-recovery attack. 2) There are various reasons why a distinguisher may be able to work
-even though only part of the key was guessed, for instance because the entire key is spread over many rounds, or because the distinguisher may be run on only ``part of the state'' of $\E$, which computation
-does not require the entire ``round key''. 3) The part of the key that was not recovered thanks to the distinguisher can be obtained by different means. For instance, another distinguisher may be
-used which leads to another part of the key, or it can simply be guessed exhaustively.
-
-
-\subsubsection{Attack models}
-
-So far we have discussed how to express the security of block ciphers and how to attack them in a rather simple case when one is given access to a single ``secret'' oracle. This setting may be generalised
-in some ways, for instance by providing more than one oracle. One such common generalisation is to attack a cipher in the \emph{related-key model}, where one is given oracle access to
-$\E(k,\cdot)$, $\E(\rka(k),\cdot)$, with $\rka(\cdot)$ one or more mappings on the key space. A crucial observation in this case is that $\rka$ cannot be arbitrary, as some mappings may
-be so powerful that they allow to attack (almost) every cipher; speaking of the security of $\E$ in such a model is then meaningless. We will mention this matter again in \autoref{chap:emrka}.
-
-The potential problems arising from ill-defined related-key models are a useful reminder that attacks should be specified in a well-founded way. While some of them may be
-considered too unrealistic to be of practical significance (this is in fact a rather common reproach to related-key attacks at large), this question is only secondary to their not allowing to trivially
-attack any cipher.
-
-\subsection{Using block ciphers}
-
-We mentioned in the beginning of this chapter that block ciphers do not provide adequate security if they are used directly and not as part of a wider construction. One calls \emph{mode
-of operation} such a construction that results in a (hopefully) functional cryptosystem. We do not describe modes in this section, but reiterate from the introduction the essential conditions that they
-must meet.
-
-A foremost requirement is that a mode be randomised, in the sense that encrypting the same message with the same key twice should not result in the same ciphertext. This can be
-enforced through the notion of \emph{indistinguishability} in a \emph{chosen-plaintext attack} scenario (\textsf{IND-CPA}) and its close relatives. Roughly, this is
-defined thanks to the following process: an adversary is given a black-box access to the encryption procedure of a certain cryptosystem, then prepares two messages $m_0$ and $m_1$ and sends them to an oracle. This oracle randomly selects one of the two messages and
-returns its associated ciphertext. Finally, the adversary is again given access to the cryptosystem and then tries to guess which message was encrypted. The cryptosystem is \textsf{IND-CPA}
-if no adversary (with appropriately bounded resources) is successful in his guess with a non-marginal advantage. It is clear in particular that a deterministic cryptosystem cannot be secure according
-to this definition.
-
-We also already mentioned that a cryptosystem should provide authentication of the communicating parties. This is either done directly by the mode of operation (which is then
-called an \emph{authenticated encryption} mode, or AE) or by combining an encryption-only mode with a \emph{message authentication code} (MAC) in an appropriate way. The current
-trend is to favour the former approach, as it tends to lead to more efficient schemes.
-
-We conclude this chapter by highlighting the prevalence of the \emph{birthday bound} (coming from the so-called \emph{birthday paradox}, which we will
-only define in \autoref{chap:hashfun}) in cryptography by stating the following fact: when using a block cipher of block size $n$, most modes of operation are only
-secure up to the encryption of $\approx 2^{n/2}$ blocks, even if the key size of the block cipher can be much bigger than that.
+On peut faire certains commentaires concernant cette procédure. 1) Le coût associé aux hypothèses répétées devant être faites sur la valeur d'une partie de la clef
+font évidemment que la complexité de l'attaque sera supérieure à celle du distingueur. On ne peut donc utiliser de cette façon seulement des distingueurs suffisamment
+efficaces. 2) Il peut y avoir plusieurs raisons faisant qu'un distingueur est exploitable même si seulement une partie de la clef est connue (par hypothèse), par exemple
+parce que seulement une partie de la clef est utilisée chaque tour, ou parce que le distingueur peut être joué sur seulement une partie de l'«\,état\,» du chiffre.
+3) La partie de la clef qui n'est pas retrouvée grâce au distingueur peut être déterminée de plusieurs façons~; par exemple, un autre distingueur
+impliquant une hypothèse sur une autre partie de la clef peut être utilisé, ou alors elle peut simplement être énumérée exhaustivement.
 
 
+\subsubsection{Modèles d'attaques}
 
+Jusqu'à présent, nous avons considéré la sécurité des chiffrements dans un cas simple où l'attaquant a accès à un unique oracle secret.
+Ce scénario peut être généralisé de plusieurs façons, par exemple en donnant accès à plus d'un oracle. Une généralisation de ce type qui est
+relativement commune consiste en le modèle d'attaques à \emph{clefs liées}, où l'attaquant peut appeler
+$\E(k,\cdot)$, $\E(\rka(k),\cdot)$, avec $\rka(\cdot)$ une ou plusieurs applications sur l'espace de clefs.
+Une observation cruciale est que dans ce cas $\rka$ ne peut pas être arbitraire, car certaines applications sont suffisamment puissantes
+pour permettre d'attaque n'importe quel chiffre~; il ne peut alors pas y avoir de définition sensée de la sécurité de $\E$ dans un tel cas.
+Il est donc utile de garder à l'esprit qu'une attaque doit toujours être spécifiée dans un modèle clair. Bien que certains modèles puissent
+être considérés comme peu réalistes et donc peu utiles (ce qui est une critique souvent formulée à l'égard des attaques en clef liée), cette
+question est toujours secondaire par rapport à celle de savoir si un modèle permet de mener des attaques triviales dans n'importe quelle circonstance. 
+
+\subsection{Utiliser des chiffres par bloc}
+\label{sec:cf_modes}
+
+Nous avons mentionné au début de ce chapitre qu'un chiffre par bloc n'offre pas nécessairement une sécurité suffisante s'il est mal employé.
+On appelle \emph{mode d'opération} une construction à base d'une primitive telle qu'un chiffre par bloc résultant en un cryptosystème (qu'on espère) fonctionnel.
+Nous ne décrivons pas de mode dans cette section, mais précisons à nouveau les critères qu'un tel objet doit vérifier.
+
+Une condition essentielle pour un mode est qu'il doit être non déterministe, dans le sens où chiffrer le même texte clair avec la même clef deux fois ne
+doit pas donner le même chiffré. Cette condition peut être formalisée par la notion d'\emph{indistinguabilité} dans un scénario d\emph{attaque à clair choisi}
+(\textsf{IND-CPA}), ainsi que ses variantes proches. Ceci est approximativement défini par le processus suivant : un adversaire est doté d'un accès
+à un oracle de chiffrement pour un certain système, puis il prépare deux messages $m_0$ et $m_1$ qu'il envoie à un second oracle. Ce dernier
+choisi aléatoirement un des deux messages et retourne son chiffré. Finalement, l'adversaire peut à nouveau émettre des requêtes à son premier oracle et doit ensuite
+deviner quel message a été chiffré. Le cryptosystème est \textsf{IND-CPA} si aucun adversaire (aux ressources bornées de façon appropriées) ne réussit ce jeu
+avec un avantage non marginal. Il est clair en particulier qu'aucun système déterministe ne peut être sûr suivant cette définition. 
+
+
+Nous avons aussi déjà mentionné qu'un cryptosystème doit permettre aux partis communicants de s'authentifier. Ceci peut être assuré directement
+par le mode d'opération (on parle alors de mode de \emph{chiffrement authentifié}) ou en combinant de façon appropriée un mode assurant le seul chiffrement avec
+un \emph{code d'authentification} (MAC).
+La tendance actuelle est de favoriser la première approche, qui mène généralement à des systèmes plus efficaces.
+
+
+Nous concluons cette section en soulignant finalement l'importance de la \emph{borne des anniversaires} (appelée ainsi à cause du «\,paradoxe des anniversaires\,»,
+que nous définissons dans la section suivante) en cryptographie en donnant la proposition suivante : la plupart des modes d'opération
+utilisant un chiffre de taille de bloc $n$ ne sont sûrs que tant qu'une clef n'est pas utilisée pour chiffrer plus que $\approx 2^{n/2}$ blocs,
+même si la taille de clef est largement supérieure.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{Hash functions}
+\section{Fonctions de hachage}
 
-A (binary) hash function is a mapping from bit strings of arbitrary length (the messages) to strings of a fixed predetermined length (the digests, or hashes):
-$\hash : \{0,1\}^* \rightarrow \{0,1\}^n$ for some integer $n$.
-Many hash functions do not strictly adhere to this definition, as they upper-bound the length of their inputs by a (usually) large integer such as $2^{64}$. This currently has
-no impact in practice, as all potential inputs to a hash function are much shorter than these upper limits; it is of course debatable whether this will always remain the case. 
-The typical output length of hash functions is of a few hundred bits, often a multiple of thirty-two; popular hash functions of the present and the past may be found with
+Une fonction de hachage (binaire) est une application des chaînes binaires de taille arbitraire (les \emph{messages}) vers des chaînes de taille
+fixe (les \emph{empreintes}, ou \emph{hachés})~:
+$\hash : \{0,1\}^* \rightarrow \{0,1\}^n$ pour un entier $n$.
+La plupart des fonctions de hachage ne se conforment pas strictement à cette définition et ne sont définies que sur un domaine fini, de taille par exemple égale
+à $2^{64}$. Ceci n'a a priori pas d'impact en pratique, puisque les éléments susceptibles d'être donnés en entrée d'une fonction sont bien plus petits que ces
+limites supérieures (même si en toute rigueur il n'est pas évident que ceci sera toujours le cas). 
+La taille de sortie typique d'une fonction de hachage est de quelques centaines de bits, et généralement un multiple de trente-deux~; des fonctions populaires
+du passé et du présent peuvent être trouvées avec 
 $n \in \{128, 160, 224, 256, 384, 512\}$.
 
-A \emph{cryptographic} hash function\footnote{We will obviously only consider such functions from now on.} is a hash function $\hash$ that verifies a certain number of \emph{security properties}, which express the difficulty of computing inputs
-to $\hash$ that verify some conditions. There are three ``classical'' security properties that must be met (at least to some extent)
-by any secure hash function; in an informal way, they can be expressed as:
-\begin{defi}[Preimage resistance] Given a target $\targ$, an \emph{adversary} must not be able to find a message $\messhash$ such that $\hash(\messhash) = \targ$ with non-negligible probability using
-less computational resources than what is required to compute $\hash$ $\bigo(2^n)$ times.
-\end{defi}
-\begin{defi}[Second preimage resistance] Given a message $\messhash$, an adversary must not be able to find a different message $\messhash'$ such that
-$\hash(\messhash) = \hash(\messhash')$  with non-negligible probability using less computational resources than what is required to compute $\hash$ $\bigo(2^n)$ times.
-\end{defi}
-\begin{defi}[Collision resistance] One must not be able to find two distinct ``fresh'' messages $\messhash$ and $\messhash'$ such that $\hash(\messhash) =
-\hash(\messhash')$ with non-negligible probability using less computational resources than what is required to compute $\hash$ $\bigo(2^{n/2})$ times.
-\end{defi}
+Une fonction de hachage \emph{cryptographique}\footnote{Nous ne considérerons que de telles fonctions jusqu'à présent} est une fonction
+de hachage $\hash$ qui vérifie un certain nombre de \emph{propriétés de sécurité} qui expriment la difficulté de trouver des messages
+produisant des empreintes vérifiant certaines conditions. On définit généralement trois propriétés «\,classiques\,» qui doivent être satisfaites
+(au moins jusqu'à un certain point) par n'importe quel fonction sûre. De façon informelle, celles-ci s'expriment de la façon suivante~:
 
-The complexities associated with these definitions correspond to the ones of the best known \emph{generic} algorithms that can find messages with the desired
-properties with high probability for any function. An \emph{attack} on a specific hash function is an algorithm that can achieve one of the above tasks (significantly)
-more efficiently than the best generic algorithm. By definition, this violates the associated security property.
-Above, we define the complexity of these generic algorithms in terms of calls to $\hash$. In practice, it may be necessary to adjust
-this to a finer granularity; for instance, for the \merkdam hash functions that we describe in \autoref{sec:mdhf}, it makes more sense to evaluate the complexity
-in terms of calls to what will be defined as a \emph{compression function}.
+\begin{fdefi}[Résistance aux préimages]
+Soit une cible $targ$, un adversaire ne doit pas être capable de trouver un message
+$\messhash$ tel que $\hash(\messhash) = \targ$ avec probabilité non négligeable en utilisant moins de ressources que ce qui est nécessaire pour calculer
+$\hash$ $\bigo(2^n)$ fois.
+\end{fdefi}
+\begin{fdefi}[Résistance aux secondes préimages]
+Soit un message $\messhash$, un adversaire ne doit pas être capable de trouver un message différent $\messhash'$ tel que
+$\hash(\messhash) = \hash(\messhash')$  avec probabilité non négligeable en utilisant moins de ressources que
+ce qui est nécessaire pour calculer $\hash$ $\bigo(2^n)$ fois.
+\end{fdefi}
+\begin{fdefi}[Résistance aux collisions] On ne doit pas être capable de trouver deux messages «\,frais\,» différents $\messhash$ et $\messhash'$ tels que$\hash(\messhash) =
+\hash(\messhash')$ avec probabilité non négligeable en utilisant moins de ressources que ce qui est nécessaire pour calculer  $\hash$ $\bigo(2^{n/2})$ fois.
+\end{fdefi}
 
-As a side remark, the lower complexity target of $\bigo(2^{n/2})$ associated with collision resistance is a direct consequence of the so-called \emph{birthday paradox} (which
-is encountered frequently in cryptography): informally,
-$N$ elements define $\bigo(N^2)$ pairs, thus if these elements are drawn at random from a set of size $S$, we expect two of them to be the same (\ie to collide)
-with high probability after drawing $\bigo(\sqrt{S})$ of them.
-One can also notice that unlike (second) preimage resistance, the definition of collision resistance does not include an input target or message. As such, it does not in itself
-exclude (generic) algorithms that simply return two constant colliding messages, in constant time. Such algorithms trivially violate the security property, but
-they do not say anything about the security of the functions (not the least because of their generic nature). Consequently, they are usually considered irrelevant in a cryptographic context, and they do not make
-the definition devoid of sense.
+Les complexités associées à ces définitions correspondent à celles des meilleurs algorithmes génériques connus, qui permettent de trouver
+des messages avec les propriétés désirées avec forte probabilité, pour n'importe quelle fonction.
+Une attaque sur une fonction de hachage concrète est un algorithme qui permet d'atteindre un des objectifs définis ci-dessus significativement
+plus efficacement qu'avec le meilleur algorithme générique. Par définition, un tel algorithme viole la propriété de sécurité associée.
+Dans nos définitions ci-dessus, nous mesurons la complexité des attaques en nombre d'appels à $\hash$. En pratique, il est généralement
+nécessaire d'ajuster cet mesure à une granularité plus fine~; par exemple, pour une fonction de type \merkdam (que nous définissons
+dans la section~\ref{sec:fmd}), il est nécessaire de mesurer cette complexité en nombre d'appels à ce qui sera défini comme
+la \emph{fonction de compression}.
 
-\subsection{Applications of hash functions}
 
-The nature of the properties used to define security for cryptographic hash functions is based on requirements from the various cases where they may be used in concrete cryptosystems or protocols.
-Depending on the situation, resistance w.r.t. all three properties from above may not be necessary; for instance, it may be the case that collision resistance is not required, or that, say, only second preimage resistance
-is relevant. However, a hash function is usually expected to be used in a certain number of settings, and it is thus understandingly expected to be secure against all attacks.
+On peut remarquer que la cible plus basse de 
+$\bigo(2^{n/2})$ pour les attaques en collision est une conséquence directe du
+«\,paradoxe des anniversaires\,»~: informellement, 
+$N$ éléments définissent $\bigo(N^2)$ paires, donc s'ils sont tirés au hasard et uniformément dans un ensemble de taille $S$,
+on s'attend à ce que deux d'entre eux soient les mêmes (collisionnent) avec forte probabilité après en avoir collecté
+$\bigo(\sqrt{S})$. 
+On peut aussi remarquer que contrairement à la résistance en (seconde) préimage, la définition de la résistance en collision n'inclus pas de «\,challenge\,» en entrée.
+Ainsi, elle ne permet pas d'exclure des algorithmes (génériques) qui retournent simplement une paire de message constante qui résulte en une collision, ceci en un temps constant.
+De tels algorithmes violent trivialement la propriété de sécurité telle qu'elle est exprimée, mais ne disent rien de pertinent sur la sécurité d'une fonction (notamment parce qu'ils
+s'appliquent aussi bien à n'importe lesquelles). En conséquence, ils sont généralement entièrement ignorés dans un contexte cryptographique, et ils ne rendent pas la
+définition vide de sens.
 
-We only briefly sketch some possible uses of hash functions here, as an illustration.
+\subsection{Applications des fonctions de hachage}
 
-\paragraph{Hash and sign signatures} are one of the main settings where hash functions may be employed; the objective is, given a digital signature
-algorithm $\sign$, to efficiently and securely sign \emph{long} messages. Directly doing so using $\sign$ is usually not an option, because signature algorithms are rather slow (especially compared
-to hash functions, which are typically at least $500 \sim 1000$ times faster) and may not behave well on long messages. A useful alternative is instead to first compute the digest of the
-message that needs to be signed (say ``$\messhash$'') and to sign the digest instead of the whole message. One then gives an output of the form $(\messhash, \sign(\key,\hash(\messhash)))$, with $\key$ a private key for $\sign$. 
+La nature des propriétés utilisées pour définir la sécurité d'une fonction de hachage est basée sur les contraintes imposées par les différentes utilisations qu'on peut faire
+d'une telle fonction dans des cryptosystèmes ou protocoles concrets.
+En fonction de la situation, la sécurité simultanée par rapport aux trois propriétés définies ci-dessus n'est pas forcément nécessaire. Par exemple, il se peut que la résistance
+en collision n'est pas nécessaire, ou que seule les attaques en seconde préimage soient une menace. Toutefois, on attend généralement d'une fonction de hachage qu'elle puisse être utilisée
+dans un certain nombre de cas, et il est donc désirable qu'elle résiste à tous les types d'attaque.
 
-It is obvious that for such a scheme to work, the function $\hash$ needs to be at least resistant to second preimages. If this were not the case, an adversary could intercept a message $\messhash$
-signed by $A$, replace $\messhash$ by $\messhash'$ such that the two messages collide through $\hash$, and claim that $A$ signed $\messhash'$.
-Collision resistance is also important for similar reasons.
+Nous décrivons ci-dessous en guise d'illustration quelques utilisations possibles des fonctions de hachage.
 
-\paragraph{Password hashing} is another common setting where hash functions may be useful. In this case, we assume that a certain entity wishes to allow users to authenticate themselves
-through passwords. Consequently, it must remember the valid password of each user. As there would be obvious security issues with the entity storing the passwords themselves, an idea
-is to instead store their images through a hash function $\hash$. Thus, if an adversary finds the database of users and their associated (hashed) passwords, he would be unable to find
-the passwords (or some equivalent input), provided that $\hash$ is preimage-resistant.
+\paragraph{Paradigme «\,hacher et signer\,».}
+Une des utilisations majeure des fonctions de hachage consiste à en faire emploi dans des schémas de signature électronique.
+L'objectif est de signer de longs messages efficacement et avec une bonne sécurité, étant donné un algorithme de signature
+$\sign$. En effet, directement utiliser ce dernier n'est généralement pas possible, parce qu'il est trop lent (particulièrement
+comparé aux fonctions de hachage qui sont typiquement au moins $500$ à $1000$ fois plus rapide), ou aussi parce qu'il se comporte mal
+pour de longs messages. Une alternative utile est alors de d'abord calculer l'empreinte du message
+qui doit être signé
+(appelons le «\,$\messhash$\,») et de ne signer que cette empreinte plutôt que le message complet.
+Ceci donne des signatures de la forme $(\messhash, \sign(\key,\hash(\messhash)))$, avec $\key$ la clef privée utilisée pour signer avec $\sign$. 
 
-In this setting, second preimage and collision resistance are not strictly needed. However, it should be noted that even when built from a secure hash function,
-the scheme just described above has severe issues, which descriptions are beyond the scope of this introduction.
+Il est évident que pour qu'un tel schéma soit sûr, la fonction $\hash$ doit au moins être résistante en seconde préimage. Si tel n'était pas le cas, un adversaire
+pourrait intercepter un message $\messhash$ signé par $A$, remplacer $\messhash$ par $\messhash'$ de même empreinte, et prétendre que $A$ a signé $\messhash'$.
+Pour des raisons similaires, on peut voir que la résistance aux collisions est également nécessaire.
 
-\paragraph{Hash-based signatures.} A less common use of hash functions is to utilise them to directly define signature schemes (see \eg \cite{DBLP:conf/crypto/Merkle87}). We will not describe such schemes in detail
-here, but it is interesting to mention a few of their specificities. Similarly as other systems using hash functions, only preimage resistance is needed. The main
-idea of the schemes is that the signing party makes some digests public while keeping their inputs secret; signing a message then consists in selectively revealing some of
-these inputs. Thus, being able to compute preimages for the hash function breaks the scheme, but collisions are not a threat.
-A distinguishing feature of hash-based signatures is that the hash function may only need to be used on inputs of short, possibly fixed size. 
+\paragraph{Hachage de mots de passe.} Le hachage de mots de passe est une autre application courante où une fonction
+de hachage peut être utile. Dans ce cas
+on suppose qu'une certaine entité souhaite autoriser certains utilisateurs à s'authentifier grâce à un mot de passe.
+En conséquence, elle doit mémoriser le mot de passe correspondant à chaque utilisateur. Comme il est évident que stocker les mots
+de passe eux-mêmes mènerait à de grave problèmes de sécurité, une idée consiste à stocker à la place leurs images à travers une fonction
+de hachage $\hash$. Ainsi, même si un adversaire devait trouver la liste des utilisateurs et de leurs mots de passe associés, il ne serait
+pas capable de trouver les mots de passe eux-mêmes (ou une entrée équivalente), pour peu que $\hash$ résiste aux attaques par préimage.
+Dans cet exemple, résister aux attaques en seconde préimage ou en collision n'est alors pas nécessaire. Cependant, il est bon de noter
+que le schéma esquissé ci-dessous est en fait trop simpliste pour apporter une réelle sécurité, indépendamment de la fonction de hachage
+utilisée (nous ne rentrerons toutefois pas dans le détail de la construction de bons schémas dans cette introduction).
 
-\paragraph{Message authentication codes.} The last possible usage of hash functions that we describe here is the building of \emph{message authentication codes}, or MACs, which
-can somehow be seen as the keyed variants of hash functions. A MAC $\mac$ takes as input a key $\key$ and a message $\messhash$ and outputs a tag $\tagg \defas \mac(\key, \messhash)$.
-If an adversary does not know the key, it should be hard for him to find a valid (message, tag) pair for $\mac(\key, \cdot)$, with the message either being of his choosing
-or imposed by a challenger. These notions correspond to \emph{existential} (for the former) and \emph{universal} (for the latter) \emph{forgery}. Of course, it is also
-highly necessary that no tag collisions occur, whether or not these happen on specific messages requested by an adversary.
+\paragraph{Signature à base de fonctions de hachage.}
+Une utilisation moins courante des fonctions de hachage est de les employer pour directement définir un schéma de signature
+(voir par exemple \cite{DBLP:conf/crypto/Merkle87}). Nous ne décrirons pas un tel schéma ici, mais il est intéressant de noter certaines
+de leurs caractéristiques.
+Tout comme d'autres constructions basées sur des fonctions de hachage, seule la résistance en préimage est nécessaire.
+L'idée principale de ces schémas est que le partie effectuant une signature publie en avance un certain nombre d'empreintes, tout en gardant
+secrètes les entrées à la fonction de hachage les produisant. Signer un message consiste alors révéler certains de ces entrées~; ainsi, être capable
+de calculer des préimages pour la fonction permet d'attaquer le schéma, mais les collisions ne sont pas une menace.
+Enfin, une propriété inhabituelle de ces constructions est que la fonction de hachage utilisée peut n'être définie que sur des entrées de petite
+taille, possiblement fixée.
 
-Hash functions seem to be good candidates to build MACs, and indeed generic hash function based constructions such as HMAC~\cite{DBLP:conf/crypto/BellareCK96} are popular. However, the exact security of
-these constructions is not always easy to establish, and there are usually faster alternatives such as MACs based on universal/polynomial hash functions (see \eg~\cite{DBLP:conf/crypto/BlackHKKR99}).
+\paragraph{Codes d'authentification.}
+Le dernier usage possible d'une fonction de hachage que nous évoquons ici est la construction de codes d'authentifications (MACs),
+qui peuvent d'une certaine façon être vus comme des variantes à clef des fonctions de hachage.
+Un MAC $\mac$ prend comme entrée une clef $\key$ et un message $\messhash$ et retourne un tag
+$\tagg \defas \mac(\key, \messhash)$.
+Si un adversaire ne connaît pas la clef, il doit être difficile pour lui de trouver une paire (message, tag) valide pour
+$\mac(\key, \cdot)$, qu'il ait le choix du message ou non.
+En fonction de ce dernier point, la propriété de sécurité associée est appelée \emph{contrefaçon existentielle} ou \emph{universelle}.
+Bien sûr, il est aussi nécessaire qu'aucune collision parmi les tags n'ait lieu, que ce soit sur des messages fournis par un adversaire ou non.
 
-\subsection{\merkdam hash functions}
+Les fonctions de hachage semblent être de bons candidats pour construire des MACs, et en effet des constructions génériques telles que 
+HMAC~\cite{DBLP:conf/crypto/BellareCK96} sont populaires. Cependant, la sécurité exacte fournie par ces constructions n'est pas toujours facile à déterminer,
+et on dispose généralement d'alternative plus rapide, comme les MACs dits polynomiaux
+(voir par exemple~\cite{DBLP:conf/crypto/BlackHKKR99}).
 
-One of the first frameworks for hash function design to have been developed is the so-called \merkdam construction, that was independently developed by
-Merkle and Damg\aa rd in 1989~\cite{DBLP:conf/crypto/Merkle89a,DBLP:conf/crypto/Damgard89a}. The idea of this construction is to make the arbitrary-length
-inputs to a hash function manageable by defining the latter as the iteration of a \emph{compression function} with a small fixed-size (co-)domain.
-This makes the overall design much easier, but without \emph{a priori} ensuring that the resulting function will be secure. The main contribution of
-Merkle and Damg\aa rd in that respect is to give a construction such that the security of the function can be (partially) reduced to the one of
-the compression function: they show that for \eg collision attacks, an attack on the hash function can be exploited to build an attack on the compression function.
-Taking the contrapositive, as long as there are no collision attacks on the compression function, we can be confident that the hash function is secure against this kind of attacks.
-This is quite similar in a way to building symmetric cryptosystems by combining a secure block cipher and a secure mode of operation.
+\subsection{Fonctions de hachage de type \merkdam}
+\label{sec:fmd}
 
-The construction works as following. A compression function $\compress : \{0,1\}^n \times \{0,1\}^b \rightarrow \{0,1\}^n$
-takes two inputs: a \emph{chaining value} $\chain$ and a \emph{message block} $\messblock$, and produces another chaining value as output.
-The hash function $\hash$ associated with $\compress$ is built by extending the domain of the latter to $\{0,1\}^*$ (or rather $\{0,1\}^N$ for a large $N$, most of the time).
-This is done by specifying an \emph{initial value} \iv for the first chaining value $\chain_0$, which is a constant for the hash function, and by defining the image
-of a message $\mess$ through $\hash$ by the following process:
+Une des premières méthodes à avoir été développée pour concevoir des fonctions de hachage est la construction dite de \merkdam,
+due indépendamment à Merkle et Damg\aa rd~\cite{DBLP:conf/crypto/Merkle89a,DBLP:conf/crypto/Damgard89a}.
+L'idée de cette construction consiste à permettre la manipulation de messages de taille arbitraire en définissant
+une fonction de hachage comme l'itération d'une \emph{fonction de compression} de domaine et codomaine de petite
+taille fixe.
+Ceci rend la conception d'une fonction bien plus aisée, mais ne garantit pas a priori que le résultat sera résistant aux attaques.
+La contribution principale de Merkle et Damg\aa rd sur ce point là a été de donner une construction telle que la sécurité de la fonction
+de hachage résultante puisse être (partiellement) réduite à celle de la fonction de compression. En effet, ils montrent que par exemple
+pour les attaques en collision, une attaque sur la fonction de hachage peut être utilisée pour donner une attaque sur la fonction
+de compression. Par contraposée, tant qu'on ne connaît pas d'attaque en collision sur la fonction de compression, on peut être convaincu
+qu'il n'y en a pas sur la fonction de hachage. D'une certaine tout ceci est proche de l'objectif de construire un mode d'opération sûr
+à partir d'un chiffre par bloc sûr lui aussi. 
+
+La construction \merkdam est définie comme suit. Une fonction de compression
+$\compress : \{0,1\}^n \times \{0,1\}^b \rightarrow \{0,1\}^n$
+prend deux entrées~: une \emph{valeur de chaînage} $\chain$ et un \emph{bloc de message} $\messblock$, et produit une autre valeur de chaînage comme sortie.
+La fonction de hachage
+$\hash$ associée à $\compress$ est construite en étendant le domaine de la seconde à $\{0,1\}^*$ (ou plutôt $\{0,1\}^N$ pour un grand entier $N$, la plupart du temps).
+Ceci est fait en spécifiant une \emph{valeur initiale} \iv pour la première valeur de chaînage
+$\chain_0$, qui est une constante pour la fonction de hachage, et en définissant l'image d'un message
+$\mess$ par $\hash$ par la procédure suivante~:
 \begin{enumerate}
-\item $\mess$ is padded to a size multiple of the message block size $b$. Various padding rules may be employed, but it is obviously important that they should not
-introduce trivial collisions. Most of the time, the size (usually in bits) of the non-padded message $\mess$ is included in the padding in one way or the other.
-This is usually called \merkdam-strengthening, and it is essential to make many of the common instantiations of the framework secure\footnote{One issue that
-could arise in the absence of such strengthening is that fixed-points for the compression function could be used to produce collisions; such fixed-points
-are easy to build for some popular compression function constructions (including the \emph{Davies-Meyer} construction
-of the \mdsha family described in \autoref{sec:mdsha}).}.
-\item The padded message is then iteratively fed to the compression function: call $\messblock_0||\messblock_1||\linebreak\ldots||\messblock_r$ this message (assuming
-it is on $r+1$ blocks, w.l.o.g.), then define $\chain_{i+1} \defas \compress(\chain_i, \messblock_i)$. The digest $\hash(\mess)$ is equal to the last
-chaining value $\chain_{r+1}$.
+\item $\mess$ est étendu
+à une taille multiple de la taille de bloc $b$. Plusieurs méthodes peuvent être employées à ces fins, mais il est évidemment important
+qu'elles ne produisent pas de collisions triviales. La plupart du temps, la taille (généralement en bits) du message non étendu
+$\mess$ est incluse dans le message étendu, d'une façon ou d'une autre, ce qu'on appelle «\,renforcement \merkdam\,» et qui est essentiel
+à la sécurité de beaucoup d'instantiations courantes de la construction\footnote{Un problème potentiel pouvant
+apparaître en l'absence d'un tel renforcement est qu'il serait possible d'utiliser des points fixes pour la fonction de compression pour
+construire des collisions~; de tels points fixes sont facile à trouver pour certaines fonctions de compression populaires, comme celles de type
+\emph{Davies-Meyer} décrites dans la section~\ref{sec:fmdsha}.}.
+\item Le message étendu est alors itérativement traité par la fonction de compression~: soit
+$\messblock_0||\messblock_1||\ldots||\messblock_r$ un tel message (supposant qu'il est constitué de
+$r+1$ blocs), on définit $\chain_{i+1} \defas \compress(\chain_i, \messblock_i)$. L'empreinte $\hash(\mess)$ est égale à la dernière valeur de chaînage
+$\chain_{r+1}$.
 \end{enumerate}
-We give an illustration of this process in \autoref{fig:merkdam}.
+
+Nous donnons une illustration de cette procédure dans la figure~\ref{fig:fmerk}.
 
 \begin{figure}[!htb]
 \begin{center}
 \input{figures/merkle-damgaard.tex}
-\caption[A \merkdam hash function processing a four-block input.]{A \merkdam hash function processing a four-block input. Figure adapted from \cite{TiKZ:Cryptographers}.}
+\caption[Une fonction \merkdam traitant un message sur quatre blocs.]{Une fonction \merkdam traitant un message sur quatre blocs. Figure adaptée de \cite{TiKZ:Cryptographers}.\label{fig:fmerk}}
 \end{center}
 \end{figure} 
 
-We conclude this presentation by sketching the reduction proofs of the construction for collision and first preimage attacks. There can be no such proof
-for second preimages, as there exists some generic attacks on \merkdam functions independently of the security of the compression function. We will
-briefly discuss these in \autoref{sec:refining_md}.
-It is also important to notice that these reductions are one-way. There is no similarly generic way to convert, say a collision for a compression function $\compress$,
-to a collision for a \merkdam function $\hash$ based on it. Still, such a collision would violate the security reduction, and thus no formal guarantee could be given
-anymore on the collision resistance of $\hash$. We will discuss such issues in slightly more details in \autoref{sec:refining_md}.
+Nous concluons cette présentation en esquissant les preuves de réduction de sécurité de la construction \merkdam pour les attaques en collision
+et en première préimage. Il n'existe pas de telle preuve pour les secondes préimages, car il existe des attaques génériques indépendamment
+de la sécurité de la fonction de compression (que nous discuterons brièvement dans la section~\ref{sec:frefmd} (et la sécurité (sous-optimale) exactement
+atteinte n'est pas connue).
+Il est aussi important de remarquer qu'une attaque en collision sur une fonction de compression $\compress$ n'implique pas de façon
+générique une attaque en collision sur
+une fonction de hachage de type \merkdam $\hash$ l'utilisant. Cependant, une telle attaque viole néanmoins la réduction de sécurité, et invalide toute garantie
+formelle qu'on pourrait avoir sur la résistance en collisions de $\hash$. Nous discuterons ce point un peu plus en détails dans la section~\ref{sec:frefmd}.
 
 \begin{prop}
-A collision on a \merkdam hash function $\hash$ implies a collision on its compression function $\compress$\footnote{Without losing much generality, we assume in this proof
-that \merkdam strengthening is used, that the message length is appended at the end of the padding, and that it fits in a single message block.}.
+Une collision sur une fonction de hachage \merkdam $\hash$ implique une collision sur sa fonction de compression
+$\compress$\footnote{Sans trop perdre en généralité, on supposera dans cette preuve que le renforcement \merkdam est utilisé, et que la taille
+d'un message est ajoutée à la fin du message étendu qu'il définit, et que cette taille tient sur un unique bloc.}.
 \end{prop}
 \begin{proof}
-Assume we have $\mess$, $\mess' \neq \mess$ s.t. $\hash(\mess) = \hash(\mess')$.
+On suppose qu'on a
+$\mess$, $\mess' \neq \mess$ t.q. $\hash(\mess) = \hash(\mess')$.
 
-Case 1: $\mess$ and $\mess'$ have a different length.
-The last message blocks $\messblock_r$ and $\messblock'_{r'}$ both include the length
-of the message, which is different. Thus $(\chain_r,\messblock_r)$ and $(\chain'_{r'}, \messblock'_{r'})$ are distinct and collide through $\compress$.
+Cas 1: $\mess$ et $\mess'$ ont des longueurs différentes.
+Les derniers blocs de message $\messblock_r$
+$\messblock'_{r'}$ incluent tous les deux la longueur de leurs messages étendus respectifs, qui sont différentes.
+Ainsi,
+$(\chain_r,\messblock_r)$ et $(\chain'_{r'}, \messblock'_{r'})$ sont distincts et collisionnent à travers $\compress$.
 
-Case 2: $\mess$ and $\mess'$ are of the same length. Assume w.l.o.g. that the messages fit on $r + 1$ blocks after padding.
-Call $i$ the highest block number such that $\messblock_{i} \neq \messblock'_{i}$. If $i = r$, then $(\chain_r,\messblock_r)$ and $(\chain'_{r}, \messblock'_{r})$
-are distinct and collide through $\compress$. If $i < r$, either $\chain_{i+1} = \chain'_{i+1}$ (thus $(\chain_i,\messblock_i)$ and $(\chain'_{i}, \messblock'_{i})$
-form a valid collision pair for $\compress$), or, we have a non-empty sequence of input pairs $(\chain_j, \messblock_j)$ and $(\chain'_j, \messblock'_j)$,
-$j = i+1\ldots r$ such that $\messblock_j = \messblock'_j$ for all $j$. As $\chain_{r+1} = \chain'_{r+1}$, at least one element of the sequence
-collides through $\compress$. The two input pairs in the first one to do so are different, and thus form a valid collision for $\compress$.
+Cas 2: $\mess$ et $\mess'$
+sont de la même longueur.
+On suppose sans perte de généralité que les deux messages étendus font
+$r + 1$ blocs.
+On appelle $i$ le numéro de bloc le plus grand tel que
+$\messblock_{i} \neq \messblock'_{i}$.
+Si 
+$i = r$, alors $(\chain_r,\messblock_r)$ et $(\chain'_{r}, \messblock'_{r})$
+sont distincts et collisionnent à travers
+$\compress$.
+Si
+$i < r$, ou bien $\chain_{i+1} = \chain'_{i+1}$ (et donc $(\chain_i,\messblock_i)$ et $(\chain'_{i}, \messblock'_{i})$
+forment une collision valide  pour $\compress$), ou bien il existe une suite non vide de paires $(\chain_j, \messblock_j)$ and $(\chain'_j, \messblock'_j)$,
+$j = i+1\ldots r$ telles que $\messblock_j = \messblock'_j$ pour tout $j$.
+Puisque $\chain_{r+1} = \chain'_{r+1}$, au moins un des éléments de la suite collisionne à travers
+$\compress$. Les deux entrées du premier de ceux-ci étant différentes, la collision qu'ils définissent est non triviale.
 \end{proof}
 
 \begin{prop}
-A preimage on a \merkdam hash function $\hash$ implies a preimage on its compression function $\compress$.
+Une préimage sur une fonction \merkdam $\hash$ implique une préimage sur sa fonction de compression
+$\compress$.
 \end{prop}
 \begin{proof}
-Let $\mess$ be a message fitting on $r+1$ blocks after padding s.t. $\hash(\mess) = \targ$, with $\targ$ the preimage target.
-Then $\compress(\chain_r, \messblock_r) = \targ$, and $(\chain_r, \messblock_r)$ is thus a valid preimage input for $\compress$.
+Soit 
+$\mess$ un message étendu sur  $r+1$ blocs t.q. $\hash(\mess) = \targ$, avec $\targ$ la cible de préimage, alors
+$\compress(\chain_r, \messblock_r) = \targ$, et $(\chain_r, \messblock_r)$ est une préimage valide pour for $\compress$.
 \end{proof}
 
-\subsection{Refining the security of hash functions}
+\subsection{Affiner la sécurité des fonctions de hachage\label{sec:frefmd}}
 
-The three security notions of collision and preimage resistance can be refined and completed with additional ones. These are not always directly relevant to actual uses of hash functions, but they may nonetheless be useful to evaluate the security
-of a function in a finer way. We may roughly distinguish between two kinds of additional properties by what they characterize: 1) Non-ideal behaviours of certain frameworks for hash function constructions; 2) Non-ideal
-behaviours of specific instances of hash functions or of their building blocks.
-To allow for more explicit definitions of these additional properties, it is useful to define a stronger, idealized view of hash functions:
+Les trois notions de sécurité de résistance aux collisions et aux préimages peuvent être raffinées et complétées avec des propriétés supplémentaires.
+Celles-ci ne sont pas toujours directement pertinentes pour les emplois concrets qui sont faits des fonctions de hachage, mais elles sont néanmoins
+utiles pour évaluer la sécurité d'une fonction de manière plus fine.
+On peut grossièrement distinguer deux types de propriétés additionnelles en fonction de ce qu'elles caractérisent~: 1) Celles ciblant les comportements
+non idéaux de certaines méthodes de construction de fonctions de hachage~; 2) Celles ciblant les comportements
+non idéaux d'instances spécifiques de fonctions de hachage ou de leurs éléments constitutifs.
+Afin de donner des définitions plus explicites de ces notions supplémentaires, il est utile de tout d'abord définir une vision plus forte et idéalisée des
+fonctions de hachage~: 
 
-\begin{defi}[Random oracle]
-An $n$-bit \emph{random oracle} $\ro$ is a mapping $\{0,1\}^* \rightarrow \{0,1\}^n$ such that for every input $x$, its image $\ro(x)$ is drawn uniformly at random over $\{0,1\}^n$.
-\end{defi}
+\begin{fdefi}[Oracle aléatoire]
+Un \emph{oracle aléatoire} sur $n$ bits
+$\ro$ est une application $\{0,1\}^* \rightarrow \{0,1\}^n$ telle que pour toute entrée $x$,
+l'image $\ro(x)$ est tirée aléatoirement et uniformément dans $\{0,1\}^n$.
+\end{fdefi}
 
-According to the way we defined attacks, a random oracle is not vulnerable to them, as only generic algorithms may be used against it. It thus completely captures what
-can be realized with hash functions: if a high-level construction is not secure when it is idealized as using a random oracle (when analysed in the \emph{random oracle model}),
-one can never hope to make it so when instantiating the oracle by a concrete hash function. However, even if a construction is secure in such a model, it is not necessarily true that
-this will still be the case once instantiated.
+Un oracle aléatoire est nécessairement résistant aux attaques que nous avons défini jusqu'à présent, puisqu'il est clair
+que seuls des algorithmes génériques peuvent être utilisés sur un tel objet. De cette façon, un oracle aléatoire capture
+entièrement les applications qui peuvent être réalisées avec des fonctions de hachages~: si une construction de haut niveau
+n'est pas sûre quand elle est réalisée avec un oracle aléatoire, elle ne le sera pas non plus si ce dernier est remplacé par une fonction
+de hachage concrète. En revanche, même si une telle construction est sûre dans un tel modèle (dit de l'oracle aléatoire), il n'est pas
+nécessaire qu'elle le sera une quand réalisée en pratique.
 
-The \merkdam functions from \autoref{sec:mdhf} exhibit some of this \emph{non-ideal behaviours},
-in the sense that there are some properties that can be realised through algorithms that are more efficient for \merkdam functions than for random oracles.
 
-A good example of such a property is the concept of \emph{multicollision}, where one is required to find $r > 2$ messages $\messhash_{0},\ldots,\messhash_{r-1}$ which images through $\hash$
-are all equal. The generic complexity (\eg for a random oracle) of this problem is $\bigo(2^{n\times (r-1)/r})$ calls to $\hash$ for an $n$-bit function, but Joux showed how to
-find $2^r$-multicollisions in time $\bigo(r\times 2^{n/2})$ for \merkdam hash functions~\cite{DBLP:conf/crypto/Joux04}.
-The basic idea used in this attack is that collisions for a \merkdam function $\hash$ can be chained together to lead to an exponentially growing number of distinct messages hashing
-to the same value. We can easily see this with a small example: assume that an attacker found two distinct colliding messages $\mess_0$ and $\mess'_0$ of the same length;
-this can be done generically at a cost of $2^{n/2}$. One then looks for a second collision for the function $\widetilde \hash$ obtained by replacing the initial chaining
-value $\chain_0$ by $\hash(\mess_0) = \hash(\mess'_0)$; this can again be obtained for a cost of $2^{n/2}$, resulting in $\mess_1$ and $\mess'_1$. Then, thanks to
-the chaining property of the \merkdam construction, we have found four colliding messages $\mess_0||\mess_1$, $\mess'_0||\mess_1$, $\mess_0||\mess'_1$, $\mess'_0||\mess'_1$\footnote{We ignore
-padding details here, but these can be easily worked out.}. It is easy to see how this generalizes to longer messages, leading to the quoted complexity of $\bigo(r \times 2^{n/2})$.
-We can observe that one of the weaknesses of the construction that is exploited here is that a hash collision is also
-a collision for the \emph{internal state} of the hash function. We will briefly see in \autoref{sec:betterhash} that increasing the size of the state of a function is indeed a way to make it resistant
-to such attacks.
+Les fonctions de type \merkdam présentent certains comportements non idéaux dans le sens où elles permettent à certains calculs
+d'être plus efficaces que pour un oracle aléatoire.
 
-Another good example for \merkdam, which this time directly violates the security property from \autoref{def:2pre}, consists in second preimage attacks for long messages.
-Dean~\cite{dean}, and later Kelsey and Schneier~\cite{DBLP:conf/eurocrypt/KelseyS05} showed how one can again exploit the structure of the function and internal collisions to compute a second preimage
-of a long message more efficiently than with a generic algorithm. The complexity of Kelsey and Schneier's attack to find a second preimage for a message
-of $2^k$ \emph{blocks} is $\approx \bigo(2^{n-k+1})$ calls to $\hash$. This means that \merkdam hash functions are actually inherently insecure, if we adhere
-strictly to what we stated as security objectives. However, although significant, these attacks remain expensive, especially for messages of usual sizes. As such, they are not usually considered as threatening
-the practical use of \merkdam functions, and indeed functions following this framework such as \shatwo~\cite{Nist-SHA} are still widely used.
+Un bon exemple de tels calculs correspond au concept de 
+\emph{multicollision}, qui consiste à chercher $r > 2$ messages $\messhash_{0},\ldots,\messhash_{r-1}$ dont les images par $\hash$
+sont toute égales.
+La complexité générique (pour un oracle aléatoire, notamment) de ce problème est
+$\bigo(2^{n\times (r-1)/r})$ appels à $\hash$ pour une fonction sur $n$ bits, mais
+Joux a montré comment trouver
+des $(2^r)$-multicollisions en temps $\bigo(r\times 2^{n/2})$ pour les fonctions de type \merkdam~\cite{DBLP:conf/crypto/Joux04}.
+L'idée de base utilisée dans cette attaque exploite le fait que des collisions pour une fonction \merkdam $\hash$ peut être chaînées
+ensemble pour mener à un nombre exponentiellement grand de messages distincts ayant tous la même empreinte.
+Ceci peut se voir avec le petit exemple suivant~: supposons qu'un attaquant a trouvé deux messages distincts
+de même longueur $\mess_0$ et $\mess'_0$ formant une collision~; ceux-ci peuvent être trouvés génériquement
+pour un coût de
+$2^{n/2}$. On peut ensuite chercher une seconde collision, cette fois pour la fonction $\widetilde \hash$ obtenue en remplaçant la valeur de chaînage initiale
+$\chain_0$ par $\hash(\mess_0) = \hash(\mess'_0)$, ce qui peut encore être fait pour un coût $2^{n/2}$, résultant en $\mess_1$ et $\mess'_1$.
+Alors, grâce à la propriété de chaînage de la construction \merkdam, on a trouvé quatre messages ayant tous la même empreinte,
+$\mess_0||\mess_1$, $\mess'_0||\mess_1$, $\mess_0||\mess'_1$, $\mess'_0||\mess'_1$. 
+Il est facile de voir que cette procédure se généralise à des messages plus longs, ce qui donne la complexité mentionnée égale à
+$\bigo(r \times 2^{n/2})$.
+On peut observer que la faiblesse de la construction qui est exploitée ici est le fait qu'une collision
+sur les empreintes consiste aussi en une collision sur l'état interne de la fonction de hachage.
+Nous verrons brièvement dans la section~\ref{sec:fbetter} qu'augmenter la taille de l'état d'une fonction
+est effectivement un moyen de se prémunir de telles attaques.
 
-\bigskip
-
-We already mentioned in \autoref{sec:mdhf} that an attack on a compression function would void the security reduction of a \merkdam function employing it. Thus it seems natural to also
-analyse the security of the compression functions themselves. An attack would in this case demonstrate a non-ideal behaviour of the second kind we mentioned above, not targeting
-a hash function in itself but one of its building blocks. There is a natural way to generalise the security properties expressed in \autoref{def:pre} $\sim$ \autoref{def:coll} to this context,
-leading to the notion of \emph{(semi-)freestart} attacks:
-
-\begin{defi}[Freestart preimage]
-A \emph{freestart preimage} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $(\freeiv,\messblock)$
-of an \iv and a message such that $\hash_\freeiv(\messblock) = \targ$, with $\hash_\freeiv(\cdot)$ denoting
-the hash function $\hash$ with its original \iv replaced by $\freeiv$.
-\end{defi}
-
-\begin{defi}[Semi-freestart collision]
-A \emph{semi-freestart collision} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $((\freeiv,\messblock), (\freeiv,\messblock'))$
-of two \iv and message pairs such that $\hash_\freeiv(\messblock) = \hash_{\freeiv}(\messblock')$.
-\end{defi}
-
-\begin{defi}[Freestart collision]
-A \emph{freestart collision} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $((\freeiv,\messblock), (\freeiv',\messblock'))$
-of two \iv and message pairs such that $\hash_\freeiv(\messblock) = \hash_{\freeiv'}(\messblock')$.
-\end{defi}
-
-It can be noted that if the two messages of, say, a freestart collision pair are one-block long, the definition above becomes equivalent to the one of a collision
-on the compression function $\compress$ used to build $\hash$.
-There is little difference between the two in general, the feature of freestart attacks precisely being that compared to hash function attacks, they may (partially) exploit the additional available input offered by the chaining value
-of the compression function.
-
+Un autre bon exemple de pour
+\merkdam, qui cette fois viole directement une des propriétés de sécurité définie au début de cette section
+consiste en les attaques génériques en seconde préimages pour des messages longs.
+Dean~\cite{dean}, puis Kelsey et Schneier~\cite{DBLP:conf/eurocrypt/KelseyS05}
+ont montré comment il est possible d'exploiter la structure \merkdam et des collisions internes
+pour calculer la seconde préimage d'un long message plus efficacement qu'avec un algorithme générique.
+La complexité de l'attaque de Kelsey et Schneier pour trouver une seconde préimage pour un message de 
+$2^k$ \emph{blocs} est $\approx \bigo(2^{n-k+1})$ appels à $\hash$. Cela veut dire que les fonctions \merkdam sont
+en fait intrinsèquement attaquées si on interprète strictement ce que nous avons énoncé comme objectifs de sécurité.
+Cependant, bien que significatives, de telles attaques restent coûteuses, particulièrement pour les tailles habituelles
+de messages. En conséquence, elles ne sont pas généralement considérées comme posant une menace sur l'utilisation
+de fonctions \merkdam en pratique, et de telles fonctions sont de fait toujours utilisées, comme
+\shatwo~\cite{Nist-SHA}.
 
 \bigskip
 
-Lastly, a somehow loosely defined addition to the security notions presented so far is the concept of \emph{distinguishers}, which denote non-ideal behaviours
-of a hash function that are not otherwise captured by the previous definitions. We will not give a precise definition here, as these are made tricky by
-the unkeyed nature of hash functions. Instead, we just briefly mention an example of such a distinguisher for the compression function of \shaone.
+Nous avons déjà mentionné dans la section~\ref{sec:frefmd} qu'une attaque sur la fonction de compression d'une fonction \merkdam fait que celle-ci
+ne peut plus être supposée «\,sûre\,». Il paraît donc naturel d'également analyser la sécurité des fonctions de compressions en tant que telles.
+Une attaque dans ce cas démontrerait alors un comportement non idéal du deuxième type mentionné ci dessus, puisqu'elle ne ciblerait
+pas la fonction de hachage elle même mais un de ses éléments constitutifs. Il existe une façon naturelle de généraliser les propriétés
+de sécurité définies plus haut à ce contexte, ce qui nous mène aux notions d'attaques à initialisation (semi) libre~:
 
-Jumping ahead, we will see in \autoref{sec:description} that the \iv and the message block of \shaone's compression function are made of five and sixteen
-32-bit words respectively. In 2003, Saarinen showed that \emph{slid pairs} could be found for this compression function for a cost equivalent to $2^{32}$
-function calls~\cite{DBLP:conf/fse/Saarinen03}. Such pairs are made of two \ivs $\state_{0,\ldots4}$, $\state'_{0,\ldots,4}$ and messages $\mess_{0,\ldots,15}$,
-$\mess'_{0,\ldots,15}$ with $\state'_i = \state_{i-1}$ and $\mess'_i = \mess_{i-1}$\footnote{We skip here the details of how to determine the starting values $\state'_0$ and $\mess'_0$.}, such that the
-pair of outputs of the function called on these inputs also has this property. Although it is not expected of a random function to exhibit such a property, there is no clear way to use it to mount
-an attack against the main and secondary security properties defined above.
+\begin{fdefi}[Préimage à initialisation libre]
+Une 
+\emph{préimage à initialisation libre}
+pour une fonction de hachage \merkdam $\hash$ est une paire $(\freeiv,\messblock)$
+d'\iv et de message telle que $\hash_\freeiv(\messblock) = \targ$, avec $\hash_\freeiv(\cdot)$ dénotant
+la fonction $\hash$ dont l'\iv original a été remplacé par $\freeiv$.
+\end{fdefi}
+
+\begin{fdefi}[Collision à initialisation semi-libre]
+Une \emph{collision à initialisation semi-libre} pour une fonction \merkdam $\hash$ est une paire $((\freeiv,\messblock), (\freeiv,\messblock'))$
+de deux paires d'\iv et de messages telle que $\hash_\freeiv(\messblock) = \hash_{\freeiv}(\messblock')$.
+\end{fdefi}
+
+\begin{fdefi}[Collision à initialisation libre (colibri)]
+Une \emph{collision à initialisation libre} (un \emph{colibri})
+pour une fonction \merkdam 
+$\hash$ est une paire $((\freeiv,\messblock), (\freeiv',\messblock'))$
+de deux paires d'\iv et de messages telle que $\hash_\freeiv(\messblock) = \hash_{\freeiv'}(\messblock')$.
+\end{fdefi}
+
+On peut remarquer que si deux messages, disons d'un colibri, ont une longueur d'un bloc, la définition ci-dessus devient équivalente à celle
+d'une collision sur la fonction de compression
+$\compress$ utilisée pour construire $\hash$.
+Il y a peu de différences entre les deux notions en général, le point principal d'attaques à initialisation libre comparées aux attaques sur la fonction de hachage étant qu'elles
+peuvent profiter de la liberté supplémentaire offerte par la valeur de chaînage de la fonction de compression.
+
+\bigskip
+
+Enfin, une notion supplémentaire quelque peu mal définie s'ajoutant à celles discutées jusqu'à présent est le concept de distingueur pour fonctions de hachage,
+qui cherche à capturer les comportements non idéaux non capturés par les notions définies jusqu'à présent. Nous ne donnerons pas de définitions ici,
+car celles-ci sont difficiles à formaliser dans le cas de fonctions de hachage, à cause de l'absence de clefs. À la place, nous mentionnons brièvement
+un exemple de distingueur pour la fonction de compression de \shaone. 
+
+Prenant un peu d'avance, nous verrons dans la section~\ref{sec:description} que l'\iv et les blocs de message  de la fonction
+de compression de \shaone sont faits de cinq et seize mots de 32 bits respectivement.
+En 2003, Saarinen a montré que des \emph{paires glissées} peuvent être trouvées pour cette fonction de compression pour un coût
+équivalent à $2^{32}$ appels~\cite{DBLP:conf/fse/Saarinen03}.
+De telles paires consistent en deux
+\ivs $\state_{0,\ldots4}$, $\state'_{0,\ldots,4}$ et messages $\mess_{0,\ldots,15}$,
+$\mess'_{0,\ldots,15}$ avec $\state'_i = \state_{i-1}$ et $\mess'_i = \mess_{i-1}$\footnote{Nous sautons ici les détails de comment déterminer les valeurs de départ
+$\state'_0$ et $\mess'_0$.}, tels que la paire des sorties de la fonction appelée sur ces entrée possède aussi cette propriété.
+Bien qu'il n'est pas attendu d'une fonction aléatoire qu'elle possède une telle propriété, il n'est pas clair comment celle-ci peut être utilisée pour monter
+une attaque sur aucune des notions de sécurité principales et secondaires définies ci-dessus.
 
 
-\subsection{Modern hash function frameworks}
+\subsection{Constructions de fonctions de hachage modernes}
+\label{sec:fbetter}
 
-We have mentioned some generic weaknesses of the \merkdam framework in \autoref{sec:refining_md}. As a consequence of these, modern hash function designs are usually based on alternative,
-more secure constructions. We briefly review two of them: the \emph{wide-pipe} variation of \merkdam, or \emph{chop-MD}, and the \emph{sponge} construction.
+Nous avons mentionné deux faiblesses génériques des fonctions \merkdam. La présence de celles-ci fait que les fonctions de hachage moderne sont généralement
+basées sur des constructions alternatives offrant une meilleure sécurité. Nous présentons brièvement deux d'entre elles~: la
+variation \emph{tuyau-large} de \merkdam (ou \emph{coupe-MD}), et les constructions \emph{éponge}. 
 
-\paragraph{Wide-pipe \merkdam.} The wide-pipe construction was introduced in 2005 by Lucks~\cite{DBLP:conf/asiacrypt/Lucks05} and Coron \etal under the name chop-MD~\cite{DBLP:conf/crypto/CoronDMP05}.
-It is conceptually simple, and consists in using the \merkdam construction with a compression function of output size larger than the one of the chaining value. If we write $\lfloor\cdot\rfloor_n$
-an arbitrary truncation function from $m > n$ to $n$ bits, we may define the $n$-bit chop-MD construction based on a compression function $\compress : \{0,1\}^m \times \{0,1\}^b \rightarrow \{0,1\}^m$
-as $\lfloor\hash(\cdot)\rfloor_n$, with $\hash$ a standard \merkdam function built from $\compress$. Some variations are possible, for instance by considering other mappings from $m$ to $n$
-bits instead of just a truncation.
 
-One can easily see that a hash collision for such a function does not anymore imply a collision for its internal state. By choosing $m$ to be sufficiently large (for instance taking $m = 2n$),
-one can achieve generic resistance to, say, multicollisions. In fact, Coron \etal proved that this construction is a secure \emph{domain extender for random oracles}, in the sense that
-if the compression function is a fixed-size random oracle, using it in a chop-MD mode yields a function that is $\varepsilon$-indifferentiable from a random oracle (in the sense of Maurer \etal~\cite{DBLP:conf/tcc/MaurerRH04})
-with $\varepsilon \approx 2^{-t}q^2$, $t = m - n$ being the number of truncated bits and $q$ the number of queries to $\compress$. In the light of \autoref{sec:refining_md}, this is a very useful result, as it
-says that unlike plain \merkdam, no non-ideal behaviour is introduced by the domain-extending construction. Such hash functions are thus expected to behave closely to the random oracles they may be expected to instantiate, as long as
-their compression functions are ``ideal'' and that they are not queried too much w.r.t. to the size of their parameters.
+\paragraph{\merkdam «\,tuyau-large\,».}
+La construction tuyau-large a été introduite en 2005 par Lucks~\cite{DBLP:conf/asiacrypt/Lucks05}
+et Coron \etal, sous le nom coupe-MD~\cite{DBLP:conf/crypto/CoronDMP05}.
+Elle est conceptuellement simple, et consiste à utiliser la construction \merkdam avec une fonction de compression de taille de sortie plus grande que celle de la valeur de chaînage.
+Si on écrit
+$\lfloor\cdot\rfloor_n$
+une fonction de troncature arbitraire de $m > n$ vers $n$ bits, on peut définir
+une construction tuyau-large de $n$ bits basée sur une fonction de compression $\compress : \{0,1\}^m \times \{0,1\}^b \rightarrow \{0,1\}^m$
+comme $\lfloor\hash(\cdot)\rfloor_n$, avec $\hash$ une fonction \merkdam classique construite depuis $\compress$.
+Quelques variations sont possibles, par exemple en considérant d'autres applications de $m$ vers $n$ que des troncatures.
 
-\paragraph{Sponge construction.} The sponge construction was introduced in 2007 by Bertoni \etal \cite{SpongeFunctions}. It is quite distinct from the \merkdam framework, notably because it does not use a compression
-function as building block, but a function of equally-sized domain and co-domain. Usually, this function is even taken to be bijective.
+On peut facilement voir qu'une collision pour une telle fonction de hachage n'implique plus une collision pour son état interne.
+En choisissant $m$ suffisamment grand (par exemple $m = 2n$),
+on peut obtenir une résistance générique aux multicollisions (par exemple). En fait,
+Coron \etal on montré que cette construction est un \emph{extendeur de domaine sûr pour un oracle aléatoire}, dans le sens
+que si la fonction de compression est un oracle aléatoire avec entrées de taille fixe, l'utiliser avec une construction tuyau-large donne une fonction
+$\varepsilon$-indifférentiable d'un oracle aléatoire
+(au sens de Maurer \etal~\cite{DBLP:conf/tcc/MaurerRH04}), avec
+$\varepsilon \approx 2^{-t}q^2$, $t = m - n$ le nombre de bits tronqués et $q$ le nombre de requêtes faites à $\compress$.
+Ceci est un résultat très utile, puisqu'il dit essentiellement qu'au contraire d'une construction \merkdam classique, aucun comportement non idéal
+n'est introduit par la construction d'extension de domaine. De telles fonctions de hachage sont donc supposées se comporter comme les oracles aléatoires
+qu'on attend qu'elles réalisent, à condition que la fonction de compression est «\,idéale\,» et qu'elles ne sont pas appelées un nombre trop important de fois par rapport à la taille de leurs paramètres.
 
-The construction in itself is simple. Assume we want to build an $n$-bit function based on a $b$-bit permutation $\perm$. We define the \emph{rate} $r$ and the \emph{capacity} $c$ as two integers such that
-$b = r + c$. Then, hashing the message $\mess$ consists in padding it to a length multiple of $r$ and to process it iteratively
-in two phases. The \emph{absorbing} phase computes an internal state value $\freeiv \defas \perm(\perm(\ldots\perm(\messblock_0||0^c)\oplus\messblock_1||0^c)\ldots)$. The squeezing phase then produces the
-$n$-bit output as $\hash(\mess) \defas \lfloor\freeiv\rfloor_r||\lfloor\perm(\freeiv)\rfloor_r||\ldots||\lfloor\perm^{n \div r}(\freeiv)\rfloor_{n \mod r}$.
 
-A distinguishing feature of the sponge construction (apart from the fact that it does not use a compression function) is that the output length of an instance is entirely decorrelated from the size of its building
-block. Thus, it allows to swimmingly build variable-length hash functions. A given permutation can also be used in different instantiations offering a tradeoff between speed (a larger rate giving
-faster functions) and security (a larger capacity giving more secure functions).
-In particular, Bertoni \etal showed in 2008 that similarly as chop-MD, the sponge construction instantiated with a random function or permutation is $\varepsilon$-indifferentiable from a random oracle
-of the same output size, with $\varepsilon \approx 2^{-c}q^2$~\cite{DBLP:conf/eurocrypt/BertoniDPA08}. To achieve the classical security requirements of a hash function, it is thus optimal to take $c = 2n$.
+\paragraph{Construction éponge.} La construction éponge a été introduite en 2007 par
+Bertoni \etal~\cite{SpongeFunctions}.
+Elle est quelque peu différente de la construction \merkdam, notamment parce qu'elle n'utiliser pas une fonction de compression
+comme primitive, mas une fonction de domaine et codomaine identique. Habituellement, cette fonction est en plus prise bijective.
 
-One of the best examples of a sponge function is \keccak~\cite{KeccakReference}, which became the \shathree standard in 2015~\cite{Nist-SHA3}. 
+La construction en elle-même est simple. Supposons qu'on souhaite construire une fonction sur $n$ bits basée sur une permutation $\perm$ sur $b$ bits.
+On définit le \emph{taux} $r$ et la \emph{capacité} $c$ comme deux entiers tels que que $b = r + c$.
+Ensuite, hacher le message
+$\mess$ consiste à
+l'étendre à une taille multiple de $r$ et à le traiter itérativement en deux phases.
+La phase d(\emph{absorption} calcule une valeur pour l'état interne
+$\freeiv \defas \perm(\perm(\ldots\perm(\messblock_0||0^c)\oplus\messblock_1||0^c)\ldots)$. La phase de \emph{compression} produit ensuite une sortie sur $n$ bits définie par
+$\hash(\mess) \defas \lfloor\freeiv\rfloor_r||\lfloor\perm(\freeiv)\rfloor_r||\ldots||\lfloor\perm^{n \div r}(\freeiv)\rfloor_{n \mod r}$.
 
-\subsection{The \mdsha family}
-We now briefly present the ``\mdsha'' hash function family, both because it is of somewhat historical importance and because, the function studied in this part, \shaone, is one of its members.
+Une caractéristique notable des constructions éponges (à part le fait qu'elles n'utilisent pas de fonction de compression) est que la taille de sortie d'une instance
+est naturellement décorrélée de la taille des sa fonction constitutrice. Ainsi, cette construction permet facilement de construire des fonctions de hachage à sortie
+de taille variable. Une même permutation ou fonction peut aussi être utilisée dans différentes réalisations offrant un compromis entre la vitesse
+(un taux plus élevé donne des fonctions plus rapides) et la sécurité (une capacité plus élevés donne une fonction plus sûre).
+En particulier, Bertoni \etal ont montré en 2008 que de la même façon que \merkdam tuyau-large, la construction éponge réalisée avec une permutation ou une fonction aléatoire est
+$\varepsilon$-indifférentiable d'un oracle aléatoire de sortie de même taille,
+avec $\varepsilon \approx 2^{-c}q^2$~\cite{DBLP:conf/eurocrypt/BertoniDPA08}. Pour atteindre les propriétés de sécurité classiques, il est alors
+optimal de prendre $c = 2n$.
 
-The family originated in 1990 with the \mdfour function, introduced by Rivest~\cite{Rivest-md4}. An attack on a reduced version was quickly found by den Boer and Bosselaers~\cite{DBLP:conf/crypto/BoerB91},
-and Rivest proposed \mdfive as a strengthened version of \mdfour~\cite{Rivest-md5}. Bosselaers proposed \ripemd in 1992 as another attempt to strengthen \mdfour~\cite[Chap. 3]{DBLP:books/sp/BosselaersP95},
-and the NSA did the same the following year by introducing the first generation of the SHS/SHA algorithms~\cite{Nist-SHA0}. Both algorithms were quickly modified in 1996 and 1995 respectively~\cite{DBLP:conf/fse/DobbertinBP96,Nist-SHA1}.
-Some later algorithms such as \shatwo~\cite{Nist-SHA}, introduced in 2002, also trace their roots back to \mdfour.
+Un des meilleurs exemples de fonction éponge est 
+\keccak~\cite{KeccakReference}, qui est devenu le nouveau standard \shathree en 2015~\cite{Nist-SHA3}. 
 
-Their are some variations inside members of the family; notably, \ripemd uses a parallel structure for its compression function. We specifically list below features that are shared by \mdfour, \mdfive and \sha, but they are also
-true for other \mdsha functions to a large extent.
+\subsection{La famille \mdsha}
+\label{sec:fmdsha}
+
+Nous présentons maintenant la famille de fonctions de hachage «\,\mdsha\,», à la fois pour son importance historique et parce que la fonction \shaone étudiée plus tard
+dans ce manuscrit est un de ses membres.
+
+Cette famille a commencé en 1990 avec la fonction \mdfour, introduite par Rivest~\cite{Rivest-md4}.
+Une attaque sur une version réduite a rapidement été trouvée par
+den Boer et Bosselaers~\cite{DBLP:conf/crypto/BoerB91},
+et Rivest a proposé \mdfive comme version améliorée.
+Bosselaers a lui-même proposé \ripemd en 1992 comme amélioration alternative de \mdfour~\cite[Chap. 3]{DBLP:books/sp/BosselaersP95},
+et la NSA fit de même l'année suivante en introduisant la première génération des algorithmes SHS/SHA~\cite{Nist-SHA0}.
+Dans les deux derniers cas, les fonctions ont été modifiées peu de temps après, en
+1996 et 1995 respectivement~\cite{DBLP:conf/fse/DobbertinBP96,Nist-SHA1}.
+D'autres algorithmes tels que 
+\shatwo~\cite{Nist-SHA}, introduits 2002, ont également été influencés par \mdfour.
+
+Il existe quelques variations parmi les membres de la famille~; notablement
+\ripemd utilise une structure parallèle pour sa fonction de compression.
+Nous énumérons spécifiquement ci-dessous les caractéristiques partagées par
+\mdfour, \mdfive et \sha, qui sont aussi communes aux autres fonctions
+\mdsha dans une large mesure.
 \begin{itemize}
-\item The \merkdam construction is used as a domain extender.
-\item The compression function is built from an \emph{ad-hoc} block cipher used in a \emph{Davies-Meyer} mode: let $\blockE(x,y)$ be the encryption of the plaintext $y$ with the key $x$ by the cipher $\blockE$, then
-the compression function is defined by
+\item La construction \merkdam est utilisée comme extendeur de domaine.
+\item La fonction de compression est construite à partir d'un chiffre par bloc ad hoc utilisé en mode \emph{Davies-Meyer} mode~: 
+soit
+$\blockE(x,y)$ le chiffrement du texte clair $y$ avec la clef $x$ par  $\blockE$, alors
+la fonction de compression est définie par
 $\chain_{i+1} \defas \blockE(\messblock_{i+1},\chain_i) \boxplus \chain_i$.
-\item The block cipher inside the compression function is an unbalanced Feistel network that uses modular additions, XORs, bit rotations, and bitwise Boolean functions as constitutive elements. Its key schedule is linear, and (very) fast to compute. 
+\item Le chiffre par bloc utilisé dans la fonction de compression est un réseau de Feistel déséquilibré qui utilise
+des additions modulaires, des XORs, des rotations sur les bits, et des fonctions booléennes bit à bit comme éléments constitutifs.
+Son expansion de clef est linéaire et (très) efficace à calculer.
 \end{itemize}
 
-With the advent of the NIST \shathree competition, which ran from 2007 to 2012, much more diversity was introduced to hash function design. However, the \mdsha family still had an influence on many competition candidates, and it remains
-influential as of today.
-
-
-
+Avec la tenue de la compétition \shathree organisée par le NIST entre 2007 et 2012, une diversité considérable a été introduite dans la conception des fonctions de hachage.
+Toutefois, la famille \mdsha a influencé un certain nombre de candidats, et elle continue à exercer son influence aujourd'hui encore.
 
 \chapter[Présentation de mes travaux]{Presentation of my work}
 
-Les travaux réalisés pendant cette thèse ont tous eu trait à la cryptographie symétrique ; on peut néanmoins distinguer certains sous-thèmes en fonction des objectifs et des objets d'étude.
+Les travaux réalisés pendant cette thèse appartiennent au domaine de la cryptographie symétrique ; on peut néanmoins distinguer certains sous-thèmes en fonction des objectifs et des objets d'étude.
 
 \medskip
 
@@ -554,7 +753,7 @@ de chiffrement en «\,boîte blanche\,»
 
 \bigskip
 
-Dans le but d'obtenir un document de taille raisonnable, certains des travaux mentionnés ci-dessus ne sont pas inclus dans ce manuscrit. Toutes les contributions sont cependant
+Bien que certains des travaux mentionnés ci-dessus ne sont pas inclus dans ce manuscrit, toutes ces contributions sont cependant
 décrites avec un peu plus de détail dans les trois sections ci-dessous (nous excluons toutefois de ces descriptions deux articles écrits avant le début de cette thèse).
 
 \section[Deux cryptanalyses]{Two cryptanalyses}
@@ -571,7 +770,7 @@ comme $A'' \circ S' \circ A' \circ S \circ A$. De façon relativement inhabituel
 les applications $A$, $S$, etc. elles mêmes qui sont tenues secrètes (et qui peuvent en pratique être générées depuis un générateur pseudo-aléatoire cryptographique paramétré par la «\,vraie\,»
 clef). Par exemple, les instance \asasa de chiffrement à clef secrète proposées par Biryukov \etal sont constituées de
 trois matrices inversibles tirées aléatoirement dans $\mathcal{M}_{128}(\Ftwo)$,
-alternant avec deux applications parallèles de seize boîtes S toutes générées aléatoirement et indépendament les unes des autres.
+alternant avec deux applications parallèles de seize boîtes S toutes générées aléatoirement et indépendamment les unes des autres.
 D'un point de vue pratique, de telles constructions peuvent être intéressantes car nécessitant peu de tours par rapport à une structure plus classique. D'un point de vue plus théorique, elles peuvent
 aussi être vues comme des généralisations de structures plus habituelles telles que les SPNs~; une étude de la structure \asasa peut ainsi par exemple fournir une borne inférieure sur le nombre de tour
 de n'importe quel SPN, en dessous duquel celui-ci pourrait être attaqué «\,génériquement\,».
@@ -684,14 +883,14 @@ jusqu'à ce jour ont été cassées (voir par ex. \cite{HenriWB} pour une revue)
 Le modèle le plus atteignable correspond à une notion d'\emph{incompressibilité}~: face à une implémentation d'une certaine taille, un adversaire doit être incapable de fournir une implémentation
 (significativement) plus petite qui est fonctionellement équivalente (avec très forte probabilité). Cet objectif est relativement facile à atteindre, mais ne satisfait pas nécessairement
 tous les emplois qu'on pourrait souhaiter faire de la cryptographie boîte blanche (qui restent au demeurant vagues). Certaines propositions récentes d'algorithmes en boîte blanche ciblent
-(des variantes proches de) ce modèlè~: les instantiations boîte blanche de la construction ASASA de Biryukov \etal~\cite{DBLP:conf/asiacrypt/BiryukovBK14}
+(des variantes proches de) ce modèle~: les instantiations boîte blanche de la construction ASASA de Biryukov \etal~\cite{DBLP:conf/asiacrypt/BiryukovBK14}
 (largement attaquées~\cite{DBLP:journals/iacr/DinurDKL15,DBLP:conf/asiacrypt/MinaudDFK15}) et la famille \spacehard de Bogdanov et Isobe~\cite{DBLP:conf/ccs/BogdanovI15}.
 
 Nos travaux ont consisté à raffiner le modèle d'incompressibilité de Delerablée \etal en définissant des notions d'incompressibilité faible et forte, puis de proposer deux familles de constructions
 prouvablement incompressibles par rapport à ces modèles. La première, \pc, est une famille de chiffres par bloc de tailles d'implémentation variable, prouvable dans le modèle
 faible. La seconde, \cdb, est une famille (également de taille variable) de fonctions
 pouvant être utilisées comme générateurs de clef, prouvable dans les deux modèles faible et fort. La base de nos algorithmes est semblable à celles des précédentes propositions de Biryukov \etal
-et Bogdanov \etal~: elle consiste à utiliser des tables de taille importante remplies de données pseudo-aléatoire et à forcer leur accès en des points a priori imprédictibles pour être capable de
+et Bogdanov \etal~: elle consiste à utiliser des tables de taille importante remplies de données pseudo-aléatoire et à forcer leur accès en des points a priori imprévisibles pour être capable de
 chiffrer un message aléatoire. L'incompressibilité vient du fait qu'un adversaire «\,oubliant\,» une partie significative des tables se trouverait forcé d'en deviner un certain nombre de valeurs
 pour correctement implémenter l'algorithme sur la plupart des entrées. Nos preuves consistent à montrer que ceci est effectivement le cas pour nos structures. Enfin, notons qu'en plus d'être
 dotées de preuves d'incompressibilité, nos constructions sont relativement efficaces, et notamment nettement plus performantes que les propositions de Bogdanov et Isobe.
@@ -720,10 +919,10 @@ donc consisté à adapter les attaques de Wang \etal à un modèle à initialisa
 tours tout en s'assurant que les conditions nécessaires à une collision sont préservées. Les attaques de ce type étant aussi relativement lourdes à effectuer, nous avons aussi amélioré certaines
 phases de la génération et de l'implémentation de l'attaque.
 Une autre part importante de ces travaux a constitué à implémenter efficacement l'ensemble de l'attaque, notamment en utilisant des cartes graphiques pour le calcul de la partie la plus coûteuse.
-Ceci a necessité un certain soin lors du développement de l'attaque, entre autres choses pour que sa structure soit adaptée au modèle de calcul imposé par les cartes graphiques.
+Ceci a nécessite un certain soin lors du développement de l'attaque, entre autres choses pour que sa structure soit adaptée au modèle de calcul imposé par les cartes graphiques.
 
 Nos résultats ont consisté en une collision à initialisation libre pour 76 tours sur 80 de \shaone avec un coût d'environ $2^{50.25}$ appels à la fonction de compression (sur cartes graphiques),
-ainsi qu'en une attaque similaire sur la fonction complète pour un coût d'environ $2^{57.5}$. Dans le dernier cas, ceci correspond à environ dix jours de calcul sur soixtante-quatre cartes
+ainsi qu'en une attaque similaire sur la fonction complète pour un coût d'environ $2^{57.5}$. Dans le dernier cas, ceci correspond à environ dix jours de calcul sur soixante-quatre cartes
 graphiques récentes, ce qui est raisonnablement à la portée d'un adversaire moyen.
 
 
@@ -740,7 +939,7 @@ Ceci leur a permis à l'époque d'atteindre le plus grand nombre de tours attaqu
 Dans nos travaux, nous avons étendu cette approche différentielle par l'utilisation de différentielles d'ordre supérieur. Ceci permet de trouver de meilleures partitions pour une attaque par
 le milieu (dans le sens où elles couvrent plus de tours), au prix d'une phase de rencontre plus complexe (rendant la technique surtout utile pour des attaques de coût élevé). De cette façon,
 nous avons pu augmenter le nombre de tours attaqués de 5 (atteignant 62 tours) avec une attaque de très grosse complexité (estimée à $2^{159.3}$), mais aussi baisser la complexité à nombre
-de tours equivalents par rapport à Knellwolf et Khovratovich (attaquant 58 tours pour un coût de $2^{157.9}$ contre 57 tours à $2^{158.8}$). Enfin, nous avons appliqué les mêmes
+de tours équivalents par rapport à Knellwolf et Khovratovich (attaquant 58 tours pour un coût de $2^{157.9}$ contre 57 tours à $2^{158.8}$). Enfin, nous avons appliqué les mêmes
 techniques avec un certain succès sur les fonctions de la famille \blake, améliorant quelque peu le nombre de tours attaqués en préimage, avec cependant un gain marginal sur la
 recherche exhaustive. 
 
