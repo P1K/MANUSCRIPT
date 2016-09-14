@@ -74,7 +74,7 @@ There exists a related notion of \emph{strong pseudo-random permutation} (SPRP) 
 
 \autoref{def:prp} is quite useful in some contexts, for instance to prove that a construction using a block cipher is not significantly less secure than the latter. This is
 typically done by defining an advantage function similar to PRP security for the higher-level construction (this being for instance CBC-MAC in the case of \cite{DBLP:journals/jcss/BellareKR00}) and by showing that
-it is not more than the PRP security of the block cipher plus some (reasonably small) extra terms.
+it is not more than a reasonable function of the PRP security of the block cipher.
 
 However, this definition is not constructive, in the sense that it does not provide any (efficient)
 way of computing the PRP security of a block cipher in general (some results do exist for specific block cipher constructions (usually modulo access to a lower-level primitive such as a
@@ -90,7 +90,7 @@ section to sketching some typical elements of attacks on block ciphers.
 The core of many concrete attacks on block ciphers is made of \emph{distinguishers}, which can be defined as algorithms using reasonable resources which have a non-negligible advantage according to \autoref{def:prp}.
 There is no easy answer as to what ``reasonable'' and ``non-negligible'' should mean in the context of actual cryptanalysis, as the key and block size of a specific cipher are fixed values. While some ciphers or potential distinguishers
 may be parameterized in a way that helps to make the definition meaningful, this does not have to be the case. Sometimes, one is easily convinced by the performance of an algorithm so that there is
-consensus that it can be called a distinguisher (\eg distinguishing $\E$ of key and block size $2^{128}$ with $q = 2$, $t = 2^{20}$, probability $\approx 1$), while some other times the picture is much less clear
+consensus that it can be called a distinguisher (\eg distinguishing $\E$ of key and block size $128$ with $q = 2$, $t = 2^{20}$, probability $\approx 1$), while some other times the picture is much less clear
 (\eg $q = t =  2^{120}$ and probability $\approx 1$). We will ignore this issue altogether and assume that all the attacks of this chapter are consensual.
 
 \subsubsection{Classes of distinguishers for block ciphers}
@@ -148,7 +148,7 @@ the ANF of $\E$ is the ordered set of ANFs of its projections.
 An important characteristic of an ANF is its (maximal) degree, which can be used to define simple yet efficient distinguishers. The degree
 of (the ANF of) an $n$-bit permutation is at most $n - 1$, and it is expected of a random permutation to be of maximal degree. If a block cipher
 has degree $d < n - 1$, it can be distinguished by differentiating it on enough values. This simply requires to evaluate the oracle on $2^d$ properly chosen
-values (essentially a cube of dimension $d$) and to sum them together. If the result is the all-zero ciphertext, the oracle is likely to be of degree less than
+values (essentially a cube of dimension $d$) and to sum them together. If the result is all-zero, the oracle is likely to be of degree less than
 $d$ and is hence assumed to be $\E$; if this is not the case, it is necessarily of degree strictly more than $d$ and hence assumed to be a random permutation.
 
 \subsubsection{Extending distinguishers to key-recovery attacks}
@@ -161,7 +161,7 @@ are not distinguisher-based. Though many of them are quite interesting, we do no
 the basic idea of this conversion; to do this, we need to assume that $\E$ possesses a certain structure (this is completely without loss of generality).
 
 An \emph{iterative block cipher} is a cipher $\E$ that can be described as the multiple composition of a \emph{round function} $\R$ (possibly with additional
-composition of an initialization or finalization function that we ignore here) : $\E \equiv \R \circ \cdots \circ \R$. Let us assume that a ``full''
+composition of an initialization or finalization function that we ignore here): $\E \equiv \R \circ \cdots \circ \R$. Let us assume that a ``full''
 application of $\E$ is made of $r$ rounds. A distinguisher-based key-recovery attack first consists in finding a distinguisher on
 a \emph{reduced-round} version of $\E$ made of the composition of $d < r$ round functions. The next step simply consists in querying the oracle on inputs verifying the distinguisher condition (for instance
 plaintexts with difference $\Delta$, in a differential case); as one obtains encryption with the full block cipher, one is not expected to be able to directly run the distinguisher
@@ -181,7 +181,7 @@ used which leads to another part of the key, or it can simply be guessed exhaust
 So far we have discussed how to express the security of block ciphers and how to attack them in a rather simple case when one is given access to a single ``secret'' oracle. This setting may be generalised
 in some ways, for instance by providing more than one oracle. One such common generalisation is to attack a cipher in the \emph{related-key model}, where one is given oracle access to
 $\E(k,\cdot)$, $\E(\rka(k),\cdot)$, with $\rka(\cdot)$ one or more mappings on the key space. A crucial observation in this case is that $\rka$ cannot be arbitrary, as some mappings may
-be so powerful that they allow to attack (almost) every cipher; speaking of the security of $\E$ in such a model is then meaningless. We will mention this matter again in \autoref{chap:emrka}.
+be so powerful that they allow to attack every cipher; speaking of the security of $\E$ in such a model is then meaningless. We will mention this matter again in \autoref{chap:emrka}.
 
 The potential problems arising from ill-defined related-key models are a useful reminder that attacks should be specified in a well-founded way. While some of them may be
 considered too unrealistic to be of practical significance (this is in fact a rather common reproach to related-key attacks at large), this question is only secondary to their not allowing to trivially
@@ -207,7 +207,7 @@ trend is to favour the former approach, as it tends to lead to more efficient sc
 
 We conclude this chapter by highlighting the prevalence of the \emph{birthday bound} (coming from the so-called \emph{birthday paradox}, which we will
 only define in \autoref{chap:hashfun}) in cryptography by stating the following fact: when using a block cipher of block size $n$, most modes of operation are only
-secure up to the encryption of $\approx 2^{n/2}$ blocks, even if the key size of the block cipher can be much bigger than that.
+secure up to the encryption of $\approx 2^{n/2}$ blocks with the same key, even if the key size of the block cipher can be much bigger than that.
 
 
 % TODO REFS.... Where???
