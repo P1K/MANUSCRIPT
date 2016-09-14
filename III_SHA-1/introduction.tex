@@ -288,7 +288,7 @@ true for other \mdsha functions to a large extent.
 \item The \merkdam construction is used as a domain extender.
 \item The compression function is built from an \emph{ad-hoc} block cipher used in a \emph{Davies-Meyer} mode: let $\blockE(x,y)$ be the encryption of the plaintext $y$ with the key $x$ by the cipher $\blockE$, then
 the compression function is defined by
-$\chain_{i+1} \defas \blockE(\messblock_{i+1},\chain_i) \boxplus \chain_i$.
+$\chain_{i+1} \defas \blockE(\messblock_{i+1},\chain_i) + \chain_i$.
 \item The block cipher inside the compression function is an unbalanced Feistel network that uses modular additions, XORs, bit rotations, and bitwise Boolean functions as constitutive elements. Its key schedule is linear, and (very) fast to compute. 
 \end{itemize}
 
