@@ -83,9 +83,10 @@ This only requires sixteen table lookups per multiplication. However, the memory
 which makes this algorithm inherently vulnerable to timing attacks.
 
 Note that there is a more memory-efficient alternative implementation of this algorithm which consists in explicitly computing the multiplications for each term $\lambda\mat^t_i$.
-This can be done with a single \pshufb instruction per matrix row, taking as first operand the table of multiplication by $\lambda$ and as second operand a register representing $\mat^t_i$.
+This can be done with a single \pshufb instruction per matrix row, taking as first operand the table of multiplication by $\lambda$ (which is made of sixteen
+4-bit entries, and can be precomputed) and as second operand a register representing $\mat^t_i$.
 In that case, only the sixteen multiplication tables need to be stored, but their accesses
-still depend on the secret value $\veci$.
+still depend on the secret value $\veci$ (as for each $\veci_i$, one needs to look up the appropriate multiplication table).
 
 
 \subsection{A generic constant-time algorithm}
@@ -101,7 +102,7 @@ the results of the scalar multiplication of the matrix rows $\mat^t_i$, those ar
 We start with a high-level description of the algorithm.
 Assume we want to perform the scalar multiplication $\lambda\vect$ for an unknown scalar $\lambda$ and a known, constant vector $\vect \in \Fst^{16}$.
 Let us write $\lambda$ as the polynomial
-$\lambda_3\cdot \alpha^3 + \lambda_2\cdot \alpha^2 + \lambda_1\cdot \alpha + \lambda_0$ with coefficients in $\mathbf{F}_2$.
+$\lambda_3\cdot \alpha^3 + \lambda_2\cdot \alpha^2 + \lambda_1\cdot \alpha + \lambda_0$ with the $\lambda_i$ in $\mathbf{F}_2$.
 Then, the result of $\lambda\cdot\vect$ is simply $\lambda_3\cdot(\alpha^3\cdot\vect) + \lambda_2\cdot(\alpha^2\cdot\vect) + \lambda_1\cdot(\alpha\cdot\vect) + \lambda_0\cdot\vect$.
 Thus we just need to precompute the products $\alpha^i\cdot\vect$, select the right ones with respect to the binary representation
 of $\lambda$, and add these together.
@@ -126,7 +127,7 @@ matrices of dimension 128~\cite{DBLP:conf/ches/KasperS09}.
   \KwIn{ $\veci \in \Fst^{16}$, $\mat \in \mappi_{16}(\Fst)$}
   \KwOut{  $\veco = \veci^t\cdot\mat^t$}
   Offline phase\\
-  \For{$i \in \{0\ldots15\}$}
+  \For{$i \defas 0$, $i < 16$}
   {
   $8\mat_i \defas \alpha^3\cdot\mat_i$\\
   $4\mat_i \defas \alpha^2\cdot\mat_i$\\
@@ -134,7 +135,7 @@ matrices of dimension 128~\cite{DBLP:conf/ches/KasperS09}.
   }
   Online phase\\
   $\veco \defas \mathbf{0}_{64}$\\
-  \For{$i \in \{0\ldots15\}$}
+  \For{$i \defas 0$, $i < 16$}
   {
   $\upsilon_i^8 \defas 8\mat_i \wedge_{64} \broad(\veci_i,3)_{64}$\\
   $\upsilon_i^4 \defas 4\mat_i \wedge_{64} \broad(\veci_i,2)_{64}$\\
@@ -160,7 +161,7 @@ bit of $\lambda$ is set and $\mathbf{0}_{64}$ otherwise, that is $\broad(\lambda
 computed this way are rather $\mathbf{0}_{128}$ and $\mathbf{1}_{128}$. Adapting this to $\mathbf{0}_{64}$
 and $\mathbf{1}_{64}$ is however simple to do.}.
 
-In practice, the vector $x$ can conveniently be constructed offline and stored in memory, but the vector $y$ might not be readily available before
+In practice, the input $x$ to \pshufb{} can conveniently be constructed offline and stored in memory, but the second input $y$ might not be readily available before
 performing this computation\footnote{And because it depends on what we assume to be a secret value, it cannot either be fetched from memory.}.
 However, it can easily be computed thanks to an additional \pshufb{}. Alternatively, if the
 above computation is done with a vector $y \defas (\lambda, ?, ?, \ldots)$ instead (with $?$ denoting unknown values) and call $z$ its result $(x[\lambda], ?, ?, \ldots)$,
@@ -262,17 +263,17 @@ It is obvious that this is equal to:
 	0 \\
 	\end{pmatrix},
 \]
-where both the constant multiplications of the vector $(x_0, x_1, x_2, x_3)^t$ and the shuffles of its coefficients can be computed
+where the constant multiplications of the vector $(x_0, x_1, x_2, x_3)^t$ and the shuffles of its coefficients can both be computed
 with a single \pshufb{} instruction each, while none of these operations directly depends on the value of the vector.
 This type of decomposition can be done for any matrix, but the number of operations depends on the value of its coefficients.
 
 \medskip
 
 We now sketch one way of obtaining an optimal decomposition as above.
-We consider a matrix product $\mat\veci$ with $\mat$ constant and $\veci$ unknown,
-where $\veci$ is seen as the formal arrangement of variables $\veci_i$.
+We consider a matrix product $\mat\veci$ with $\mat$ constant and $\veci$
+seen as the formal arrangement of undeterminates $\veci_i$.
 Let us define $\shuff(\mat, \lambda)$ as one of the minimal sets of shuffles of coefficients of $\veci$, such that
-there exists a unique vector $\vect \in \shuff(\mat, \lambda)$ with $\vect_i = \veci_j$ iff $\mat_{i,j} = \lambda$.
+there exists a unique vector $\vect \in \shuff(\mat, \lambda)$ sucht that $\vect_i = \veci_j$ iff $\mat_{i,j} = \lambda$.
 For instance, in the above example, we have $\shuff(\mat,2) = \{(x_2,x_2,x_0,x_1)^t, (x_3,0,x_3,0)^t\}$. Equivalently, we could have taken
 $\shuff(\mat, 2) = \{(x_3,x_2,x_3,0)^t, (x_2,0,x_0,x_1)^t\}$.
 These sets are straightforward to compute from this particular matrix, and so are they in the general case.
@@ -290,15 +291,15 @@ We give a complete description of this shuffle-based process in \autoref{alg:shu
   \KwIn{   $\veci \in \Fst^{16}$, $\mat \in \mappi_{16}(\Fst)$}
   \KwOut{  $\veco = \mat\cdot\veci$}
   Offline phase\\
-  \For{$i \in \{1\ldots15\}$}
+  \For{$i \defas 1$, $i < 16$}
   {
   $s_i[\,] \defas \shuff(M, i)$ $\triangleright$ \emph{Initialize the array $s_i$ with one of the possible sets of shuffles.}
   }
   Online phase\\
   $\veco \defas \mathbf{0}_{64}$\\
-  \For{$i \in \{1\ldots15\}$}
+  \For{$i \defas 1$, $i < 16$}
   {
-  \For{$j < \#s_i$}
+  \For{$j \defas 1$, $j < \#s_i$}
   {
   $\veco \defas \veco + i\cdot s_i[j]$
   }
@@ -335,7 +336,7 @@ this is for instance the case for circulant matrices, by definition.
 More generally, we can heuristically hope that the cost of a matrix will be low if all of its rows can be obtained from the permutation of, say, only two rows.
 
 We can try to estimate the minimum cost of an arbitrary dense circulant matrix of dimension sixteen over $\Fst$.
-If the coefficients of the (unique, up to permutation) row are chosen at random, we should expect them to be made of about $2/3$ of the elements of $\Fst$.
+If the coefficients of the (unique, up to permutation) row are chosen uniformly at random, we should expect them to be made of about $1-(1-1/16)^{16} \approx 2/3$ of the elements of $\Fst$.
 Additionally, fifteen permutations of the input will need to be computed (all rows need to be different for the matrix to be of full rank ---which is something we will
 desire in our applications--- but the coefficients on the diagonal are constant).
 Thus we can estimate the cost of such a random matrix to be about 25.

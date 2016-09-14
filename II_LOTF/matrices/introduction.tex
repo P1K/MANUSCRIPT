@@ -9,7 +9,7 @@ MDS matrices thus have an optimal diffusion, in a cryptographic sense, which mak
 The good security properties that can be derived from MDS matrices are often counter-balanced by the cost of their computation. The standard matrix-vector product is
 quadratic in the dimension of the vector, and finite field operations are not always efficient.
 For that reason, there is often a focus on finding matrices allowing efficient implementations. For instance, the \AES{} matrix is circulant and has small coefficients.
-More recently, the \photon{} hash function~\cite{photon} introduced the use of matrices that can be obtained as the power of a companion matrix, which sparsity may be useful in
+More recently, the \photon{} hash function~\cite{photon} introduced the use of matrices that can be obtained as the power of a companion matrix, whose sparsity may be useful in
 lightweight hardware implementations. The topic of finding such so-called recursive diffusion layers has been quite active in the past years, and led to a series
 of papers investigating some of their various aspects~\cite{recursive1,recursive2,recursive3}. One recent development shows how to systematically construct some of these matrices
 from BCH codes~\cite{recursive4}. This allows in particular to construct very large recursive MDS matrices, for instance of dimension sixteen over $\Fth$. This defines a linear mapping over
@@ -50,7 +50,7 @@ to vectors over an extension of $\Fst$ such as $\Fth$, while keeping the same go
 This allows for instance to increase the diffusion to $16\times8 = 128$ bits.
 
 We also study two simple yet efficient algorithms for implementing the matrix-vector multiplication needed in a \shark{}
-structure, when a \emph{vector permute} instruction is available. From one of these, we derive conditions on the matrix to make the product
+structure, when a \emph{vector permute} instruction is available. From one of these, we derive conditions on the matrix to make the matrix-vector product
 faster to compute, in the form of a cost function; we then search for matrices with a low cost, both randomly, and by using automorphisms of the code and of the hyperelliptic
 curve on which it is based. The use of codes automorphisms to derive efficient encoders is not new~\cite{sysgrob,grobarch},
 but it is not generally applied to the architecture and dimensions that we consider in our case.

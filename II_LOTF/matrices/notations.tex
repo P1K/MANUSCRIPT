@@ -12,7 +12,7 @@ $\Fst \cong \mathbf{F}_2[\alpha]/(\alpha^4 + \alpha + 1)$ when a specific one is
 by writing $n \in \{0\ldots2^n-1\} = \sum_{i = 0}^{n-1} a_i 2^i$ to represent the element
 $x \in \Ftwom = \sum_{i = 0}^{n-1} a_i \alpha^i$. In the remainder of this section, and especially in \autoref{sec:ag}, we usually consider an arbitrary algebraically closed field, written $k$
 (it will usually be clear from the context whether $k$ is a field or the dimension of a linear code, see \autoref{def:lincode} below).
-$\mathfrak{S}_n$ denotes the group of permutations of $n$ elements.
+We let $\mathfrak{S}_n$ denote the group of permutations of $n$ elements.
 
 Bold variables denote vectors (in the sense of elements of a vector space), and subscripts are used to denote their $i^\text{th}$ coordinate, starting from zero. For instance,
 let $\veci \defas (1, 2, 7)$, then  $\veci_2 = 7$.
@@ -24,7 +24,7 @@ Arrays, or tables, (in the sense of software data structures) are denoted by reg
 For instance, $T[i]$ is the $i^\text{th}$ element of the table $T$, starting from zero.
 
 The operator ``$\wedge_{64}$'' denotes the  \emph{logical and} on 64-bit values. We use $\mathbf{0}_{n}$ and $\mathbf{1}_n$ for binary vectors of length $n$ all made of
-zeros and ones respectively. If $n$ is a multiple of a power of two, these vectors may freely be interpreted as elements of the relevant vector spaces.
+zeros and ones respectively. These may also freely be interpreted as elements of the vector spaces that will be clear from the context.
 The function $\indic(\cdot)$ takes as input a set and returns one if it is non-empty, zero otherwise; $\#$ denotes the cardinality of a set.
 We may also use subscripts to show the base in which a number is written when it is not ten, \eg $1010_2$ is the number 10 written in base two.
 
@@ -45,7 +45,8 @@ The \emph{Hamming distance} $\hdist(\veci,\veco)$ between two vectors is defined
 
 \begin{defi}[Linear code]
 \label{def:lincode}
-A \emph{linear code} of \emph{length} $n$, \emph{dimension} $k$ and \emph{minimal distance} $d$ over the alphabet $\Fq$ is a $k$-dimensional linear subspace of $\Fq^n$ such that $\veci, \veco \in \code \Rightarrow \hdist(\veci, \veco) \geq d$
+A \emph{linear code} of \emph{length} $n$, \emph{dimension} $k$ and \emph{minimal distance} $d$ over the alphabet $\Fq$ is a $k$-dimensional linear subspace of $\Fq^n$ such that
+$\veci, \veco \neq \veci \in \code \Rightarrow \hdist(\veci, \veco) \geq d$
 and $\exists \veci, \veco \in \code,  \hdist(\veci, \veco) = d$.
 The last conditions can equivalently be expressed as $\veci \neq \nullvec \in \code \Rightarrow \weight(\veci) \geq d$ and $\exists \veci \in \code, \weight(\veci) = d$.
 We use the usual ``NKD'' notation to characterize codes: an $[n, k, d]_{\Fq}$ code $\code$ is a code of length $n$, dimension $k$ and minimum distance $d$
@@ -70,8 +71,8 @@ $I_k$ the identity matrix of dimension $k$.
 \end{defi}
 
 If $(I_k~A)$ is a generator matrix for a code $\code$, then $(-A^t~I_{n-k})$ (or equivalently $(I_{n-k}~-A^t)$)
-is a generator matrix for its dual $\code^\bot$. It follows that if $\code$ is self-dual, $A$ is symmetric and
-orthogonal.
+is a generator matrix for its dual $\code^\bot$. It follows that if $\code$ is self-dual, $A$ is orthogonal,
+\ie $A\cdot A^t = I$
 % TODO why not just A.A^t diagonal?
 
 \begin{defi}[MDS code, MDS matrix]
@@ -80,7 +81,8 @@ By abuse of definition, if $n = 2k$ and $(I_k~A)$ is a generator matrix of $\cod
 \end{defi}
 
 It is easy to see that this is the highest possible minimum distance that can be achieved by a code with a
-systematic generator matrix, as all rows of such a matrix have weight at most $n - k + 1$.
+systematic generator matrix, as all rows of such a matrix have weight at most $n - k + 1$~; this is the
+in fact the Singleton bound.
 
 A useful alternative characterization of MDS matrices is given by the following theorem.
 
@@ -94,7 +96,7 @@ We also have the following (in simplified form):
 
 \begin{conj}[MDS conjecture]
 There is no MDS code with symbols in $\Fu$ of length $n$ with $n > \#\Fu + 1$\footnote{This maximal length can be increased by one
-for some values of $q$ and $k$.}.
+for some values of $q$ and $k$.}, (except degenerate cases).
 \end{conj}
 
 The next definition rephrases and generalizes some of the above concepts in a way that is more suitable to cryptographic applications.
@@ -126,11 +128,13 @@ It is an $[n,k,\ast]_{\Fq}$ code.
 
 A generator matrix $G$ of an evaluation code can easily be constructed by evaluating a basis for $\funcspace$ on $\points$. Call $(\fun_0,\ldots,\fun_{k-1})$
 such a basis, then $G = (\evmap_\points(\fun_0),\ldots,\evmap_\points(\fun_{k-1}))$.
-If the code admits a systematic generator matrix, it can simply be obtained by computing the reduced row echelon form of $G$.
+If the code admits a systematic generator matrix (\ie its first $k$ columns span a subspace of rank $k$), it can simply be obtained by computing the reduced row echelon form of $G$.
 
 We use ordered sets for the evaluation domain $\points$ in this definition. Although the order that is chosen does not impact the parameters of the code (hence we
-may sometimes abuse our definition and talk about \emph{the} code for any of the codes based on the same $\funcspace$ and $\dom$), it may have
-an influence on the performance of explicit instantiations, through \eg properties of the generator matrices. Most of the work
+may sometimes abuse our definition and talk about \emph{the} code for any of the equivalent codes based on the same $\funcspace$ and $\dom$), it may have
+an influence on the performance of explicit instantiations, through \eg properties of the generator matrices\footnote{For instance, one
+evaluation domain $\points$ may be such that its associated generator matrix cannot be put in systematic form, but there is always
+a permutation $\points'$ of $\points$ such that it is the case.}. Most of the work
 of this chapter is actually based on this fact.
 
 The probably best-known evaluation codes are the \emph{Reed-Solomon codes} (``RS codes''):

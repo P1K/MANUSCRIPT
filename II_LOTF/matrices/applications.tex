@@ -66,12 +66,13 @@ a single \pshufb{}, this part of the round function has virtually no impact on t
 could for instance add an extra half-round essentially for free.
 
 \begin{table}
-\caption[Performance of software implementations of \sam, given in cycles per byte.]{Performance of software implementations of \sam, given in cycles per byte (cpb). Figures in parentheses are for an AVX implementation (when applicable).
+\caption[Performance of software implementations of \sam, given in cycles per byte.]{Performance of software implementations of \sam, given in cycles per byte (cpb),
+for implementations using \autoref{alg:broadcast} and \autoref{alg:shuffle}. Figures in parentheses are for an AVX implementation (when applicable).
 \label{tbl:perf_sam}}
 \begin{center}
 \begin{tabularx}{\textwidth}{@{\extracolsep{2mm} } l c  X  X}
 \toprule
-Processor type & \# rounds &  cpb (Alg. 1) &  cpb (Alg. 2)\\
+Processor type & \# rounds &  cpb (Alg. 6.1) &  cpb (Alg. 6.2)\\
 \midrule
 Intel Xeon E5-2650 @ 2.00GHz & 8 &  66.5 (60.2) & 44.5 (31.9)\\
 \midrule
@@ -150,7 +151,8 @@ implementation of the \AES{} S-Box from Hamburg~\cite{vpaes}\footnote{Better per
 weaker but more efficient S-boxes, such as \whirlpool's second S-box \cite{whirlpool}.}.
 
 \begin{table}
-\caption[Performance of software implementations of \eric, in cycles per byte.]{Performance of software implementations of \eric, in cycles per byte (cpb). Figures in parentheses are for an AVX implementation (when applicable).
+\caption[Performance of software implementations of \eric, in cycles per byte.]{Performance of software implementations of \eric, in cycles per byte (cpb),
+for implementations using \autoref{alg:broadcast} and \autoref{alg:shuffle}. Figures in parentheses are for an AVX implementation (when applicable).
 \label{tbl:perf_eric}}
 \begin{center}
 \begin{tabularx}{\textwidth}{@{\extracolsep{2mm} } l c  X  X}
@@ -158,7 +160,7 @@ weaker but more efficient S-boxes, such as \whirlpool's second S-box \cite{whirl
 %\cline{3-6}
 \multicolumn{2}{c}{} & \multicolumn{2}{c}{128-bit Block} \\
 \cmidrule(lr){3-4}
-Processor type & \# rounds & cpb (Alg. 1) & cpb (Alg. 2)\\
+Processor type & \# rounds & cpb (Alg. 6.1) & cpb (Alg. 6.2)\\
 \midrule
  \multirow{2}{*}{Intel Xeon E5-2650 @ 2.00GHz} & 6 & 58 (52.3) &  32.7 (26.5) \\
  %\cline{2-6}
@@ -186,7 +188,7 @@ the optimized vector implementations of
 It is however slower than Hamburg's vector implementation of \AES{}, with reported speeds of 6 to 22 cpb. (9 to 25 for the inverse cipher)~\cite{vpaes,twine}.
 
 Yet, we conjecture that the strong structure of the round function makes \samneric more suitable to speed-ups from derivative constructions. For instance,
-the \emph{leak extraction} approach from \lex allowed a 2.5-time speed-up from the \AES by leaking a quarter of the state of the cipher as keystream every round~\cite{DBLP:conf/sacrypt/Biryukov06}.
-Although this original proposal was later broken~\cite{DBLP:conf/asiacrypt/DunkelmanK08a}, we believe that the stronger diffusion in \samneric may protect
+the \emph{leak extraction} approach used in the stream cipher \lex allowed a 2.5-time speed-up from the \AES by leaking a quarter of the state of the cipher as keystream every round~\cite{DBLP:conf/sacrypt/Biryukov06}.
+Although \lex was later broken~\cite{DBLP:conf/asiacrypt/DunkelmanK08a}, we believe that the stronger diffusion in \samneric may protect
 leak extraction variants against similar attacks; these could for instance lead to two-time speed-ups for an eight-round \eric with leaks of
-the same amount as the ones of \lex. 
+the same amount as the ones of \lex.

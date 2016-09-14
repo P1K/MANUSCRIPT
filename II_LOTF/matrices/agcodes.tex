@@ -13,7 +13,7 @@ and that they can be instantiated for many lengths and dimensions. One limitatio
 is that the maximal length of the code is limited by the cardinality of the alphabet $\Fq$: we
 cannot evaluate the functions on more points than there are elements in $\Fq$ without introducing some
 repetition; we can still slightly increase this maximal length by one (two for some
-values of $k$ and $q$) by defining an \emph{extended} RS code, which is still MDS. However, by the MDS
+very very specific and uncommon values of $k$ and $q$) by defining an \emph{extended} RS code, which is still MDS. However, by the MDS
 conjecture, we do not expect to be able to do better than that.
 Yet we may want to
 have a tradeoff between the maximal length of a code construction and its \emph{designed minimal distance} $d^* \leq d$.
@@ -22,19 +22,20 @@ A natural way to increase the maximal length of an evaluation code is to conside
 of higher dimension than the ``line'' used in RS codes. For instance, one could take $\dom$ to be the
 $m$-dimensional space $\Fq^m$, and $\funcspace$ to be the $m$-variate polynomials of $\Fq[x_0,\ldots,x_{n-1}]$
 less than a certain degree $r$. This defines \emph{Reed-Muller codes} (``RM codes'') of order $r$.
-Although this construction successfully yields codes longer than RS codes, the parameters of RM codes
-are not always easy to find.
+Although this construction successfully yields codes longer than RS codes, they are not asymptotically good\footnote{An
+$[n, k, d]$ code si asymptotically good if neither of $d/n$ and $k/n$ tends to zero when $n$ goes to the infinity.}.
 
 An alternative approach to construct longer variants of RS codes is the one followed by AG codes. Seeing
 RS codes as working with a line of genus zero, the idea is to take as evaluation domains
-the points of (plane, affine) curves of higher genera, which can be assimilated to a subset of $\Fq^2$. A geometrically
+the points of curves of higher genera (planar and affine in our case, so as not to complexify things too much),
+which can be assimilated to a subset of $\Fq^2$. A geometrically
 meaningful way to choose the function space $\funcspace$ is then to consider certain subspaces of
 the function fields of the curves. We will see that for well-chosen $\funcspace$, this construction
 leads to codes of parameters $[n, k, d \geq n - k + 1 - g]_{\Fq}$ for curves of genus $g$. As the
 (maximal) number of points on a curve is roughly increasing with the genus, this construction gives us the
 sort of tradeoff we were searching for.
 
-\subsection{Selective algebraic geometry notions}
+\subsection{Selected algebraic geometry notions}
 
 We will be needing a few tools from algebraic geometry to make our description of AG codes explicit. We only introduce
 here the notions that are relevant to this specific application,
@@ -54,12 +55,13 @@ justify them, we need to be able to reason about points at infinity. Thus we sta
 \label{def:affiprojec}
 The $n$-dimensional \emph{affine space} $\affi^n(k)$ over a field $k$ is a set of \emph{points} formed by $n$-tuples over $k$,
 $P \defas (x_0, \ldots, x_{n-1})$, $x_i \in k$.
-The $n$-dimensional \emph{projective space} $\projec^n(k)$ over $k$ is a set of points formed by equivalence classes of $n+1$-tuples
+The $n$-dimensional \emph{projective space} $\projec^n(k)$ over $k$ is a set of points formed by equivalence classes of $(n+1)$-tuples
 $P \defas (x_0 : \ldots : x_n)$, $x_i \in k$, where not all $x_i$s are zero, and the equivalence relation $\sim$ is
-defined by $(x_0 : \ldots : x_n) \sim (\lambda x_0 : \ldots : \lambda x_n)$, $\lambda \in k^*$.
+defined by $(x_0 : \ldots : x_n) \sim (\lambda x_0 : \ldots : \lambda x_n)$, $\lambda \in k^*$. In the (usual) case where $n = 2$, we let
+$x \defas x_0$, $y \defas x_1$ and $z \defas x_2$.
 
 \noindent
-$\affi^n(k)$ can be embedded into $\projec^n(k)$ in a natural way as $(x_0, \ldots, x_{n-1}) \mapsto (x_0 : \ldots : x_{n-1} : 1)$.
+The space $\affi^n(k)$ can be embedded into $\projec^n(k)$ in a natural way as $(x_0, \ldots, x_{n-1}) \mapsto (x_0 : \ldots : x_{n-1} : 1)$.
 The set of projective points $(x_0 : \ldots : x_{n-1} : 0)$ is called the \emph{hyperplane at infinity}.
 \end{defi}
 
@@ -67,11 +69,13 @@ We now define projective varieties.
 
 \begin{defi}[Projective variety]
 A \emph{projective variety} in the projective space $\projec^n(k)$ over an algebraically closed field $k$ is the set of common zeros
-of a prime ideal $\mathcal{I} \defas \{f_0, \ldots, f_m\}$ of homogeneous polynomials of $k[x_0,\ldots,x_n]$ (a polynomial is called \emph{homogeneous}
+of a prime ideal $\mathcal{I} \defas \langle f_0, \ldots, f_m \rangle$ of homogeneous polynomials of $k[x_0,\ldots,x_n]$ (a polynomial is called \emph{homogeneous}
 if all its monomials have the same degree).
 \end{defi}
 
-A \emph{projective curve} is a projective variety of dimension one. In practice, we will only consider curves in $\projec^2$ (plane curves),
+A \emph{projective curve} is a projective variety of dimension one\footnote{The dimension $n$ of a variety $V$ is defined by
+the maximal length of the inclusion chain $V = V_0 \supset \ldots \supset V_n \neq \emptyset$, with $V_i$ closed in $V_{i-1}$ (for the \emph{Zariski topology})
+for all $i \in \{1,\ldots,n\}$.}. In practice, we will only consider curves in $\projec^2$ (plane curves),
 which will then be defined by a single homogeneous polynomial $E$.
 
 \paragraph{Remarks.}
@@ -94,7 +98,8 @@ The \emph{function field} $k(\curve)$ of $\curve$ is the quotient field of $k[\c
 
 \begin{defi}[Function field of a projective variety]
 Let $\curve$ be an affine variety in $\projec^n(k)$ defined by the ideal $\mathcal{I}$. Let $F$, $G$ be homogeneous polynomials of equal degrees in $k[x_0, \ldots, x_n]$
-with $G \notin \mathcal{I}$. The \emph{function field} $k(\curve)$ of $\curve$ is the set of \emph{rational functions} $F/G$ modulo $\mathcal{I'} \defas \{F/G~|~ F \in \mathcal{I}\}$.
+with $G \notin \mathcal{I}$. The \emph{function field} $k(\curve)$ of $\curve$ is the set of \emph{rational functions} $F/G$ modulo $\mathcal{I'}$,
+where $\mathcal{I'} = \{F/G~|~ F \in \mathcal{I}\}$.
 
 \noindent
 A rational function $F/G$ is \emph{regular} at $P$, point of $\curve$, if $G(P) \neq 0$.
@@ -148,7 +153,7 @@ $f \in \locring$ or $f^{-1} \in \locring$.
 \end{defi}
 
 We will see shortly that the ability to define valuations at any point is essential
-in the definition of $\funcspace$; this is why we require the curve to be non-singular, as a local ring is a valuation ring iff $P$ is smooth.
+in the definition of our function space $\funcspace$; this is why we require the curve to be non-singular, as a local ring is a valuation ring iff $P$ is smooth.
 
 \medskip
 
@@ -183,7 +188,7 @@ Let $D \in \cdiv(\curve)$. We define $\rrs(D)$, the \emph{space associated with 
 \[
 \rrs(D) = \{f \in k(\curve)^*~|~(f) + D \geq 0\} \cup \{0\}.
 \]
-This forms a vector space; we write $\ell(D)$ its dimension.
+This forms a $k$-vector space; we write $\ell(D)$ its dimension.
 \end{defi}
 
 This is finally the kind of function space we will be using to define AG codes. For a divisor
@@ -191,13 +196,13 @@ $D \defas \sum a_iP_i - \sum b_jP_j$, $a_i, b_j \geq 0$, a simple reformulation 
 which may have poles only in the $P_i$s of order at most $a_i$, and which must have zeros in all the $P_j$s of order
 at least $b_j$.
 
-It can be shown that for any $D$, $\rrs(D)$ is finite-dimensional. In fact, we have the following major theorem from Riemann and Roch, which allows to compute the explicit value $\ell(D)$
-for a given divisor $D$.
+It can be shown that for any $D$, $\rrs(D)$ is finite-dimensional. In fact, this is a consequence of two major theorems first from Riemann and then extended by Roch, which allow in particular to compute the explicit value $\ell(D)$
+for a given divisor $D$~; this is expressed by the following corollary:
 
-\begin{thm}[Riemann-Roch theorem]
+\begin{cor}[Corollary of Riemann and Roch]
 Let $D$ be a divisor on a curve of \emph{genus} $g$, then $\ell(D) \geq \deg(D) + 1 - g$, with equality
 when $\deg(D) > 2g - 2$.
-\end{thm}
+\end{cor}
 
 The formulation of this theorem uses the notion of \emph{genus} of a curve, that we have not defined yet. A possible, purely algebraic definition is precisely to take
 $g(\curve) \defas \max \{\deg(D) - \ell(D) + 1,~D \in \cdiv(\curve)\}$. Although this is not very satisfying, we will not provide a better definition here (and computing
@@ -229,7 +234,7 @@ This can be done by constructing a \emph{non-singular model} $\nscurve$ of $\cur
 and taking as places of $\curve$ the points of $\nscurve$. A useful theorem is that for a projective curve $\curve$, there is a unique (up to isomorphism) non-singular curve
 $\nscurve$ that is birationally equivalent to it\footnote{This means that there are \emph{rational maps} from $\curve$ to $\nscurve$ and vice-versa, that compose to the identity wherever they are
 defined.
-A rational map $\curve \subseteq \projec^m \rightarrow \projec^n$ is an $n+1$-tuple of homogeneous polynomials of degree $m+1$ s.t. the polynomials do not jointly
+A rational map $\curve \subseteq \projec^m \rightarrow \projec^n$ is an $n+1$-tuple of homogeneous polynomials s.t. the polynomials do not jointly
 vanish at any point of the curve.}. Furthermore, the function fields $k(\curve)$ and $k(\nscurve)$ are the same, up to isomorphism, so defining the places of $\curve$ in this
 way is meaningful.
 (We will not address here the problem of computing these non-singular models \emph{per se}.)
@@ -241,7 +246,8 @@ point of $\curve$ has exactly one place centered at it, while finitely many plac
 We conclude by defining curves that are said to be in \emph{special position} (cf. \eg \cite{DBLP:journals/tit/SaintsH95}), which are convenient to use for several reasons.
 
 \begin{defi}[Curve in special position]
-A projective plane curve $\curve$ is in \emph{special position} if:
+A projective plane curve $\curve$\footnote{We recall our notations: a point $P \in \projec^2(k)$ is written $(x : y : z)$, and is
+at infinity iff $z = 0$.} is in \emph{special position} if:
 \begin{enumerate}
 \item it has exactly one point $P_\infty$ at infinity;
 \item there is exactly one place centered at $P_\infty$;
@@ -251,7 +257,7 @@ A projective plane curve $\curve$ is in \emph{special position} if:
 \end{defi}
 
 Curves in special positions are useful as there is a bijection between their places and their points (even if they are potentially singular); thus they can always be considered
-``as if smooth'' w.r.t. to the discussions of this section. Additionally, if one considers the space $\rrs(aP_\infty)$, $a > 0$ of functions having poles only at the point at infinity,
+``as if smooth'' w.r.t. to the discussions of this section. Additionally, if one considers the space $\rrs(aP_\infty)$, $a > 0$, of functions having poles only at the point at infinity,
 its elements can be mapped to polynomials of the coordinate ring of $\curve_A$. In other words, one can perform all the computations in $\rrs(aP_\infty)$ with the affine curve
 only (we discuss how to explicitly compute bases for such spaces next). The main curve used in this chapter is a singular curve in special position.
 
@@ -320,11 +326,11 @@ We are now ready to define the class of AG codes that we will use in the remaind
 
 Let $\curve$ be a smooth projective curve defined by an equation in $\Fq$ such that the set of its rational places $\curve(\Fq)$ is non-empty.
 Let $D \in \cdiv(\curve)$ be a divisor on $\curve$ and $\points \defas \langle P_0, \ldots, P_{n-1}\rangle \subset \curve(\Fq)$ be $n$ places not in the support of $D$.
-This defines a code $\evcode(\rrs(D), \points)$.
+This defines a code $\evcode(\rrs(D), \points)$ through the evaluation map $\evmap_\points(\fun) \defas (\fun(P_0),\ldots,\fun(P_{n-1}))$, $\fun \in \rrs(D)$.
 
 For the definition to be valid, the evaluation map from $\rrs(D)$ to $\points$ has to be injective (\ie have only $\{0\}$ as kernel).
 This condition can easily be expressed in terms of divisors; if we call $S \defas P_0 + \ldots + P_{n-1}$ the divisor of the
-evaluation support, we need $\rrs(D - S)$ (\ie functions of $\rrs(D)$ with zeros in all of the $P_i$s, \ie the kernel of $\evmap$) to be only the zero function.
+evaluation support, we need $\rrs(D - S)$ (\ie functions of $\rrs(D)$ with zeros in all of the $P_i$s, \ie the kernel of $\evmap$) to be reduced to the zero function.
 One can see that this will always be the case as long as $\deg(D) < \deg(S)$.
 
 \medskip
@@ -344,7 +350,7 @@ We give two concrete examples of AG codes, the second of which being the code us
 
 \begin{example}[An AG code from a curve of genus 1]
 \label{ex:genus1}
-Let $\curve$ be the plane projective curve of genus 1 of equation $x^2z + xz^2 = y^3 + yz^2$. It is smooth, in special position,
+Let $\curve$ be the plane projective curve of genus 1 of equation $x^2z + xz^2 = y^3 + yz^2$ define over $\Fst$. It is smooth, in special position,
 with a unique point at infinity $P_\infty \defas [1:0:0]$, and has 24 $\Fst$-rational affine points. The pole order
 of $x/z$ and $y/z$ at $P_\infty$ is 3 and 2 respectively (as computed in \autoref{ex:order_gen1}).
 
@@ -358,7 +364,7 @@ has differential (and in fact also linear) branch number at least 12 (in fact ex
 
 \begin{example}[An AG code from a curve of genus 2]
 \label{ex:genus2}
-Let $\curve$ be the plane projective curve of genus 2 of equation $x^5 = y^2z^3 + yz^4$. It is singular, in special position,
+Let $\curve$ be the plane projective curve of genus 2 of equation $x^5 = y^2z^3 + yz^4$ defined over $\Fst$. It is singular, in special position,
 with a unique point at infinity $P_\infty \defas [0:1:0]$ at which a unique place is centered. It has 32 $\Fst$-rational affine points. The pole order
 of $x/z$ and $y/z$ at $P_\infty$ is 2 and 5 respectively (as computed in \autoref{ex:order_gen2}).
 
