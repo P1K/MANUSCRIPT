@@ -1,0 +1,47 @@
+\section{Introduction}
+Since the late 1990's and the end of the \aes competition, the academic community and the industry have been provided with excellent block ciphers.
+In most cases where a cipher is needed, \aes \cite{rijndael} can readily be used and there is currently little need for a replacement.
+Consequently, the symmetric cryptographic community shifted focus to \eg the wider picture of \emph{authenticated encryption} through
+the \textsc{Caesar} competition, or to more specific applications of block ciphers. In the latter case, an important topic is
+the design of ``lightweight'' block ciphers intended to be implemented on low-cost, resource-constraint devices. An early
+successful example following this trend is the block cipher \present \cite{present}, which can be implemented in small hardware circuits.
+Most lightweight algorithms similarly target one (or a few) platform(s) on which they are expected to perform particularly well;
+good performance in other cases are however not usually expected and lightweight ciphers are in general not very versatile.
+Typical platforms of interest include hardware circuits and 8-bit to 32-bit microcontrollers.
+Recently, NIST released a draft report on lightweight cryptography with the objective of creating a portfolio of lightweight primitives
+through an open process~\cite{NistLightDraft}. The topic of lightweight cryptography is thus ever more timely. 
+
+In this work, we design a conceptually simple block cipher targeting efficient \emph{light} implementations on 8-bit microcontrollers\footnote{By \emph{light} implementations,
+we mean in particular that the size of the code is small, typically of the order of 200 bytes. If more ressources are available, the best current block cipher is
+probably the \aes (see \eg \cite{DBLP:journals/iacr/BeaulieuSSTWW15}).}.
+%, which is also expected to achieve reasonable performance in hardware.
+The chief academic proposal to date for this scenario is the \pride block cipher\footnote{Notable
+``non-academic'' ciphers for the same scenario are the ``NSA ciphers'' \simon and \speck \cite{NSAciph}.},
+that was presented at CRYPTO~2014~\cite{pride}. Our block cipher is built around \littlunOne, a compact 8-bit S-box with branch number 3. This allows
+to define a round function similar to a scaled-up variant of \present, composing the S-box application with a simple bit permutation\footnote{As a bit permutation
+obviously does not increase the number of active bits, an important part of the diffusion in such a cipher is played by the S-box. The typical measure of the quality
+of the diffusion of an S-box is its ``branch number'' which plays a role similar to the minimum distance of the linear codes used in \aes-like designs.}.
+This offers a trade-off between hardware and light software implementations: \littlunOne is more expensive in hardware than (two applications
+of) the S-box of \present, but the bit permutation is simple to implement with 8-bit rotations. Owing to Golding, we name our
+block cipher ``\fly''.
+
+Excluding on-the-fly key expansion, the round function of \fly costs four instructions less to implement than \pride's on AVR. Using the
+good branch number of \littlunOne, we can show that with a similar number of rounds, \fly is more resistant than \pride
+to statistical (differential and linear) attacks. This is all the more relevant as the security margin of \pride seems to be quite
+thin~\cite{prideattack}. Taking the key-schedule into account, one round of \fly costs eight more instructions
+than one round of \pride. However, unlike \pride, we do not use an FX construction for the key-schedule and thus
+the generic security of \fly does not decrease with the amount of data available
+to the adversary (Dinur also showed how the FX construction can lead to more efficient time-memory-data trade-offs~\cite{itaitmd}).
+
+As implementations on resource-constraint devices are more likely to be vulnerable to side-channel attacks, one should also consider
+the additional cost of protection against, say, differential power analysis when evaluating schemes that target such platforms.
+In that respect, the small number of gates
+necessary to implement the \littlunOne S-box, as well as its simple expression in terms of light 4-bit S-boxes allows one to produce
+masked implementations of \fly with limited overhead.
+
+\paragraph{Related work.} The block cipher literature is so numerous that most new proposal will bear some similarity with past
+designs. In that respect, apart from \present, \fly is quite similar to \rectangle \cite{rectangle}, which also combines a \serpent-like
+bitsliced application of an S-box \cite{serpent} with a rotation-implemented bit permutation. However, the S-box in \rectangle is on 4 bits, it does
+not have a branch number of 3 and the rotations are on 16-bit words. The construction of the \littlun S-box uses
+the Lai-Massey structure from the \idea block cipher~\cite{idea}; this structure was already used to build the second S-box
+of the \whirlpool hash function \cite{whirlpool} and the S-box of the block cipher \fox \cite{fox}.

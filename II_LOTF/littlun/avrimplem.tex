@@ -1,0 +1,122 @@
+\section{AVR implementation of the \fly round function}
+\label{sec:mega}
+
+We give pseudo AVR assembly code for the S-box layer, the permutation
+and on-the-fly computation of the key-schedule of \fly.
+All the state, key and temporary variables fit in the 32 registers of
+an ATtiny or ATmega.
+
+\begin{figure}[ht]
+\begin{minted}[breaklines]{scheme}
+; input/output in s0,...,s7 (with MSBs in s0)
+; temporary values held in t0,...,t4
+; top XOR
+movw t0, s0 ; moves t1:s0 <- s1:s0
+movw t2, s2
+eor t0, s4
+eor t1, s5
+eor t2, s6
+eor t3, s7
+; middle S-box
+mov t4, t1
+or  t1, t0
+eor t1, t2
+and t2, t4
+eor t2, t3
+and t3, t1
+eor t3, t0
+or  t0, t2
+eor t0, t4
+; bottom XOR
+eor s0, t0
+eor s1, t1
+eor s2, t2
+eor s3, t3
+eor s4, t0
+eor s5, t1
+eor s6, t2
+eor s7, t3
+; bottom S-boxes
+mov t0, s1
+or  s1, s0
+eor s1, s2
+and s2, t0
+eor s2, s3
+and s3, s1
+eor s3, s0
+or  s0, s2
+eor s0, t0
+
+mov t0, s5
+or  s5, s4
+eor s5, s6
+and s6, t0
+eor s6, s7
+and s7, s5
+eor s7, s4
+or  s4, s6
+eor s4, t0
+\end{minted}
+\caption{The \littlunOne S-box on ATmega, using 41 instructions.\label{fig:avrS}}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{minted}[breaklines]{scheme}
+; input/output in s0,...,s7
+rol s1
+rol s2
+rol s2
+swap s3
+ror s3
+swap s4
+swap s5
+rol s5
+ror s6
+ror s6
+ror s7
+\end{minted}
+\caption{The $\rot$ permutation on ATmega/ATtiny, using 11 instructions.\label{fig:avrP}}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{minted}[breaklines]{scheme}
+; key input in k0,...,k15
+; cipher state in s0,...,s7
+; round constant in c0
+; temporary register in t0
+
+; add the current round key & round constant to the state
+eor s0, k0
+eor s1, k1
+eor s2, k2
+eor s3, k3
+eor s4, k4
+eor s5, k5
+eor s6, k6
+eor s7, k7
+
+eor s0, c0
+eor s1, 255
+
+; update k0,...,k7 to the next round key
+eor k0, k8
+eor k1, k9
+eor k2, k10
+eor k3, k11
+eor k4, k12
+eor k5, k13
+eor k6, k14
+eor k7, k15
+
+; update c0 to the next round constant
+mov  t0, c0
+andi t0, 1
+dec  t0
+andi t0, 177
+lsr  c0
+eor  c0, t0
+\end{minted}
+\caption{Key addition, and the $\ksOne$ key-schedule on ATmega/ATtiny, using 24 instructions.\label{fig:avrK}}
+\end{figure}
+
+\FloatBarrier

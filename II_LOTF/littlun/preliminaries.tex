@@ -1,0 +1,63 @@
+\section{Preliminaries}
+
+We start by defining the main notions that will be used in evaluating the cryptographic properties of our construction.
+Although we will mostly consider S-boxes as defined over binary strings, we may see an $n$-bit S-box as a mapping
+$\ftwo^n \rightarrow \ftwo^n$ whenever convenient.
+
+
+\begin{defi}[Differential uniformity of an S-box]
+Let $\sbo$ be an $n$-bit S-box. We define its
+\emph{difference distribution table} (or DDT) as the function $\diff_{\sbo}$ defined extensively by:
+\[
+\diff_{\sbo}(a,b) \defas \#\{x \in \ftwo^n | \sbo(x) + \sbo(x + a) = b\}.
+\]
+The \emph{differential uniformity} $\LdiffU$ of $\sbo$ is defined as:
+\[
+\max_{(a,b) \neq (0,0)} \diff_{\sbo}(a,b).
+\]
+\end{defi}
+Put another way, an n-bit S-box with differential uniformity $\LdiffU$ has a maximal differential probability
+of $\LdiffU/2^n$ over its inputs.
+
+
+\begin{defi}[Linearity of an S-box]
+Let $\sbo$ be an $n$-bit S-box. We define its
+\emph{linear approximation table} (or LAT) as the function $\lin_{\sbo}$ defined extensively by:
+\[
+\lin_{\sbo}(a,b) \defas \sum_{x \in \ftwo^n} (-1)^{\langle b,\sbo(x)\rangle + \langle a, x\rangle}.
+\]
+The \emph{linearity} $\linU$ of $\sbo$ is defined as:
+\[
+\max_{(a,b) \neq (0,0)} |\lin_{\sbo}(a,b)|.
+\]
+\end{defi}
+Roughly speaking, the linearity measures the maximum (absolute) difference between how many times a (non-trivial) linear approximation
+takes the value 1 and how many times it takes the value 0. It is therefore twice the difference between $2^{n-1}$ (for an n-bit S-box)
+and how many times either value is taken.
+In particular, if we define the \emph{bias} $b$ of a probability $p$ as $|p - 1/2|$, it means that
+the bias of any linear approximation of an n-bit S-box of linearity $\linU$ is upper-bounded by $(\linU/2)/2^n$.
+
+\begin{defi}[Differential branch number of an S-box]
+The \emph{differential branch number} of an S-box $\sbo$ is:
+\[
+\min_{\{(a,b) \neq (0,0) | \diff_{\sbo}(a,b) \neq 0\}} \wt(a) + \wt(b),
+\]
+where $\wt(x)$ is the Hamming weight of $x$. 
+\end{defi}
+
+\begin{defi}[Linear branch number of an S-box]
+The \emph{linear branch number} of an S-box $\sbo$ is:
+\[
+\min_{\{(a,b) \neq (0,0) | \lin_{\sbo}(a,b) \neq 0\}} \wt(a) + \wt(b).
+\]
+
+\end{defi}
+
+\begin{defi}[Algebraic normal form]
+Let $f : \ftwo^n \rightarrow \ftwo$ be an $n$-bit Boolean function, its \emph{algebraic normal form}
+(or ANF) is defined as the polynomial $g \in \ftwo[x_0,x_1,\ldots x_{n-1}]/<x_i^2-x_i>_{i<n}$
+such that for all $x \in \ftwo^n$, $f(x) = g(x[0],\ldots,\allowbreak x[n-1])$.
+Similarly, the ANF of an $n$-bit S-box $\sbo$ 
+is the sequence of the ANFs of its $n$ constituent Boolean
+functions $\langle\sbo(\cdot),e_i\rangle$ (with $(e_i)$ the canonical basis of $\ftwo^n$).
+\end{defi}

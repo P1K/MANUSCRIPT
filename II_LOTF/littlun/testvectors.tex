@@ -1,0 +1,60 @@
+\section{Test vectors for \fly}
+%\color{red}TO UPDATE!!
+
+All numbers are given in big endian (\ie, those are arrays of bytes, with the byte of lowest address on the left).
+
+\medskip
+
+\noindent
+\verb+k0: 0x0000000000000000 k1: 0x0000000000000000+
+
+\noindent
+\verb+p : 0x0000000000000000+
+
+\noindent
+\verb+FLY(k0||k1,p)            : 0x40A942D3FB302724+
+ 
+\medskip
+
+\noindent
+\verb+k0: 0x0001020304050607 k1: 0x08090A0B0C0D0E0F+
+
+\noindent
+\verb+p : 0xF7E6D5C4B3A29180+
+
+\noindent
+\verb+FLY(k0||k1,p)            : 0x0D3FE2BF9650AE34+
+
+\medskip
+
+\noindent
+\verb+k0: 0x0000000000000000 k1: 0x0000000000000000+
+
+\noindent
+\verb+p : 0x0000000000000000+
+
+\noindent
+\verb+FLY(0,k0)/12         	   : 0x228F5762975E5B43+
+
+\noindent
+\verb+FLY(0,k1)/12         	   : 0x228F5762975E5B43+
+
+\noindent
+\verb+FLY_RK(k0||k1,p)         : 0x7C5B37DC56F4829A+
+
+\medskip
+
+\noindent
+\verb+k0: 0x0001020304050607 k1: 0x08090A0B0C0D0E0F+
+
+\noindent
+\verb+p : 0xF7E6D5C4B3A29180+
+
+\noindent
+\verb+FLY(0,k0)/12         	   : 0x68F5FC8290A95219+
+
+\noindent
+\verb+FLY(0,k1)/12         	   : 0x58F242AC38C00E6B+
+
+\noindent
+\verb+FLY_RK(k0||k1,p)         : 0x8EE2EA8B0A63DE6D+

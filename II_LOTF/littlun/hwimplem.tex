@@ -1,0 +1,7 @@
+\section{Hardware implementation of \fly}
+\label{implem:hw}
+\fly was not designed to be particularly efficient in hardware, and there are clearly better alternatives in that setting. Thus we did not implement \fly in hardware, but it might be informative to very roughly estimate the cost (in GE) of such
+an implementation. This can be done by looking at the cost of \present, given the similarity of their structures.
+A round-based ASIC implementation of \present-128 can be done for 1884~GE \cite{poschmann}, of which $27\times16$ are dedicated to implementing the 16 S-boxes. If we make the assumption that the key-schedule of \fly does not use significantly more area
+than the one of \present-128, we can estimate that a similar round-based implementation of \fly would cost in the area of $1884 - 27\times16 + 80\times8 = 2092$~GE, meaning that the overhead is about
+11\,\%.

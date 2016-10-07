@@ -1,0 +1,197 @@
+\section{C masked implementation of \fly}
+\label{sec:mask}
+
+We give here the code of a masked version of the \littlunOne S-box and of the \fly block cipher in \autoref{ms} and \autoref{mf} respectively. These use primitive operations defined in \autoref{mp}.
+
+\begin{minted}[breaklines]{c}
+
+typedef uint8_t bint8_t[NUM_SHARES];
+
+#define NOT(x)      (~x)
+#define XOR(x,y)    (x ^ y)
+#define AND(x,y)    (x & y)
+
+void bint8_not(bint8_t r, bint8_t a) {
+  r[0] = NOT(a[0]);
+  // This can be removed if we know that a and r are equal
+  memcpy(r+1, a+1, NUM_SHARES - 1);
+  return;
+}
+
+void bint8_xor(bint8_t r, bint8_t a, bint8_t b) {
+  int i;
+  for (i = 0; i < NUM_SHARES; i++) r[i] = XOR(a[i], b[i]);
+  return;
+}
+
+void bint8_xor_pub(bint8_t r, bint8_t a, uint8_t b) {
+  r[0] = XOR(a[0], b);
+  memcpy(r+1, a+1, NUM_SHARES - 1);
+  return;
+}
+
+void bint8_rotl(bint8_t r, bint8_t a, uint8_t b) {
+  int i;
+  for (i = 0; i < NUM_SHARES; i++) r[i] = ROTL8(a[i], b);
+  return;
+}
+
+void bint8_refresh(bint8_t r, bint8_t a) {
+  int i, j;
+  uint8_t aux;
+
+
+  memcpy(r,a,NUM_SHARES);   //for (i = 0; i < NUM_SHARES; i++) r[i] = a[i];
+
+  for (i = 0; i < NUM_SHARES; i++) {
+    for (j = i + 1; j < NUM_SHARES; j++) {
+      aux = uint8_rand();
+      r[i] = XOR(r[i], aux);
+      r[j] = XOR(r[j], aux);
+    }
+  }
+
+  return;
+}
+
+void bint8_and(bint8_t rc, bint8_t a,bint8_t b) {
+  int i, j;
+  uint8_t zij, zji, tmp;
+  bint8_t r;
+
+  // Diagonal
+  for (i = 0; i < NUM_SHARES; i++) {
+    r[i] = AND(a[i],b[i]);
+  }
+
+  // Triangles + Row-Wise Sums
+  for (i = 0; i < NUM_SHARES; i++) {
+    for (j = i + 1; j < NUM_SHARES; j++) {
+      zij  = uint8_rand();
+      zji  = AND(a[i],b[j]);
+      zji  = XOR(zij,zji);
+      tmp  = AND(a[j],b[i]);
+      zji  = XOR(zji,tmp);
+      r[i] = XOR(r[i],zij);
+      r[j] = XOR(r[j],zji);
+    }
+  }
+
+  memcpy(rc,r,NUM_SHARES);
+
+  return;
+}
+\end{minted}
+\begin{figure}[ht]
+\caption{Basic masked operations\label{mp}.} 
+\end{figure}
+
+
+\begin{minted}[breaklines]{c}
+
+void or8 (bint8_t r, bint8_t x, bint8_t y) {
+  bint8_t aux, x0, y0;
+
+  bint8_not(x0, x);
+  bint8_not(y0, y);
+  bint8_and(aux, x0, y0);
+  bint8_not(r, aux);
+  return;
+}
+
+void s8 (bint8_t x[8]) {
+  bint8_t t, a, b, c, d, aux;
+
+  bint8_xor(a, x[0], x[4]);
+  bint8_xor(b, x[1], x[5]);
+  bint8_xor(c, x[2], x[6]);
+  bint8_xor(d, x[3], x[7]);
+  bint8_copy(t, b);
+  bint8_refresh(aux, a);
+  or8(b, b, aux);
+  bint8_xor(b, b, c);
+  bint8_refresh(aux, t);
+  bint8_and(c, c, aux);
+  bint8_xor(c, c, d);
+  bint8_refresh(aux, b);
+  bint8_and(d, d, aux);
+  bint8_xor(d, d, a);
+  bint8_refresh(aux, c);
+  or8(a, a, aux);
+  bint8_xor(a, a, t);
+  bint8_xor(x[0], x[0], a);
+  bint8_xor(x[1], x[1], b);
+  bint8_xor(x[2], x[2], c);
+  bint8_xor(x[3], x[3], d);
+  bint8_xor(x[4], x[4], a);
+  bint8_xor(x[5], x[5], b);
+  bint8_xor(x[6], x[6], c);
+  bint8_xor(x[7], x[7], d);
+  bint8_copy(t, x[1]);
+  bint8_refresh(aux, x[0]);
+  or8(x[1], x[1], aux);
+  bint8_xor(x[1], x[1], x[2]);
+  bint8_refresh(aux, t);
+  bint8_and(x[2], x[2], aux);
+  bint8_xor(x[2], x[2], x[3]);
+  bint8_refresh(aux, x[1]);
+  bint8_and(x[3], x[3], aux);
+  bint8_xor(x[3], x[3], x[0]);
+  bint8_refresh(aux, x[2]);
+  or8(x[0], x[0], aux);
+  bint8_xor(x[0], x[0], t);
+  bint8_copy(t, x[5]);
+  bint8_refresh(aux, x[4]);
+  or8(x[5], x[5], aux);
+  bint8_xor(x[5], x[5], x[6]);
+  bint8_refresh(aux, t);
+  bint8_and(x[6], x[6], aux);
+  bint8_xor(x[6], x[6], x[7]);
+  bint8_refresh(aux, x[5]);
+  bint8_and(x[7], x[7], aux);
+  bint8_xor(x[7], x[7], x[4]);
+  bint8_refresh(aux, x[6]);
+  or8(x[4], x[4], aux);
+  bint8_xor(x[4], x[4], t);
+  return;
+}
+\end{minted}
+\begin{figure}[ht]
+\caption{\C masked implementation of the \littlunOne S-box\label{ms}.} 
+\end{figure}
+
+\begin{minted}[breaklines]{c}
+void fly (bint8_t x[8], bint8_t k[16]) {
+  uint8_t rcon, t, i, j, l;
+
+  rcon = 0;
+  for(i = 0; i < 20; i++) {
+    for(j = 0; j < 8; j++) {
+      bint8_xor(x[j], x[j], k[j]);
+    }
+    bint8_xor_pub(x[0], x[0], rcon);
+    bint8_xor_pub(x[1], x[1], 0xFF);
+    s8(x);
+    for(l = 1; l < 8; l++) {
+      bint8_rotl(x[l], x[l], l);
+    }
+    t = rcon & 1;
+    t = t - 1;
+    t = t & 177;
+    rcon = rcon >> 1;
+    rcon = rcon ^ t;
+    for(j = 0; j < 8; j++) {
+      bint8_xor(k[j], k[j], k[8 + j]);
+    }
+  }
+  for(j = 0; j < 8; j++) {
+    bint8_xor(x[j], x[j], k[j]);
+  }
+  bint8_xor_pub(x[0], x[0], rcon);
+  bint8_xor_pub(x[1], x[1], 0xFF);
+  return;
+}
+\end{minted}
+\begin{figure}[ht]
+\caption{\C masked implementation of \fly\label{mf}.}
+\end{figure}
