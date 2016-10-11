@@ -171,7 +171,7 @@ Dans la grande majorité des cas, $+$ est l'addition sur $\mathbf{F}_2^n$,
 c'est à dire le OU exclusif bit à bit (XOR)~; on utilisera alors souvent la notation alternative $\oplus$ pour cette loi.
 Parfois, $+$ est l'addition dans $\mathbf{Z}/2^n\mathbf{Z}$, et d'autres fois les différences peuvent être considérées suivant plusieurs lois à la fois.
 Une \emph{paire différentielle} pour la différence $(\Delta,\delta)$ et pour une certaine clef $k$
-est une paire ordonnée de textes clairs et de leurs chiffrés correspondant $((p,c), (p',c'))$ avec 
+est une paire ordonnée de textes clairs et de leurs chiffrés correspondant $\langle (p,c), (p',c')\rangle$ avec 
 $p$, $c \defas \E(k,p)$, $p'$, $c' \defas \E(k,p')$, telle que $p - p' = \Delta$, $c - c' = \delta$. Quand la différence est sur $\mathbf{F}_2^n$,
 la soustraction coïncide avec l'addition et la paire peut être non ordonnée. Nous nous plaçons dans un tel cas pour le reste de cette description.
 
@@ -693,7 +693,7 @@ variable. Une même permutation ou fonction peut aussi être utilisée dans diff
 
 Bertoni \etal ont aussi montré en 2008 que de la même façon que \merkdam tuyau-large, la construction éponge réalisée avec une permutation ou une fonction aléatoire est
 $\varepsilon$-indifférentiable d'un oracle aléatoire de sortie de même taille,
-avec $\varepsilon \approx 2^{-c}q^2$~\cite{DBLP:conf/eurocrypt/BertoniDPA08}. Pour atteindre les propriétés de sécurité classiques, il est alors
+avec $\varepsilon \approx 2^{-c}q^2$ \cite{DBLP:conf/eurocrypt/BertoniDPA08}. Pour atteindre les propriétés de sécurité classiques, il est alors
 optimal de prendre $c = 2n$.
 
 Un des meilleurs exemples de fonction éponge est 
