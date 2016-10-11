@@ -443,19 +443,19 @@ La fonction de hachage
 $\hash$ associée à $\compress$ est construite en étendant le domaine de la seconde à $\{0,1\}^*$ (ou plutôt $\{0,1\}^N$ pour un grand entier $N$, la plupart du temps).
 Ceci est fait en spécifiant une \emph{valeur initiale} \iv pour la première valeur de chaînage
 $\chain_0$, qui est une constante pour la fonction de hachage, et en définissant l'image d'un message
-$\mess$ par $\hash$ par la procédure suivante~:
+$m$ par $\hash$ par la procédure suivante~:
 \begin{enumerate}
-\item $\mess$ est étendu
+\item $m$ est étendu
 à une taille multiple de la \emph{taille de bloc} $b$. Plusieurs méthodes peuvent être employées à ces fins, mais il est évidemment important
 qu'elles ne produisent pas de collisions triviales. De plus, la plupart du temps, la taille (généralement en bits) du message non étendu
-$\mess$ est incluse dans le message étendu, d'une façon ou d'une autre. Ce procédé s'appelle «\,renforcement \merkdam\,» et est essentiel
+$m$ est incluse dans le message étendu, d'une façon ou d'une autre. Ce procédé s'appelle «\,renforcement \merkdam\,» et est essentiel
 à la sécurité de beaucoup d'instantiations courantes de la construction\footnote{Un problème potentiel pouvant
 apparaître en l'absence d'un tel renforcement est qu'il serait possible d'utiliser des points fixes pour la fonction de compression pour
 construire des collisions~; de tels points fixes sont faciles à trouver pour certaines fonctions de compression populaires, comme celles de type
 \emph{Davies-Meyer} décrites dans la section~\ref{sec:fmdsha}.}.
 \item Le message étendu est alors itérativement traité par la fonction de compression~: soit
 $\messblock_0||\messblock_1||\ldots||\messblock_r$ un tel message (supposant qu'il est constitué de
-$r+1$ blocs), on définit $\chain_{i+1} \defas \compress(\chain_i, \messblock_i)$. L'empreinte $\hash(\mess)$ est égale à la dernière valeur de chaînage
+$r+1$ blocs), on définit $\chain_{i+1} \defas \compress(\chain_i, \messblock_i)$. L'empreinte $\hash(m)$ est égale à la dernière valeur de chaînage
 $\chain_{r+1}$.
 \end{enumerate}
 
@@ -484,15 +484,15 @@ d'un message est ajoutée à la fin du message étendu qu'il définit, et que ce
 \end{prop}
 \begin{proof}
 On suppose qu'on a
-$\mess$, $\mess' \neq \mess$ t.q. $\hash(\mess) = \hash(\mess')$.
+$m$, $m' \neq m$ t.q. $\hash(m) = \hash(m')$.
 
-Cas 1: $\mess$ et $\mess'$ ont des longueurs différentes.
+Cas 1: $m$ et $m'$ ont des longueurs différentes.
 Les derniers blocs de message $\messblock_r$
 $\messblock'_{r'}$ incluent tous les deux la longueur de leurs messages étendus respectifs, qui sont différentes.
 Ainsi,
 $(\chain_r,\messblock_r)$ et $(\chain'_{r'}, \messblock'_{r'})$ sont distincts et collisionnent à travers $\compress$.
 
-Cas 2: $\mess$ et $\mess'$
+Cas 2: $m$ et $m'$
 sont de la même longueur.
 On suppose sans perte de généralité que les deux messages étendus font
 $r + 1$ blocs.
@@ -516,7 +516,7 @@ $\compress$.
 \end{prop}
 \begin{proof}
 Soit 
-$\mess$ un message étendu sur  $r+1$ blocs t.q. $\hash(\mess) = t$, avec $t$ la cible de préimage, alors
+$m$ un message étendu sur  $r+1$ blocs t.q. $\hash(m) = t$, avec $t$ la cible de préimage, alors
 $\compress(\chain_r, \messblock_r) = t$, et $(\chain_r, \messblock_r)$ est une préimage valide pour $\compress$.
 \end{proof}
 
@@ -549,7 +549,7 @@ Les fonctions de type \merkdam présentent certains comportements non idéaux da
 d'être plus efficaces que pour un oracle aléatoire.
 
 Un bon exemple de tels calculs correspond au concept de 
-\emph{multicollision}, qui consiste à chercher $r > 2$ messages $\mess_{0},\ldots,\mess_{r-1}$ dont les images par $\hash$
+\emph{multicollision}, qui consiste à chercher $r > 2$ messages $m_{0},\ldots,m_{r-1}$ dont les images par $\hash$
 sont toutes égales.
 La complexité générique (pour un oracle aléatoire, notamment) de ce problème est
 $\bigo(2^{n\times (r-1)/r})$ appels à $\hash$ pour une fonction sur $n$ bits, mais
@@ -558,12 +558,12 @@ des $(2^r)$-multicollisions en temps $\bigo(r\times 2^{n/2})$ pour les fonctions
 L'idée de base utilisée dans cette attaque exploite le fait que des collisions pour une fonction \merkdam $\hash$ peuvent être chaînées
 ensemble pour mener à un nombre exponentiellement grand de messages distincts ayant tous la même empreinte.
 Ceci peut se voir avec le petit exemple suivant~: supposons qu'un attaquant ait trouvé deux messages distincts
-de même longueur $\mess_0$ et $\mess'_0$ formant une collision~; ceux-ci peuvent être trouvés génériquement
+de même longueur $m_0$ et $m'_0$ formant une collision~; ceux-ci peuvent être trouvés génériquement
 pour un coût de
 $2^{n/2}$. On peut ensuite chercher une seconde collision, cette fois pour la fonction $\widetilde \hash$ obtenue en remplaçant la valeur de chaînage initiale
-$\chain_0$ par $\hash(\mess_0) = \hash(\mess'_0)$, ce qui peut encore être fait pour un coût $2^{n/2}$, résultant en $\mess_1$ et $\mess'_1$.
+$\chain_0$ par $\hash(m_0) = \hash(m'_0)$, ce qui peut encore être fait pour un coût $2^{n/2}$, résultant en $m_1$ et $m'_1$.
 Alors, grâce à la propriété de chaînage de la construction \merkdam, on a trouvé quatre messages ayant tous la même empreinte~:
-$\mess_0||\mess_1$, $\mess'_0||\mess_1$, $\mess_0||\mess'_1$, $\mess'_0||\mess'_1$. 
+$m_0||m_1$, $m'_0||m_1$, $m_0||m'_1$, $m'_0||m'_1$. 
 Il est facile de voir que cette procédure se généralise à des messages plus longs, ce qui donne la complexité mentionnée égale à
 $\bigo(r \times 2^{n/2})$.
 On peut observer que la faiblesse de la construction qui est exploitée ici est le fait qu'une collision
@@ -631,9 +631,9 @@ de compression de \shaone sont faits de cinq et seize mots de 32 bits respective
 En 2003, Saarinen a montré que des \emph{paires glissées} peuvent être trouvées pour cette fonction de compression pour un coût
 équivalent à $2^{32}$ appels~\cite{DBLP:conf/fse/Saarinen03}.
 De telles paires consistent en deux
-\ivs $\state_{0,\ldots,4}$, $\state'_{0,\ldots,4}$ et messages $\mess_{0,\ldots,15}$,
-$\mess'_{0,\ldots,15}$ avec $\state'_i = \state_{i-1}$ et $\mess'_i = \mess_{i-1}$\footnote{Nous sautons ici les détails de comment déterminer les valeurs de départ
-$\state'_0$ et $\mess'_0$.}, tels que la paire des sorties de la fonction appelée sur ces entrées possède aussi cette propriété.
+\ivs $\state_{0,\ldots,4}$, $\state'_{0,\ldots,4}$ et messages $m_{0,\ldots,15}$,
+$m'_{0,\ldots,15}$ avec $\state'_i = \state_{i-1}$ et $m'_i = m_{i-1}$\footnote{Nous sautons ici les détails de comment déterminer les valeurs de départ
+$\state'_0$ et $m'_0$.}, tels que la paire des sorties de la fonction appelée sur ces entrées possède aussi cette propriété.
 Bien qu'il n'est pas attendu d'une fonction aléatoire qu'elle possède une telle propriété, il n'est pas clair comment celle-ci peut être utilisée pour monter
 une attaque sur une des notions de sécurité principales et secondaires définies ci-dessus.
 
@@ -679,11 +679,11 @@ comme primitive, mas une fonction de domaine et codomaine identique. Habituellem
 La construction en elle-même est simple. Supposons qu'on souhaite construire une fonction sur $n$ bits basée sur une permutation $\perm$ sur $b$ bits.
 On définit le \emph{taux} $r$ et la \emph{capacité} $c$ comme deux entiers tels que que $b = r + c$.
 Ensuite, hacher le message
-$\mess$ consiste à
+$m$ consiste à
 l'étendre à une taille multiple de $r$ et à le traiter itérativement en deux phases.
 La phase d'\emph{absorption} calcule une valeur pour l'état interne
 $\freeiv \defas \perm(\perm(\ldots\perm(\messblock_0||0^c)\oplus\messblock_1||0^c)\ldots)$. La phase de \emph{compression} produit ensuite une sortie sur $n$ bits définie par
-$\hash(\mess) \defas \lfloor\freeiv\rfloor_r||\lfloor\perm(\freeiv)\rfloor_r||\ldots||\lfloor\perm^{n \div r}(\freeiv)\rfloor_{n \mod r}$.
+$\hash(m) \defas \lfloor\freeiv\rfloor_r||\lfloor\perm(\freeiv)\rfloor_r||\ldots||\lfloor\perm^{n \div r}(\freeiv)\rfloor_{n \mod r}$.
 
 Une caractéristique notable des constructions éponges à part le fait qu'elles n'utilisent pas de fonction de compression est que la taille de sortie d'une instance
 est naturellement décorrélée de la taille de sa fonction constitutrice. Ainsi, cette construction permet facilement de construire des fonctions de hachage à

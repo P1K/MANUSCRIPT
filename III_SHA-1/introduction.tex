@@ -99,16 +99,16 @@ The construction works as following. A compression function $\compress : \{0,1\}
 takes two inputs: a \emph{chaining value} $\chain$ and a \emph{message block} $\messblock$, and produces another chaining value as output.
 The hash function $\hash$ associated with $\compress$ is built by extending the domain of the latter to $\{0,1\}^*$ (or rather $\{0,1\}^N$ for a large $N$, most of the time).
 This is done by specifying an \emph{initial value} \iv for the first chaining value $\chain_0$, which is a constant for the hash function, and by defining the image
-of a message $\mess$ through $\hash$ by the following process:
+of a message $m$ through $\hash$ by the following process:
 \begin{enumerate}
-\item $\mess$ is padded to a size multiple of the message \emph{block size} $b$. Various padding rules may be employed, but it is obviously important that they should not
-introduce trivial collisions. Also, most of the time, the size (usually in bits) of the non-padded message $\mess$ is included in the padding in one way or the other.
+\item $m$ is padded to a size multiple of the message \emph{block size} $b$. Various padding rules may be employed, but it is obviously important that they should not
+introduce trivial collisions. Also, most of the time, the size (usually in bits) of the non-padded message $m$ is included in the padding in one way or the other.
 This is usually called \merkdam-strengthening, and it is essential to make many of the common instantiations of the framework secure\footnote{One issue that
 could arise in the absence of such strengthening is that fixed-points for the compression function could be used to produce collisions; such fixed-points
 are easy to build for some popular compression function constructions (including the \emph{Davies-Meyer} construction
 of the \mdsha family described in \autoref{sec:mdsha}).}.
 \item The padded message is then iteratively fed to the compression function: call $\messblock_0||\messblock_1||\linebreak\ldots||\messblock_r$ this message (assuming
-it is on $r+1$ blocks, w.l.o.g.), then define $\chain_{i+1} \defas \compress(\chain_i, \messblock_i)$. The digest $\hash(\mess)$ is equal to the last
+it is on $r+1$ blocks, w.l.o.g.), then define $\chain_{i+1} \defas \compress(\chain_i, \messblock_i)$. The digest $\hash(m)$ is equal to the last
 chaining value $\chain_{r+1}$.
 \end{enumerate}
 We give an illustration of this process in \autoref{fig:merkdam}.
@@ -133,13 +133,13 @@ A collision on a \merkdam hash function $\hash$ implies a collision on its compr
 that \merkdam strengthening is used, that the message length is appended at the end of the padding, and that it fits in a single message block.}.
 \end{prop}
 \begin{proof}
-Assume we have $\mess$, $\mess' \neq \mess$ s.t. $\hash(\mess) = \hash(\mess')$.
+Assume we have $m$, $m' \neq m$ s.t. $\hash(m) = \hash(m')$.
 
-Case 1: $\mess$ and $\mess'$ have a different length.
+Case 1: $m$ and $m'$ have a different length.
 The last message blocks $\messblock_r$ and $\messblock'_{r'}$ both include the length
 of the message, which is different. Thus $(\chain_r,\messblock_r)$ and $(\chain'_{r'}, \messblock'_{r'})$ are distinct and collide through $\compress$.
 
-Case 2: $\mess$ and $\mess'$ are of the same length. Assume w.l.o.g. that the messages fit on $r + 1$ blocks after padding.
+Case 2: $m$ and $m'$ are of the same length. Assume w.l.o.g. that the messages fit on $r + 1$ blocks after padding.
 Call $i$ the highest block number such that $\messblock_{i} \neq \messblock'_{i}$. If $i = r$, then $(\chain_r,\messblock_r)$ and $(\chain'_{r}, \messblock'_{r})$
 are distinct and collide through $\compress$. If $i < r$, either $\chain_{i+1} = \chain'_{i+1}$ (thus $(\chain_i,\messblock_i)$ and $(\chain'_{i}, \messblock'_{i})$
 form a valid collision pair for $\compress$), or, we have a non-empty sequence of input pairs $(\chain_j, \messblock_j)$ and $(\chain'_j, \messblock'_j)$,
@@ -151,7 +151,7 @@ collides through $\compress$. The two input pairs in the first one to do so are 
 A preimage on a \merkdam hash function $\hash$ implies a preimage on its compression function $\compress$.
 \end{prop}
 \begin{proof}
-Let $\mess$ be a message fitting on $r+1$ blocks after padding s.t. $\hash(\mess) = k$, with $k$ the preimage target.
+Let $m$ be a message fitting on $r+1$ blocks after padding s.t. $\hash(m) = k$, with $k$ the preimage target.
 Then $\compress(\chain_r, \messblock_r) = k$, and $(\chain_r, \messblock_r)$ is thus a valid preimage input for $\compress$.
 \end{proof}
 
@@ -175,14 +175,14 @@ this will still be the case once instantiated.
 The \merkdam functions from \autoref{sec:mdhf} exhibit some of this \emph{non-ideal behaviours},
 in the sense that there are some properties that can be realised through algorithms that are more efficient for \merkdam functions than for random oracles.
 
-A good example of such a property is the concept of \emph{multicollision}, where one is required to find $r > 2$ messages $\mess_{0},\ldots,\mess_{r-1}$ whose images through $\hash$
+A good example of such a property is the concept of \emph{multicollision}, where one is required to find $r > 2$ messages $m_{0},\ldots,m_{r-1}$ whose images through $\hash$
 are all equal. The generic complexity (\eg for a random oracle) of this problem is $\bigo(2^{n\times (r-1)/r})$ calls to $\hash$ for an $n$-bit function, but Joux showed how to
 find $(2^r)$-multicollisions in time $\bigo(r\times 2^{n/2})$ for \merkdam hash functions~\cite{DBLP:conf/crypto/Joux04}.
 The basic idea used in this attack is that collisions for a \merkdam function $\hash$ can be chained together to lead to an exponentially growing number of distinct messages hashing
-to the same value. We can easily see this with a small example: assume that an attacker found two distinct colliding messages $\mess_0$ and $\mess'_0$ of the same length;
+to the same value. We can easily see this with a small example: assume that an attacker found two distinct colliding messages $m_0$ and $m'_0$ of the same length;
 this can be done generically at a cost of $2^{n/2}$. One then looks for a second collision for the function $\widetilde \hash$ obtained by replacing the initial chaining
-value $\chain_0$ by $\hash(\mess_0) = \hash(\mess'_0)$; this can again be obtained for a cost of $2^{n/2}$, resulting in $\mess_1$ and $\mess'_1$. Then, thanks to
-the chaining property of the \merkdam construction, we have found four colliding messages $\mess_0||\mess_1$, $\mess'_0||\mess_1$, $\mess_0||\mess'_1$, $\mess'_0||\mess'_1$\footnote{We ignore
+value $\chain_0$ by $\hash(m_0) = \hash(m'_0)$; this can again be obtained for a cost of $2^{n/2}$, resulting in $m_1$ and $m'_1$. Then, thanks to
+the chaining property of the \merkdam construction, we have found four colliding messages $m_0||m_1$, $m'_0||m_1$, $m_0||m'_1$, $m'_0||m'_1$\footnote{We ignore
 padding details here, but these can be easily worked out.}. It is easy to see how this generalizes to longer messages, leading to the quoted complexity of $\bigo(r \times 2^{n/2})$.
 We can observe that one of the weaknesses of the construction that is exploited here is that a hash collision is also
 a collision for the \emph{internal state} of the hash function. We will briefly see in \autoref{sec:betterhash} that increasing the size of the state of a function is indeed a way to make it resistant
@@ -203,21 +203,21 @@ a hash function in itself but one of its building blocks. There is a natural way
 leading to the notion of \emph{(semi-)freestart} attacks:
 
 \begin{defi}[Freestart preimage]
-A \emph{freestart preimage} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $(\freeiv,\messblock)$
-of an \iv and a message such that $\hash_\freeiv(\messblock) = k$, with $\hash_\freeiv(\cdot)$ denoting
+A \emph{freestart preimage} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $(\freeiv,m)$
+of an \iv and a message such that $\hash_\freeiv(m) = k$, with $\hash_\freeiv(\cdot)$ denoting
 the hash function $\hash$ with its original \iv replaced by $\freeiv$.
 \label{def:free_pre}
 \end{defi}
 
 \begin{defi}[Semi-freestart collision]
-A \emph{semi-freestart collision} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $((\freeiv,\messblock), (\freeiv,\messblock'))$
-of two \iv and message pairs such that $\hash_\freeiv(\messblock) = \hash_{\freeiv}(\messblock')$.
+A \emph{semi-freestart collision} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $((\freeiv,m), (\freeiv,m'))$
+of two \iv and message pairs such that $\hash_\freeiv(m) = \hash_{\freeiv}(m')$.
 \label{def:semi-free_coll}
 \end{defi}
 
 \begin{defi}[Freestart collision]
-A \emph{freestart collision} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $((\freeiv,\messblock), (\freeiv',\messblock'))$
-of two \iv and message pairs such that $\hash_\freeiv(\messblock) = \hash_{\freeiv'}(\messblock')$.
+A \emph{freestart collision} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $((\freeiv,m), (\freeiv',m'))$
+of two \iv and message pairs such that $\hash_\freeiv(m) = \hash_{\freeiv'}(m')$.
 \label{def:free_coll}
 \end{defi}
 
@@ -235,8 +235,8 @@ the unkeyed nature of hash functions. Instead, we just briefly mention an exampl
 
 Jumping ahead, we will see in \autoref{part:sha-1} that the \iv and the message block of \shaone's compression function are made of five and sixteen
 32-bit words respectively. In 2003, Saarinen showed that \emph{slid pairs} could be found for this compression function for a cost equivalent to $2^{32}$
-function calls~\cite{DBLP:conf/fse/Saarinen03}. Such pairs are made of two \ivs $\state_{0,\ldots,4}$, $\state'_{0,\ldots,4}$ and messages $\mess_{0,\ldots,15}$,
-$\mess'_{0,\ldots,15}$ with $\state'_i = \state_{i-1}$ and $\mess'_i = \mess_{i-1}$\footnote{We skip here the details of how to determine the starting values $\state'_0$ and $\mess'_0$.}, such that the
+function calls~\cite{DBLP:conf/fse/Saarinen03}. Such pairs are made of two \ivs $\state_{0,\ldots,4}$, $\state'_{0,\ldots,4}$ and messages $m_{0,\ldots,15}$,
+$m'_{0,\ldots,15}$ with $\state'_i = \state_{i-1}$ and $m'_i = m_{i-1}$\footnote{We skip here the details of how to determine the starting values $\state'_0$ and $m'_0$.}, such that the
 pair of outputs of the function called on these inputs also has this property. Although it is not expected of a random function to exhibit such a property, there is no clear way to use it to mount
 an attack against the main and secondary security properties defined above.
 
@@ -264,9 +264,9 @@ their compression functions are ``ideal'' and that they are not queried too much
 function as building block, but a function of equally-sized domain and co-domain. Usually, this function is even taken to be bijective.
 
 The construction in itself is simple. Assume we want to build an $n$-bit function based on a $b$-bit permutation $\perm$. We define the \emph{rate} $r$ and the \emph{capacity} $c$ as two integers such that
-$b = r + c$. Then, hashing the message $\mess$ consists in padding it to a length multiple of $r$ and to process it iteratively
+$b = r + c$. Then, hashing the message $m$ consists in padding it to a length multiple of $r$ and to process it iteratively
 in two phases. The \emph{absorbing} phase computes an internal state value $\freeiv \defas \perm(\perm(\ldots\perm(\messblock_0||0^c)\oplus\messblock_1||0^c)\ldots)$. The squeezing phase then produces the
-$n$-bit output as $\hash(\mess) \defas \lfloor\freeiv\rfloor_r||\lfloor\perm(\freeiv)\rfloor_r||\ldots||\lfloor\perm^{n \div r}(\freeiv)\rfloor_{n \mod r}$.
+$n$-bit output as $\hash(m) \defas \lfloor\freeiv\rfloor_r||\lfloor\perm(\freeiv)\rfloor_r||\ldots||\lfloor\perm^{n \div r}(\freeiv)\rfloor_{n \mod r}$.
 
 A distinguishing feature of the sponge construction (apart from the fact that it does not use a compression function) is that the output length of an instance is entirely decorrelated from the size of its building
 block. Thus, it allows to swimmingly build variable-length hash functions. A given permutation can also be used in different instantiations offering a tradeoff between speed (a larger rate giving
