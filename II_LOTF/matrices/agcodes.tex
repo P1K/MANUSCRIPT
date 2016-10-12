@@ -23,17 +23,17 @@ of higher dimension than the ``line'' used in RS codes. For instance, one could 
 $m$-dimensional space $\Fq^m$, and $\funcspace$ to be the $m$-variate polynomials of $\Fq[x_0,\ldots,x_{n-1}]$
 less than a certain degree $r$. This defines \emph{Reed-Muller codes} (``RM codes'') of order $r$.
 Although this construction successfully yields codes longer than RS codes, they are not asymptotically good\footnote{An
-$[n, k, d]$ code si asymptotically good if neither of $d/n$ and $k/n$ tends to zero when $n$ goes to the infinity.}.
+$[n, k, d]$ code is asymptotically good if neither of $d/n$ and $k/n$ tends to zero when $n$ goes to the infinity.}.
 
 An alternative approach to construct longer variants of RS codes is the one followed by AG codes. Seeing
 RS codes as working with a line of genus zero, the idea is to take as evaluation domains
 the points of curves of higher genera (planar and affine in our case, so as not to complexify things too much),
 which can be assimilated to a subset of $\Fq^2$. A geometrically
-meaningful way to choose the function space $\funcspace$ is then to consider certain subspaces of
+meaningful way to choose the function spaces $\funcspace$ is then to consider certain subspaces of
 the function fields of the curves. We will see that for well-chosen $\funcspace$, this construction
 leads to codes of parameters $[n, k, d \geq n - k + 1 - g]_{\Fq}$ for curves of genus $g$. As the
 (maximal) number of points on a curve is roughly increasing with the genus, this construction gives us the
-sort of tradeoff we were searching for.
+sort of tradeoff we were searching for, and also yields asymptotically good codes.
 
 \subsection{Selected algebraic geometry notions}
 
@@ -196,7 +196,8 @@ $D \defas \sum a_iP_i - \sum b_jP_j$, $a_i, b_j \geq 0$, a simple reformulation 
 which may have poles only in the $P_i$s of order at most $a_i$, and which must have zeros in all the $P_j$s of order
 at least $b_j$.
 
-It can be shown that for any $D$, $\rrs(D)$ is finite-dimensional. In fact, this is a consequence of two major theorems first from Riemann and then extended by Roch, which allow in particular to compute the explicit value $\ell(D)$
+It can be shown that for any $D$, $\rrs(D)$ is finite-dimensional. In fact, this is a consequence of two major theorems
+the first from Riemann and the second being an extension due to Roch, which allow in particular to compute the explicit value $\ell(D)$
 for a given divisor $D$~; this is expressed by the following corollary:
 
 \begin{cor}[Corollary of Riemann and Roch]
@@ -240,7 +241,8 @@ way is meaningful.
 (We will not address here the problem of computing these non-singular models \emph{per se}.)
 
 The map $\curve \rightarrow \nscurve$ may not be defined on every point of $\curve$, but the number of points where it is not defined is finite (this makes sense, as a curve
-has at most finitely many singular points). We say that a place is \emph{centered} at a point $P$ if $P$ is its image by the map $\nscurve \rightarrow \curve$. Any non-singular
+has at most finitely many singular points). We say that a place is \emph{centered} at a point $P$ if $P$ is its image by the map $\nscurve \rightarrow \curve$.
+Every non-singular
 point of $\curve$ has exactly one place centered at it, while finitely many places may be centered at singular points.
 
 We conclude by defining curves that are said to be in \emph{special position} (cf. \eg \cite{DBLP:journals/tit/SaintsH95}), which are convenient to use for several reasons.
@@ -275,7 +277,8 @@ than $a$).
 A generating family for $\rrs(aP_\infty)$ is thus (omitting the homogenising terms $(z/z)^{\alpha_k}$ for convenience) $\{f^ig^j~|~i\times\ord_{P_\infty}(f) + j\times\ord_{P_\infty}(g) \leq a\}$; if we keep only a single monomial
 with any given pole order, it forms a basis.
 As $P_\infty$ is the only place at infinity, we can switch to the affine case for all computations by considering points in affine coordinates and dehomogenising $E$ and the basis functions; notably, the latter effectively become polynomials rather
-than rational fractions. Indeed, a basis for $\rrs(aP_\infty) \subseteq k[\curve]$ is formed by $\{x^iy^j~|~i\times\ord_{P_\infty}(f) + j\times\ord_{P_\infty}(g) \leq a\}$.
+than rational fractions. Indeed, a generating family
+for $\rrs(aP_\infty) \subseteq k[\curve]$ is formed by $\{x^iy^j~|~i\times\ord_{P_\infty}(f) + j\times\ord_{P_\infty}(g) \leq a\}$.
 
 \medskip
 
@@ -350,7 +353,7 @@ We give two concrete examples of AG codes, the second of which being the code us
 
 \begin{example}[An AG code from a curve of genus 1]
 \label{ex:genus1}
-Let $\curve$ be the plane projective curve of genus 1 of equation $x^2z + xz^2 = y^3 + yz^2$ define over $\Fst$. It is smooth, in special position,
+Let $\curve$ be the plane projective curve of genus 1 of equation $x^2z + xz^2 = y^3 + yz^2$ defined over $\Fst$. It is smooth, in special position,
 with a unique point at infinity $P_\infty \defas [1:0:0]$, and has 24 $\Fst$-rational affine points. The pole order
 of $x/z$ and $y/z$ at $P_\infty$ is 3 and 2 respectively (as computed in \autoref{ex:order_gen1}).
 

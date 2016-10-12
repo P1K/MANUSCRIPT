@@ -120,7 +120,7 @@ As they only use keys related with, say, the $\xrka$ class,
 they are therefore meaningful when considering the related-key security of $\IEM$.
 
 From the very definition of $\IEM^r$, it
-is obvious to see that the two values $\E((k_{r-1}, k_{r-2},\linebreak[1] \ldots, k_0), p)$
+is obvious that the two values $\E((k_{r-1}, k_{r-2},\linebreak[1] \ldots, k_0), p)$
 and $\E((k_{r-1}, k_{r-2}, \ldots, k_0 \oplus \delta), p \oplus \delta)$ are equal for any
 difference $\delta$ when
 $\E = \IEM^r$ and that this equality does not hold in general, thence allowing to distinguish
@@ -148,14 +148,14 @@ This is illustrated in \autoref{fig:em4.1.tex} and \autoref{fig:em4.2.tex}
 \begin{figure}[!htb]
 \begin{center}
 \input{../I_PROLEGO/em4.1.tex}
-\caption{Related-key queries to $\IEM^1$ with no output difference.\label{fig:em4.1.tex}}
+\caption{Related-key queries to $\IEM^1$ (\ie \EM) with no output difference.\label{fig:em4.1.tex}}
 \end{center}
 \end{figure}
 
 \begin{figure}[!htb]
 \begin{center}
 \input{../I_PROLEGO/em4.2.tex}
-\caption{Related-key queries to $\IEM^1$ with an output difference.\label{fig:em4.2.tex}}
+\caption{Related-key queries to $\IEM^1$ (\ie \EM) with an output difference.\label{fig:em4.2.tex}}
 \end{center}
 \end{figure}
 
@@ -206,7 +206,7 @@ We conclude this short section by showing why the test of line~5 is successful w
 but refer to Cogliati and Seurin for a complete description of their distinguisher, including the general case of distinct
 permutations and keys linearly derived from a master key (adapting the general case to our modified setting only requires small modifications which are left as an exercise to the reader).
 
-For the sake of clarity, we write $k \oplus \Delta_i$ for $k + \Delta_i$, as they are equal by hypothesis. 
+For the sake of clarity, we write $k \oplus \Delta_i$ for $k + \Delta_i$, as these values are equal by hypothesis. 
 By definition,
 $y_1 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1$ and
 $y_3 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus k \oplus {\color{Green}\Delta_1} \oplus {\color{NavyBlue}\Delta_1} \oplus \Delta_3$
@@ -261,7 +261,7 @@ Because our attack solely relies on the Even-Mansour structure of the cipher, we
 submission document of \proest for the definition of its permutation.
 The same goes for the OTR mode~\cite{M14}, as we only need to focus on a small part to describe the attack.
 Consequently, we just describe how the encryption of the first block of plaintext is performed in \proestotr\footnote{This is not necessarily the
-same as encrypting the first block in all instantiations of OTR, as there is some flexibility in the definition of the mode.}.
+same as encrypting the first block in every instantiations of OTR, as there is some flexibility in the definition of the mode.}.
 
 \medskip
 
@@ -513,8 +513,8 @@ admittedly unorthodox, this would not result in a stronger model than using $\ar
 \paragraph{Discussion.}
 
 In a recent independent work, Dobraunig, Eichlseder and Mendel use similar methods to produce forgeries for \proestotr by considering
-related keys with XOR differences~\cite{DEM15}. On the one hand, one could argue that the class $\xrka$ is more natural than $\arka$
-and more likely to arise in actual protocols, which would
+related keys with XOR differences~\cite{DEM15}. On the one hand, one could argue that the class $\xrka$ seems more natural than $\arka$
+and could be more likely to arise in actual situations, which would
 make their attack more applicable than ours. On the other hand, an ideal cipher is expected to give a similar security against
 RKA using either class, which means that our model is not theoretically stronger than the one of Dobraunig~\etal, while resulting in a
 much more powerful key recovery attack.

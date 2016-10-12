@@ -7,7 +7,7 @@ with efficient implementations with respect to \autoref{alg:shuffle} of the prev
 A diffusion matrix associated to this code is simply the right block $A$ of a generator matrix in systematic form $G \defas (I_{16}~A)$.
 Recall that $G$ is the result of computing the reduced row echelon form of the matrix obtained by evaluating a basis for $\funcspace$
 on $\points$. Using the row echelon form is simply a convenient way of computing the basis that results in $G$ being in systematic
-form, so it is clear that the initial choice of the basis prior reduction does not impact $G$, and hence $A$.
+form, so it is clear that the initial choice of the basis for $\funcspace$ prior reduction does not impact $G$, and hence $A$.
 However, changing the order of the elements of the evaluation domain does result in different matrices.
 
 The problem for the rest of the section is thus to find good orderings $\points$,
@@ -31,7 +31,7 @@ has an evaluation support s.t. elements of a same orbit are consecutive,
 then the action of $\pi$ on a codeword of $\cagh$
 is to cyclically permute its coordinates locally, along each orbit.
 
-To see that this is useful, assume that there is an automorphism $\pi$ with two orbits $O_0$ and $O_1$ of size $n/2$ each. Then, if $\mat \defas (I_{n/2}~A)$ is
+To see that this can be useful, assume that there is an automorphism $\pi$ with two orbits $O_0$ and $O_1$ of size $n/2$ each. Then, if $\mat \defas (I_{n/2}~A)$ is
 built from $\points \defas \langle O_0, O_1\rangle$, each row of $\mat$ can be obtained by the repeated action of $\pi$ on, say, $\mat_0$, and it follows
 that $A$ is circulant (and therefore has a low cost w.r.t. \autoref{alg:shuffle}). More generally, if an automorphism can be found such that it has orbits of sizes summing up to
 $n/2$, the corresponding matrix $\mat$ can be deduced from a small set of rows. We give two toy examples with Reed-Solomon codes, which can easily be verified.
@@ -90,7 +90,7 @@ Type 5 & 0 & 1 & 0 & 0 & 3\\
 \noindent
 From these automorphisms, it is possible to define partitions of $\points$ in two sets of size sixteen which are union of orbits. We may therefore
 hope to obtain systematic matrices of the type we are looking for. Unfortunately, after an extensive search\footnote{Both on $\cagh$ and
-on the smaller elliptic code of \autoref{ex:genus1}.}, it appears that ordering $\points$ in this fashion \emph{never} results in
+on the smaller elliptic code of \autoref{ex:genus1}, using its own automorphisms.}, it appears that ordering $\points$ in this fashion \emph{never} results in
 obtaining a systematic matrix, \ie computing the row-reduced of the initial matrix never results in a left square submatrix of full rank.
 
 %TODO try with non-circulant thingies (i.e. arbitrary permutations of the orbits), see what it does.
@@ -135,7 +135,7 @@ Indeed, it only consists in repeatedly generating a random permutation of the af
 a matrix for the code with the corresponding point order, tentatively putting it in systematic form $(I_{16}~A)$, and if successful evaluating
 the $\cost$ function from \autoref{shuff} on $A$. We then collect matrices with a minimum cost.
 
-Because there are $32! \approx 2^{117,7}$ possible point orders, we can only explore a very small part of the search space. However,
+Because there are $32! \approx 2^{117.7}$ possible point orders, we can only explore a very small part of the search space. However,
 matrices of low cost can be found even after a moderate amount of computation, and we found many matrices of
 cost 43, though none of a lower cost. We present in \autoref{tbl:randomsearch} from \autoref{app:stats} the number of matrices of cost strictly less than 60
 that we found during a search of $2^{38}$ encoders.

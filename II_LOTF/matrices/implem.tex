@@ -38,7 +38,7 @@ x'[i] = \left\{
 where $\lfloor\cdot\rfloor_4$ denotes truncation to the four least significant bits.
 This instruction allows to arbitrarily \emph{shuffle} a vector according to a mask, with possible repetition and omission of some of the vector
 values\footnote{We will use the word \emph{shuffle} with this precise meaning in the remainder of this chapter.}.
-Notice that this instruction can also be used to perform sixteen parallel 4-to-8-bit table lookups: let us call $T$ this table; take
+Notice that this instruction can in particular be used to perform sixteen parallel 4-to-8-bit table lookups: let us call $T$ this table; take
 as first operand to \pshufb{} the vector $x \defas (T[i],~i = 0,\ldots,15)$, as second operand the vector
 $y \defas (a, b, c, d, \ldots)$
 on which to perform the lookup; then we see that the first byte of the result is $x[y[0]] = T[a]$, the second is $x[y[1]] = T[b]$,

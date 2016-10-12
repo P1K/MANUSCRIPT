@@ -5,7 +5,7 @@ We introduce a few notations, definitions and background notions that are used i
 our goal is not to provide a detailed exposition on coding theory, and we refer the reader to any good textbook such as \cite{vanlint} for a thorough treatment.
 
 \subsection{Notations}
-We write `$\defas$' equality by definition.
+We use `$\defas$' to denote equality by definition.
 We note $\Fq$ an arbitrary finite field and \Ftwom{} the finite field with $2^m$ elements. We often consider $\Fst$, and implicitly use this specific field if not mentioned otherwise.
 W.l.o.g. we use the representation
 $\Fst \cong \mathbf{F}_2[\alpha]/(\alpha^4 + \alpha + 1)$ when a specific one is needed. We freely use ``integer representation'' for elements of $\Ftwom \cong \Ftwom[\alpha]/I(\alpha)$
@@ -24,7 +24,7 @@ Arrays, or tables, (in the sense of software data structures) are denoted by reg
 For instance, $T[i]$ is the $i^\text{th}$ element of the table $T$, starting from zero.
 
 The operator ``$\wedge_{64}$'' denotes the  \emph{logical and} on 64-bit values. We use $\mathbf{0}_{n}$ and $\mathbf{1}_n$ for binary vectors of length $n$ all made of
-zeros and ones respectively. These may also freely be interpreted as elements of the vector spaces that will be clear from the context.
+zeros and ones respectively. These may also freely be interpreted as elements of other vector spaces that will be clear from the context.
 The function $\indic(\cdot)$ takes as input a set and returns one if it is non-empty, zero otherwise; $\#$ denotes the cardinality of a set.
 We may also use subscripts to show the base in which a number is written when it is not ten, \eg $1010_2$ is the number 10 written in base two.
 
@@ -80,8 +80,8 @@ An $[n,k,d]_{\Fq}$ code $\code$ is called \emph{maximum distance separable}, or 
 By abuse of definition, if $n = 2k$ and $(I_k~A)$ is a generator matrix of $\code$, we call $A$ an \emph{MDS matrix}.
 \end{defi}
 
-It is easy to see that this is the highest possible minimum distance that can be achieved by a code with a
-systematic generator matrix, as all rows of such a matrix have weight at most $n - k + 1$~; this is the
+It is easy to see that this is the highest possible minimum distance that can be achieved by a code defined with a
+systematic generator matrix, as all rows of such a matrix have weight at most $n - k + 1$~; this is
 in fact the Singleton bound.
 
 A useful alternative characterization of MDS matrices is given by the following theorem.
@@ -95,8 +95,8 @@ A consequence of this is that the dual of an MDS code is also MDS.
 We also have the following (in simplified form):
 
 \begin{conj}[MDS conjecture]
-There is no MDS code with symbols in $\Fu$ of length $n$ with $n > \#\Fu + 1$\footnote{This maximal length can be increased by one
-for some values of $q$ and $k$.}, (except degenerate cases).
+There is no MDS code with symbols in $\Fu$ of length $n$ with $n > \#\Fu + 1$, (except degenerate cases\footnote{This maximal length can be increased by one
+for some values of $q$ and $k$.}).
 \end{conj}
 
 The next definition rephrases and generalizes some of the above concepts in a way that is more suitable to cryptographic applications.
@@ -109,7 +109,7 @@ is equal to $\min_{\veci \neq 0}(\weight(\veci) + \weight(\veci A))$,
 and the \emph{linear branch number} of $A$ is equal to $\min_{\veci \neq 0}(\weight(\veci) + \weight(\veci A^t))$.
 \end{defi}
 
-If $A$ is such that $(I_k~A)$ is a generator matrix of a code of minimum distance $d$ which dual has minimum distance $d'$,
+If $A$ is such that $(I_k~A)$ is a generator matrix of a code of minimum distance $d$ whose dual has minimum distance $d'$,
 then $A$ has a differential (resp. linear) branch number of $d$ (resp. $d'$).
 
 \subsubsection{Evaluation codes}

@@ -17,18 +17,18 @@ the entire cipher execution.
 
 An advantage of SPNs over some other design structures is that they lend themselves relatively well to analysis, in particular w.r.t.
 statistical attacks; this is exemplified by the \emph{wide-trail strategy} used in the design of the \aes. Another notable point
-about them is that they offer many possible tradeoffs in their instantiations. One can choose between large and small S-boxes
-(large S-boxes are comparatively stronger than small ones, but also more expensive); best-performing S-boxes or cheaper
-``average'' ones; bit permutations (particularly efficient in hardware) or (non-permutation) matrices; ``optimally diffusing'' (MDS)
+about SPNs is that they offer many possible tradeoffs in their instantiations. One can choose between large and small S-boxes,
+large S-boxes are comparatively stronger than small ones, but also more expensive; best-performing S-boxes or cheaper
+``average'' ones; bit permutations, particularly efficient in hardware, or (non-permutation) matrices; ``optimally diffusing'' (MDS)
 matrices or not; state-wide matrices or not, etc.; the design space of SPNs is thus quite large.
 
 \bigskip
 
-In the second part of this thesis, we study two mappings intended to be used as part of an SPN round function (the second
-of them being also instantiated in a complete block cipher design).
+In the second part of this thesis, we study two mappings intended to be used as part of an SPN round function, the second
+of them being also instantiated in a complete block cipher design.
 
-In \autoref{cha:difmat}, we present large linear mappings with very good diffusion and efficient software implementations
-(given their sizes). They are derived from linear codes over a small field (typically $\Fst$) with a high dimension
+In \autoref{cha:difmat}, we present large linear mappings with very good diffusion and efficient software implementations,
+with respect to their sizes. They are derived from linear codes over a small field (typically $\Fst$) with a high dimension
 (typically 16) and a high minimum distance. This results in
 diffusion matrices with equally high dimension and a large branch number.
 Because we aim for parameters for which no MDS code is known to exist, we propose to use more flexible \emph{algebraic-geometry} codes.
@@ -39,7 +39,7 @@ to find good such matrices.
 In \autoref{cha:littlun}, we present
 the construction and implementation of an 8-bit S-box with a differential and linear branch number of 3.
 We show an application by designing \littlunpride: a simple block cipher
-based on bitsliced evaluations of the S-box and bit rotations which is designed to be efficient on 8-bit microcontrollers in particular.
+based on bitsliced evaluations of the S-box and bit rotations, which is designed to be efficient on 8-bit microcontrollers in particular.
 The round function of \fly achieves good performance on its target platform, in terms of number of instructions per round and overall
 code size, while providing good cryptographic properties.
 The S-box also has an efficient implementation with SIMD instructions, a low implementation cost in hardware
