@@ -28,7 +28,7 @@ des deux premiers chapitres de la première partie de ce manuscrit.
 
 Un \emph{algorithme de chiffrement par bloc} (ou chiffrement (par bloc), ou chiffre (par bloc)) est une famille d'applications
 injectives de domaine et codomaine finis. On adoptera en fait toujours ici une vision plus spécifique de ces objets,
-considérant des domaines et codomaines de même taille, et tous les paramètres impliqués étant définis sur un alphabet
+considérant des domaines et codomaines de même taille, et tous les ensembles impliqués étant définis sur un alphabet
 binaire. Ainsi, on considère qu'un chiffre par bloc est une application
 $\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$
 telle que pour tout $k \in \{0,1\}^\kappa$, $\E(k,\cdot)$ est une permutation.
@@ -37,8 +37,8 @@ $\kappa$ la \emph{taille de clef} et $n$ la \emph{taille de bloc} de $\E$. Habit
 $\kappa \in \{64, 80, 128, 192, 256\}$, bien que les clefs de 64 ou 80 bits ne soient plus considérées de nos jours
 comme apportant une sécurité suffisante, et 
 $n \in \{64, 128, 256\}$.
-On requiert aussi que $\E$ est son inverse $\E^{-1}$ soient calculables efficacement (bien qu'en fonction des applications
-il puisse être suffisant qu'un seul des deux le soit). 
+On requiert aussi que $\E$ est son inverse $\E^{-1}$ soient calculables efficacement, bien qu'en fonction des applications
+il puisse être suffisant qu'un seul des deux le soit. 
 
 L'emploi le plus direct d'un chiffre par bloc est de permettre d'assurer la confidentialité de communications.
 Deux partis $A$ et $B$ partageant une clef $k$ pour le même chiffre\footnote{Nous ne nous intéresserons pas ici à la question de savoir
@@ -88,8 +88,8 @@ ce qui n'est pas quelque chose d'évident à obtenir.
 Tout ceci fait qu'en pratique nous sommes généralement forcés d'utiliser des «\,approximations\,» de chiffres idéaux.
 Une façon utile, bien qu'essentiellement théorique, de quantifier la sécurité d'un chiffre par bloc est alors précisément
 de mesurer à quel point celui-ci est éloigné d'un chiffre idéal.
-Informellement, ceci est fait en bornant par le haut l'\emph{avantage} sur un choix aléatoire qu'un adversaire
-avec des ressources bornées de façon appropriée a de distinguer s'il interagi avec une permutation tirée aléatoirement
+Informellement, ceci est fait en bornant par le haut l'\emph{avantage} sur un choix aléatoire qu'un adversaire,
+avec des ressources bornées de façon appropriée, a de distinguer s'il interagi avec une permutation tirée aléatoirement
 ou avec une instance du chiffre paramétré avec une clef aléatoire (et inconnue). Cette proposition peut être précisée
 sous la forme suivante, similaire à celle qui peut être trouvée par exemple dans~\cite{DBLP:journals/jcss/BellareKR00}~:
 
@@ -262,14 +262,14 @@ impliquant une hypothèse sur une autre partie de la clef peut être utilisé, o
 Jusqu'à présent, nous avons considéré la sécurité des chiffrements dans un cas simple où l'attaquant a accès à un unique oracle secret.
 Ce scénario peut être généralisé de plusieurs façons, par exemple en donnant accès à plus d'un oracle. Une généralisation de ce type qui est
 relativement courante consiste en le modèle d'attaques à \emph{clefs liées}, où l'attaquant peut appeler
-$\E(k,\cdot)$, $\E(\rka(k),\cdot)$, avec $\rka(\cdot)$ une ou plusieurs applications sur l'espace de clefs.
+$\E(k,\cdot)$, $\E(\rka(k),\cdot)$, avec $\rka(\cdot)$ une ou plusieurs applications sur l'espace des clefs.
 Une observation cruciale est que dans ce cas $\rka$ ne peut pas être arbitraire, car certaines applications sont suffisamment puissantes
 pour permettre d'attaquer n'importe quel chiffre~; il ne peut alors pas y avoir de définition sensée de la sécurité de $\E$ dans un tel cas.
 Il est donc utile de garder à l'esprit qu'une attaque doit toujours être spécifiée dans un modèle clair. Bien que certains modèles puissent
 être considérés comme peu réalistes et donc peu utiles (ce qui est une critique souvent formulée à l'égard des attaques en clef liée), cette
 question est toujours secondaire par rapport à celle de savoir si un modèle permet de mener des attaques triviales dans n'importe quelle circonstance. 
 
-\subsection{Utiliser des chiffres par bloc}
+\subsection{Utilisation des chiffres par bloc}
 \label{sec:cf_modes}
 
 Nous avons mentionné au début de ce chapitre qu'un chiffre par bloc n'offre pas nécessairement une sécurité suffisante s'il est mal employé.
@@ -292,7 +292,7 @@ La tendance actuelle est de favoriser la première approche, qui mène général
 
 
 Nous concluons cette section en soulignant finalement l'importance de la \emph{borne des anniversaires} (appelée ainsi à cause du «\,paradoxe des anniversaires\,»,
-que nous définissons dans la section suivante) en cryptographie en donnant la proposition suivante : la plupart des modes d'opération
+que nous évoquons en un peu plus de détails dans la section suivante) en cryptographie en donnant la proposition suivante : la plupart des modes d'opération
 utilisant un chiffre de taille de bloc $n$ ne sont sûrs que tant qu'une clef n'est pas utilisée pour chiffrer plus que $\approx 2^{n/2}$ blocs,
 même si la taille de clef est largement supérieure.
 
@@ -309,7 +309,7 @@ fixe (les \emph{empreintes}, ou \emph{hachés})~:
 $\hash : \{0,1\}^* \rightarrow \{0,1\}^n$ pour un entier $n$.
 La plupart des fonctions de hachage ne se conforment pas strictement à cette définition et ne sont définies que sur un domaine fini, de taille par exemple égale
 à $2^{64}$. Ceci n'a a priori pas d'impact en pratique, puisque les arguments potentiels d'une fonction sont bien plus petits que ces
-limites supérieures, même si en toute rigueur il n'est pas évident que ceci sera toujours le cas. 
+limites supérieures, même si en toute rigueur il n'est pas évident que ceci soit toujours le cas. 
 La taille de sortie typique d'une fonction de hachage est de quelques centaines de bits, et généralement un multiple de trente-deux~; des fonctions populaires
 du passé et du présent peuvent être trouvées avec 
 $n \in \{128, 160, 224, 256, 384, 512\}$.
@@ -349,7 +349,8 @@ $\bigo(2^{n/2})$ pour les attaques en collision est une conséquence directe du
 $N$ éléments définissent $\bigo(N^2)$ paires~; si ces $N$ éléments sont tirés au hasard et uniformément dans un ensemble de taille $S$,
 on s'attend à ce que deux d'entre eux soient les mêmes (collisionnent) avec forte probabilité après en avoir collecté
 $\bigo(\sqrt{S})$. 
-On peut aussi remarquer que contrairement à la résistance en (seconde) préimage, la définition de la résistance en collision n'inclus pas de «\,challenge\,» en entrée.
+On peut aussi remarquer que contrairement à la résistance en (seconde) préimage, la définition de la résistance en collision n'inclus pas de valeur
+cible en entrée.
 Ainsi, elle ne permet pas d'exclure des algorithmes (génériques) qui retournent simplement une paire de message constante qui résulte en une collision,
 la complexité d'un tel algorithme étant alors indépendante de la taille de sortie $n$ de la fonction de hachage.
 De tels algorithmes violent trivialement la propriété de sécurité telle qu'elle est exprimée, mais ne disent rien de pertinent sur la sécurité d'une fonction,
@@ -389,9 +390,9 @@ on suppose qu'une certaine entité souhaite autoriser des utilisateurs à s'auth
 En conséquence, elle doit mémoriser le mot de passe correspondant à chaque utilisateur. Comme il est évident que stocker les mots
 de passe eux-mêmes mènerait à de grave problèmes de sécurité, une idée consiste à stocker à la place leurs images à travers une fonction
 de hachage $\hash$. Ainsi, même si un adversaire devait trouver la liste des utilisateurs et de leurs mots de passe hachés associés, il ne serait
-pas capable de trouver les mots de passe eux-mêmes (ou une entrée équivalente), pour peu que $\hash$ résiste aux attaques en préimage.
+pas capable de trouver les mots de passe eux-mêmes (ou des entrées équivalente), pour peu que $\hash$ résiste aux attaques en préimage.
 Dans cet exemple, résister aux attaques en seconde préimage ou en collision n'est alors pas nécessaire. Cependant, il est bon de noter
-que le schéma esquissé ci-dessous est en fait trop simpliste pour apporter une réelle sécurité, indépendamment de la fonction de hachage
+que le schéma esquissé ci-dessus est en fait trop simpliste pour apporter une réelle sécurité, indépendamment de la fonction de hachage
 utilisée (nous ne rentrerons toutefois pas dans les détails de la construction de bons schémas).
 
 \paragraph{Signature à base de fonctions de hachage.}
@@ -402,8 +403,8 @@ Tout comme d'autres constructions basées sur des fonctions de hachage, seule la
 L'idée principale de ces schémas est que le parti effectuant une signature publie en avance un certain nombre d'empreintes, tout en gardant
 secrètes les entrées à la fonction de hachage les produisant. Signer un message consiste alors révéler certaines de ces entrées~; ainsi, être capable
 de calculer des préimages pour la fonction permet d'attaquer le schéma, mais les collisions ne sont pas une menace.
-Enfin, une propriété inhabituelle de ces constructions est que la fonction de hachage utilisée peut n'être définie que sur des entrées de petite
-taille, possiblement fixée.
+Enfin, une propriété inhabituelle de ces constructions est qu'elles peuvent être basées sur une fonction de hachage qui a seulement besoin
+d'être définie sur des entrées de petite taille, possiblement fixée.
 
 \paragraph{Codes d'authentification.}
 Le dernier usage possible d'une fonction de hachage que nous évoquons ici est la construction de codes d'authentifications (MACs),
@@ -571,8 +572,8 @@ sur les empreintes consiste aussi en une collision sur l'état interne de la fon
 Nous verrons brièvement dans la section~\ref{sec:fbetter} qu'augmenter la taille de l'état d'une fonction
 est effectivement un moyen de se prémunir de telles attaques.
 
-Un autre bon exemple sur
-\merkdam, qui cette fois viole directement une des propriétés de sécurité définie au début de cette section
+Un autre bon exemple d'une faiblesse de
+\merkdam, qui cette fois viole directement une des propriétés de sécurité définie au début de cette section,
 consiste en les attaques génériques en seconde préimages pour des messages longs.
 Dean~\cite{dean}, puis indépendamment Kelsey et Schneier~\cite{DBLP:conf/eurocrypt/KelseyS05}
 ont montré comment il est possible d'exploiter la structure \merkdam et des collisions internes
@@ -595,21 +596,21 @@ de sécurité définies plus haut à ce contexte, ce qui nous mène aux notions 
 \begin{fdefi}[Préimage à initialisation libre]
 Une 
 \emph{préimage à initialisation libre}
-pour une fonction de hachage \merkdam $\hash$ est une paire $(\freeiv,\messblock)$
-d'\iv et de message telle que $\hash_\freeiv(\messblock) = t$, avec $\hash_\freeiv(\cdot)$ dénotant
+pour une fonction de hachage \merkdam $\hash$ est une paire $(\freeiv,m)$
+d'\iv et de message telle que $\hash_\freeiv(m) = t$, avec $\hash_\freeiv(\cdot)$ dénotant
 la fonction $\hash$ dont l'\iv original a été remplacé par $\freeiv$.
 \end{fdefi}
 
 \begin{fdefi}[Collision à initialisation semi-libre]
-Une \emph{collision à initialisation semi-libre} pour une fonction \merkdam $\hash$ est une paire $((\freeiv,\messblock), (\freeiv,\messblock'))$
-de deux paires d'\iv et de messages telle que $\hash_\freeiv(\messblock) = \hash_{\freeiv}(\messblock')$.
+Une \emph{collision à initialisation semi-libre} pour une fonction \merkdam $\hash$ est une paire $((\freeiv,m), (\freeiv,m'))$
+de deux paires d'\iv et de messages telle que $\hash_\freeiv(m) = \hash_{\freeiv}(m')$.
 \end{fdefi}
 
 \begin{fdefi}[Collision à initialisation libre (colibri)]
 Une \emph{collision à initialisation libre} (un \emph{colibri})
 pour une fonction \merkdam 
-$\hash$ est une paire $((\freeiv,\messblock), (\freeiv',\messblock'))$
-de deux paires d'\iv et de messages telle que $\hash_\freeiv(\messblock) = \hash_{\freeiv'}(\messblock')$.
+$\hash$ est une paire $((\freeiv,m), (\freeiv',m'))$
+de deux paires d'\iv et de messages telle que $\hash_\freeiv(m) = \hash_{\freeiv'}(m')$.
 \end{fdefi}
 
 On peut remarquer que si deux messages, disons d'un colibri, ont une longueur d'un bloc, la définition ci-dessus devient équivalente à celle
@@ -634,14 +635,14 @@ De telles paires consistent en deux
 \ivs $\state_{0,\ldots,4}$, $\state'_{0,\ldots,4}$ et messages $m_{0,\ldots,15}$,
 $m'_{0,\ldots,15}$ avec $\state'_i = \state_{i-1}$ et $m'_i = m_{i-1}$\footnote{Nous sautons ici les détails de comment déterminer les valeurs de départ
 $\state'_0$ et $m'_0$.}, tels que la paire des sorties de la fonction appelée sur ces entrées possède aussi cette propriété.
-Bien qu'il n'est pas attendu d'une fonction aléatoire qu'elle possède une telle propriété, il n'est pas clair comment celle-ci peut être utilisée pour monter
+Bien qu'il n'est pas attendu d'une fonction aléatoire qu'elle possède une telle propriété, il n'est pas clair comment cette dernière peut être utilisée pour monter
 une attaque sur une des notions de sécurité principales et secondaires définies ci-dessus.
 
 
 \subsection{Constructions de fonctions de hachage modernes}
 \label{sec:fbetter}
 
-Nous avons mentionné deux faiblesses génériques des fonctions \merkdam. La présence de celles-ci fait que les fonctions de hachage moderne sont généralement
+Nous avons mentionné deux faiblesses génériques des fonctions \merkdam. La présence de celles-ci fait que les fonctions de hachage modernes sont généralement
 basées sur des constructions alternatives offrant une meilleure sécurité. Nous présentons brièvement deux d'entre elles~: la
 variante \emph{tuyau-large} de \merkdam (ou \emph{coupe-MD}), et les constructions \emph{éponge}. 
 
@@ -674,7 +675,7 @@ pas appelées un nombre de fois trop important par rapport à la taille de leurs
 \paragraph{Construction éponge.} La construction éponge a été introduite en 2007 par
 Bertoni \etal~\cite{SpongeFunctions}.
 Elle est quelque peu différente de la construction \merkdam, notamment parce qu'elle n'utilise pas une fonction de compression
-comme primitive, mas une fonction de domaine et codomaine identique. Habituellement, cette fonction est en plus prise bijective.
+comme primitive, mais une fonction de domaine et codomaine identique. Habituellement, cette fonction est en plus prise bijective.
 
 La construction en elle-même est simple. Supposons qu'on souhaite construire une fonction sur $n$ bits basée sur une permutation $\perm$ sur $b$ bits.
 On définit le \emph{taux} $r$ et la \emph{capacité} $c$ comme deux entiers tels que que $b = r + c$.
@@ -743,8 +744,9 @@ Les travaux réalisés pendant cette thèse appartiennent au domaine de la crypt
 \medskip
 
 Une importante partie de cette thèse et de ce manuscrit est dédiée à des attaques sur la fonction de hachage \shaone. Notre objectif principal concernant cette fonction a été d'obtenir
-une attaque «\,explicite\,» (dans le sens où l'attaque peut être exécutée jusqu'à son terme) sur une version complète de \shaone (contrairement aux attaques explicites précédentes
-qui ont toujours ciblé des versions réduites) ; le type d'attaque retenu a été celui des attaques en collision, qui sont à ce jour les plus efficaces sur \shaone.
+une attaque «\,explicite\,» (dans le sens où l'attaque peut être exécutée jusqu'à son terme) sur une version complète de \shaone,
+contrairement aux attaques explicites précédentes
+qui ont toujours ciblé des versions réduites~; le type d'attaque retenu a été celui des attaques en collision, qui sont à ce jour les plus efficaces sur \shaone.
 Pour atteindre notre objectif, néanmoins, nous nous sommes placés dans un modèle à initialisation libre, légèrement plus favorable à l'attaquant.
 
 Nous avons aussi développé une seconde attaque sur \shaone visant cette fois à calculer efficacement des préimages. Ces résultats restent cependant théoriques, dans le sens où le coût
@@ -822,7 +824,7 @@ Nous décrivons ici un article publié à ISC~2015.
 En 1991, à ASIACRYPT, Even et Mansour ont proposé une construction générique de chiffrement par bloc qui porte désormais leur nom~\cite{EM}. Partant d'une permutation «\,aléatoire\,» fixe
 et publiquement connue $\Perm$, on définit le chiffrement $\E((k_1,k_0),p)$ du texte clair $p$ comme $\Perm(p \oplus k_0) \oplus k_1$. Soit $n$ la taille de bloc de ce chiffre
 et en supposant qu'on accède à $\Perm$ en boîte noire, on peut montrer que la probabilité de retrouver les clefs d'une instance inconnue de $\E$,
-ou même seulement de la distingueur d'une permutation aléatoire, est inférieure à
+ou même seulement de la distinguer d'une permutation aléatoire, est inférieure à
 $\bigo(qt \cdot 2^{-n})$, avec $q$ le nombre d'accès à l'oracle de chiffrement et $t$ le nombre d'accès à la permutation. De plus, on connaît une attaque atteignant cette borne.
 
 Si on considère un modèle d'attaque \emph{à clefs liées}, la construction Even-Mansour est cependant beaucoup plus faible. En effet, supposant un accès à deux oracles de chiffrement
@@ -867,10 +869,10 @@ des codes \emph{MDS}, atteignant la borne de Singleton. Malheureusement, on ne c
 aucun code MDS de dimension 16 sur $\Fst$ n'est connu.
 
 Nos travaux ont donc particulièrement consisté à explorer l'utilisation de codes géométriques pour définir des matrices de diffusion
-de grande dimension sur de petits corps et de BN en pratique seulement légèrement inférieur à celui d'une hypothétique matrice MDS de même taille.
+de grande dimension sur de petits corps, et de BN en pratique seulement légèrement inférieur à celui d'une hypothétique matrice MDS de même taille.
 Un code géométrique est dans notre cas un code construit à partir d'une courbe algébrique, qui permet de définir à la fois un ensemble
 de points (ou plus précisément de places) et des espaces de fonctions associés à ses diviseurs~; on peut alors définir des codes
-comme l'évaluation d'un certain espace sur un sous-ensemble des points.
+comme l'évaluation d'un espace de fonctions donné sur un sous-ensemble des points.
 En choisissant correctement la courbe et l'espace de fonctions, on peut par exemple construire une matrice de dimension 16 sur
 $\Fst$ de BN 15, soit deux de moins que la borne de Singleton. Cependant, implémenter efficacement la multiplication par une telle
 matrice n'est pas immédiat, et nous proposons aussi un algorithme vectoriel rapide qui répond à ce besoin.
@@ -913,7 +915,8 @@ tous les emplois qu'on pourrait souhaiter faire de la cryptographie boîte blanc
 (des variantes proches de) ce modèle~: les instantiations boîte blanche de la construction ASASA de Biryukov \etal~\cite{DBLP:conf/asiacrypt/BiryukovBK14}
 (largement attaquées~\cite{DBLP:journals/iacr/DinurDKL15,DBLP:conf/asiacrypt/MinaudDFK15}) et la famille \spacehard de Bogdanov et Isobe~\cite{DBLP:conf/ccs/BogdanovI15}.
 
-Nos travaux ont consisté à raffiner le modèle d'incompressibilité de Delerablée \etal en définissant des notions d'incompressibilité faible et forte, puis de proposer deux familles de constructions
+Nos travaux ont consisté à raffiner le modèle d'incompressibilité de Delerablée \etal en définissant des notions d'incompressibilité faible et forte
+(la nuance  correspondant aux hypothèses faites sur les stratégies des adversaires), puis de proposer deux familles de constructions
 prouvablement incompressibles par rapport à ces modèles. La première, \pc, est une famille de chiffres par bloc de tailles d'implémentation variables, prouvable dans le modèle
 faible. La seconde, \cdb, est une famille (également de taille variable) de fonctions
 pouvant être utilisées comme générateurs de clef, prouvable dans le modèle faible et dans le modèle fort. La base de nos algorithmes est semblable à celles des précédentes propositions de Biryukov \etal
@@ -934,8 +937,8 @@ Nous décrivons conjointement deux articles écrits avec Marc Stevens et Thomas 
 
 \medskip
 
-Les premières attaques en collision sur une version non-réduite de \shaone ont été présentées par Wang \etal à CRYPTO 2005~\cite{DBLP:conf/crypto/WangYY05a}. Bien que
-comme souvent en cryptanalyse de complexité
+Les premières attaques en collision sur une version non-réduite de \shaone ont été présentées par Wang \etal à CRYPTO 2005~\cite{DBLP:conf/crypto/WangYY05a}. Bien que,
+comme souvent en cryptanalyse, de complexité
 trop élevée pour être effectivement exécutée, ces attaques ont eu un impact important sur l'étude des fonctions de hachage durant la décennie qui a suivie. Elles ont notamment poussé à l'organisation
 d'une compétition internationale pour le choix d'un nouveau standard, qui a vu \keccak devenir \shathree en 2015~\cite{Nist-SHA3}.
 
@@ -964,7 +967,7 @@ Nous concluons en décrivant des travaux menés avec Thomas Espitau et Pierre-Al
 
 Si la dernière décennie a permis de développer des attaques en collisions puissantes sur \shaone (bien que seulement à la limite supérieure de la faisabilité), nous ne connaissons toujours
 pas d'attaque en préimage même complètement théorique sur la fonction complète.
-En 2012 Knellwolf et Khovratovich ont présenté à CRYPTO une vision différentielle des attaques en préimages utilisant les technique de rencontre par le milieu~\cite{DBLP:conf/crypto/KnellwolfK12}.
+En 2012 Knellwolf et Khovratovich ont présenté à CRYPTO une vision différentielle des attaques en préimages utilisant les techniques de rencontre par le milieu~\cite{DBLP:conf/crypto/KnellwolfK12}.
 Ceci leur a permis à l'époque d'atteindre le plus grand nombre de tours attaqués pour \shaone, à 57 sur 80.
 Dans nos travaux, nous avons étendu cette approche différentielle par l'utilisation de différentielles d'ordre supérieur. Ceci permet de trouver de meilleures partitions pour une attaque par
 le milieu (dans le sens où elles couvrent plus de tours), au prix d'une phase de rencontre plus complexe (rendant la technique surtout utile pour des attaques de coût élevé). De cette façon,

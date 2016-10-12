@@ -13,7 +13,7 @@
 %%% Document
 %\begin{document}
 \begin{tikzpicture}[scale=0.4]
-	\path[anchor=east] (-1,0.5) node {$pad(\mess)=$};
+	\path[anchor=east] (-1,0.5) node {$pad(m)=$};
 	\draw[fill=Fuchsia!20,thick,inner sep=2ex] (0,0) rectangle (16,1);
 
 	%% Separations in the message
@@ -52,7 +52,7 @@
 	\end{scope}
 
 	\begin{scope}[shift={(16.5,-4)}]
-		\draw[->,thick] ++(-0.2,0.5) -- ++(0.75,0) node[right] {$\chain_4 = \hash(\mess)$} ;
+		\draw[->,thick] ++(-0.2,0.5) -- ++(0.75,0) node[right] {$\chain_4 = \hash(m)$} ;
 	\end{scope}
 	
 \end{tikzpicture}
