@@ -15,9 +15,11 @@ In this work, we design a conceptually simple block cipher targeting efficient \
 we mean in particular that the size of the code is small, typically of the order of 200 bytes. If more ressources are available, the best current block cipher is
 probably the \aes (see \eg \cite{DBLP:journals/iacr/BeaulieuSSTWW15}).}.
 %, which is also expected to achieve reasonable performance in hardware.
-The chief academic proposal to date for this scenario is the \pride block cipher\footnote{Notable
-``non-academic'' ciphers for the same scenario are the ``NSA ciphers'' \simon and \speck \cite{NSAciph}.},
-that was presented at CRYPTO~2014~\cite{pride}. Our block cipher is built around \littlunOne, a compact 8-bit S-box with branch number 3. This allows
+The chief academic proposal to date for this scenario is the \pride block cipher,
+that was presented at CRYPTO~2014~\cite{pride};
+nNotable
+``non-academic'' ciphers for the same scenario are the ``NSA ciphers'' \simon and \speck \cite{NSAciph}.
+Our block cipher is built around \littlunOne, a compact 8-bit S-box with branch number 3. This allows
 to define a round function similar to a scaled-up variant of \present, composing the S-box application with a simple bit permutation\footnote{As a bit permutation
 obviously does not increase the number of active bits, an important part of the diffusion in such a cipher is played by the S-box. The typical measure of the quality
 of the diffusion of an S-box is its ``branch number'' which plays a role similar to the minimum distance of the linear codes used in \aes-like designs.}.

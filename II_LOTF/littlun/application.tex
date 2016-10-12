@@ -35,8 +35,8 @@ r[5] = r[5] ^ flip; r[7] = r[7] ^ flip;
 % // 3
 % // 2
 % // 0
-\caption[The round-constant-generating LFSR.]{The LFSR which $i^\text{th}$ iteration (starting from a zero state) defines the $i^\text{th}$ round constant. This pseudo-code
-assumes an 8-bit state $r$, which entry $r[0]$ maps to the LSB in a machine representation\label{rcon_lfsr}.}
+\caption[The round-constant-generating LFSR.]{The LFSR whose $i^\text{th}$ iteration (starting from a zero state) defines the $i^\text{th}$ round constant. This pseudo-code
+assumes an 8-bit state $r$, whose entry $r[0]$ maps to the LSB in a machine representation\label{rcon_lfsr}.}
 \end{figure}
 
 We write $\ark_i$ the addition of the $i^\text{th}$ round key: $\ark_i(rk_i, x) \defas f_i(x \oplus rk_i)$;
@@ -77,7 +77,7 @@ we mean the all-zero key for even values of $i$ and $k_1$ otherwise.}. A round c
 \medskip
 
 For \fly to be resistant to related-key attacks, we use the same approach as \noekeon \cite{noekeon} to define $\ksTwo$ as follows. Let us denote by $\fly(0, \cdot)/12$ twelve applications of the round function of \fly
-with the all-zero 128-bit key and define $k' \defas k_0'||k_1' = \fly(0, k_0)/12||\linebreak \fly(0, k_1)/12$. Then $\ksTwo$ is defined through $\flyrk$ as $\flyrk(k, \cdot) \defas \fly(k', \cdot)$. 
+with the all-zero 128-bit key and define $k' \defas k_0'||k_1' = \fly(0, k_0)/12||\fly(0, k_1)/12$. Then $\ksTwo$ is defined through $\flyrk$ as $\flyrk(k, \cdot) \defas \fly(k', \cdot)$. 
 
 \medskip
 
@@ -140,7 +140,7 @@ the \autoref{statprop} of \littlunOne, by multiplying the differential probabili
 Even by discounting the additional 2 S-boxes and assuming that a distinguisher can be found for this amount of rounds, this gives a very comfortable margin of 8 rounds,
 which we estimate to be much beyond the ability of an attacker to convert the distinguisher into, say, key-recovery (in particular, this is twice the number of rounds needed
 for full diffusion).
-This also leaves some margin to ensure that even in the case where \fly would exhibit a strong differential or linear hull it would be unlikely for an attacker to be able
+This also leaves some margin to ensure that even in the case where \fly would exhibit a strong differential or linear hull effect it would be unlikely for an attacker to be able
 to mount a meaningful attack. For instance, after 16 rounds, an attacker would need about $2^{32}$ ``optimal'' contributing characteristics to obtain a distinguisher with non-trivial
 probability, and would still be facing 4 rounds to mount an attack.
 
@@ -216,8 +216,8 @@ be compactly implemented with only 11 instructions, as shown in \autoref{fig:avr
 
 The entire substitution and permutation layers of \fly can therefore be implemented with only 52 instructions on ATmega (54 on ATtiny), which is 4 less than the 56 of \pride \cite{pride},
 while at the same time having at least 1.5 times more \emph{equivalent} active S-boxes every four rounds\footnote{There are at least four active 4-bit S-boxes of maximum differential probability $2^{-2}$ and
-best linear correlation $2^{-1}$ every two rounds of \pride and there are at least 3 active 8-bit S-boxes of maximum differential probability $2^{-4}$ and best linear correlation $2^{-2}$ every
-two rounds of \fly.}.
+best linear correlation $2^{-1}$ every two rounds of \pride and there are at least 6 active 8-bit S-boxes of maximum differential probability $2^{-4}$ and best linear correlation $2^{-2}$ every
+four rounds of \fly.}.
 
 On-the-fly computation of one round-key of the key-schedule $\ksOne$ can be done in 8 instructions. The complete key expansion and round constant addition can be done in 24 instructions
 as shown in \autoref{fig:avrK}.
