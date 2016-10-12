@@ -13,7 +13,7 @@ $n \in \{128, 160, 224, 256, 384, 512\}$.
 A \emph{cryptographic} hash function\footnote{We will obviously only consider such functions from now on.} is a hash function $\hash$ that verifies a certain number of security properties, which express the difficulty of computing inputs
 to $\hash$ that verify some conditions. There are three ``classical'' security properties that must be met (at least to some extent)
 by any secure hash function; in an informal way, they can be expressed as:
-\begin{defi}[Preimage resistance] Given a target $k$, an adversary must not be able to find a message $m$ such that $\hash(m) = k$ with non-negligible probability using
+\begin{defi}[Preimage resistance] Given a target $t$, an adversary must not be able to find a message $m$ such that $\hash(m) = t$ with non-negligible probability using
 less computational resources than what is required to compute $\hash$ $\bigo(2^n)$ times.
 \label{def:pre}
 \end{defi}
@@ -151,7 +151,7 @@ collides through $\compress$. The two input pairs in the first one to do so are 
 A preimage on a \merkdam hash function $\hash$ implies a preimage on its compression function $\compress$.
 \end{prop}
 \begin{proof}
-Let $m$ be a message fitting on $r+1$ blocks after padding s.t. $\hash(m) = k$, with $k$ the preimage target.
+Let $m$ be a message fitting on $r+1$ blocks after padding s.t. $\hash(m) = t$, with $t$ the preimage target.
 Then $\compress(\chain_r, \messblock_r) = k$, and $(\chain_r, \messblock_r)$ is thus a valid preimage input for $\compress$.
 \end{proof}
 
@@ -204,7 +204,7 @@ leading to the notion of \emph{(semi-)freestart} attacks:
 
 \begin{defi}[Freestart preimage]
 A \emph{freestart preimage} for a Merkle-Damg\aa rd hash function $\hash$ is a pair $(\freeiv,m)$
-of an \iv and a message such that $\hash_\freeiv(m) = k$, with $\hash_\freeiv(\cdot)$ denoting
+of an \iv and a message such that $\hash_\freeiv(m) = t$, with $\hash_\freeiv(\cdot)$ denoting
 the hash function $\hash$ with its original \iv replaced by $\freeiv$.
 \label{def:free_pre}
 \end{defi}
