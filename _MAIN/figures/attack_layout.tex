@@ -1,0 +1,63 @@
+\begin{tikzpicture}[scale=0.22,>=latex']
+    % teh boxez
+    \draw[thick] (0,0) -- (20,0) -- (20,-34);
+    \draw[thick,dashed] (20,-34) -- (15,-33) -- (10,-34) -- (5,-33) -- (0,-34);
+    \draw[thick] (0,-34) -- (0,0);
+    \draw[thick] (25,-4) -- (45,-4) -- (45,-34);
+    \draw[thick,dashed] (45,-34) -- (40,-33) -- (35,-34) -- (30,-33) -- (25,-34);
+    \draw[thick] (25,-34) -- (25,-4);
+    % teh row indices for the state
+    \node at (-2,0) {-4};
+    \node at (-2,-12) {8};
+    \node at (-2,-16) {12};
+    \node at (-2,-18) {14};
+    \node at (-2,-21) {17};
+    \node at (-2,-25) {21};
+    \node at (-2,-30) {26};
+    % teh row indices for the message
+    \node at (23,-4) {0};
+    \node at (23,-9) {5};
+    \node at (23,-14) {10};
+    \node at (23,-19) {15};
+    \node at (23,-24) {20};
+    \node at (23,-29) {25};
+    \node at (23,-34) {30};
+    % the fillings
+    \draw[pattern=vertical lines] (0,-1) rectangle (20,-12); % base solution
+    \draw[pattern=horizontal lines] (0,-12) rectangle (20,-16); % IV
+    \draw[pattern=vertical lines] (0,-16) rectangle (20,-21); % base solution
+    \draw[pattern=dots] (0,-21) rectangle (20,-30); % where neutral bits act
+    \draw[pattern=north west lines] (25,-10) rectangle (45,-25); % free message words
+    \draw[pattern=crosshatch] (25,-18) rectangle (45,-25); % message words with neutral bits
+
+    % legends
+    \draw[thick] (50,-14) rectangle (51.5,-15.5);
+    \node[anchor=text] at (52.5,-15.5) {Starting point};
+    \draw[pattern=horizontal lines] (50,-14) rectangle (51.5,-15.5);
+    %
+    \draw[thick] (50,-18) rectangle (51.5,-19.5);
+    \node[anchor=text] at (52.5,-19.5) {Base solution};
+    \draw[pattern=vertical lines] (50,-18) rectangle (51.5,-19.5);
+    %
+    \draw[thick] (50,-22) rectangle (51.5,-23.5);
+    \node[anchor=text] at (55,-23.5) {Free};
+    \node[anchor=text] at (50,-25) {message window};
+    \draw[pattern=north west lines] (50,-22) rectangle (51.5,-23.5);
+    \draw[thick] (52.5,-22) rectangle (54,-23.5);
+    \draw[pattern=crosshatch] (52.5,-22) rectangle (54,-23.5);
+    %
+    \draw[thick] (50,-26) rectangle (51.5,-27.5);
+    \node[anchor=text] at (52.5,-27.5) {Message with};
+    \node[anchor=text] at (52.5,-29) {neutral bits};
+    \draw[pattern=crosshatch] (50,-26) rectangle (51.5,-27.5);
+    %
+    \draw[thick] (50,-30) rectangle (51.5,-31.5);
+    \node[anchor=text] at (52.5,-31.5) {Affected by};
+    \node[anchor=text] at (52.5,-33) {neutral bits};
+    \draw[pattern=dots] (50,-30) rectangle (51.5,-31.5);
+
+    %title
+    \node[anchor=text] at (0,3) {\shaone State words ($\mathcal{A}_i$)};
+    \node[anchor=text] at (25,3) {\shaone Message words ($\mathcal{W}_i$)};
+
+\end{tikzpicture}

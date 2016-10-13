@@ -175,7 +175,7 @@ We extended it so that it can also reconstruct the set of differential paths ove
 This can be made possible by keeping the intermediate sets of reduced differential paths $\mathcal{R}_{[t_b,t_e]}$ which were constructed backwards starting at a zero-difference intermediate state of \shaone.
 Then one can iteratively construct sets $\mathcal{O}_{[0,i[}$ of optimal differential paths over steps $0,\ldots,i-1$, \ie,
 differential paths compatible with some combination of the optimal starting differences, ending differences and message bit relations such that the optimal success probability can be achieved.
-One starts with the set $\mathcal{O}_{[0,0[}$ determined by the optimal starting differences.
+One starts with the set $\mathcal{O}_{[0,0]}$ determined by the optimal starting differences.
 Given $\mathcal{O}_{[0,i[}$ one can compute $\mathcal{O}_{[0,i+1[}$ by considering
 all possible extensions of every differential path in $\mathcal{O}_{[0,i[}$ with step $i$.
 %(under the predefined constraints, \ie $\Delta Q_j \in \mathcal{Q}_j$, $\delta W_i \in \mathcal{W}-i$, see~\cite{DBLP:conf/eurocrypt/Stevens13}). 
