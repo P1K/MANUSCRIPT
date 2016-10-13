@@ -12,12 +12,12 @@ Recently, NIST released a draft report on lightweight cryptography with the obje
 through an open process~\cite{NistLightDraft}. The topic of lightweight cryptography is thus ever more timely. 
 
 In this work, we design a conceptually simple block cipher targeting efficient \emph{light} implementations on 8-bit microcontrollers\footnote{By \emph{light} implementations,
-we mean in particular that the size of the code is small, typically of the order of 200 bytes. If more ressources are available, the best current block cipher is
+we mean in particular that the size of the code is small, typically of the order of 200 bytes. If more resources are available, the best current block cipher is
 probably the \aes (see \eg \cite{DBLP:journals/iacr/BeaulieuSSTWW15}).}.
 %, which is also expected to achieve reasonable performance in hardware.
 The chief academic proposal to date for this scenario is the \pride block cipher,
 that was presented at CRYPTO~2014~\cite{pride};
-nNotable
+notable
 ``non-academic'' ciphers for the same scenario are the ``NSA ciphers'' \simon and \speck \cite{NSAciph}.
 Our block cipher is built around \littlunOne, a compact 8-bit S-box with branch number 3. This allows
 to define a round function similar to a scaled-up variant of \present, composing the S-box application with a simple bit permutation\footnote{As a bit permutation
