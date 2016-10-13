@@ -1,0 +1,50 @@
+\begin{tikzpicture}[scale=1,transform shape,thick]
+
+\hspace{.5mm}
+  \tikzstyle{every node}=[transform shape];
+  \tikzstyle{every node}=[node distance=1cm];
+
+	% thingies
+    \node (hin) {\textsf{Hi}};
+	\node (lon) [right of=hin,node distance=3cm]{\textsf{Lo}};
+	\coordinate[right of=hin,node distance=1.5cm] (mid);
+	\node (XOR-1) [XOR,scale=0.8,thick,below of=mid] {};
+	\coordinate[left of=XOR-1,node distance=1.5cm] (midleft);
+	\coordinate[right of=XOR-1,node distance=1.5cm] (midright);
+	\node (f-1) [below of=XOR-1,draw,rectangle,very thick,minimum width=1cm,minimum height=0.5cm] {$\sbo_4$};
+	\node (XOR-2) [XOR,scale=0.8,thick,below of=hin,node distance=4.5cm] {};
+	\coordinate[right of=XOR-2,node distance=1.5cm] (midbot);
+	\node (XOR-3) [XOR,scale=0.8,thick,below of=lon,node distance=4.5cm] {};
+	\node (f-2) [below of=XOR-2,draw,rectangle,very thick,minimum width=1cm,minimum height=0.5cm] {$\sbo_4$};
+	\node (f-3) [below of=XOR-3,draw,rectangle,very thick,minimum width=1cm,minimum height=0.5cm] {$\sbo_4$};
+
+	% data path
+	\draw (hin) -- (XOR-2);
+	\draw (midleft) -- (XOR-1);
+	\draw (lon) -- (XOR-3);
+	\draw (midright) -- (XOR-1);
+	%
+	\draw (XOR-1) -- (f-1);
+	\draw (f-1) -- (midbot);
+	\draw (midbot) -- (XOR-2);
+	\draw (midbot) -- (XOR-3);
+	%
+	\draw (XOR-2) -- (f-2);
+	\draw (XOR-3) -- (f-3);
+
+%	\draw (XOR-1) edge (f-1);
+%
+%    \node (XOR-2)[right of=f-1,XOR,scale=0.8,thick] {};
+%	\draw (f-1) edge (XOR-2);
+%	\node (f-2) [right of=XOR-2] {};
+%	\path[line] (XOR-2) edge (f-2) ;
+%	\node [right of=XOR-2,node distance=1.2cm] {$y$};
+%
+%	%% Subkeys
+%	\node (k-0) [above=0.4cm of XOR-1]{\small $k_{0}$};
+%	\draw (k-0) edge (XOR-1);
+%
+%	\node (k-1) [above=0.4cm of XOR-2]{\small $k_{1}$};
+%	\draw (k-1) edge (XOR-2);
+	
+\end{tikzpicture}

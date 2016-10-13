@@ -1,0 +1,29 @@
+\begin{tikzpicture}[scale=0.7]
+
+	%% Subkey XORs
+    \foreach \z in {0,...,63} {
+        \node[XOR, scale=0.5] (xor\z) at ($\z*(0.75em, 0)$) {};
+        \node (xorr\z) at ($\z*(0.75em, 0)+(0,-16em)$) {};
+    }
+
+    %% Nodes positions
+    \foreach \z in {0,...,63} {
+        \node (i\z) [above = 0.75em of xor\z] {};
+        \node (o\z) [below = 2.5em of xor\z] {};
+        \node (ii\z) [above = 0.25em of xorr\z] {};
+        \draw[thick] (i\z) -- (xor\z);
+	}
+
+	%% Permutation layer
+	\foreach \z [evaluate=\z as \zz using {int(mod(mod(\z,8)*8+\z,64))}] in {0,...,63} {
+		\draw[thick] (xor\z)  -- (o\z.center)  -- (ii\zz.center) -- (xorr\zz);
+	}
+
+	%% SBoxes
+    \foreach \z in {0,...,7} {
+    		\node[draw,thick,minimum width=4.2em,minimum height=2em,fill=white] (p4) at ($\z*(6em,0) + (2.6em,-2em)$) {$\mathcal{S}$};
+	}
+
+	\node[left = 0em of xor0] {$rk_i$};
+	
+\end{tikzpicture}

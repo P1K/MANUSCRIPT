@@ -1,0 +1,73 @@
+\def\mystrutNL{\vrule height 1.5em depth 1em width 0pt}%
+\def\mystrutLin{\vrule height 2.5em depth 2em width 0pt}%
+
+\begin{tikzpicture}[
+	scale=1.2,
+	transform shape,
+	node distance=3em and 0em,
+]
+    \tikzstyle{F} = [
+    		draw,
+		rectangle split,
+		rectangle split horizontal=false, 
+		rectangle split parts=3,
+		rectangle split draw splits=false, 
+		rectangle split part fill={green!20, blue!20, red!20},
+		text centered,
+		text width=4em,
+		minimum width=4em,
+		minimum height=12em,
+	]
+	
+	%%
+	%% First characteristic
+	%%
+	\node[F] (c1) {\mystrutNL \textswab{NL 1} \nodepart{two} \nodepart{three}\mystrutLin {\Large\textswab{L}}};
+	\draw[dashed] (c1.text split west) -- (c1.text split east);
+    \draw[dashed] (c1.two split west) -- (c1.two split east);
+	\node[MODADD,scale=1.5,below = 2em of c1] (add1) {};
+	\node[above = of c1.north, xshift=-1em] (in11) {};
+	\node[above = of c1.north, xshift=1em] (in12) {$\diff\expmess$};
+
+	\draw[line] let \p1=(in11.south),\p2=(c1.north) in (\x1,\y1) -- (\x1,\y2);
+	\draw[line] let \p1=(in12.south),\p2=(c1.north) in (\x1,\y1) -- (\x1,\y2);
+	\draw[line] (c1) -- node[right] {$\diff\state$} (add1);
+
+	\draw[line] let \p1=(in11),\p2=(c1.north),\p3=(add1) in 
+		(\x1,\y2+1.5em) 
+		-- node[above left]{$\text{\textswab{0}}$} (\x3-3em,\y2+1.5em) 
+		-- (\x3-3em,\y3) 
+		-- node[below] {} (add1);
+	
+	%%
+	%% Second characteristic
+	%%
+	\node[F, right = 8em of c1] (c2) {\mystrutNL \textswab{NL 2}\nodepart{two} \nodepart{three} \mystrutLin {\Large\textswab{-L}}};
+	\draw[dashed] (c2.text split west) -- (c2.text split east);
+    \draw[dashed] (c2.two split west) -- (c2.two split east);
+	\node[MODADD,scale=1.5,below = 2em of c2] (add2) {};
+	\node[below = of add2] (out) {};
+	\node[above = of c2.north, xshift=-1em] (in21) {};
+	\node[above = of c2.north, xshift=1em] (in22) {$-\diff\expmess$};
+
+	\draw[line] (c2) -- node[right] {$-\diff\state$} (add2);
+	\draw[line] let \p1=(in22.south),\p2=(c2.north) in (\x1,\y1) -- (\x1,\y2);
+	\draw[line] (add2) -- (out) node[below] {\textswab{0}};
+
+	\coordinate (M12) at ($(add1)!0.5!(add2)$);
+
+	\draw[line] let \p1=(c2.north),\p2=(add1),\p3=(in21),\p4=(M12) in 
+		(\x2,\y2) 
+		-- (\x2,\y2-2em) 
+		-- (\x4-1.5em,\y4-2em)
+		-- (\x4-1.5em,\y3)
+		-- (\x3,\y3)
+		-- (\x3,\y1);
+
+	\draw[line] let \p1=(in21),\p2=(c2.north),\p3=(add2) in 
+		(\x1,\y2+1.5em) 
+		-- node[above left]{$\diff\state$} (\x3-3em,\y2+1.5em) 
+		-- (\x3-3em,\y3) 
+		-- node[below] {$\diff\state$} (add2);
+
+\end{tikzpicture}

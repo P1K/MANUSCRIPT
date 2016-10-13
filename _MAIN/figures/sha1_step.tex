@@ -1,0 +1,130 @@
+%% Public TikZ libraries
+\usetikzlibrary{positioning}
+
+%% Custom TikZ addons
+\usetikzlibrary{crypto.symbols}
+\tikzset{shadows=no}        % Option: add shadows to XOR, ADD, etc.
+
+%% Document
+\begin{tikzpicture}[scale=0.8, transform shape,
+	thick,
+	node distance=2.1cm and 0cm,
+	]
+
+    \tikzstyle{word} = [
+		draw,
+		rectangle,
+		fill=Fuchsia!20,
+		text centered,
+		text width=3em,
+		minimum width=2cm,	
+		%blur shadow={shadow blur steps=5},	
+	]
+
+    \tikzstyle{dot} = [
+		fill,
+		shape=circle,
+		minimum size=5pt,
+		inner sep=0pt,
+	]	
+
+    \tikzstyle{F} = [
+		draw,
+		rectangle,
+		fill=LimeGreen!30,
+		text centered,
+		text width=2em,
+		minimum width=1em,
+		minimum height=2em,	
+		%blur shadow={shadow blur steps=5},	
+	]
+
+    \tikzstyle{rotatebox} = [
+		draw,
+		rectangle,
+		fill=YellowOrange!30,
+		text centered,
+		text width=1cm,
+		minimum width=1cm,	
+		%blur shadow={shadow blur steps=5},		
+	]
+	
+	\node[word] (a0) {$\mathcal{A}_{i}$};
+	\node[word,right of = a0] (b0) {$\mathcal{B}_{i}$};
+	\node[word,right of = b0] (c0) {$\mathcal{C}_{i}$};
+	\node[word,right of = c0] (d0) {$\mathcal{D}_{i}$};
+	\node[word,right of = d0] (e0) {$\mathcal{E}_{i}$};
+    
+	\node[MODADD,scale=1.5,below = 2em of e0] (add1) {};
+	\node[MODADD,scale=1.5,below = 2em of add1] (add2) {};
+	\node[MODADD,scale=1.5,below = 2em of add2] (add3) {};
+	\node[MODADD,scale=1.5,below = 2em of add3] (add4) {};
+
+	\path let \p1=(a0.east),\p2=(add2) in node[rotatebox] (rot1) at (\x1+0.5em,\y2) {$\circlearrowleft 5$};	
+	\path let \p1=(b0),\p2=(add3) in node[rotatebox] (rot2) at (\x1,\y2) {$\circlearrowright 2$};
+
+	\node[F,left = 1em of add1] (F) {$\boolF_{i}$};
+
+	\node[word,below of = add4] (e1) {$\mathcal{E}_{i+1}$};
+	\node[word,left of = e1] (d1) {$\mathcal{D}_{i+1}$};
+	\node[word,left of = d1] (c1) {$\mathcal{C}_{i+1}$};
+	\node[word,left of = c1] (b1) {$\mathcal{B}_{i+1}$};
+	\node[word,left of = b1] (a1) {$\mathcal{A}_{i+1}$};
+
+	\draw[line] (e0) -- (add1);
+	\draw[line] (add1) -- (add2);
+	\draw[line] (add2) -- (add3);
+	\draw[line] (add3) -- (add4);
+	\draw[line] (b0) -- (rot2);
+	\draw[line] (rot1) -- (add2);
+
+	\draw[line] let \p1=(add4.south),\p2=(a1.north),\p3=(add4.south) in 
+		(\x1,\y1) 
+		-- (\x1,\y3-0.5em)
+		-- (\x2, \y2+1em)
+		-- (\x2, \y2);
+
+	\draw[line] let \p1=(c0.south),\p2=(d1.north),\p3=(add4.south) in 
+		(\x1,\y1) 
+		-- (\x1,\y3-0.5em)
+		-- (\x2, \y2+1em)
+		-- (\x2, \y2);
+
+	\draw[line] let \p1=(rot2.south),\p2=(c1.north),\p3=(add4.south) in 
+		(\x1,\y1) 
+		-- (\x1,\y3-0.5em)
+		-- (\x2, \y2+1em)
+		-- (\x2, \y2);
+		
+	\draw[line] let \p1=(d0.south),\p2=(e1.north),\p3=(add4.south) in 
+		(\x1,\y1) 
+		-- (\x1,\y3-0.5em)
+		-- (\x2, \y2+1em)
+		-- (\x2, \y2);
+				
+	\draw[line] let \p1=(a0.south),\p2=(b1.north),\p3=(add4.south) in 
+		(\x1,\y1) 
+		-- (\x1,\y3-0.5em)
+		-- (\x2, \y2+1em)
+		-- (\x2, \y2);
+
+	\draw[line] (F) -- (add1);
+
+	\node[right = 2em of add3] (m) {$\mathcal{W}_{i}$};
+	\draw[line] (m) -- (add3);
+
+	\node[right = 2em of add4] (k) {$\mathcal{K}_{i}$};
+	\draw[line] (k) -- (add4);
+
+	\path let \p1=(rot1.west),\p2=(a0.south) in node[dot] (dotA) at (\x2,\y1) {};
+	
+	\path let \p1=(F.west),\p2=(d0.south) in node[dot] (dotD) at (\x2,\y1-0.6em) {};
+	\path let \p1=(F.west),\p2=(c0.south) in node[dot] (dotC) at (\x2,\y1) {};
+	\path let \p1=(F.west),\p2=(b0.south) in node[dot] (dotB) at (\x2,\y1+0.6em) {};
+	
+	\draw[line] (dotA) -- (rot1);
+	\draw[line] let \p1=(dotD),\p2=(F.west) in (dotD) -- (\x2,\y1);
+	\draw[line] let \p1=(dotC),\p2=(F.west) in (dotC) -- (\x2,\y1);
+	\draw[line] let \p1=(dotB),\p2=(F.west) in (dotB) -- (\x2,\y1);
+
+\end{tikzpicture}
