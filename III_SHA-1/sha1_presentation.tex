@@ -1,7 +1,7 @@
 \section{The SHA-1 hash function}
 \label{sec:description}
 
-This section gives a brief description of the \shaone hash function, going again over some features already presented in \autoref{sec:intro}. We refer to the most recent NIST standard document~\cite{Nist-SHA} for a more thorough
+This section gives a brief description of the \shaone hash function, going again over some features already presented in \autoref{chap:hashfun}. We refer to the most recent NIST standard document~\cite{Nist-SHA} for a more thorough
 presentation.
 
 \shaone is a hash function from the \mdsha family which produces digests of $160$ bits.
@@ -30,7 +30,7 @@ Similarly to other members of the \mdsha family, the compression function $\comp
 %wordiwse addition of the five state registers (cf. below) in $\ztt$.
 %and ``$\boxplus$'' denotes word-wise addition in $\mathbf{Z}/2^{32}\,\mathbf{Z}$. 
 The block cipher itself is a five-branch generalized Feistel network using an Add-Rotate-XOR ``ARX'' step function with the addition of two non-linear Boolean functions, see \autoref{tab:sha_spec}.
-In its full version, the step function is iterated 80 times (divided in four rounds of 20 steps).
+In its full version, the step function is iterated 80 times, divided in four rounds of 20 steps.
 
 The internal state of $\blockE$ consists of five 32-bit registers $(\mathcal{A}_i, \mathcal{B}_i, \mathcal{C}_i, \mathcal{D}_i, \mathcal{E}_i)$; at each step, a 32-bit \emph{expanded} message word $\expmess_i$ derived from
 a message block $\messblock$

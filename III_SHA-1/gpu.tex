@@ -120,7 +120,7 @@ later steps when no neutral bits can be used anymore, the snippets regroup the c
 Eventually the verification that partial solutions up to step 56 (in the 76-step case; 60 in the 80-step one) result in valid collisions is done on a CPU. This is partly because
 the amount of available memory makes it hard to use step-by-step snippets until the end, but also because such partial solutions are only
 produced very slowly. For instance, a single \gtx produces partial solutions up to step 56 of a 76-step collision at a speed of about 0.017 solution per second, that is about
-1 per minute); waiting for enough partial solutions to feed a single complete warp would in this case take a completely unreasonable half hour.
+1 per minute; waiting for enough partial solutions to feed a single complete warp would in this case take a completely unreasonable half hour.
 
 \bigskip
 
@@ -182,7 +182,7 @@ in memory causes as little overhead as possible.
 The representation we use is based on two types of buffers: some are holding enough information to define a \sha computation in its entirety (\ie it
 contains the value of at least five (resp. sixteen) consecutive state (resp. message) words), while others only contain the necessary information to
 express how the associated partial solution differs from a completely-defined one. Typically, the first kind of buffer may be used to store base solutions,
-while the second is used to keep track of which neutral bits are currently active.
+while the second is used to keep track of which neutral bits are active in a partial solution.
 
 It is quite straightforward to define the structure of a base solution buffer, as there is little doubt about the necessary information they need
 to include and the way to represent it. For instance, the 76-step base solution buffer contains the value of state words $\state_{13},\ldots,\state_{17}$
@@ -190,8 +190,8 @@ and of the message words $\expmess_6,\ldots,\expmess_{21}$. Additionally, it inc
 not strictly necessary, it is useful to speed-up the computation of the activation of some neutral bits. Similar buffers (without an extra state word)
 are used to hold partial solutions up to $\state_{36}$ and $\state_{56}$ (resp. $\state_{40}$ and $\state_{60}$ in the 80-step case)\footnote{The choice
 of these boundaries to define the late partial solutions (were no more control is possible) simply comes from the fact that a pair of messages following
-the differential path of either attack is not expected to have any state differences at these steps. It is thus particularly efficient to screen
-solutions that are still valid at these points.}.
+the differential path of either attack is not expected to have any state differences at these steps. It is thus particularly efficient to filter
+solutions that are not valid at these points.}.
 
 The structures of the other buffers are also quite simple, but their instantiations may require some care to make them especially efficient.
 In a nutshell, we just want such a buffer to keep a reference to a base solution and to remember the values of the currently active neutral bits.
@@ -203,7 +203,7 @@ approach we followed in our implementations, with an added refinement.
 
 We have already mentioned in the past section that \eg the 76-step attack contains neutral bits acting on a wide range of steps, from $\state_{18}$
 to $\state_{26}$; the range for the 80-step attack is even wider, due to the use of boomerangs. Additionally, the neutral bits themselves are located on many message
-words. Thus, it would seem wasteful to recompute the action of paste neutral bits on message words as low as $\expmess_{14}$ while in the snippet corresponding
+words. Thus, it would seem wasteful to recompute the action of past neutral bits on message words as low as $\expmess_{14}$ while in the snippet corresponding
 \eg to $\state_{24}$. Consequently, we have a strong incentive to store intermediary partial solutions in order to save some of this recomputation.
 
 In the 76-step case, there is a natural location that may be used to define what we call \emph{extended base solutions}. As we will detail in
@@ -212,21 +212,23 @@ on words $\expmess_{19}$ to $\expmess_{21}$ are only used in later steps. Thus, 
 $\expmess_{18}$ have all been determined, only the modified message words and the corresponding value for the state should be stored. There is
 however no need to keep again sixteen message words in such an extended base solution, as most of them are identical to the ones of the corresponding
 base solution (and as a base solution is in general extended into many distinct extended base solutions, it would not make sense to \eg add enough
-message words to the latter and erasing the former). One subtlety in the definition of this extended base solution is that
-it also includes the message word $\expmess_{20}$. Although no neutral bits on this word are yet to be used at the point where the solution is
+message words to the latter and erase the former). One subtlety in the definition of this extended base solution is that
+it also includes the message word $\expmess_{20}$. Although no neutral bits on this word
+have been activated at the point where the solution is
 formed, some of its bits may need to be flipped depending on the use of neutral bits on words $\expmess_{15}$ and $\expmess_{16}$, so as to
 preserve message bit relations. A convenient way to remember this information is simply to preemptively add the possible contributions of the neutral
 bits to $\expmess_{20}$ and to store this modified word in the extended base solution.
 All in all, the buffer of extended base solution of the 76-step attack is made of twelve words: five state words $\state_{17}$ to $\state_{21}$,
 six message words $\expmess_{14}$ to $\expmess_{18}$ and $\expmess_{20}$, and one word holding an identifier for the base solution from which
 it is extended.
+
 The ``inter-snippet'' buffers that refer to changes from a base or extended base solution are only made of two words consisting of concatenated
 segments of the message words containing neutral bits and of a reference to the associated solution.
 
 The 80-step attack uses similar representations but with a few variations. As we will show in \autoref{sec:res_80}, there are
 more possible corrections on the messages to be performed in the 80-step attack to preserve message bit relations. Consequently, some of the precomputations of
 individual neutral bit contributions are stored alongside the actual neutral bits. It is also slightly less immediate to determine where to
-start defining an extended base solution, as there is no natural separation between the location of various neutral bits as there were in
+start defining an extended base solution, as there is no natural separation between the location of various neutral bits as there was in
 the 76-step case. This is not a major issue, however, as the location of the neutral bits of a same word shared between base and extended base solutions
 are not overlapping inside the word itself; splitting their representation over multiple buffers thus does not result in significant overhead.
 Finally, the additional use of boomerang neutral bits (or somehow equivalently, the use of more neutral bits than in the 76-step attack)
@@ -250,7 +252,7 @@ thence reducing the overhead inherent to the use of such shared data structures.
 Taken together, the buffers thus use a significant portion of the 4\,GB memory available on the \gtx, needing in the neighbourhood of 3\,GB.
 
 We carefully took into account the presence of a limited amount of
-very fast multii\-processor-specific shared memory. While the 96\,KB available per multiprocessor is
+very fast multi\-processor-specific shared memory. While the 96\,KB available per multiprocessor is
 hardly enough to store the whole buffers themselves, we take advantage of it by dissociating the storage of
 the buffers and of the meta-data used for their control logic, the latter being held in
 shared memory. This improves the overall latency of buffer manipulations, especially in case of
@@ -331,7 +333,8 @@ buffer, or from the matching solution of the base solution buffer \mintinline{c}
 is the one of \mintinline{c}{q22} on line 16, using the \shaone round function. This would in fact not be necessary in this function, as the value could have been included in the extended base solution altogether.
 This was not done because recomputing \mintinline{c}{q22} is necessary in the snippets of the following steps and causes only minimal overhead in this one, while saving a 32-bit word from the \mintinline{c}{Q22SOLBUF} buffer.
 
-The loop from line 18 to 41 (\ie the remainder of the function) applies every combination of the five neutral bits for this step, all of which being located on $\expmess_{19}$. In more details, line 21 sets the register
+The loop from line 18 to 41 (\ie the remainder of the function) applies every combination of the five neutral bits for this step, all of which 
+are located on $\expmess_{19}$. In more details, line 21 sets the register
 \mintinline{c}{w19_q23_nb} to one of the 32 possible combinations. Lines 23 and 24 clear the message word \mintinline{c}{m19} of the previous neutral bit combination and applies the new one, and line 25
 computes the expanded message word \mintinline{c}{m22} based on the new value for \mintinline{c}{m19}, using \shaone's message expansion (note that this computation could actually be optimized, \eg by
 precomputing the contribution of \mintinline{c}{m14}, \mintinline{c}{m8} and \mintinline{c}{m6}, which are fixed in this function).
@@ -361,7 +364,7 @@ performance variations across the GPUs. This was likely due to uneven heat dissi
 average expected time to obtain a collision on our 4-GPU machines was 4.42 days per GPU, and thus about 1.1 day per machine. As the cooling was not optimal in our set-up,
 reaching a performance closer to the one-GPU setting is likely to be possible.
 
-We did not make any major change for the 80-step attack, but due to the higher computational cost, only 4-GPU machines were used.
+We did not make any major changes for the 80-step attack, but due to the higher computational cost, only 4-GPU machines were used.
 
 \FloatBarrier
 
@@ -369,7 +372,7 @@ We did not make any major change for the 80-step attack, but due to the higher c
 \label{sec:effi_fw}
 
 We conclude this section by evaluating the performance of our framework, and in particular by assessing the relative efficiency of a GPU-based attack compared to a more traditional CPU implementation.
-We provide this analysis for the 76-step attack, but the results apply entirely to the 80-step attack as well (and to \shaone collision attacks implemented with our framework in general).
+We provide this analysis for the 76-step attack, but the results apply entirely to the 80-step attack as well (and to would-be \shaone collision attacks implemented with our framework in general).
 
 
 Our GPU implementation of \shaone can compute about $2^{31.8}$ (full) \shaone compression functions per second on a \gtx.

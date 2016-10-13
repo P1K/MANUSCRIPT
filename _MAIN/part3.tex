@@ -4,13 +4,13 @@
 
 \section*{Overview}
 
-The \shaone hash function was one of the first widely-deployed hash functions. It was designed by the NSA in 1995 as a modified version of 1993's \shazero (which itself
-was more loosely inspired by 1990's \mdfour). In 2005, Wang \etal presented the first major attack on \shaone, giving a method to find colliisions for the hash function
+The \shaone hash function was one of the first widely-deployed hash functions. It was designed by the NSA in 1995 as a modified version of 1993's \shazero, which itself
+was more loosely based on 1990's \mdfour. In 2005, Wang \etal presented the first major attack on \shaone, giving a method to find collisions for the hash function
 in time equivalent to $\approx 2^{69}$ evaluations of the compression function, which is significantly faster than the $\approx 2^{80}$ required by a generic process.
 However, the high cost of the attack implied that no explicit collision was computed at the time. This remains the case today, even if improvements to the attack
 and ever more efficient hardware would make such an endeavour more affordable than it was in 2005.
-The considerable amount of work that followed Wang \etal's original contribution then mostly focused on first getting a better understanding of the attack process and
-second bringing innovations allowing to explicitly provide collisions for reduced versions of \shaone with the highest number of steps. 
+The considerable amount of work that followed Wang \etal's original contribution then mostly focused on first getting a better understanding of the attack process, and
+secondly on bringing innovations allowing to explicitly provide collisions for reduced versions of \shaone with the highest number of steps. 
 
 \bigskip
 

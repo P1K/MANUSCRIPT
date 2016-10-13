@@ -11,7 +11,7 @@ the matter.
 
 \medskip
 
-All the attacks presented in this section are differential in nature. In its simplest form, the idea is to find a ``good'' \emph{message difference} $\diff(\expmess,\dexpmess)$
+All the attacks presented in this section are differential in nature. In its simplest form, the idea such attacks is to find a ``good'' \emph{message difference} $\diff(\expmess,\dexpmess)$
 (or $\diff\expmess$)\footnote{Strictly speaking, the difference is imposed on the non-expanded message words $\mess_i$. However, the message expansion being linear,
 we will usually rather consider the implied probability-one difference on the expanded message $\expmess_i$.}
 and associated state differential path $\diff(\state,\dstate)$ (or $\diff\state$) such that: (1) A pair of states following the differential path
@@ -23,12 +23,12 @@ $\diff\state$ results in a collision; (2) Finding a pair of messages of differen
 
 In the initial SHA standard of 1993, there was no rotation by one to the left in the message expansion of the compression function~\cite{Nist-SHA0}; the corresponding original algorithm was
 retrospectively named \shazero, to distinguish it from the updated standard \shaone, first published in 1995~\cite{Nist-SHA1}.
-At CRYPTO~1998, Chabaud and Joux presented a theoretical collision attack on \shazero, with an estimated complexity of searching through $2^{61}$ message pairs~\cite{DBLP:conf/crypto/ChabaudJ98}
-(equivalent to $2^{58}$ calls to the compression function of \shazero~\cite{DBLP:journals/joc/BihamCJ15}). However, the modified message
+At CRYPTO~1998, Chabaud and Joux presented a theoretical collision attack on \shazero, with an estimated complexity of searching through $2^{61}$ message pairs~\cite{DBLP:conf/crypto/ChabaudJ98},
+equivalent to $2^{58}$ calls to the compression function of \shazero~\cite{DBLP:journals/joc/BihamCJ15}. However, the modified message
 expansion of \shaone prevents a straightforward application of the same approach from leading to an attack better than brute force.
 
-There are four main components in this original attack on \shazero (and its first improvements~\cite{DBLP:conf/crypto/BihamC04,DBLP:conf/eurocrypt/BihamCJCLJ05,DBLP:journals/joc/BihamCJ15}),
-all of which found their way to the attacks on \shaone (either \emph{as is} or in a modified form):
+There are four main components in the original attack on \shazero and its first improvements~\cite{DBLP:conf/crypto/BihamC04,DBLP:conf/eurocrypt/BihamCJCLJ05,DBLP:journals/joc/BihamCJ15},
+all of which found their way to the attacks on \shaone, either \emph{as is} or in a modified form:
 \begin{enumerate}
 \item \emph{Local collisions} in the step function as a springboard for a collision for the full function (\autoref{sec:local_coll}).
 \item Using \emph{signed differences} and a fine analysis of difference conditions in the Boolean functions (\autoref{sec:diffs_ana}).
@@ -47,7 +47,7 @@ variant (named \shiun by Chabaud and Joux~\cite{DBLP:conf/crypto/ChabaudJ98}) ar
 (in particular the differential paths $\diff\expmess$ and $\diff\state$),
 one element of which being the concept of \emph{local collisions} for the step function.
 
-It is easy to see (for instance from \autoref{eq:rec_step}) that only five consecutive state words are used in the step function of \sha to determine the value of the next (or previous) one. Consequently, if
+It is easy to see (for instance from \autoref{eq:rec_step}) that only five consecutive state words are used in the step function of \sha to determine the value of the next (or previous) word. Consequently, if
 we could introduce a difference in the message, such that after some steps the five current state words of $\state$ and $\dstate$ were equal, then the final hash values for the
 two computations would form a collision,
 as long as no more differences were present in the remainder of the message. Of course, the latter condition is hard to meet in general, but meeting the former seems to be quite easy as long as some limited
@@ -68,7 +68,7 @@ $\diff(\expmess_i, \dexpmess_i) =$ \nodiff \nodiff \nodiff \nodiff \nodiff \nodi
 \end{tabular}.
 \end{center}
 From \autoref{eq:rec_step}, we see that this introduces a difference between $\state_{i + 1}$ and $\dstate_{i + 1}$ in the same position, \ie on bit 8. Our goal is now to ensure that this
-difference does not propagate further, and that there is no difference between $\state_{i + 2\ldots i + 6}$ and $\dstate_{i + 2\ldots i + 6}$:
+difference does not propagate further, and that there are no differences between $\state_{i + 2\ldots i + 6}$ and $\dstate_{i + 2\ldots i + 6}$:
 \begin{itemize}
 \item At ($\state_{i + 2},\dstate_{i + 2}$), we must cancel the difference coming from $(\state_{(i + 2) - 1}, \dstate_{(i + 2) - 1}) \circlearrowleft 5 = (\state_{i + 1}, \dstate_{i + 1}) \circlearrowleft 5$;
 this is done by inserting a difference in bit 13 of $\expmess_{i + 1}$:
@@ -138,12 +138,12 @@ In the case of \shiun, the probability of obtaining a local collision when follo
 For instance, there is a probability $2^{-1}$ that the introduction of the difference in $(\state_{i+1},\dstate_{i+1})$ with modular addition rather than XOR
 leads to a difference in more than one bit because of different
 behaviours in the propagation of the carry in the two states (on which we do not assume to have any direct control). Overall, the probability of obtaining a successful local collision depends on several factors, including which Boolean function is used
-and whether several collisions are chained together. We partially address this matter next.
+and whether several collisions are chained together or not. We partially address this matter next.
 
 \subsubsection{Difference analysis for impure ARX}
 \label{sec:diffs_ana}
-We now move away from \shiun and start to analyse the behaviour of local collisions for the true \sha function. There are two main points in this analysis: (1)~What conditions \emph{at the bit level}
-ensure the highest probability of success for the different types of single local collisions; (2)~Under optimal conditions, what is the probability of a chain of interdependent local collisions?
+We now move away from \shiun and start to analyse the behaviour of local collisions for the true \sha function. There are two main points in this analysis: what conditions \emph{at the bit level}
+ensure the highest probability of success for the different types of single local collisions, and under optimal conditions, what is the probability of a chain of interdependent local collisions?
 We focus on the first question here, and defer the answer to the second to \autoref{sec:chain_lc}.
 
 \medskip
@@ -179,7 +179,7 @@ canceled in $\diff\state_{i+2}$ through the modular addition of $\diff\expmess_{
 message, we can ensure that this is always the case for successful introductions of the difference on $\diff\state_{i+1}$ (that do not result in different carry propagations for
 $\state_{i+1}$ and $\dstate_{i+1}$) by analysing what may happen in the four possible cases  of an introduction (depending on the signs of the involved differences), at the level of one bit:
 \begin{enumerate}
-\item \onediffu (the difference in $\diff\expmess_i$, introducing the perturbation) + \nodiffz (the ``difference'' in the same position of the partial sum used to compute $\diff\state_{i+1}$) = \onediffu,
+\item \onediffu (the difference in $\diff\expmess_i$, introducing the perturbation) + \nodiffz{} (the ``difference'' in the same position of the partial sum used to compute $\diff\state_{i+1}$) = \onediffu,
 with no different carry propagation in the remainder of $\diff\state_{i+1}$).
 \item \onediffu  + \nodiffo = \onediffd, with different carry propagation.
 \item \onediffd  + \nodiffz = \onediffd, with no different carry propagation.
@@ -230,7 +230,7 @@ may be used to check in advance if a given local collisions is going to happen o
 assuming a perturbation on bit $j$ of $\diff\state_{i+1}$, we can predict that there will be no local collision if the bits $j - 2$ of $\diff\state_{i}$ and $\diff\state_{i-1}$ are equal, even if the perturbation is properly
 introduced. Indeed, none of $\fif(\text{\onediffu,\nodiffz,\nodiffz})$, $\fif(\text{\onediffu,\nodiffo,\nodiffo})$, $\fif(\text{\onediffd,\nodiffz,\nodiffz})$, $\fif(\text{\onediffd,\nodiffo,\nodiffo})$
 results in a difference
-\footnote{This can also be trivially deduced from the very definition of the IF function.}, which means that there will be no difference in the Boolean function computation at $\diff\state_{i+3}$ and thus the tentative correction
+\footnote{This can be trivially deduced from the very definition of the IF function.}, which means that there will be no difference in the Boolean function computation at $\diff\state_{i+3}$ and thus the tentative correction
 in $\diff\expmess_{i+2}$ will actually introduce a difference.
 
 \begin{table}[ht]
@@ -320,11 +320,11 @@ The first condition is actually easy to meet by defining a \emph{disturbance vec
 of local collisions.
 Now it suffices to remark that because the message expansion is linear, a sum of expanded messages is an expanded message itself;
 then if the disturbance vector is a valid expanded message word, so is the complete message difference, including the corrections of the local
-collisions. For this to be correct, however, two conditions need to be met: (1)~The disturbance vector must have no differences in its first five ``negative'' words $\expmess_{-5,\ldots,-1}$, obtained through
+collisions. For this to be correct, however, two conditions need to be met: first, the disturbance vector must have no differences in its first five ``negative'' words $\expmess_{-5,\ldots,-1}$, obtained through
 the backward message expansion. Indeed, remembering \autoref{sec:local_coll}, the corrections of the local collisions will be obtained from (possibly rotated) shifted copies of the pattern of initial perturbations introduced by the \dv,
 up to five positions down. If we want these copies to be valid expanded message words, they must be equal to the \dv with its last (up to five) words removed and with a few (up to five) words
 added at the beginning, which would be obtained from the backward message expansion. As the added words must be zero, lest they create new perturbations that would not be corrected, we obtain the aforementioned
-condition. (2)~All corrections need to be performed in the same way, so that they globally conform to the message expansion; this is why one cannot exploit the absorption properties of some Boolean functions as noticed in \autoref{sec:diffs_ana},
+condition. Second, all corrections need to be performed in the same way, so that they globally conform to the message expansion; this is why one cannot exploit the absorption properties of some Boolean functions as noticed in \autoref{sec:diffs_ana},
 as it is impossible to do so consistently across all the rounds.
 
 This simple characterization of series of local collisions allows to define efficient search strategies to find vectors
@@ -356,7 +356,7 @@ of $\boolF_\text{IF}$; in that case, it disqualifies \dvs with two consecutive p
 while the probability of some other interactions being successful can be increased by properly choosing the sign of some specific collisions. We will later discuss
 the issue further for \shaone in \autoref{sec:chain_lc}.
 
-With this refined cost function in mind, two good disturbance vectors where found for the original attack on \shazero~\cite{DBLP:conf/crypto/ChabaudJ98}; we show the first of them in
+With this refined cost function in mind, two good disturbance vectors were found for the original attack on \shazero~\cite{DBLP:conf/crypto/ChabaudJ98}; we show the first of them in
 \autoref{fig:shaz_dv}, using an unsigned differences notation.
 
 \begin{figure}[ht]
@@ -384,7 +384,7 @@ Although this is already an attack that is significantly faster than a brute-for
 nearly twenty years later, such an attack requires considerable resources; it would roughly be comparable in cost with the full free-start collision for \shaone which is the main topic of
 this part.}.
 A series of techniques were later developed to make such attacks considerably more efficient, which ultimately led to the first explicit collision on \shazero~\cite{DBLP:conf/eurocrypt/BihamCJCLJ05}.
-These improvements were of two kinds: (1) Chaining multiple blocks to enable the use of better \dvs; (2) Using \emph{neutral bits} to make the probabilistic phase of the attack more efficient.
+These improvements were of two kinds: chaining multiple blocks to enable the use of better \dvs, and using \emph{neutral bits} to make the probabilistic phase of the attack more efficient.
 The first improvement as originally used for \shazero was later superseded by the two-block attack structure of Wang \etal, used both for improved attacks on \shazero
 and for the first full theoretical attack on \shaone~\cite{DBLP:conf/crypto/WangYY05,DBLP:conf/crypto/WangYY05a},
 and we will not describe it here. The second improvement,
@@ -446,7 +446,7 @@ subsequent improvements:
 \item Better cost functions were defined for the disturbance vectors (\autoref{sec:chain_lc}).
 \end{enumerate}
 It is important to note that although these improvements were somehow necessary to attack \shaone and led to the first theoretical attack on this function~\cite{DBLP:conf/crypto/WangYY05a},
-the same technique can, and were, applied to improve the existing attacks on \shazero as well~\cite{DBLP:conf/crypto/WangYY05}, and also other functions of the \mdsha family.
+the same techniques can, and were, applied to improve the existing attacks on \shazero as well~\cite{DBLP:conf/crypto/WangYY05}, and also other functions of the \mdsha family.
 
 Let us also mention for completeness that the original attacks of Wang \etal used an accelerating technique named \emph{message modification} instead of neutral bits. Such a technique works
 by identifying changes in message words controlled by the attacker that only impact (say) a single necessary condition for a local collision located at a point where no direct control is possible.
@@ -498,9 +498,14 @@ Two advantages of this approach over a purely linear model were already mentione
 \item One can keep successive local collisions in the IF round (this point was already partially resolved by Biham \etal for \shazero~\cite{DBLP:conf/eurocrypt/BihamCJCLJ05}).
 \end{enumerate}
 
-This allows to select better disturbance vectors than what would otherwise be possible, provided that one is able to find a suitable state difference. It is however not
-essential (at least for a basic attack) for the resulting path to be of high probability, as it will be located in (part of) the first round only, where one has entire
-control of the message. This amount of freedom is enough to find many solutions to the non-linear part, even when keeping in mind that these need to leave some bits unspecified
+This allows to select better disturbance vectors than what would otherwise be possible, provided that one is able to find a suitable state difference, using
+a non-linear propagation model, that is compatible with the disturbance vector.
+It is however not
+essential (at least for a basic attack) for the path entailed by the (``non-linear'') state difference
+to be of high probability, as it will be located in (part of) the first round only (as there is no obstacle
+to using a linear path for the remainder of the function), where one has entire
+control of the message. This amount of freedom is enough to find many solutions to the non-linear part of the differential path,
+even when keeping in mind that these need to leave some bits unspecified
 so that enough message candidates can later be generated to obtain a collision.
 
 The other main advantage of using a non-linear path is that, as mentioned above, it is the chief reason why an efficient two-block structure can be used for an attack. Indeed,
@@ -541,10 +546,10 @@ One can also mention the alternative ``meet-in-the-middle'' approach for the con
 and later Stevens~\cite{phdstevens}. This method works by defining two partial differential paths, one expanded forward (\eg starting from the \iv) and one expanded backward
 (\eg starting from the purely linear part of the path), that are then connected on a few consecutive steps.
 
-The advantages of an automatic search of the non-linear part of the differential path over a manual one are twofold: (1) It is much faster to create new
+The advantages of an automatic search of the non-linear part of the differential path over a manual one are twofold: first, it is much faster to create new
 attack instances, which allows for example to experiment quickly with several \dvs. This is particularly useful if one wants both to mount
 attacks for the full function (even without running the attack completely) and attacks for a high number of reduced steps, the best \dvs in each case
-being likely different. (2) The ability to generate many non-linear paths allows to search for ones that have few constraints (for instance leading
+being likely different. Second, the ability to generate many non-linear paths allows to search for ones that have few constraints (for instance leading
 to more available neutral bits) or that can incorporate more preset constraints (that may for instance aid in the use of boomerang neutral bits).
 
 % advantage is twofold: faster to mount new attacks, to experiment with several dvs; may lead to better paths or paths satisfying predefined constraints
@@ -723,7 +728,7 @@ It is most useful in this case to first consider the differences as modular ones
 have $\widetilde{x} = x - 2^{i} - 2^{i+1} + 2^{i+2}$ for some value $i$. Now we want to determine what are the probabilities of some of the possible resulting XOR differences between $x + y$ and $\widetilde{x} + \widetilde{y}$.
 
 Using a traditional view and treating all differences separately (which is what would happen if these were perturbations of local collisions seen independently), we would like to have no
-carry propagation at any of the three position, to obtain an XOR difference on the same three positions where differences were introduced. It is easy to see that this imposes three conditions
+carry propagation at any of the three positions, to obtain an XOR difference on the same three positions where differences were introduced. It is easy to see that this imposes three conditions
 on $x + y$, as it means that we want $\widetilde{x} + \widetilde{y} = (x + y) \oplus 2^{i} \oplus 2^{i+1} \oplus 2^{i+2}$, which translates to bits $i$, $i+1$ and $i+2$ of $x+y$ being 1, 1 and 0 respectively.
 The probability of this happening is thus $2^{-3}$.
 
@@ -799,7 +804,7 @@ by Mendel \etal for all Boolean functions and positions of the perturbation~\cit
 
 \medskip
 
-To conclude this part and the previous one, we have seen that the interaction of XOR and modular differences in \sha leads to a slight \emph{differential} effect for the disturbance vector. A single
+To conclude, we have seen that the interaction of XOR and modular differences in \sha leads to a slight \emph{differential} effect for the disturbance vector. A single
 message difference actually defines several, not mutually exclusive, local collision patterns. Even though one of these patterns is much more likely than the others (\ie the one with all possible compressions
 effectively done, and no decompression), the contribution of the remaining ones is not nil.
 
