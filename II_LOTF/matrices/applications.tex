@@ -40,9 +40,11 @@ We use standard $\emph{wide-trail}$ considerations to study differential and lin
 This is very easy to do thanks to the simple structure of the cipher.
 The branch number of $\matdiff$ is 15, which means that at least 15 S-boxes are active in any two rounds of
 a differential path or linear characteristic, while the best 4-bit S-boxes have a maximum differential probability
-and a maximal linear bias of $2^{-2}$. By using
-such S-boxes, one can upper-bound the probability of a single differential path or linear characteristic
-for $2 n$ rounds by $2^{-2\cdot 15 n}$. This is smaller than $2^{-64}$
+of $2^{-2}$ and a bias of at most $2^{-2}$ for any linear approximation (we will discuss such notions in more details
+in the next chapter). By using
+such S-boxes, one can upper-bound the probability of a single differential path (respectively the bias of a single linear characteristic)
+for $2 n$ rounds by $2^{-2\cdot 15 n}$ (respectively $2^{15n - 1}2^{-2\cdot 15 n}$) . This is smaller than $2^{-64}$ (respectively
+$2^{-32}$)
 as soon as $n > 2$. Hence we conjecture that 6 to 8 rounds are enough to make a cipher resistant
 to standard statistical attacks.
 
@@ -99,7 +101,7 @@ of $\cagh$, their minimum weight is 15, and thus so is the one of $w$.
 
 An efficient encoder can also be built for $\cagh'$, with only small changes from an encoder for $\cagh$.
 If we consider finite field multiplications as performed by linear feedback shift registers (LFSRs), the multiplication by
-a constant is done by summing shifts of the multiplicand and (possibly shifted) copies of the retroaction polynomial. Such a
+a constant is done by summing shifts of the multiplicand and (possibly shifted) copies of the feedback polynomial. Such a
 multiplication, say on eight bits can obviously be tabulated in a table of 256 8-bit entries, but smaller tables can also
 be used, exploiting the linearity. For instance, one can compute the multiplication from two tables of 16 8-bit entries which store the partial
 multiplication of the constant by the four most and least significant bits respectively; performing the complete multiplication
@@ -137,10 +139,11 @@ strong 8-bit S-boxes.
 
 From wide-trail considerations, the resistance of an \eric cipher to statistical attacks is comparatively better than \sam,
 when an appropriate 8-bit S-Box is used.
-For instance, the $\AES$ S-box has a maximal differential probability and linear bias of $2^{-6}$~\cite{aes}.
-This implies that the probability of a single differential path or linear characteristic for $2n$ rounds
-is upper-bounded by $2^{-6\cdot15 n}$, which is already much smaller than $2^{-128}$ as soon
-as $n > 1$.
+For instance, the $\AES$ S-box has a maximal differential probability of $2^{-6}$, and it cannot be approximated
+linearly with a bias more than $2^{-4}$~\cite{aes}.
+This implies that the probability (respectively bias) of a single differential path (respectively linear characteristic)
+for $2n$ rounds is upper-bounded by $2^{-6\cdot15 n}$ (respectively $2^{15n -1}2^{-4\cdot 15n}$), which is already much smaller than
+$2^{-128}$ (respectively $2^{-64}$) as soon as $n > 1$.
 \eric is also likely to be more resistant to algebraic attacks; at least five rounds are necessary to reach
 full degree (for an S-box of degree seven), which is two less than \sam.
 Thus, eight (and a half) rounds of an \eric cipher should bring adequate security, and six (and a half) rounds might be enough.

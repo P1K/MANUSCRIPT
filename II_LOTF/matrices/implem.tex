@@ -31,9 +31,10 @@ $\pshufb~x~y$ is to overwrite the input $x$ with the vector $x'$ defined by:
 x'[i] = \left\{
 				\begin{array}{ll}
 				x[\lfloor y[i]\rfloor_4]  & \text{if the most significant bit of $y[i]$ is not set}\\
-				0 & \text{otherwise}
+				0 & \text{otherwise} \\
 				\end{array}
-	    \right.
+		,~0\leq i \leq 16
+		\right.
 \]
 where $\lfloor\cdot\rfloor_4$ denotes truncation to the four least significant bits.
 This instruction allows to arbitrarily \emph{shuffle} a vector according to a mask, with possible repetition and omission of some of the vector
@@ -157,9 +158,9 @@ To compute $\broad(\lambda,i)_{64}$, with $\lambda$ a 4-bit value,
 we can use a single \pshufb{} with first operand
 $x$, such that $x[j] = 11111111_2$ if the $i^\text{th}$ bit of $j$ is set and 0 otherwise, and with second operand $y \defas (\lambda, \lambda, \ldots)$.
 The result of \pshufb{}~$x~y$ is indeed $(x[\lambda], x[\lambda], \ldots)$ which is $\mathbf{1}_{64}$ if the $i^\text{th}$
-bit of $\lambda$ is set and $\mathbf{0}_{64}$ otherwise, that is $\broad(\lambda, i)_{64}$\footnote{The quantities actually
+bit of $\lambda$ is set and $\mathbf{0}_{64}$ otherwise, that is $\broad(\lambda, i)_{64}$. In fact, the quantities actually
 computed this way are rather $\mathbf{0}_{128}$ and $\mathbf{1}_{128}$. Adapting this to $\mathbf{0}_{64}$
-and $\mathbf{1}_{64}$ is however simple to do.}.
+and $\mathbf{1}_{64}$ is however simple to do.
 
 In practice, the input $x$ to \pshufb{} can conveniently be constructed offline and stored in memory, but the second input $y$ might not be readily available before
 performing this computation\footnote{And because it depends on what we assume to be a secret value, it cannot either be fetched from memory.}.
@@ -311,7 +312,7 @@ We give a complete description of this shuffle-based process in \autoref{alg:shu
 on the coefficients of the matrix, since the size of the sets $\shuff(\mat, \lambda)$ depends both on the density
 of the matrix and of how its coefficients are arranged.
 
-If we suppose that a vector implementation of this algorithm is used, and if the dimension and the field of the matrix are well chosen,
+If we suppose that a vector implementation of this algorithm is used, and if the dimension and the field of the matrix are well-chosen,
 we can assume that both the scalar multiplication of $\veci$ by a constant and a shuffle can be computed with a single
 \pshufb{} each, and a few ancillary instructions. We take the number of calls to \pshufb as a basis to define a cost function for matrices with respect to their implementations with \autoref{alg:shuffle}.
 It is defined as:
@@ -319,7 +320,7 @@ It is defined as:
 %\cost(M) \defas \big(\sum_{\lambda \in \Fst^*} \indic(\shuff(\mat, \lambda)) + \#\shuff(\mat, \lambda)\big) - \indic(\shuff(\mat, 1)),
 %\]
 \[
-\cost(M) \defas \sum_{\lambda \in \Fst^*}\#\shuff(\mat, \lambda) + \sum_{\lambda \in \Fst^*-\{1\}}\indic(\shuff(\mat, \lambda)).
+\cost(M) \defas \sum_{\lambda \in \Fst^*}\#\shuff(\mat, \lambda) + \sum_{\lambda \in \Fst^*\setminus\{1\}}\indic(\shuff(\mat, \lambda)).
 \]
 The first term corresponds to the number of shuffles that need to be performed for each constant value, and the second to the number
 of constant multiplications to do.
@@ -352,5 +353,5 @@ The implementation of \autoref{alg:shuffle} is quite straightforward. We give no
 \subsection{Performance}
 
 In \autoref{tbl:perf_sam} and \autoref{tbl:perf_eric} of \autoref{sec:appli}, we give a few performance figures for ciphers with a \shark{} structure using assembly implementations of \autoref{alg:broadcast} and \autoref{alg:shuffle}  for their linear mapping.
-From there it can be seen without surprise that \autoref{alg:shuffle} is more efficient if the matrix is well chosen. However, \autoref{alg:broadcast}
+From there it can be seen without surprise that \autoref{alg:shuffle} is more efficient if the matrix is well-chosen. However, \autoref{alg:broadcast}
 still performs reasonably well, without imposing any condition on the matrix.

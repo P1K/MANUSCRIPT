@@ -71,14 +71,14 @@ be clear from the context and therefore omitted.
 
 Finally, we identify strings of length $n$ over the binary alphabet $\{0,1\}$ with elements of
 the vector-space $\mathbf{F}_2^n$ and with the binary representation of elements of
-the group $\mathbf{Z}/2^n\mathbf{Z}$. The addition operation on these structures
+the group $\mathbf{Z}/2^n\mathbf{Z}$. The addition operations on these structures
 are respectively denoted by $\oplus$ (bitwise exclusive or (XOR)) and $+$ (modular addition).
 
 \section{Generic related-key key-recovery attacks on $\IEM$}
 \label{sec:gen}
 
 
-Since the work of Bellare and Kohno~\cite{BK03}, it is well known that no block cipher can resist
+Since the work of Bellare and Kohno~\cite{BK03}, it is well-known that no block cipher can resist
 related-key attacks (RKA) when an attacker may request encryptions under related keys
 using two relation classes. A simple example showing why this cannot be the case
 is to consider the classes $\xrka(k)$ and $\arka(k)$ of keys
@@ -270,8 +270,8 @@ The mode of operation OTR is nonce-based; it takes as input a key $k$, a nonce $
 to the encryption of the message with $k$, and a tag $t$ authenticating $m$ and
 $a$ together with the key $k$. It is important for the security of the mode to ensure
 that one cannot encrypt twice using the same nonce. However, there are no
-specific restriction as to their value, and we consider that one
-can freely choose them.
+specific additional restrictions on the nonces, and we consider that an attacker
+has full control over their non-repeating values.
 
 The encryption of the first block of ciphertext $c_1$ by \proestotr is defined as a function
 $\fun(k, n, m_1, m_2)$
@@ -392,6 +392,7 @@ $2^\frac{\kappa}{2}$.
 
 
 \subsection{Step 2: Recovering the least significant half of the key.}
+\label{sec:reco_lsb}
 
 Even though the generic attack in its most simple form does not allow to recover the full key
 of \proestotr,
@@ -417,7 +418,7 @@ $\mathfrak{C} \oplus (k - k^\MSB - \Delta_\msbtwo) = \mathfrak{C} \oplus (k \opl
 with $\mathfrak{C} \defas \Perm(p \oplus (k - k^\MSB - \Delta_\msbtwo))$.
 Consequently, the XOR difference between the two results is known and equal to $\Delta_\msbtwoone$.
 If on the other hand
-$k[\msbtwo] = 0$, the carry in $(k - k^\MSB) - \Delta_\msbtwo)$ propagates all the way to the most significant bit of $k$, whereas only
+$k[\msbtwo] = 0$, the carry in $((k - k^\MSB) - \Delta_\msbtwo)$ propagates all the way to the most significant bit of $k$, whereas only
 two differences are introduced in the input to $\Perm$ in the first query. This allows to distinguish between the two cases and thus to recover the value of this key bit.
 
 Once the value of $k[\msbtwo]$ has been learned, one can iterate the process to recover the remaining bits of $k$.
@@ -450,7 +451,7 @@ and $\fun(k + \Delta_i^-, n, m_1 \oplus \permi(\Delta_{\msbtwoone}), m_2)$, whic
 with overwhelming probability.
 
 All in all, one can retrieve the whole key of size
-$\kappa$ using only $2\kappa$ chosen-nonce related-key encryption requests (with $\kappa$ different keys), ignoring
+$\kappa$ using only $2\kappa$ chosen-nonce related-key encryption requests (with $\kappa + \kappa/2 + 1$ different keys), ignoring
 everything in the output (including the tag) apart from the value of the first block
 of ciphertext. We give the full attack in \autoref{alg:kr}. Note that it makes use
 of a procedure \textsc{Refresh} which picks fresh values for two message words and (most importantly)
@@ -485,6 +486,7 @@ $k'$ := $0^\kappa$\\
 	\textsc{Refresh}($n$, $m_1$, $m_2$)\\
 	$x$ := $\fun(k + \Delta_i^+, n \oplus \Delta_{\msbtwoone}, m_1 \oplus \Delta_{\msbtwoone}, m_2)$\\
 	$y$ := $\fun(k + \Delta_i^-, n, m_1 \oplus \permi(\Delta_{\msbtwoone}), m_2)$\\
+	\tcc{The values of $\Delta_i^+$ and $\Delta_i^-$ are computed as in \autoref{sec:reco_lsb}}
 	\If{$x = y \oplus \Delta_\msbtwoone$}
 	{
 		$k'[i]$ := 1	
@@ -550,7 +552,7 @@ This lack of other results is not very surprising, as we only improve existing d
 attacks, and this improvement cannot be used without a distinguisher as its basis.
 Therefore, any primitive for which resistance to related-key attacks is important should already be resistant
 to the distinguishing attacks and thus to ours. Yet it would be reasonable to allow the presence
-of a simple related-key distinguisher when designing a primitive, as this a very weak type of
+of a simple related-key distinguisher when designing a primitive, as this is a very weak type of
 attack (in fact, this is for instance the approach taken by PRINCE, among others~\cite{PRINCE}, which admits
 a trivial distinguisher due to its \textsf{FX} construction).
 What we have shown is that one must be

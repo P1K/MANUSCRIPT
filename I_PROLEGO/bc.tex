@@ -113,11 +113,11 @@ A differential distinguisher instantiates this idea by considering a certain typ
 statistical distinguishers is the one of \emph{linear distinguishers}.
 
 Consider a block cipher $\E$; a \emph{differential} for $\E$ is a pair $(\Delta,\delta)$ of input and output \emph{differences},
-according to some group law $+$\footnote{We implicitly only consider non-trivial differences where $\Delta \neq 0$.}.
+according to some group law $+$\footnote{We implicitly only consider non-trivial differentials where $\Delta \neq 0$.}.
 In the huge majority of cases, $+$ is the addition in $\mathbf{F}_2^n$,
 \ie the bitwise exclusive OR (XOR); in this case we usually use the alternative notation $\oplus$. Sometimes, $+$
 is taken to be the addition in $\mathbf{Z}/2^n\mathbf{Z}$, and some other times differences according to the two laws may be jointly used.
-A \emph{differential pair} for the difference $(\Delta,\delta)$ and the key $k$ is an ordered pair $\langle (p,c), (p',c')\rangle$
+A \emph{differential pair} for the differential $(\Delta,\delta)$ and the key $k$ is an ordered pair $((p,c), (p',c'))$
 of plaintexts and their corresponding ciphertexts
 $p$, $c \defas \E(k,p)$, $p'$, $c' \defas \E(k,p')$ such that $p - p' = \Delta$, $c - c' = \delta$. When differences are over $\mathbf{F}_2^n$,
 subtraction coincides with addition and the pair can be unordered. We consider this to be the case in the remainder of this description.
@@ -132,7 +132,7 @@ A common assumption is that for most keys and differentials, the fixed-key DP is
 The DP of a random differential w.r.t. a random permutation can be approximated by
 a Poisson distribution: the (approximate) number of differential pairs is $\sim \poi(2^{-1})$, of mean and variance $2^{-1}$
 (see~\cite{DBLP:journals/jmc/DaemenR07}, using an earlier result~\cite{DBLP:journals/joc/OConnor95}).
-As there are $2^{n-1}$ possible pairs, the expected DP is thus $2^{-n}$\footnote{Note however that the DP is in fact restricted to values multiple of $2^{-n+1}$.}.
+As there are $2^{n-1}$ possible pairs, the expected DP is thus $2^{-n}$; note however that the DP is in fact restricted to values multiple of $2^{-n+1}$.
 For a distinguisher on $\E$ to be of any use, we need its EDP not to be equal to $2^{-n}$. If it is far enough
 from that (\eg $2^{-3n/4}$), we usually make the simplifying working hypothesis that all DPs are equal to their expected value (or rather the nearest
 possible values).
@@ -143,14 +143,14 @@ the input difference and counting how many of them verify the output difference.
 
 Another kind of distinguishers is based on \emph{algebraic} representations of block ciphers. One can always redefine a block cipher
 $\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ as an ordered set of functions $\F_i : \{0,1\}^{\kappa+n} \rightarrow \{0,1\}$ that project
-$\E$ on its $i^\text{th}$ output bit: $\E \equiv \langle \F_0, \ldots, \F_{n-1} \rangle$. The $\F_i$s can be understood as Boolean functions
-$\mathbf{F}_{2^{\kappa + n}} \rightarrow \Ftwo$ which are themselves in bijection with elements of $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
+$\E$ on its $i^\text{th}$ output bit: $\E \equiv (\F_0, \ldots, \F_{n-1})$. The $\F_i$s can be understood as Boolean functions
+$\mathbf{F}^{2^{\kappa + n}} \rightarrow \Ftwo$ which are themselves in bijection with elements of $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
 \ie multivariate polynomials in $\kappa + n$ variables over $\Ftwo$. The polynomial to which a Boolean function is mapped is called its \emph{algebraic normal form} (ANF);
 the ANF of $\E$ is the ordered set of ANFs of its projections.
 
 An important characteristic of an ANF is its (maximal) degree, which can be used to define simple yet efficient distinguishers. The degree
 of (the ANF of) an $n$-bit permutation is at most $n - 1$, and it is expected of a random permutation to be of maximal degree. If a block cipher
-has degree $d < n - 1$, it can be distinguished by differentiating it on enough values. This simply requires to evaluate the oracle on $2^d$ properly chosen
+has degree $d < n - 1$, it can be distinguished by differentiating it on enough values. This simply requires to evaluate the oracle on $2^{d+1}$ properly chosen
 values (essentially a cube of dimension $d$) and to sum them together. If the result is all-zero, the oracle is likely to be of degree less than
 $d$ and is hence assumed to be $\E$; if this is not the case, it is necessarily of degree strictly more than $d$ and hence assumed to be a random permutation.
 

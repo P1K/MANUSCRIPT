@@ -22,7 +22,7 @@
 	%%
 	%% First characteristic
 	%%
-	\node[F] (c1) {\mystrutNL \textswab{NL 1} \nodepart{two} \nodepart{three}\mystrutLin {\Large\textswab{L}}};
+	\node[F] (c1) {\mystrutNL $NL~1$ \nodepart{two} \nodepart{three}\mystrutLin {\Large$L$}};
 	\draw[dashed] (c1.text split west) -- (c1.text split east);
     \draw[dashed] (c1.two split west) -- (c1.two split east);
 	\node[MODADD,scale=1.5,below = 2em of c1] (add1) {};
@@ -35,14 +35,14 @@
 
 	\draw[line] let \p1=(in11),\p2=(c1.north),\p3=(add1) in 
 		(\x1,\y2+1.5em) 
-		-- node[above left]{$\text{\textswab{0}}$} (\x3-3em,\y2+1.5em) 
+		-- node[above left]{$0$} (\x3-3em,\y2+1.5em) 
 		-- (\x3-3em,\y3) 
 		-- node[below] {} (add1);
 	
 	%%
 	%% Second characteristic
 	%%
-	\node[F, right = 8em of c1] (c2) {\mystrutNL \textswab{NL 2}\nodepart{two} \nodepart{three} \mystrutLin {\Large\textswab{-L}}};
+	\node[F, right = 8em of c1] (c2) {\mystrutNL $NL~2$\nodepart{two} \nodepart{three} \mystrutLin {\Large$-L$}};
 	\draw[dashed] (c2.text split west) -- (c2.text split east);
     \draw[dashed] (c2.two split west) -- (c2.two split east);
 	\node[MODADD,scale=1.5,below = 2em of c2] (add2) {};
@@ -52,7 +52,7 @@
 
 	\draw[line] (c2) -- node[right] {$-\diff\state$} (add2);
 	\draw[line] let \p1=(in22.south),\p2=(c2.north) in (\x1,\y1) -- (\x1,\y2);
-	\draw[line] (add2) -- (out) node[below] {\textswab{0}};
+	\draw[line] (add2) -- (out) node[below] {0};
 
 	\coordinate (M12) at ($(add1)!0.5!(add2)$);
 

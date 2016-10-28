@@ -147,18 +147,22 @@ to cover \emph{all} steps (including the non-linear part) and to produce the ent
 the conditions placed on the expanded messages $\expmess$ that ensure that the highest probability that is reachable for a given \dv is indeed attained.
 More specifically, we improved JLCA in the following ways:
 \begin{enumerate}
-\item \textsc{Include the non-linear part.} Originally JLCA considered the entire set of differential paths that conform to the disturbance vector only
+%\item \textsc{Include the non-linear part.} Originally JLCA considered the entire set of differential paths that conform to the disturbance vector only
+\item Originally JLCA considered the entire set of differential paths that conform to the disturbance vector only
 over the linear part. 
-This was done by considering sets $\mathfrak{A}_i$ of allowed state differences for each state word $\state_i$ given the disturbance vector (including carries).
-We extended this to aid in the non-linear path search by defining sets $\mathfrak{A}_i$ for the non-linear part as the state difference given by the previously constructed differential path of the non-linear part.
+This was done by considering sets $\{\diff\state_i\}$ of allowed state differences for each state word $\state_i$ given the disturbance vector (including carries).
+We extended this to aid in the non-linear path search by defining sets $\{\diff\state_i\}$ for the non-linear part as the state difference given by the previously constructed differential path of the non-linear part.
 Here one actually has a few options: only consider exact state difference of the non-linear path or also consider changes in carries or signs, as well as include state differences conforming to the disturbance vector.
 We found that allowing changes in carries or signs for the state differences given by the non-linear path made JLCA impractical,
 yet including state differences conforming to the disturbance vector was practical and had a positive effect on the overall probability of the full differential path.
 
-\item \textsc{Do not consider path variants not used in the attack.} Originally JLCA considered the possible carry propagations for local collisions  as this improves the overall probability (the probability of variants of paths adding up). 
-However, until a certain step (say, 25), a typical attack implementation requires the partial solutions to strictly follow the main differential path, and thus variants induced by carry propagations do not add any contribution.
-For these steps JLCA would thus optimize for the wrong model, which includes all variants.
-We thus improved JLCA by not adding up the probability of paths over the first 25 steps, but only by taking the maximum probability. 
+%\item \textsc{Do not consider path variants not used in the attack.} Originally JLCA considered the possible carry propagations for local collisions  as this improves the overall probability (the probability of variants of paths adding up). 
+\item In the original JLCA,
+the probability computation took into account the possible carry propagations in local collisions, as
+as this improves the overall probability (the probability of variants of paths adding up). 
+However, until a certain step (say, 25), a typical attack implementation requires the partial solutions to strictly follow the main differential path,
+and thus variants induced by carry propagations are actually not allowed to happen in an attack, and thus should not be counted as improving the probability.
+We thus corrected JLCA by not adding up the probability of paths over the first 25 steps, but only by taking the maximum probability. 
 %We propose to do this by redefining the cumulative probabilities $p_{(\mathcal{P},w)}$ from~\cite[Sec 4.6]{DBLP:conf/eurocrypt/Stevens13} to:
 %\[ p_{(\mathcal{P},w)} = \max_{\widehat{\mathcal{P}}_{[0,25]}\in\mathcal{D}_{[0,25]}} 
 %  \sum_{\substack{
@@ -169,8 +173,8 @@ We thus improved JLCA by not adding up the probability of paths over the first 2
 %	 \Pr[\mathcal{P}'-\mathcal{P}]. 
 %\]
 In our implementation, this can be simply done by replacing the addition of two probabilities by taking their maximum, conditionally on the current \shaone step.
-
-\item \textsc{Determine sufficient conditions.} Originally JLCA only gave as output starting differences, ending differences, message bit relations and the optimal success probability. 
+%\item \textsc{Determine sufficient conditions.} Originally JLCA only gave as output starting differences, ending differences, message bit relations and the optimal success probability. 
+\item Originally JLCA only gave as output starting differences, ending differences, message bit relations and the optimal success probability. 
 We extended it so that it can also reconstruct the set of differential paths over steps, say, $[0,25]$ and determine minimal sets of sufficient conditions and message bit relations.
 This can be made possible by keeping the intermediate sets of reduced differential paths $\mathcal{R}_{[t_b,t_e]}$ which were constructed backwards starting at a zero-difference intermediate state of \shaone.
 Then one can iteratively construct sets $\mathcal{O}_{[0,i[}$ of optimal differential paths over steps $0,\ldots,i-1$, \ie,
@@ -288,8 +292,9 @@ We call \emph{base solutions} such partial solutions; each of them consists of a
 such that 21 consecutive state words (one for each free message word plus the \iv) follow the differential path:
 
 \begin{defi}[Base solution]
-A \emph{base solution} for a differential path $\mathcal{P}$ of offset $i \in \{0,\ldots,64\}$ is a pair $(\expmess,  \wp_5(\state) = (\state_{j},\ldots,\state_{j+4}; j \in \{i,\ldots i + 16\})$
-such that the state words $\state_i, \ldots, \state_{i+20}$ entailed by $\expmess$ and $\wp_5(\state)$ satisfy all necessary conditions imposed on them by $\mathcal{P}$ (\ie is a partial solution for $\mathcal{P}$).
+A \emph{base solution} for a differential path $\mathcal{P}$ of offset $i \in \{0,\ldots,64\}$ is a pair
+$(\expmess,  I_j(\state) \defas (\state_{j},\ldots,\state_{j+4}; j \in \{-4 + i,\ldots 11 + i\})$
+such that the state words $\state_i, \ldots, \state_{i+20}$ entailed by $\expmess$ and the ``\iv'' $I_j(\state)$ satisfy all necessary conditions imposed on them by $\mathcal{P}$ (\ie is a partial solution for $\mathcal{P}$).
 \end{defi}
 
 Although we may define base solutions with an offset as above, one should note that it is not directly related to the main block offset; in particular, both offsets do not need to be equal, and they
@@ -298,16 +303,23 @@ before any neutral bits are applied, while the main block offset defines which s
 to have an offset only if there are no path conditions on the lower state words that become ignored by the initialization as a result. If this were not the case, the conditions would need to be
 satisfied probabilistically, likely with no accelerating technique to make that process efficient. On the other hand, the main block offset is chosen to be the one yielding the best neutral bits, and
 it is chiefly limited by the magnitude of the backward interactions it entails.
+
+There is also some subtlety in how to specify the ``\iv'' of a base solution, as it potentially includes two offsets. The first offset of an \iv
+naturally comes from the one of the base solution it is part of, as the \iv needs to be entirely included in the twenty words of the solution. The
+second offset then comes from the freedom one has, to choose which five contiguous words from the twenty of the base solution are to be initialised.
+
 Let us make this more concrete by discussing the specific cases of our attacks.
 
 \medskip
 
-The first state condition in both attacks appears on $\state_{-3}$, \ie the second (original) \iv word. Consequently, we chose a base solution offset of one in both cases. 
+The first state condition in both attacks appears on $\state_{-3}$, \ie the second word of the original \iv.
+Consequently, we chose a base solution offset of one in both cases. 
 Thus, a base solution consists of state words $\state_{-3},\ldots,\state_{17}$ specified through a five-word \iv and an expanded message such that all path conditions are verified by
 this partially computed state.
 
-The search for a base solution consists in specifying a suitable ``\iv'' $\wp_5(\state)$ and then finding a message producing a valid partial solution. For instance, in the case of the 76-step
-attack, this process is instantiated by first choosing an initial solution over $\state_8,\ldots,\state_{12}$ and then extending it backward using message words $\expmess_{11},\ldots,\expmess_1$
+The search for a base solution consists in specifying a suitable \iv $I_j(\state)$ and then finding a message producing a valid partial solution. For instance, in the case of the 76-step
+attack, this process is instantiated by first choosing an initial solution $I_8(\state)$ over $\state_8,\ldots,\state_{12}$
+and then extending it backward using message words $\expmess_{11},\ldots,\expmess_1$
 and forward using words $\expmess_{12},\ldots,\expmess_{16}$.
 
 For both attacks, the implementation of this search directly uses the path conditions, such as they are computed by JLCA at the end of the generation of the differential path.

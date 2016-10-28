@@ -21,7 +21,7 @@ be orthomorphisms of any group; hence we in fact only partially adhere to the La
 by Vaudenay~\cite{vaudmassey}.}.
 
 The choice of the Lai-Massey structure was mainly motivated by our objective of building
-an S-box with a branch number of three; this will in turn be useful to design a good lightweight round function.
+an S-box with a branch number of three, both differential and linear; this will in turn be useful to design a good lightweight round function.
 Indeed, it is easy to see that the S-box will
 have this property for the differential branch number by construction as soon as the 4-bit S-boxes have differential branch number three,
 and such S-boxes are well-known (see \eg \serpent \cite{serpent}). So much cannot be said however for
@@ -37,8 +37,8 @@ On the downside, it requires the 4-bit S-boxes to be permutations if we want the
 for Feistel structures could be used to build compact S-boxes with particularly low differential probability
 \cite{sac15}. We should note however that for the applications we have in mind (see \autoref{sec:fly}),
 the linearity of the
-S-box is as important as the differential probability, and the S-box of Canteaut \etal is
-average in that respect (and in particular not better than ours).
+S-box is as important as the differential probability, and the linearity of the S-box of Canteaut \etal is
+average, and in particular not better than ours.
 Finally, we should mention that the good and bad points of the Lai-Massey structure cited so far
 are shared with the Misty structure. Choosing Lai-Massey in our case was mainly due to a matter of
 taste, though it is noteworthy that Misty yields S-boxes with a rather sparse algebraic expression
@@ -74,7 +74,7 @@ of \littlunOne.
 
 \begin{prop}[Statistical properties]
 \label{statprop}
-The differential uniformity of \littlunOne and of its inverse is 16 and its linearity is 64.
+The differential uniformity of \littlunOne and of its inverse is 16 and its linearity is 64, as proven by a direct computation.
 Its DDT and LAT are shown in \autoref{littDDT} and \autoref{littLAT} respectively.
 \end{prop}
 

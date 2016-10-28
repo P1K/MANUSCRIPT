@@ -5,8 +5,8 @@ We now discuss how to design diffusion matrices based on the code from \autoref{
 with efficient implementations with respect to \autoref{alg:shuffle} of the previous section.
 
 A diffusion matrix associated to this code is simply the right block $A$ of a generator matrix in systematic form $G \defas (I_{16}~A)$.
-Recall that $G$ is the result of computing the reduced row echelon form of the matrix obtained by evaluating a basis for $\funcspace$
-on $\points$. Using the row echelon form is simply a convenient way of computing the basis that results in $G$ being in systematic
+Recall that $G$ is the result of computing the reduced row-echelon form of the matrix obtained by evaluating a basis for $\funcspace$
+on $\points$. Using the row-echelon form is simply a convenient way of computing the basis that results in $G$ being in systematic
 form, so it is clear that the initial choice of the basis for $\funcspace$ prior reduction does not impact $G$, and hence $A$.
 However, changing the order of the elements of the evaluation domain does result in different matrices.
 
@@ -32,16 +32,16 @@ then the action of $\pi$ on a codeword of $\cagh$
 is to cyclically permute its coordinates locally, along each orbit.
 
 To see that this can be useful, assume that there is an automorphism $\pi$ with two orbits $O_0$ and $O_1$ of size $n/2$ each. Then, if $\mat \defas (I_{n/2}~A)$ is
-built from $\points \defas \langle O_0, O_1\rangle$, each row of $\mat$ can be obtained by the repeated action of $\pi$ on, say, $\mat_0$, and it follows
+built from $\points \defas (O_0, O_1)$, each row of $\mat$ can be obtained by the repeated action of $\pi$ on, say, $\mat_0$, and it follows
 that $A$ is circulant (and therefore has a low cost w.r.t. \autoref{alg:shuffle}). More generally, if an automorphism can be found such that it has orbits of sizes summing up to
-$n/2$, the corresponding matrix $\mat$ can be deduced from a small set of rows. We give two toy examples with Reed-Solomon codes, which can easily be verified.
+$n/2$, and if the two partitions defined by the orbits have maximal rank, then the corresponding matrix $\mat$ can be deduced from a small set of rows. We give two toy examples with Reed-Solomon codes, which can easily be verified.
 
-\paragraph{$\pi:~\Fst \rightarrow \Fst,~x \mapsto 8 x$.} This automorphism has $O_0\defas \langle 1, 8, 12, 10, 15\rangle$
-and $O_1 \defas \langle 2, 3, 11, 7, 13\rangle$ for orbits, among others. The systematic matrix for the $[10, 5, 6]_{\Fst}$ code obtained with the points in that
+\paragraph{$\pi:~\Fst \rightarrow \Fst,~x \mapsto 8 x$.} This automorphism has $O_0\defas (1, 8, 12, 10, 15)$
+and $O_1 \defas (2, 3, 11, 7, 13)$ for orbits, among others. The systematic matrix for the $[10, 5, 6]_{\Fst}$ code obtained with the points in that
 order is then such that $A$ is circulant and obtained from the cyclic permutation of the row $(12, 10, 2, 6, 3)$.
 
-\paragraph{$\pi:~\Fst \rightarrow \Fst,~x \mapsto 7 x$.} This automorphism has $O_0 \defas \langle 1, 7, 6\rangle$,
-$O_1 \defas \langle 2, 14, 12\rangle$, $O_2 \defas \langle 4, 15, 11\rangle$, and $O_3 \defas \langle 8, 13, 5\rangle$ for orbits, among others.
+\paragraph{$\pi:~\Fst \rightarrow \Fst,~x \mapsto 7 x$.} This automorphism has $O_0 \defas (1, 7, 6)$,
+$O_1 \defas (2, 14, 12)$, $O_2 \defas (4, 15, 11)$, and $O_3 \defas (8, 13, 5)$ for orbits, among others.
 The systematic matrix for the $[12, 6, 7]_{\Fst}$ code obtained with the points in that
 order is then of the form
 $\begin{pmatrix}

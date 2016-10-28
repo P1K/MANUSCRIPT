@@ -18,7 +18,6 @@ Bold variables denote vectors (in the sense of elements of a vector space), and 
 let $\veci \defas (1, 2, 7)$, then  $\veci_2 = 7$.
 If $\mat$ is a matrix of $n$ columns, we call $\mat_i \defas (\mat_{i,j},~j = 0\ldots n - 1)$ the row vector formed from the coefficients of
 its $i^\text{th}$ row.
-We use angle brackets ``$\langle$'' and ``$\rangle$'' to delimit ordered sets.
 
 Arrays, or tables, (in the sense of software data structures) are denoted by regular variables such as $x$ or $T$, and their elements are accessed by using square brackets.
 For instance, $T[i]$ is the $i^\text{th}$ element of the table $T$, starting from zero.
@@ -50,7 +49,7 @@ $\veci, \veco \neq \veci \in \code \Rightarrow \hdist(\veci, \veco) \geq d$
 and $\exists \veci, \veco \in \code,  \hdist(\veci, \veco) = d$.
 The last conditions can equivalently be expressed as $\veci \neq \nullvec \in \code \Rightarrow \weight(\veci) \geq d$ and $\exists \veci \in \code, \weight(\veci) = d$.
 We use the usual ``NKD'' notation to characterize codes: an $[n, k, d]_{\Fq}$ code $\code$ is a code of length $n$, dimension $k$ and minimum distance $d$
-with symbols in \Fq.
+with symbols in \Fq. When $d$ is unknown, we simply write $[n, k]_{\Fq}$.
 \end{defi}
 
 We only consider linear codes in this manuscript and we will therefore omit this qualifier in the remainder of the text. 
@@ -80,9 +79,9 @@ An $[n,k,d]_{\Fq}$ code $\code$ is called \emph{maximum distance separable}, or 
 By abuse of definition, if $n = 2k$ and $(I_k~A)$ is a generator matrix of $\code$, we call $A$ an \emph{MDS matrix}.
 \end{defi}
 
-It is easy to see that this is the highest possible minimum distance that can be achieved by a code defined with a
-systematic generator matrix, as all rows of such a matrix have weight at most $n - k + 1$~; this is
-in fact the Singleton bound.
+This minimum distance corresponds to the Singleton bound. In the case of a linear code 
+defined with a
+systematic generator matrix, it is easy to see that $n - k + 1$ is indeed the maximum possible weight for any row.
 
 A useful alternative characterization of MDS matrices is given by the following theorem.
 
@@ -92,17 +91,18 @@ A matrix $M$ is MDS if and only if all of its minors are non-zero (\ie all the s
 \end{thm}
 
 A consequence of this is that the dual of an MDS code is also MDS.
-We also have the following (in simplified form):
+We also have the following (see for instance~\cite[Chap. 1]{tvn}):
 
 \begin{conj}[MDS conjecture]
-There is no MDS code with symbols in $\Fu$ of length $n$ with $n > \#\Fu + 1$, (except degenerate cases\footnote{This maximal length can be increased by one
-for some values of $q$ and $k$.}).
+There is no MDS code $[n,k,n-k+1]_{\Fq}$ of length $n > B$,
+where $B = q + 2$ when $q$ is even and $k = 3$ or $k = q - 1$,
+and $B = q + 1$ in all other cases. 
 \end{conj}
 
 The next definition rephrases and generalizes some of the above concepts in a way that is more suitable to cryptographic applications.
 We assume in this case that $\Fq = \Ftwom$ for some $m$.
 
-\begin{defi}[Branch number~\cite{aes}]
+\begin{defi}[Branch number~\cite{phddaemen}]
 Let $A$ be the matrix of a linear mapping over $\Fu$.
 The \emph{differential branch number} of $A$
 is equal to $\min_{\veci \neq 0}(\weight(\veci) + \weight(\veci A))$,
@@ -119,29 +119,29 @@ we give a brief overview.
 We start with a general definition:
 
 \begin{defi}[Evaluation code]
-Let $\funcspace$ be an $\Fq$-vector space of dimension $k$ of functions $\fun : \dom \rightarrow \Fq$ (the \emph{function space}). Let $\points \defas \langle P_0,\ldots, P_{n-1}\rangle$
+Let $\funcspace$ be an $\Fq$-vector space of dimension $k$ of functions $\fun : \dom \rightarrow \Fq$ (the \emph{function space}). Let $\points \defas (P_0,\ldots, P_{n-1})$
 be an ordered subset of $\dom$ of cardinality $n$ (the \emph{evaluation domain}). Let $\evmap_\points : \funcspace \rightarrow \Fq^n$ be the \emph{evaluation map}
 defined as $\evmap_\points(\fun) \defas (\fun(P_0),\ldots,\fun(P_{n-1}))$.
 The \emph{evaluation code} $\evcode(\funcspace,\points)$ for an injective evaluation map $\evmap_\points$ is defined as $\{\evmap_\points(\fun)~|~\fun \in \funcspace\}$.
-It is an $[n,k,\ast]_{\Fq}$ code.
+It is an $[n,k]_{\Fq}$ code.
 \end{defi}
 
 A generator matrix $G$ of an evaluation code can easily be constructed by evaluating a basis for $\funcspace$ on $\points$. Call $(\fun_0,\ldots,\fun_{k-1})$
 such a basis, then $G = (\evmap_\points(\fun_0),\ldots,\evmap_\points(\fun_{k-1}))$.
-If the code admits a systematic generator matrix (\ie its first $k$ columns span a subspace of rank $k$), it can simply be obtained by computing the reduced row echelon form of $G$.
+If the code admits a systematic generator matrix (\ie its first $k$ columns span a subspace of rank $k$), it can simply be obtained by computing the reduced row-echelon form of $G$.
 
 We use ordered sets for the evaluation domain $\points$ in this definition. Although the order that is chosen does not impact the parameters of the code (hence we
 may sometimes abuse our definition and talk about \emph{the} code for any of the equivalent codes based on the same $\funcspace$ and $\dom$), it may have
 an influence on the performance of explicit instantiations, through \eg properties of the generator matrices\footnote{For instance, one
 evaluation domain $\points$ may be such that its associated generator matrix cannot be put in systematic form, but there is always
 a permutation $\points'$ of $\points$ such that it is the case.}. Most of the work
-of this chapter is actually based on this fact.
+in this chapter is actually based on this fact.
 
 The probably best-known evaluation codes are the \emph{Reed-Solomon codes} (``RS codes''):
 
 \begin{defi}[Reed-Solomon codes]
 An $[n,k,\ast]_{\Fq}$ \emph{Reed-Solomon} code is an evaluation code obtained by taking $\funcspace$ to be the polynomials $\Fq[x]$
-of degree less than $k-1$ and $\points$ any ordered subset of $\Fq$. 
+of degree less than $k-1$ and $\points$ any ordered subset of $\Fq$ of size $n$. 
 \end{defi}
 
 As we must have $n \geq k$ by definition of a code, all polynomials of $\funcspace$

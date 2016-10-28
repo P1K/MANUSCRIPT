@@ -90,8 +90,8 @@ we must avoid having idle threads that are waiting because their candidate solut
 others keep on verifying a more successful one. Our approach to this is to fragment the verification into many small functions
 (or \emph{snippets})
 that are chosen in a way which ensures that coherency is maintained for every thread of a warp when executing a single snippet, except in
-only a few small points. This is achieved through a series of intermediary buffers that store inputs and outputs for the snippets;
-a warp then only executes a given snippet if enough inputs are available for every of its threads.
+only a few small points. This is achieved through a series of intermediary buffers that store inputs and outputs for the snippets.
+A warp then only executes a given snippet if enough inputs are available for every of its threads.
 One should note that there is no need to entirely decompose the second step of the attack into snippets, and that a final part can again
 be run in a more serial fashion, typically on CPU. Indeed, if inputs to such a part are scarce, there is no real advantage in verifying them in
 a highly parallel way.
@@ -127,12 +127,12 @@ produced very slowly. For instance, a single \gtx produces partial solutions up 
 
 %\paragraph{Complete process of the attack.}
 A complete implementation of an attack mostly consists in the snippets and supporting functions, such as buffer management.
-Connecting the snippets together is straightforward; every warp tries to work with partial solutions that are up
-to the latest step for which enough solutions are available, \ie it visits the buffer of partial solutions in order from the top,
+Connecting the snippets together is straightforward. Every warp tries to work with partial solutions that are up
+to the latest step for which enough solutions are available. This means that it visits the buffer of partial solutions in order from the top,
 stopping at the first that is able to feed it entirely.
 In the worst case where none of the buffers are full enough, it simply resorts to using base solutions.
 
-In practice, warps spend most of their time feeding on partial solutions that are valid up to a rather late step; for instance, in the 76-step attack,
+In practice, warps spend most of their time feeding on partial solutions that are valid up to a rather late step. For instance, in the 76-step attack,
 about 90\% of the time is spent on $\state_{24}$ or higher, which is at most two steps away from the latest one where neutral bits are available.
 Thus, work on early steps and in particular on base solutions is done only intermittently.
 
@@ -333,7 +333,7 @@ buffer, or from the matching solution of the base solution buffer \mintinline{c}
 is the one of \mintinline{c}{q22} on line 16, using the \shaone round function. This would in fact not be necessary in this function, as the value could have been included in the extended base solution altogether.
 This was not done because recomputing \mintinline{c}{q22} is necessary in the snippets of the following steps and causes only minimal overhead in this one, while saving a 32-bit word from the \mintinline{c}{Q22SOLBUF} buffer.
 
-The loop from line 18 to 41 (\ie the remainder of the function) applies every combination of the five neutral bits for this step, all of which 
+The loop from lines 18 to 41 (\ie the remainder of the function) applies every combination of the five neutral bits for this step, all of which 
 are located on $\expmess_{19}$. In more details, line 21 sets the register
 \mintinline{c}{w19_q23_nb} to one of the 32 possible combinations. Lines 23 and 24 clear the message word \mintinline{c}{m19} of the previous neutral bit combination and applies the new one, and line 25
 computes the expanded message word \mintinline{c}{m22} based on the new value for \mintinline{c}{m19}, using \shaone's message expansion (note that this computation could actually be optimized, \eg by
@@ -361,10 +361,11 @@ We also experimented with various temperature limits
 Taken together, these variations had a significant impact on the overall performance of the program. For a single GPU, the initial setting resulted in an estimated
 time of 4.94 days to produce one 76-step freestart collision. We were able to eventually reduce this to 4.16 days. We also set-up machines with four GPUs, and observed significant
 performance variations across the GPUs. This was likely due to uneven heat dissipation, as was shown by the different temperatures reached by every board. All in all, the
-average expected time to obtain a collision on our 4-GPU machines was 4.42 days per GPU, and thus about 1.1 day per machine. As the cooling was not optimal in our set-up,
+average expected time to obtain a collision on a single 4-GPU machine was 4.42 days per GPU, and thus about 1.1 day per machine. As the cooling was not optimal in our set-up,
 reaching a performance closer to the one-GPU setting is likely to be possible.
 
-We did not make any major changes for the 80-step attack, but due to the higher computational cost, only 4-GPU machines were used.
+We did not make any major changes for the 80-step attack. However, due to the higher computational cost, we only run the attack once, only using 4-GPU machines.
+The collision was found after ten days, with the attack being run on sixteen 4-GPU machines.
 
 \FloatBarrier
 
@@ -388,5 +389,5 @@ running our attack program (this increases to 146 for the best-performing GPU).
 While this drop in relative efficiency was to be expected, it is somehow surprisingly small given the
 complexity of our implementation and \eg the intensive use of large shared data structures. Our careful implementation thus
 gives a much better value for the GPUs when compared to previous attempts at running collision attacks on such a platform:
-in their work, Grechnikov and Adinetz estimated a GPU to be worth 39 CPU cores~\cite{cryptoeprint:2011:641}\footnote{This comparison must me modulated by considering possibly uneven progress in GPUs and CPUs
+in their work, Grechnikov and Adinetz estimated a GPU to be worth 39 CPU cores~\cite{cryptoeprint:2011:641}\footnote{This comparison must be modulated by considering possibly uneven progress in GPUs and CPUs
 since 2011 and different hardware quality. We believe that the gap between these and our results is nonetheless significant.}.

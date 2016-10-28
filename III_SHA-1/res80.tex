@@ -3,7 +3,7 @@
 
 This section gives the attack parameters for the 80-step (full) freestart collision attack on \shaone.
 
-\subsection{The differential path for part of the two first rounds}
+\subsection{The differential path for part of the first two rounds}
 \label{sec:app_diff_path80}
 
 A graphical representation of the differential path
@@ -277,9 +277,9 @@ $\expmess_{20}$:  & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nod
 \end{figure}
 
 In addition to the ``single'' neutral bits, the 80-step attack also uses boomerangs. These are regrouped in two sets of two.
-The first one first introduces a difference in the message at word $\expmess_{10}$;
+The first one introduces a difference in the message at word $\expmess_{10}$;
 as it does not significantly impact conditions up to step 27, it is used to increase the number of partial solutions for $\state_{28}$.
-The second set first introduces a difference at word $\expmess_{11}$, and is used on partial solutions up to $\state_{30}$.
+The second set introduces a difference at word $\expmess_{11}$, and is used on partial solutions up to $\state_{30}$.
 More precisely, the four boomerangs have their first differences on bits 7,8 of $\expmess_{10}$ and 8,9 of $\expmess_{11}$.
 In \autoref{fig:boom_coll}, we give a graphical representation of the complete set of message bits to be flipped for each
 boomerang. One can see that these follow the pattern of a local collisions, with some ``linear'' corrections omitted thanks to the absorption
@@ -516,4 +516,4 @@ consider partial solutions up to $\state_{40}$. On a good-performing \gtx, such 
 in a collision is given by JLCA to be $2^{-35.58}$, leading to an expected time to collision of 577.16 days.
 Recalling that one \gtx can compute $2^{31.8}$ \shaone compression functions per second, the complexity of the attack is thus of $2^{57.37}$ on such a GPU.
 However, it should be noted that as for the 76-step attack, the average performance of the GPUs on an actual cluster slightly degrades compared to a single one. In our attack, we used
-sixteen 4-GPU machines, which combined together led to an attack of complexity about $2^{57.5}$.
+sixteen 4-GPU machines, which combined together led to an attack of complexity about $2^{57.5}$, which takes about ten days to run.

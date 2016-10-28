@@ -26,7 +26,7 @@ des deux premiers chapitres de la première partie de ce manuscrit.
 
 \section{Algorithmes de chiffrement par bloc}
 
-Un \emph{algorithme de chiffrement par bloc} (ou chiffrement (par bloc), ou chiffre (par bloc)) est une famille d'applications
+Un \emph{algorithme de chiffrement par bloc}, ou chiffrement (par bloc), ou chiffre (par bloc), est une famille d'applications
 injectives de domaine et codomaine finis. On adoptera en fait toujours ici une vision plus spécifique de ces objets,
 considérant des domaines et codomaines de même taille, et tous les ensembles impliqués étant définis sur un alphabet
 binaire. Ainsi, on considère qu'un chiffre par bloc est une application
@@ -37,11 +37,11 @@ $\kappa$ la \emph{taille de clef} et $n$ la \emph{taille de bloc} de $\E$. Habit
 $\kappa \in \{64, 80, 128, 192, 256\}$, bien que les clefs de 64 ou 80 bits ne soient plus considérées de nos jours
 comme apportant une sécurité suffisante, et 
 $n \in \{64, 128, 256\}$.
-On requiert aussi que $\E$ est son inverse $\E^{-1}$ soient calculables efficacement, bien qu'en fonction des applications
+On requiert aussi que $\E$ et son inverse $\E^{-1}$ soient calculables efficacement, bien qu'en fonction des applications
 il puisse être suffisant qu'un seul des deux le soit. 
 
 L'emploi le plus direct d'un chiffre par bloc est de permettre d'assurer la confidentialité de communications.
-Deux partis $A$ et $B$ partageant une clef $k$ pour le même chiffre\footnote{Nous ne nous intéresserons pas ici à la question de savoir
+Deux entités $A$ et $B$ partageant une clef $k$ pour le même chiffre\footnote{Nous ne nous intéresserons pas ici à la question de savoir
 comment obtenir un tel partage.} peuvent communiquer par l'intermédiaire de messages chiffrés $c \defas \E(k,p)$,
 $c' \defas \E(k,p')$, etc. Le second argument $p$ de $\E$ est généralement appelé 
 \emph{texte clair}, et le résultat $c$ est généralement appelé \emph{texte chiffré}.
@@ -89,7 +89,7 @@ Tout ceci fait qu'en pratique nous sommes généralement forcés d'utiliser des 
 Une façon utile, bien qu'essentiellement théorique, de quantifier la sécurité d'un chiffre par bloc est alors précisément
 de mesurer à quel point celui-ci est éloigné d'un chiffre idéal.
 Informellement, ceci est fait en bornant par le haut l'\emph{avantage} sur un choix aléatoire qu'un adversaire,
-avec des ressources bornées de façon appropriée, a de distinguer s'il interagi avec une permutation tirée aléatoirement
+avec des ressources bornées de façon appropriée, a de distinguer s'il interagit avec une permutation tirée aléatoirement
 ou avec une instance du chiffre paramétré avec une clef aléatoire (et inconnue). Cette proposition peut être précisée
 sous la forme suivante, similaire à celle qui peut être trouvée par exemple dans~\cite{DBLP:journals/jcss/BellareKR00}~:
 
@@ -162,23 +162,23 @@ L'idée de base correspondant à cette dernière est de définir un événement 
 Appliquer le distingueur correspond alors à collecter un certain nombre d'échantillons (obtenus grâce à un oracle)
 et à déterminer quelle est la distribution d'après laquelle ils ont le plus probablement été tirés.
 Un distingueur différentiel réalise cette idée en considérant un certain type d'événement statistique. Une autre classe
-majeure de distingueurs statistique est celle des \emph{distingueurs linéaires}.
+majeure de distingueurs statistiques est celle des \emph{distingueurs linéaires}.
 
 Soit $\E$ un chiffre par bloc, une \emph{différentielle} pour $\E$ est une paire
 $(\Delta,\delta)$ de différences d'entrée et de sortie associées à une certaine loi de groupe
-$+$\footnote{On considérera toujours des différences non triviales avec $\Delta \neq 0$.}.
+$+$\footnote{On considérera toujours des différentielles non triviales avec $\Delta \neq 0$.}.
 Dans la grande majorité des cas, $+$ est l'addition sur $\mathbf{F}_2^n$,
 c'est à dire le OU exclusif bit à bit (XOR)~; on utilisera alors souvent la notation alternative $\oplus$ pour cette loi.
 Parfois, $+$ est l'addition dans $\mathbf{Z}/2^n\mathbf{Z}$, et d'autres fois les différences peuvent être considérées suivant plusieurs lois à la fois.
-Une \emph{paire différentielle} pour la différence $(\Delta,\delta)$ et pour une certaine clef $k$
-est une paire ordonnée de textes clairs et de leurs chiffrés correspondant $\langle (p,c), (p',c')\rangle$ avec 
+Une \emph{paire différentielle} pour la différentielle $(\Delta,\delta)$ et pour une certaine clef $k$
+est une paire ordonnée de textes clairs et des chiffrés correspondant $((p,c), (p',c'))$ avec 
 $p$, $c \defas \E(k,p)$, $p'$, $c' \defas \E(k,p')$, telle que $p - p' = \Delta$, $c - c' = \delta$. Quand la différence est sur $\mathbf{F}_2^n$,
 la soustraction coïncide avec l'addition et la paire peut être non ordonnée. Nous nous plaçons dans un tel cas pour le reste de cette description.
 
 On appelle \emph{probabilité différentielle} d'une différentielle pour une permutation $\Perm$ la probabilité d'obtenir une
 paire différentielle pour $\Perm$~:
 $\DP^{\Perm}(\Delta,\delta) \defas \Pr_{p\,\in\,\{0,1\}^n}[\Perm(k,p) \oplus \Perm(k,p \oplus \Delta) = \delta]$.
-La caractéristique la plus importante d'une différentielle pour un chiffre par bloc est sa \emph{probabilité différentielle attendue},
+La caractéristique la plus importante d'une différentielle pour un chiffre par bloc est sa \emph{probabilité différentielle espérée},
 qui est simplement la moyenne sur $k$ de ses probabilités différentielles pour $\E(k,\cdot)$~:
 $\EDP^{\E}(\Delta,\delta) \defas 2^{-\kappa}\sum_{k\,\in\,\{0,1\}^\kappa} \DP^{\E(k,\cdot)}(\Delta,\delta)$.
 Une hypothèse courante est que pour la plupart des clefs et des différentielles, la probabilité DP à clef fixée
@@ -188,7 +188,7 @@ le nombre (approché) de paires différentielles est
 $\sim \poi(2^{-1})$, de moyenne et variance $2^{-1}$
 (voir~\cite{DBLP:journals/jmc/DaemenR07}, se basant sur un résultat antérieur~\cite{DBLP:journals/joc/OConnor95}).
 Puisqu'il y a
-$2^{n-1}$ paires possibles, la DP attendue est de $2^{-n}$\footnote{On notera cependant que la DP prend forcément sa valeur parmi les multiples de $2^{-n+1}$.}.
+$2^{n-1}$ paires possibles, la DP espérée est de $2^{-n}$~; on notera cependant que la DP prend forcément sa valeur parmi les multiples de $2^{-n+1}$.
 Pour qu'un distingueur sur $\E$ soit utile, il faut donc en quelque sorte que son EDP soit différente de $2^{-n}$. Si elle en est suffisamment éloignée
 (par exemple $2^{-3n/4}$), on fait généralement l'hypothèse simplificatrice que toutes les DPs sont égales à leur espérance (ou plutôt la valeur
 possible la plus proche).
@@ -204,8 +204,8 @@ Tous les distingueurs ne sont pas statistiques;
 un autre type de distingueur est basé sur une représentation \emph{algébrique} des chiffres par bloc.
 Il est toujours possible de redéfinir un chiffre 
 $\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ comme un ensemble ordonné de fonctions $\F_i : \{0,1\}^{\kappa+n} \rightarrow \{0,1\}$ projetant
-$\E$ sur son $i^\text{ème}$ bit de sortie~: $\E \equiv \langle \F_0, \ldots, \F_{n-1} \rangle$. Les $\F_i$s peuvent être vues comme des fonctions booléennes
-$\mathbf{F}_{2^{\kappa + n}} \rightarrow \Ftwo$ qui sont elles mêmes en bijection avec les éléments de $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
+$\E$ sur son $i^\text{ème}$ bit de sortie~: $\E \equiv (\F_0, \ldots, \F_{n-1})$. Les $\F_i$s peuvent être vues comme des fonctions booléennes
+$\mathbf{F}^{2^{\kappa + n}} \rightarrow \Ftwo$ qui sont elles mêmes en bijection avec les éléments de $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
 c'est à dire des polynômes en $\kappa + n$ variables sur $\Ftwo$. Le polynôme correspondant à une fonction booléenne est appelé sa \emph{forme algébrique normale}
 (ANF)~;
 l'ANF de $\E$ est l'ensemble ordonné des ANFs de ses projections.
@@ -213,17 +213,17 @@ l'ANF de $\E$ est l'ensemble ordonné des ANFs de ses projections.
 Une caractéristique importante d'une ANF est son degré, qui peut être utilisé pour définir des distingueurs simples mais efficaces.
 Le degré de l'ANF d'une permutation sur $n$ bits est au plus $n - 1$, et il est attendu d'une permutation aléatoire qu'elle soit de degré
 maximal. Si un chiffre par bloc a un degré $d < n - 1$, il peut être distingué en le dérivant en suffisamment de points.
-Ceci nécessite simplement d'évaluer l'oracle fourni au distingueur sur $2^d$ valeurs bien choisies (essentiellement un cube de dimension $d$) et de toutes
+Ceci nécessite simplement d'évaluer l'oracle fourni au distingueur sur $2^{d+1}$ valeurs bien choisies (essentiellement un cube de dimension $d$) et de toutes
 les additionner.
 Si le résultat vaut zéro sur chaque bit, l'oracle est probablement de degré moins que $d$ et est donc supposé être $\E$~; si ce n'est pas le cas, il est
-nécessairement de degré plus que $d$ et est donc supposé être une permutation aléatoire.
+nécessairement de degré $d$ ou plus et est donc supposé être une permutation aléatoire.
 
 \subsubsection{\'Etendre un distingueur pour retrouver une clef}
 
 Pour définir la sécurité PRP, la notion de distingueur était suffisante. Cependant, dans le cas d'attaques concrètes, l'objectif
 final est idéalement de retrouver la clef inconnue utilisée par l'oracle.
 Le contexte d'une attaque est aussi souvent différent de celui d'un jeu de sécurité PRP, car l'attaquant connaît généralement déjà
-le chiffre $\E$ avec lequel il interagit, et sait également que celui ci n'est pas une permutation aléatoire~; il peut donc paraître finalement inutile
+le chiffre $\E$ avec lequel il interagit, et sait également que celui-ci n'est pas une permutation aléatoire~; il peut donc paraître finalement inutile
 d'appliquer un distingueur.
 Malgré ces observations, les distingueurs sont utiles dans bien des cas, et sont souvent à la base d'attaques retrouvant la clef\footnote{Toutes ces
 attaques ne sont pas pour autant basées sur des distingueurs. Bien que beaucoup d'entre elles soient intéressantes, nous ne les décrivons pas ici.}.
@@ -248,11 +248,11 @@ Finalement, on peut donc
 voir que cette approche donne une méthode pour vérifier une hypothèse sur une partie a priori inconnue de la clef.
 
 On peut faire certains commentaires concernant cette procédure. Tout d'abord, le coût associé aux hypothèses répétées sur la valeur d'une partie de la clef
-font évidemment que la complexité de l'attaque sera supérieure à celle du distingueur. On ne peut donc utiliser de cette façon que
+fait évidemment que la complexité de l'attaque sera supérieure à celle du distingueur. On ne peut donc utiliser de cette façon que
 des distingueurs de complexité suffisamment faible.
 Ensuite, il peut y avoir plusieurs raisons faisant qu'un distingueur a priori défini sur l'ensemble d'un
 chiffre $\E$ reste exploitable même si par hypothèse seulement une partie de la clef est connue, par exemple
-parce que seulement une partie de la clef est utilisée chaque tour, ou parce que le distingueur ne base sa réponse que sur une partie de l'«\,état\,» du chiffre.
+parce que seulement une partie de la clef est utilisée à chaque tour, ou parce que le distingueur ne base sa réponse que sur une partie de l'«\,état\,» du chiffre.
 Enfin, la partie de la clef qui n'est pas retrouvée grâce au distingueur peut être déterminée de plusieurs façons~; par exemple, un autre distingueur
 impliquant une hypothèse sur une autre partie de la clef peut être utilisé, ou alors elle peut simplement être énumérée exhaustivement.
 
@@ -266,7 +266,7 @@ $\E(k,\cdot)$, $\E(\rka(k),\cdot)$, avec $\rka(\cdot)$ une ou plusieurs applicat
 Une observation cruciale est que dans ce cas $\rka$ ne peut pas être arbitraire, car certaines applications sont suffisamment puissantes
 pour permettre d'attaquer n'importe quel chiffre~; il ne peut alors pas y avoir de définition sensée de la sécurité de $\E$ dans un tel cas.
 Il est donc utile de garder à l'esprit qu'une attaque doit toujours être spécifiée dans un modèle clair. Bien que certains modèles puissent
-être considérés comme peu réalistes et donc peu utiles (ce qui est une critique souvent formulée à l'égard des attaques en clef liée), cette
+être considérés comme peu réalistes et donc peu utiles (ce qui est une critique souvent formulée à l'égard des attaques à clefs liées), cette
 question est toujours secondaire par rapport à celle de savoir si un modèle permet de mener des attaques triviales dans n'importe quelle circonstance. 
 
 \subsection{Utilisation des chiffres par bloc}
@@ -285,7 +285,7 @@ deviner quel message a été chiffré. Le cryptosystème est \textsf{IND-CPA} si
 avec un avantage non marginal. Il est clair en particulier qu'aucun système déterministe ne peut être sûr suivant cette définition. 
 
 
-Nous avons aussi déjà mentionné qu'un cryptosystème doit permettre aux partis communicants de s'authentifier. Ceci peut être assuré directement
+Nous avons aussi déjà mentionné qu'un cryptosystème doit permettre aux entités communicantes de s'authentifier. Ceci peut être assuré directement
 par le mode d'opération (on parle alors de mode de \emph{chiffrement authentifié}), ou en combinant de façon appropriée un mode assurant le seul chiffrement avec
 un \emph{code d'authentification} (MAC).
 La tendance actuelle est de favoriser la première approche, qui mène généralement à des systèmes plus efficaces.
@@ -314,10 +314,10 @@ La taille de sortie typique d'une fonction de hachage est de quelques centaines 
 du passé et du présent peuvent être trouvées avec 
 $n \in \{128, 160, 224, 256, 384, 512\}$.
 
-Une fonction de hachage \emph{cryptographique}\footnote{Nous ne considérerons que de telles fonctions jusqu'à présent.} est une fonction
+Une fonction de hachage \emph{cryptographique}\footnote{Nous ne considérerons que de telles fonctions à partir de maintenant.} est une fonction
 de hachage $\hash$ qui vérifie un certain nombre de \emph{propriétés de sécurité} qui expriment la difficulté de trouver des messages
 produisant des empreintes vérifiant certaines conditions. On définit généralement trois propriétés «\,classiques\,» qui doivent être satisfaites
-(au moins jusqu'à un certain point) par n'importe quel fonction sûre. De façon informelle, celles-ci s'expriment de la façon suivante~:
+(au moins jusqu'à un certain point) par n'importe quelle fonction sûre. De façon informelle, celles-ci s'expriment de la façon suivante~:
 
 \begin{fdefi}[Résistance aux préimages]
 Soit une cible $t$, un adversaire ne doit pas être capable de trouver un message
@@ -349,7 +349,7 @@ $\bigo(2^{n/2})$ pour les attaques en collision est une conséquence directe du
 $N$ éléments définissent $\bigo(N^2)$ paires~; si ces $N$ éléments sont tirés au hasard et uniformément dans un ensemble de taille $S$,
 on s'attend à ce que deux d'entre eux soient les mêmes (collisionnent) avec forte probabilité après en avoir collecté
 $\bigo(\sqrt{S})$. 
-On peut aussi remarquer que contrairement à la résistance en (seconde) préimage, la définition de la résistance en collision n'inclus pas de valeur
+On peut aussi remarquer que contrairement à la résistance en (seconde) préimage, la définition de la résistance en collision n'inclut pas de valeur
 cible en entrée.
 Ainsi, elle ne permet pas d'exclure des algorithmes (génériques) qui retournent simplement une paire de message constante qui résulte en une collision,
 la complexité d'un tel algorithme étant alors indépendante de la taille de sortie $n$ de la fonction de hachage.
@@ -386,10 +386,10 @@ Pour des raisons similaires, on peut voir que la résistance aux collisions est 
 
 \paragraph{Hachage de mots de passe.} Le hachage de mots de passe est une autre application courante où une fonction
 de hachage peut être utile. Dans ce cas
-on suppose qu'une certaine entité souhaite autoriser des utilisateurs à s'authentifier grâce à un mot de passe.
+on suppose qu'une entité souhaite autoriser des utilisateurs à s'authentifier grâce à un mot de passe.
 En conséquence, elle doit mémoriser le mot de passe correspondant à chaque utilisateur. Comme il est évident que stocker les mots
-de passe eux-mêmes mènerait à de grave problèmes de sécurité, une idée consiste à stocker à la place leurs images à travers une fonction
-de hachage $\hash$. Ainsi, même si un adversaire devait trouver la liste des utilisateurs et de leurs mots de passe hachés associés, il ne serait
+de passe eux-mêmes mènerait à de graves problèmes de sécurité, une idée consiste à stocker à la place leurs images à travers une fonction
+de hachage $\hash$. Ainsi, même si un adversaire devait trouver la liste des utilisateurs et des mots de passe hachés associés, il ne serait
 pas capable de trouver les mots de passe eux-mêmes (ou des entrées équivalente), pour peu que $\hash$ résiste aux attaques en préimage.
 Dans cet exemple, résister aux attaques en seconde préimage ou en collision n'est alors pas nécessaire. Cependant, il est bon de noter
 que le schéma esquissé ci-dessus est en fait trop simpliste pour apporter une réelle sécurité, indépendamment de la fonction de hachage
@@ -400,14 +400,14 @@ Une utilisation moins courante des fonctions de hachage est de les employer pour
 (voir par exemple \cite{DBLP:conf/crypto/Merkle87}). Nous ne décrirons pas un tel schéma ici, mais il est intéressant de noter certaines
 de leurs caractéristiques.
 Tout comme d'autres constructions basées sur des fonctions de hachage, seule la résistance en préimage est nécessaire.
-L'idée principale de ces schémas est que le parti effectuant une signature publie en avance un certain nombre d'empreintes, tout en gardant
-secrètes les entrées à la fonction de hachage les produisant. Signer un message consiste alors révéler certaines de ces entrées~; ainsi, être capable
+L'idée principale de ces schémas est que l'entité souhaitant  effectuer des signatures publie en avance un certain nombre d'empreintes, tout en gardant
+secrètes les entrées de la fonction de hachage les produisant. Signer un message consiste alors à révéler certaines de ces entrées~; ainsi, être capable
 de calculer des préimages pour la fonction permet d'attaquer le schéma, mais les collisions ne sont pas une menace.
 Enfin, une propriété inhabituelle de ces constructions est qu'elles peuvent être basées sur une fonction de hachage qui a seulement besoin
 d'être définie sur des entrées de petite taille, possiblement fixée.
 
 \paragraph{Codes d'authentification.}
-Le dernier usage possible d'une fonction de hachage que nous évoquons ici est la construction de codes d'authentifications (MACs),
+Le dernier usage possible d'une fonction de hachage que nous évoquons ici est la construction de codes d'authentification (MACs),
 qui peuvent d'une certaine façon être vus comme des variantes à clef des fonctions de hachage.
 Un MAC $\mac$ prend comme entrée une clef $k$ et un message $m$ et retourne un tag
 $\tagg \defas \mac(k, m)$.
@@ -418,7 +418,7 @@ Bien sûr, il est aussi nécessaire qu'aucune collision parmi les tags n'ait lie
 
 Les fonctions de hachage semblent être de bons candidats pour construire des MACs, et en effet des constructions génériques telles que 
 HMAC~\cite{DBLP:conf/crypto/BellareCK96} sont populaires. Cependant, la sécurité exacte fournie par ces constructions n'est pas toujours facile à déterminer,
-et on dispose généralement d'alternatives plus rapide, comme les MACs dits polynomiaux
+et on dispose généralement d'alternatives plus rapides, comme les MACs dits polynomiaux
 (voir par exemple~\cite{DBLP:conf/crypto/BlackHKKR99}).
 
 \subsection{Fonctions de hachage de type \merkdam}
@@ -538,12 +538,13 @@ $\ro$ est une application $\{0,1\}^* \rightarrow \{0,1\}^n$ telle que pour toute
 l'image $\ro(x)$ est tirée aléatoirement et uniformément dans $\{0,1\}^n$.
 \end{fdefi}
 
-Un oracle aléatoire est nécessairement résistant aux attaques que nous avons défini jusqu'à présent, puisqu'il est clair
+Un oracle aléatoire est nécessairement résistant aux attaques que nous avons définies jusqu'à présent, puisqu'il est clair
 que seuls des algorithmes génériques peuvent être utilisés sur un tel objet. De cette façon, un oracle aléatoire capture
 entièrement les applications qui peuvent être réalisées avec des fonctions de hachages~: si une construction de haut niveau
 n'est pas sûre quand elle est réalisée avec un oracle aléatoire, elle ne le sera pas non plus si ce dernier est remplacé par une fonction
-de hachage concrète. En revanche, même si une construction est sûre dans un tel modèle (dit de l'oracle aléatoire), il n'est pas
-nécessaire qu'elle le sera une fois réalisée en pratique.
+de hachage concrète. En revanche, même si une construction est sûre dans un tel modèle (dit de l'oracle aléatoire), elle ne le sera
+pas nécessairement
+une fois réalisée en pratique.
 
 
 Les fonctions de type \merkdam présentent certains comportements non idéaux dans le sens où elles permettent à certains calculs
@@ -635,8 +636,10 @@ De telles paires consistent en deux
 \ivs $\state_{0,\ldots,4}$, $\state'_{0,\ldots,4}$ et messages $m_{0,\ldots,15}$,
 $m'_{0,\ldots,15}$ avec $\state'_i = \state_{i-1}$ et $m'_i = m_{i-1}$\footnote{Nous sautons ici les détails de comment déterminer les valeurs de départ
 $\state'_0$ et $m'_0$.}, tels que la paire des sorties de la fonction appelée sur ces entrées possède aussi cette propriété.
-Bien qu'il n'est pas attendu d'une fonction aléatoire qu'elle possède une telle propriété, il n'est pas clair comment cette dernière peut être utilisée pour monter
-une attaque sur une des notions de sécurité principales et secondaires définies ci-dessus.
+Bien qu'il n'est pas attendu d'une fonction aléatoire qu'elle possède une telle propriété,
+il n'est pas évident que celle-ci puisse-t-être 
+ utilisée pour monter
+une attaque sur une des notions de sécurité principales ou secondaires définies ci-dessus.
 
 
 \subsection{Constructions de fonctions de hachage modernes}
@@ -661,7 +664,7 @@ Quelques variations sont possibles, par exemple en considérant d'autres applica
 On peut facilement voir qu'une collision pour une telle fonction de hachage n'implique plus une collision sur son état interne.
 En choisissant $m$ suffisamment grand (par exemple $m = 2n$),
 on peut par exemple obtenir une résistance générique aux multicollisions. En fait,
-Coron \etal on montré que cette construction est un \emph{extendeur de domaine sûr pour un oracle aléatoire}, dans le sens
+Coron \etal ont montré que cette construction est un \emph{extendeur de domaine sûr pour un oracle aléatoire}, dans le sens
 que si la fonction de compression est un oracle aléatoire avec entrées de taille fixe, l'utiliser avec une construction tuyau-large donne une fonction
 $\varepsilon$-indifférentiable d'un oracle aléatoire
 (au sens de Maurer \etal~\cite{DBLP:conf/tcc/MaurerRH04}), avec
@@ -755,8 +758,8 @@ objectif a précisément été d'augmenter le nombre de tours de la fonction pou
 
 \medskip
 
-D'autres travaux menés pendant cette thèse ont porté sur des attaques sur des algorithmes différents de \shaone. Le premier de ces autres résultats a porté sur la famille de primitive
-\asasa, qui comporte plusieurs instances à clef secrète et à clef publique. Nous avons développé une idée générale d'attaque exploitant certaines propriétés algébriques de la
+D'autres travaux menés pendant cette thèse ont consisté en des attaques sur des algorithmes différents de \shaone. Le premier de ces autres résultats a porté sur la famille de primitive
+\asasa, qui est faite de plusieurs instances à clef secrète et à clef publique. Nous avons développé une idée générale d'attaque exploitant certaines propriétés algébriques de la
 structure utilisée dans \asasa, ce qui nous a permis d'attaquer toutes les instances proposées (à l'exception d'une, qui avait également été attaquée avant nos travaux, en utilisant
 d'autres méthodes).
 
@@ -767,7 +770,7 @@ de type Even-Mansour.
 \medskip
 
 Enfin, une autre partie de cette thèse a été consacrée à la conception d'algorithmes de chiffrements et de certains de leurs éléments constitutifs.
-Une première contribution a porté sur la conception de matrices de diffusion de grande taille, que nous avons défini à partir de codes géométriques.
+Une première contribution a porté sur la conception de matrices de diffusion de grande taille, que nous avons définies à partir de codes géométriques.
 Nous nous sommes aussi intéressés aux algorithmes de chiffrement dits légers, qui sont conçus spécifiquement pour être utilisés dans des environnements
 contraints, comme par exemple un petit processeur. Nous avons développé l'algorithme \fly, qui répond bien à ce contexte.
 Enfin, nous avons conçu \pc et \cdb, deux algorithmes pouvant être implémentés de façon «\,incompressible\,», et qui de cette façon répondent à un certain modèle
@@ -795,11 +798,11 @@ clef). Par exemple, les instances \asasa de chiffrement à clef secrète propos�
 trois matrices inversibles tirées aléatoirement dans $\mathcal{M}_{128}(\Ftwo)$,
 alternant avec deux applications parallèles de seize boîtes S toutes générées aléatoirement et indépendamment les unes des autres.
 D'un point de vue pratique, de telles constructions peuvent être intéressantes, car elles nécessitent peu de tours par rapport à une structure plus classique. D'un point de vue plus théorique, elles peuvent
-aussi être vues comme des généralisations de structures plus habituelles telles que les réseaux de substitution-permutation (SPNs)~; une étude de la structure \asasa peut ainsi par exemple fournir une borne inférieure sur le nombre de tour
+aussi être vues comme des généralisations de structures plus habituelles telles que les réseaux de substitution-permutation (SPNs)~; une étude de la structure \asasa peut ainsi par exemple fournir une borne inférieure sur le nombre de tours
 de n'importe quel SPN, en dessous de laquelle celui-ci pourrait être attaqué «\,génériquement\,».
 
 Dans nos travaux, nous avons montré que les constructions basées sur \asasa présentent des faiblesses qui permettent de retrouver efficacement les différentes applications $A$, $S$, etc.
-(à équivalence prêt). Ceci est le cas pour l'instance «\,chiffrement par bloc\,» esquissée ci-dessus, mais aussi pour une instance définissant un schéma de cryptographie «\,multivariée\,»
+(à équivalence prête). Ceci est le cas pour l'instance «\,chiffrement par bloc\,» esquissée ci-dessus, mais aussi pour une instance définissant un schéma de cryptographie «\,multivariée\,»
 à clef publique, ainsi que des variantes à taille réduite de l'instance chiffrement par bloc utilisées pour définir des algorithmes en boîte blanche.
 Il est à noter qu'un quatrième type d'instance de type clef publique (que nous n'attaquons pas) avait aussi été proposé par Biryukov \etal. Ces instances ont cependant aussi été attaquées par
 Gilbert \etal à CRYPTO~2015~\cite{DBLP:conf/crypto/GilbertPT15}.
@@ -809,7 +812,7 @@ chiffrement par bloc. On considère les formes algébriques normales (ANFs) asso
 juste avant l'application de la dernière couche $A''$~;
 celles-ci sont de degré au plus 49, car les boîtes des couches $S$ sont sur huit bits et inversibles. Si on multiplie deux de ces ANFs issues de boîtes différentes de $S'$, le degré du résultat
 sera très probablement supérieur à 49~; ce n'est par contre pas le cas si les ANFs sont issues de la même boîte, le degré restant alors toujours borné par le haut par 49.
-À la suite de cette observation, il est possible de définir un système d'équations dont la résolution fournit la couche $A''$, à équivalence prêt~;
+À la suite de cette observation, il est possible de définir un système d'équations dont la résolution fournit la couche $A''$, à équivalence prête~;
 essentiellement,
 les coefficients de $A''$ sont les inconnues, et les contraintes consistent à forcer les produits de deux sorties des mêmes boîtes S à sommer à zéro sur un certain nombre de cubes. Une fois le système résolu, il ne reste plus qu'à par exemple
 appliquer la fin de l'attaque sur les constructions \sasas de Biryukov et Shamir~\cite{DBLP:conf/eurocrypt/BiryukovS01}. La complexité totale de notre attaque est dominée par le calcul
@@ -830,7 +833,7 @@ $\bigo(qt \cdot 2^{-n})$, avec $q$ le nombre d'accès à l'oracle de chiffrement
 Si on considère un modèle d'attaque \emph{à clefs liées}, la construction Even-Mansour est cependant beaucoup plus faible. En effet, supposant un accès à deux oracles de chiffrement
 $\oracle$ et $\oracle'$, l'un avec la clef $(k_1,k_0)$ et l'autre avec la clef $(k_1,k_0\oplus\delta)$ avec $\delta$ une constante non nulle connue de l'attaquant,
 il est clair que celui-ci peut facilement distinguer $\E$ d'une construction aléatoire en vérifiant que $\oracle(p) = \oracle'(p \oplus \delta)$.
-Nous avons alors fait l'observation élémentaire que ce distingueur peut-être rendu conditionnel à la valeur des bits de la clef en utilisant des clefs liées par l'addition
+Nous avons alors fait l'observation élémentaire que ce distingueur peut être rendu conditionnel à la valeur des bits de la clef en utilisant des clefs liées par l'addition
 modulaire plutôt que le XOR. Nous présentons cette idée dans le cas simple (mais répandu) où $k \defas k_0 = k_1$. Soit $\oracle(\cdot) \defas \E(k, \cdot)$, $\oracle_i(\cdot)
 \defas \E(k \boxplus \Delta_i,\cdot)$ avec $\Delta_i = 2^i$ (représenté par une chaîne binaire de $n$ bits valant tous zéro sauf celui en position $i$), on peut alors
 apprendre la valeur du $i^\text{ème}$ bit de $k$ en comparant $x \defas \oracle(p)$ et $y \defas \oracle_i(p \oplus \Delta_i)$: si celui-ci vaut zéro, alors la valeur
@@ -859,7 +862,7 @@ cependant pas toujours sa représentation la plus naturelle.}.
 
 Dans ces travaux, nous nous sommes intéressés à la conception de matrices denses
 de grande dimension pouvant être utilisées pour assurer toute la diffusion dans un SPN, c'est à dire qu'elles agissent sur l'ensemble du bloc. Concrètement, les matrices que nous
-avons étudié ont une dimension de 16
+avons étudiées ont une dimension de 16
 et permettent de définir des algorithmes avec des blocs de 64 bits (quand définies sur $\Fst$) ou 128 bits (quand définies sur $\Fth$).
 Utiliser une matrice de grande dimension permet d'assurer une diffusion très rapide, à condition qu'elle possède un \emph{branch number} (BN) élevé~; cette notion correspond à la
 distance minimale d'un code généré par la matrice\footnote{Telle qu'elle est définie ici, la matrice ne correspond en fait qu'à
@@ -929,7 +932,7 @@ dotées de preuves d'incompressibilité, nos constructions sont relativement eff
 \section[Nouvelles attaques sur la fonction de hachage \shaone]{New attacks on \shaone}
 
 La fonction de hachage \shaone a été développée par la NSA en 1995~\cite{Nist-SHA1} (sur la base d'un algorithme datant de 1993~\cite{Nist-SHA0}), et a été jusqu'à 2002 l'unique standard du NIST pour
-le hachage cryptographique. En tant que tel, elle fut largement déployée et consiste donc une cible de choix pour les cryptanalystes.
+le hachage cryptographique. En tant que telle, elle fut largement déployée et consiste donc une cible de choix pour les cryptanalystes.
 
 \subsection{Collisions à initialisations libres pour \shaone \cite{DBLP:conf/crypto/KarpmanPS15,DBLP:conf/eurocrypt/StevensKP16}}
 
@@ -939,7 +942,7 @@ Nous décrivons conjointement deux articles écrits avec Marc Stevens et Thomas 
 
 Les premières attaques en collision sur une version non-réduite de \shaone ont été présentées par Wang \etal à CRYPTO 2005~\cite{DBLP:conf/crypto/WangYY05a}. Bien que,
 comme souvent en cryptanalyse, de complexité
-trop élevée pour être effectivement exécutée, ces attaques ont eu un impact important sur l'étude des fonctions de hachage durant la décennie qui a suivie. Elles ont notamment poussé à l'organisation
+trop élevée pour être effectivement exécutées, ces attaques ont eu un impact important sur l'étude des fonctions de hachage durant la décennie qui a suivie. Elles ont notamment poussé à l'organisation
 d'une compétition internationale pour le choix d'un nouveau standard, qui a vu \keccak devenir \shathree en 2015~\cite{Nist-SHA3}.
 
 Dans ces travaux, nous avons souhaité obtenir la première attaque explicite sur une version non-réduite de \shaone. La complexité attendue d'une attaque complète à la

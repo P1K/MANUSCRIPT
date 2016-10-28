@@ -53,13 +53,15 @@ The low number of non-linear gates needed to implement \littlunOne makes it a su
 Indeed, it directly implies a lower cost when using Boolean masking schemes (both hardware and software), which represent the primitive to be masked as a circuit \cite{isw,DBLP:conf/fse/CarletGPQR12}.
 In particular, \littlunOne is competitive with the S-boxes proposed by Grosso \etal \cite{lsdesigns}: it has the same gate count as the S-box used for \robin and only
 one more non-linear (and one less XOR) gate than the one used for \fantomas. All three S-boxes are comparable in terms of cryptographic properties.
+The S-box of Canteaut \etal is slightly more expensive, requiring two more non-linear gates~\cite{sac15}; it is however stronger against differential cryptanalysis.
 
 One could alternatively consider that the chief non-linear component to take into account in that context is actually \littlunS, the 4-bit S-box underlying \littlunOne, rather than the full S-box.
 Indeed, any cryptosystem using \littlunOne (in combination with an arbitrary linear layer)
-can be re-written as using only \littlunS for its non-linear part. In that respect, the number of non-linear gates to consider for masking would only be 4\footnote{One could object that
+can be re-written as using only \littlunS for its non-linear part. In that respect, the number of non-linear gates to consider for masking would only be 4. One could however
+object that
 additional factors need to be taken into account, such as for instance the total number of application of the S-box in an execution of the cipher. Yet if we jump a little ahead and
 consider the block cipher \fly of \autoref{sec:fly}, we can see that in terms of the 4-bit S-box, \fly needs $20\times8\times3 = 480$ calls to \littlunS, which is
-comparable to the $31\times16 = 496$ of \present (discounting the key-schedule).}.
+comparable to the $31\times16 = 496$ of \present (discounting the key-schedule).
 
 The ability to express \littlunOne only in terms of a 4-bit S-box is also convenient when considering threshold implementations (although these chiefly apply to hardware implementations,
 which are not the focus of this chapter).

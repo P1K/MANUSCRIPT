@@ -1,0 +1,164 @@
+%%% This LaTeX template was created by Adrien Thurotte
+%% It is approved by Paris-Saclay University (december 2015)
+% And, of course, needs improvements : feel free to work on it and share it back ...
+%% Under the licence CC0 - Others may freely build upon, enhance and reuse the works for any purposes without restriction under copyright or database law. https://creativecommons.org/about/cc0
+\documentclass[12pt,a4paper]{book}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usepackage{graphicx} % For commande \includegraphics
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor} %% To color in violet the text
+\frenchspacing
+\usepackage[absolute]{textpos} % to place elements in the page
+\usepackage{multicol} % To write summary in two columns-mode
+\usepackage{calc} % To calculate textwidth
+\RequirePackage{geometry}% That nicely create a one-page template
+\geometry{textheight=150ex,textwidth=40em,top=30pt,headheight=30pt,headsep=30pt,inner=80pt}
+\usepackage{tikz} %% Make the square.
+
+\label{The thesis}
+\newcommand{\PhDTitleFR}{Analyse de primitives symétriques}
+\newcommand{\PhDkeywordsFR}{Cryptographie symétrique, Chiffres par bloc, Fonctions de hachage} %% 3 à 6 mots clefs
+\newcommand{\PhDsumFR}{
+Cette thèse a pour objet d'étude les algorithmes de chiffrement par bloc
+et les fonctions de hachage cryptograpiques, qui sont deux primitives
+essentielles de la cryptographie dite «\,symétrique\,».
+
+Dans une première partie, nous étudions des éléments utiles
+pour la conception de chiffres par bloc: tout d'abord des
+matrices de diffusion de grande dimension issues de codes
+correcteurs géométriques, puis une boîte de substitution
+offrant une bonne diffusion. Dans le second cas, nous
+montrons aussi comment utiliser cet élément pour construire
+un chiffre compact et efficace sur petits processeurs.
+
+Dans une seconde partie, nous nous intéressons à
+des attaques en collision à initialisation libre sur
+la fonction de hachage SHA-1. Nous montrons comment
+les attaques classiques sur cette fonction peuvent être
+rendues plus efficaces en exploitant la liberté supplémentaire
+offerte par ce modèle. Ceci nous permet en particulier de
+calculer explicitement des collisions pour la fonction
+de compression de SHA-1 non réduite.	
+}
+
+
+\newcommand{\PhDTitleEN}{Analysis of symmetric primitives}
+\newcommand{\PhDkeywordsEN}{Symmetric cryptography, Block ciphers, Hash functions} %% 3-6 Keywords
+\newcommand{\PhDsumEN}{
+This thesis is about block ciphers and cryptographic
+hash functions, which are two essential primitives
+of symmetric-key cryptography.
+
+In the first part of this manuscript, we study
+useful building blocks for block cipher design.
+We first consider large diffusion matrices built
+from algebraic-geometry codes, and then construct
+a small S-box with good diffusion. In the second
+case, we show how the S-box can be used to define
+a compact and efficient block cipher targetting
+small processors.
+
+In the second part, we focus on the SHA-1 hash function,
+for which we develop a freestart collision attack.
+We show how classical collision attacks can be made
+more efficient by exploiting the additional freedom
+provided by this model. This allows us in particular
+to compute explicit collisions for the full compression
+function of SHA-1.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+ 
+ \label{Personnal}
+\newcommand{\PhDname}{M. Pierre Karpman} % Civility, first name and name 
+\newcommand{\NNT}{201XSACLSXXX} %% Your NNT numer (the Library will attribute one...)
+\newcommand{\ecodocnum}{580} % Accrediation number
+\newcommand{\ecodoctitle}{Sciences et technologies de l'information et de la communication} % Full name of the doctorale school
+\newcommand{\PhDspeciality}{Informatique} % Speciality 
+\newcommand{\PhDworkingplace}{\'Ecole Polytechnique\\ et à la Nanyang Technological University}
+\newcommand{\defenseplace}{Palaiseau} %Place of defense
+\newcommand{\defensedate}{18 novembre 2016} % Date of defense
+\newcommand{\logoED}{\includegraphics[scale=1.2]{logo/STIC.png}} % Logo of doctoral school. Check the name of the correct file in the /logo folder.
+\newcommand{\logoEt}{\includegraphics[scale=0.11]{logo/ntu.png}} % Must be the logo corresponding to %PhD working place. Check the name of the correct file in the /logo folder.
+\newcommand{\vpos}{1.3} %% You can modify vertical position (leave cm as unit) in order to align horizontally both images
+
+%%%%%%In a case of "cotutelle" Delete " % " of the three following lines. Then, in style-pagedegarde.tex, delete " % " of line 3 to 5.
+\newcommand{\logoCotut}{\includegraphics[scale=0.11]{logo/X2.jpg}} % Add here the logo of the partner. 
+\newcommand{\vCotutpos}{3.1} %% You can modify vertical position (leave cm as unit) in order to align horizontally both images
+\newcommand{\hCotutpos}{13} %% You can modify horizontal position (leave cm as unit) in order to align horizontally both images
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%JURY%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lors du premier dépôt de la thèse le nom du président n’est pas connu, le choix du président se fait par les membres du Jury juste avant la soutenance. La précision est apportée sur la couverture lors du second dépôt.
+% Choice of the jury's president is made during the defense. Thus, it must be specified only for the second file deposition in ADUM.
+% All the jury members listed here must have been present during the defense.
+\label{Jury}
+%%% Jury member n1 (Président) %%%
+\newcommand{\jurynameA}{Louis Goubin}
+\newcommand{\jurygenderA}{M.} % M. or Mme. / Mrs.
+\newcommand{\juryadressA}{Université de Versailles}
+\newcommand{\jurygradeA}{Professeur des universités}
+%\newcommand{\juryroleA}{Président du jury} % 
+\newcommand{\juryroleA}{Examinateur} % 
+%%% Jury member n2 (Rapporteur) %%%
+\newcommand{\jurynameB}{Anne Canteaut}
+\newcommand{\jurygenderB}{Mme.} % M. or Mme. / Mrs.
+\newcommand{\juryadressB}{Inria de Paris}
+\newcommand{\jurygradeB}{Directrice de recherche}
+\newcommand{\juryroleB}{Rapporteur}
+%%% Jury member n3 (Rapporteur) %%%
+\newcommand{\jurynameC}{Antoine Joux}
+\newcommand{\jurygenderC}{M.} % M. or Mme. / Mrs.
+\newcommand{\juryadressC}{Université de Paris 6}
+\newcommand{\jurygradeC}{TBD}
+\newcommand{\juryroleC}{Rapporteur}
+%%% Jury member n4 (Examinateur) %%%
+\newcommand{\jurynameD}{Benoît Gérard}
+\newcommand{\jurygenderD}{M.} % M. or Mme. / Mrs.
+\newcommand{\juryadressD}{Direction générale de l'armement}
+\newcommand{\jurygradeD}{Ingénieur de recherche}
+\newcommand{\juryroleD}{Examinateur}
+%%% Jury member n5 (Examinateur) %%%
+\newcommand{\jurynameE}{Hongjun Wu}
+\newcommand{\jurygenderE}{M.} % M. or Mme. / Mrs.
+\newcommand{\juryadressE}{Nanyang Technological University}
+\newcommand{\jurygradeE}{Associate professor}
+\newcommand{\juryroleE}{Examinateur}
+%%% Jury member n6 (Examinateur) %%%
+\newcommand{\jurynameF}{Daniel Augot}
+\newcommand{\jurygenderF}{M.} % M. or Mme. / Mrs.
+\newcommand{\juryadressF}{Inria Saclay Île-de-France}
+\newcommand{\jurygradeF}{Directeur de recherche}
+\newcommand{\juryroleF}{Directeur de thèse}
+%%% Jury member n6 (Examinateur) %%%
+\newcommand{\jurynameG}{Pierre-Alain Fouque}
+\newcommand{\jurygenderG}{M.} % M. or Mme. / Mrs.
+\newcommand{\juryadressG}{Université de Rennes 1}
+\newcommand{\jurygradeG}{Professeur des universités}
+\newcommand{\juryroleG}{Directeur de thèse}
+%%% Jury member n6 (Examinateur) %%%
+\newcommand{\jurynameH}{Thomas Peyrin}
+\newcommand{\jurygenderH}{M.} % M. or Mme. / Mrs.
+\newcommand{\juryadressH}{Nanyang Technological University}
+\newcommand{\jurygradeH}{Associate professor}
+\newcommand{\juryroleH}{Directeur de thèse}
+%% Il est possible d'ajouter des membres supplémentaires selon le même modèle.
+%% More jury members can be added according to the same model
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%COMPILATION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{Document}
+%% 
+%% Les fichiers sont à compiler un par un. Il faut retirer la marque de commentaire " % " en début de ligne, compiler le document, puis mettre la ligne à nouveau en commentaire en vue de compiler le document suivant.
+%% To compile desired document, delete the " % " at the begin of the line, compile the file, and then comment again in order to be able to compile the next one.
+%%
+\begin{document}
+%% La page de garde :
+\input{style-pagedegarde} %% Have to be compiled twice in before getting the square correctly positionned.
+
+%% Deux résumé sur une page - two on the same page
+%\input{style-abstractboth}
+
+%% Une page par résumé - One page by summary
+%\input{style-abstractfr}
+%\input{style-abstracten}
+\end{document}

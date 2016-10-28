@@ -57,18 +57,20 @@ uint8_t littlun1[256] =
 \label{sec:simdimplem}
 
 In the context of 4 to 8-bit S-boxes, the Lai-Massey structure of the \littlun construction also allows to conveniently use ``vector'' Single Instruction Multiple Data (or SIMD) instructions for
-efficient implementations. We discuss here an implementation of \littlunOne based mostly on the \pshufb instruction from Intel's SSSE3 instruction set. This instruction
-allows to perform 16 parallel lookups of a 4-bit S-box on a 128-bit register, which is particularly convenient to implement a similarly parallel application of
-a \littlun S-box on 128 bits. More precisely, the semantics of $x' \defas \pshufb~x~y$ can be defined as: 
-\[
-x'[i] \defas \left\{
-				\begin{array}{ll}
-				x[\lfloor y[i]\rfloor_4]  & \text{if the most significant bit of $y[i]$ is not set}\\
-				0 & \text{otherwise}
-				\end{array}
-	    \right.
-\]
-where $x$ and $y$ are vectors of 16 bytes. The \pshufb instruction can easily be used in an implementation either by directly writing the relevant part of the program in assembler
+efficient implementations. We discuss here an implementation of \littlunOne based mostly on the \pshufb instruction from Intel's SSSE3 instruction set.
+%This instruction
+%allows to perform 16 parallel lookups of a 4-bit S-box on a 128-bit register, which is particularly convenient to implement a similarly parallel application of
+%a \littlun S-box on 128 bits. More precisely, the semantics of $x' \defas \pshufb~x~y$ can be defined as: 
+%\[
+%x'[i] \defas \left\{
+%				\begin{array}{ll}
+%				x[\lfloor y[i]\rfloor_4]  & \text{if the most significant bit of $y[i]$ is not set}\\
+%				0 & \text{otherwise}
+%				\end{array}
+%	    \right.
+%\]
+%where $x$ and $y$ are vectors of 16 bytes.
+The \pshufb instruction can easily be used in an implementation either by directly writing the relevant part of the program in assembler
 or by using compiler intrinsics for a language such as \C. In the latter case, the intrinsic corresponding to the use of \pshufb is usually named \texttt{\_mm\_shuffle\_epi8}.
 We give a small function implementing the \littlunOne S-box using \C intrinsics in \autoref{sse8}. Even without further tuning of the code, this function compares favourably with vector implementations
 of other S-boxes in terms of efficiency. For instance, it needs about half the number of instructions of Hamburg's hand-written vector implementation of the \aes S-box \cite{vpaes}, although
