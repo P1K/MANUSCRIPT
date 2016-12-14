@@ -5,35 +5,36 @@ Consequently, the symmetric cryptographic community shifted focus to \eg the wid
 the \textsc{Caesar} competition, or to more specific applications of block ciphers. In the latter case, an important topic is
 the design of ``lightweight'' block ciphers intended to be implemented on low-cost, resource-constraint devices. An early
 successful example following this trend is the block cipher \present \cite{present}, which can be implemented in small hardware circuits.
-Most lightweight algorithms similarly target one (or a few) platform(s) on which they are expected to perform particularly well;
+Most lightweight algorithms similarly target a few platforms on which they are expected to perform particularly well;
 good performance in other cases are however not usually expected and lightweight ciphers are in general not very versatile.
 Typical platforms of interest include hardware circuits and 8-bit to 32-bit microcontrollers.
 Recently, NIST released a draft report on lightweight cryptography with the objective of creating a portfolio of lightweight primitives
 through an open process~\cite{NistLightDraft}. The topic of lightweight cryptography is thus ever more timely. 
 
-In this work, we design a conceptually simple block cipher targeting efficient \emph{light} implementations on 8-bit microcontrollers\footnote{By \emph{light} implementations,
+In this work, we design a conceptually simple block cipher targeting efficient \emph{light} implementations on 8-bit microcontrollers, where
+by \emph{light} implementations,
 we mean in particular that the size of the code is small, typically of the order of 200 bytes. If more resources are available, the best current block cipher is
-probably the \aes (see \eg \cite{DBLP:journals/iacr/BeaulieuSSTWW15}).}.
+probably the \aes, see \eg \cite{DBLP:journals/iacr/BeaulieuSSTWW15}.
 %, which is also expected to achieve reasonable performance in hardware.
 The chief academic proposal to date for this scenario is the \pride block cipher,
 that was presented at CRYPTO~2014~\cite{pride};
 notable
 ``non-academic'' ciphers for the same scenario are the ``NSA ciphers'' \simon and \speck \cite{NSAciph}.
 Our block cipher is built around \littlunOne, a compact 8-bit S-box with branch number 3. This allows
-to define a round function similar to a scaled-up variant of \present, composing the S-box application with a simple bit permutation\footnote{As a bit permutation
+to define a round function similar to a scaled-up variant of \present, composing the S-box application with a simple bit permutation. As a bit permutation
 obviously does not increase the number of active bits, an important part of the diffusion in such a cipher is played by the S-box. The typical measure of the quality
-of the diffusion of an S-box is its ``branch number'' which plays a role similar to the minimum distance of the linear codes used in \aes-like designs.}.
-This offers a trade-off between hardware and light software implementations: \littlunOne is more expensive in hardware than (two applications
-of) the S-box of \present, but the bit permutation is simple to implement with 8-bit rotations. Owing to Golding, we name our
+of the diffusion of an S-box is its ``branch number'' which plays a role similar to the minimum distance of the linear codes used in \aes-like designs.
+We thus get a trade-off between hardware and light software implementations: \littlunOne is more expensive in hardware than two applications
+of the S-box of \present, but the bit permutation is simple to implement with 8-bit rotations. Owing to Golding, we name our
 block cipher ``\fly''.
 
 Excluding on-the-fly key expansion, the round function of \fly costs four instructions less to implement than \pride's on AVR. Using the
 good branch number of \littlunOne, we can show that with a similar number of rounds, \fly is more resistant than \pride
-to statistical (differential and linear) attacks. This is all the more relevant as the security margin of \pride seems to be quite
+to statistical attacks. This is all the more relevant as the security margin of \pride seems to be quite
 thin~\cite{prideattack}. Taking the key-schedule into account, one round of \fly costs eight more instructions
 than one round of \pride. However, unlike \pride, we do not use an FX construction for the key-schedule and thus
 the generic security of \fly does not decrease with the amount of data available
-to the adversary (Dinur also showed how the FX construction can lead to more efficient time-memory-data trade-offs~\cite{itaitmd}).
+to the adversary. Dinur also showed how the FX construction can lead to more efficient time-memory-data trade-offs~\cite{itaitmd}.
 
 As implementations on resource-constraint devices are more likely to be vulnerable to side-channel attacks, one should also consider
 the additional cost of protection against, say, differential power analysis when evaluating schemes that target such platforms.

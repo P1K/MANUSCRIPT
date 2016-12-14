@@ -1,0 +1,352 @@
+\section{Applications to \shaone}
+\label{sec:sha1}
+
+%\subsection{Description of SHA-1}
+%
+%SHA-1 is an NSA-designed hash function standardized by the NIST~\cite{sha1}. It combines a compression
+%function which is a block cipher with 512-bit keys and 160-bit messages used in Davies-Meyer mode
+%with a Merkle-Damg\aa rd mode of operation~\cite[Chap. 9]{HAC96}. Thus, the initial vector (IV)
+%as well as the final hash
+%are 160-bit values, and messages are processed in 512-bit blocks.
+%The underlying block cipher of the compression function can be described as follows:
+%let us denote by $m_0, \ldots m_{15}$ the 512-bit key as 16 32-bit words. The \emph{expanded} key
+%$w_0, \ldots w_{79}$ is defined as:
+%\[
+%  w_i = \left\{\begin{array}{ll}
+%      m_i & \text{if } i < 16\\
+%      (w_{i - 3} \oplus w_{i - 8} \oplus w_{i - 14} \oplus w_{i - 16}) \lll 1 & \text{otherwise}.
+%    \end{array}
+%    \right.
+%  \]
+%  Then, if we denote by $a, b, c, d, e$ a 160-bit state made of 5 32-bit words and initialized
+%  with the plaintext, the ciphertext is the value held in this state
+%  after iterating the following procedure (parametered by the round number $i$) 80 times:
+%  \[
+%    \begin{array}{l}
+%      t \leftarrow (a \lll 5) + \bool_{i \div 20}(b, c, d) + e + k_{i \div 20} + w_i  \\
+%      e \leftarrow d\\
+%      d \leftarrow c\\
+%      c \leftarrow b \lll 30\\
+%      b \leftarrow a\\
+%      a \leftarrow t,\\
+%    \end{array}\quad
+%  \]
+%  where `$\div$' denotes the integer division, $\Phi_{0\ldots3}$ are four bitwise Boolean functions,
+%  and $k_{0\ldots3}$ are four constants (we refer to~\cite{sha1} for their definition).
+%
+%  Importantly, before being hashed, a message is \emph{always} padded with
+%  at least 65 bits, made of a `1' bit, a (possibly zero) number of `0' bits,
+%  and the length of the message in bits as a 64-bit integer. This padding places
+%  an additional constraint on the attacker as it means that even a preimage for the compression function with
+%  a valid IV is not necessarily a preimage for the hash function.
+
+
+\subsection{One-block preimages without padding}
+\label{sec:one_wo_pad}
+  We apply the framework of \autoref{NewFramework} to mount attacks on \shaone
+  for \emph{one-block preimages without padding}. These are rather direct applications
+  of the framework, the only difference being the fact that we use \emph{sets} of
+  differentials instead of \emph{linear spaces}. This has no impact
+  on \autoref{affine_testing_II}, but makes the description of the attack parameters
+  less compact.
+
+  As was noted in~\cite{DBLP:conf/crypto/KnellwolfK12}, the message expansion of \shaone being linear, it is possible to attack 15 steps both in the forward and backward 
+  direction, for a total of 30, without advanced matching techniques: it is sufficient to use a message difference
+  in the kernel of the 15 first steps of
+  the message expansion. 
+  When applying our framework to attack more steps, say 55 to 62, we have observed experimentally
+  that splitting the forward and backward parts around steps 22 to 27 seems to give the best results.
+  A similar behaviour was observed by Knellwolf and Khovratovich in their attacks, and this can be explained by the fact
+  that the \shaone step function has a somewhat weaker diffusion when computed backward compared to forward.
+
+  We use \autoref{difference-getter} to
+  construct a suitable set of differences in the preparation of an attack.
+  This algorithm was run on input differences of low Hamming weight; these
+  are kept only when they result in output differences
+  with truncation masks that are long enough and with good overall
+  probabilities. The sampling parameter $Q$ that we used was $2^{15}$;
+  the threshold value $t$ was subjected to a tradeoff: the larger it is,
+  the less bits are chosen in the truncation mask, but the better the probability of
+  the resulting differential. In practice, we used values between 2 and 5, 
+  depending on the differential considered. 
+
+  \begin{algorithm}[ht]
+        \LinesNumbered
+    \KwIn{
+      A chunk $\Fs_i$ of the compression function, $\delta_{i,1}, \delta_{i,2} \in \{0,1\}^m$, a threshold value $t$,
+      a sample size $Q$, an internal state $c$.
+    }
+    \KwOut{
+      An output difference $\mathcal{S}$ , and a mask $T_\mathcal{S}$ for the differential 
+      $((\delta_{i,1}, \delta_{i,2}), 0) \overset{\Fs_i}{{\rightsquigarrow}}~\mathcal{S}$
+    }
+    \KwData{ 
+      An array $d$ of $n$ counters initially set to $0$.
+    }
+    \For{$ q = 0$ to $Q$}
+    {
+      Choose $\mu \in \{0,1\}^m$ at random\;
+      $\Delta \leftarrow \Fs_i (\mu \oplus \delta_{i,1} \oplus \delta_{i,2} , c) \oplus \Fs_i (\mu \oplus \delta_{i,1} , c) \oplus
+      \Fs_i(\mu \oplus \delta_{i,2},c) \oplus \Fs_i (\mu,c)$\;
+      \For{$i = 0$ to $ n-1$ }
+      {
+        \If{ the i$^\text{th}$ bit of $\Delta$ is 1}
+        {
+          $d[i] \leftarrow d[i] + 1$\;
+        }
+      }
+    }
+    \For{$i = 0$ to $ n-1$ }
+    {
+      \If{ $d[i] \geq  t $}
+      {
+        Set the $i$-th bit of the output difference $\mathcal{S}$ to $1$\;
+      }
+    }
+    \caption{\label{difference-getter}Computing a suitable output difference for a given input difference}
+  \end{algorithm}
+
+  Once input and output differences have been chosen, we use an adapted version of \cite[Algorithm~2]{DBLP:conf/crypto/KnellwolfK12} given in
+  \autoref{mask-getter} to compute suitable truncation masks. 
+
+  \begin{algorithm}[ht]
+        \LinesNumbered
+    \KwIn{
+      $D_{1,1}, D_{1,2}, D_{2,1}, D_{2,2} \subset \{0,1\}^m$, a sample size $Q$, a mask size $d$.
+    }
+    \KwOut{
+      A truncation mask $T \in \{0,1\}^n$ of Hamming weight $d$.
+    }
+    \KwData{ 
+      An array $k$ of $n$ counters initially set to $0$.
+    }
+
+    \For{$ q = 0$ to $Q$}
+    {
+      Choose $\mu \in \{0,1\}^m$ at random \;
+      $c \leftarrow \Fs(\mu, \iv)$\;
+      Choose $(\delta_{1,1},\delta_{1,2},\delta_{2,1},\delta_{2,2}) \in D_{1,1} \times D_{1,2} \times D_{2,1} \times D_{2,2} $ at random\; 
+      $\Delta \leftarrow 
+      \Fuu (\mu \oplus \delta_{1,1} \oplus \delta_{1,2} , c) \oplus 
+      \Fuu (\mu \oplus \delta_{1,1} , c) \oplus 
+      \Fuu(\mu \oplus \delta_{1,2},c)$\;
+      $\Delta \leftarrow \Delta \oplus
+      \Fd^{-1} (\mu \oplus \delta_{2,1} \oplus \delta_{2,2}, c) \oplus 
+      \Fd^{-1}(\mu \oplus \delta_{2,2} , c) \oplus 
+      \Fd^{-1} (\mu \oplus \delta_{2,2} , c) $\;
+      \For{$i = 0$ to $ n-1$ }
+      {
+        \If{ the i$^\text{th}$ bit of $\Delta$ is 1}
+        {
+          $k[i] \leftarrow k[i] + 1$\;
+        }
+      }
+    }
+    Set the d bits of lowest counter value in $k$ to 1 in T.
+    \caption{\label{mask-getter}Find truncation mask T for matching}
+  \end{algorithm}
+
+  The choice of the size of the truncation mask $d$ in this algorithm
+  offers a tradeoff between the probability one can hope to achieve for the resulting truncated differential
+  and how efficient a filtering of ``\,bad\,'' messages it will offer.
+  In our applications to \shaone, we chose masks of size about
+  $\min(\log_2(|D_{1,1}|), \log_2(|D_{1,2}|)$, $\log_2(|D_{2,1}|), \log_2(|D_{2,2}|))$,
+  which is consistent with taking masks of size the dimension of the affine
+  spaces as is done in~\cite{DBLP:conf/crypto/KnellwolfK12}.
+
+  \medskip
+
+  We similarly adapt \cite[Algorithm 3]{DBLP:conf/crypto/KnellwolfK12} as \autoref{typeI-getter} in order to estimate the average
+  false negative probability associated with the final truncated differential.
+
+  \begin{algorithm}[ht]
+        \LinesNumbered
+    \KwIn{
+      $D_{1,1}, D_{1,2}, D_{2,1}, D_{2,2} \subset \{0,1\}^m, T \in \{0,1\}^n$, a sample size $Q$
+    }
+    \KwOut{
+      Average false negative probability $\alpha$.
+    }
+    \KwData{ 
+      A counter $k$ initially set to $0$.
+    }
+
+    \For{$q = 0$ to $Q$}
+    {
+      Choose $\mu \in \{0,1\}^m$ at random \;
+      $c \leftarrow \Fs(\mu, \iv)$\;
+      Choose $(\delta_{1,1},\delta_{1,2},\delta_{2,1},\delta_{2,2}) \in D_{1,1} \times D_{1,2} \times D_{2,1} \times D_{2,2} $ at random\; 
+      $\Delta \leftarrow 
+      \Fuu (\mu \oplus \delta_{1,1} \oplus \delta_{1,2} , c) \oplus 
+      \Fuu (\mu \oplus \delta_{1,1} , c) \oplus 
+      \Fuu(\mu \oplus \delta_{1,2},c)$\;
+      $\Delta \leftarrow \Delta \oplus
+      \Fd^{-1} (\mu \oplus \delta_{2,1} \oplus \delta_{2,2}, c) \oplus 
+      \Fd^{-1}(\mu \oplus \delta_{2,2} , c) \oplus 
+      \Fd^{-1} (\mu \oplus \delta_{2,2} , c) $\;
+      \For{$i = 0$ to $ n-1$ }
+      {
+        \If{$\Delta \not\equiv_T 0^n$}
+        {
+          $k \leftarrow k+1$\;
+        }
+      }
+    }
+    \Return {$k/Q$}
+    \caption{\label{typeI-getter}Estimate the average false negative probability}
+  \end{algorithm}
+
+  We conclude this section by giving the statistics for the best attacks that we found for
+  various reduced versions of \shaone in \autoref{SHA11}, the highest number of
+  attacked rounds being 62. Because the difference spaces
+  are no longer affine, they do not lend themselves to a compact description and their size
+  is not necessarily a power of 2 anymore. The ones we use do not have many elements, however,
+  which makes them easy to enumerate.
+
+  \begin{table}[t]
+    \caption[One block preimage without padding.]{One block preimage without padding. $N$ is the 
+              number of attacked steps, \emph{Split} is the separation step between the
+              forward and the backward chunk, $d_{i,j}$ is the $\log_2$ of the cardinal
+              of $D_{i,j}$ and $\alpha$ is the estimate for the false negative probability. The complexity
+              is computed as described in  \autoref{NewFramework}.\label{SHA11}}
+    \begin{center}
+      \begin{tabular}{l c c c c c c r @{}} \toprule
+        $N\qquad$ &  \emph{Split} & $d_{1,1}$ &  $d_{1,2}$ & $d_{2,1}$ & $d_{2,2}$ & $\alpha $ & Complexity \\\midrule
+        58    & 25  & 7.6  & 9.0 & 9.2 & 9.0 & 0.73  & 157.4\\ 
+        59    & 25  & 7.6  & 9.0 & 6.7 & 6.7  & 0.69  & 157.7\\ 
+        60    & 26  & 6.5 & 6.0 & 6.7 & 6.0  & 0.60  & 158.0\\ 
+        61    & 27  & 4.7 & 4.8 & 5.7  & 5.8  & 0.51  & 158.5\\ 
+        62    & 27  & 4.7 & 4.8 & 4.3  & 4.6  & 0.63 & 159.0 \\ 
+        \bottomrule
+        \hline
+      \end{tabular}
+    \end{center}
+  \end{table}
+
+  \subsection{One-block preimages with padding}
+\label{sec:one_wi_pad}
+
+
+  If we want the message to be properly padded, 65 out of the 512 bits of the last message
+  blocks need to be fixed according to the padding rules, and this naturally restricts the positions
+  of where one can now use message differences. This has in particular an adverse effect on
+  the differences in the backward step, which Hamming weight increases because of some
+  features of \shaone's message expansion algorithm. The overall process of finding attack
+  parameters is otherwise unchanged from the non-padded case. We give statistics for
+  the best attacks that we found in \autoref{SHA12}. One will note that the highest number of attacked
+  rounds dropped from 62 to 56 when compared to \autoref{SHA11}.
+ 
+  \begin{table}[t]
+    \caption[One block preimage with padding.]{One block preimage with padding. $N$ is the 
+              number of attacked steps, \emph{Split} is the separation step between the
+              forward and the backward chunk, $d_{i,j}$ is the $\log_2$ of the cardinal
+              of $D_{i,j}$ and $\alpha$ is the estimation for false negative probability. The complexity
+              is computed as described in \autoref{NewFramework}.\label{SHA12}}
+    \begin{center}
+      \begin{tabular}{l c c c c c c r @{}} \toprule
+        $N\qquad$ &  \emph{Split} & $d_{1,1}$ &  $d_{1,2}$ & $d_{2,1}$ & $d_{2,2}$ & $\alpha $ & Complexity \\\midrule
+      51    & 23  & 8.7  & 8.7 & 8.7 & 8.7  & 0.72  & 155.6\\ 
+      52    & 23  & 9.1  & 9.1 & 8.2 & 8.2  & 0.61  & 156.7\\ 
+      53    & 23  & 9.1  & 9.1 & 3.5 & 3.5  & 0.61  & 157.7\\ 
+      55    & 25  & 6.5  & 6.5 & 5.9 & 5.7  & 0.52  & 158.2\\ 
+      56    & 25  & 6  & 6.2 & 7.2 & 7.2  & 0.6  & 159.4\\ 
+        \bottomrule
+        \hline
+      \end{tabular}
+    \end{center}
+  \end{table}
+
+
+
+  \subsection{Two-block preimages with padding}
+\label{sec:one_two}
+
+
+  We can increase the number of rounds for which we can find a preimage with a properly padded
+  message at the cost of using a slightly longer message of two blocks: if we are able to find
+  \emph{one-block pseudo preimages with padding} on enough rounds, we can then use the
+  \emph{one-block preimage without padding} to bridge the former to the IV. Indeed,
+  in a pseudo-preimage
+  setting, the additional freedom degrees gained from removing any constraint on the IV
+  more than compensate for the ones added by the padding. We first describe
+  how to compute such pseudo-preimages.
+
+  \subsubsection{One-block pseudo-preimages.}
+
+  If we relax the conditions on the IV and do not impose anymore that it is fixed
+  to the one of the specifications, it becomes possible to use a splice-and-cut
+  decomposition of the function, as well as short properly padded bicliques.
+
+  The reduced compression function of \shaone $\Fs$ is now decomposed into three smaller
+  functions as $\Fs = \Fd^t \circ \Fuu \circ \Ft \circ \Fd^b$, $\Ft$ being the rounds covered by the
+  biclique. The function $\Fuu$ covers the steps $s_1$ to $e$, $\Fd = \Fd^t \circ \Fd^b$ covers
+  $s_2$ to $e + 1$ through the feedforward, and $\Ft$ covers $s_2 + 1$ to $s_1 - 1$, as shown in
+  \autoref{biclique}.
+
+    \begin{figure}
+	\center
+      \includegraphics[scale=0.6]{../III_SHA-1/preimages/SHA.pdf}
+      \caption{A splice-and-cut decomposition with biclique.\label{biclique}}
+    \end{figure}
+
+    Finding the parameters is done in the exact same way as for the one-block preimage attacks.
+    Since the bicliques only cover $7$ steps, one can generate many of them
+    from a single one by modifying some of the remaining message words outside of the biclique proper.
+    Therefore, the amortized cost of their construction is small and considered negligible w.r.t. the
+    rest of the attack. The resulting attacks are shown in \autoref{SHA13}.
+
+  \begin{table}[ht]
+    \caption[One block pseudo-preimage with padding.]{One block pseudo-preimage with padding. $N$ is the 
+              number of attacked steps, $d_{i,j}$ is the $\log_2$ of the cardinal
+              of the set $D_{1,2}$ and $\alpha$ is the estimation for false negative probability.
+              The various splits are labeled as in \autoref{biclique}.
+            The complexity is computed as described in \autoref{NewFramework}.\label{SHA13}}
+    \begin{center}
+      \begin{tabular}{l c c c c c  c c c r @{}} \toprule
+        $N\qquad$ & $s_1$ & $e$ & $s_2$ & $d_{1,1}$ &  $d_{1,2}$ & $d_{2,1}$ & $d_{2,2}$ & $\alpha $ & Complexity \\\midrule
+        61    & 27 & 49 & 20   & 7.0  & 7.0 & 7.5 & 7.5  & 0.56  & 156.4\\ 
+        62    & 27 & 50 & 20   & 5.8  & 5.7 & 7.2 & 7.2  & 0.57  & 157.0\\ 
+        63    & 27 & 50 & 20   & 6.7  & 6.7 & 7.7 & 7.7  & 0.57  & 157.6\\ 
+        64    & 27 & 50 & 20   & 3 & 3 & 4.5 & 4.7  & 0.69  & 158.7\\ 
+        \bottomrule
+        \hline
+      \end{tabular}
+    \end{center}
+  \end{table}
+
+  \subsubsection{Complexity of the two-block attacks.}
+  Using both one-block attacks, it is simple to mount a two-block attack at the combined cost of each of them.
+  For a given target $c$, the process is the followinf:
+    \begin{enumerate}
+      \item The attacker uses a properly-padded pseudo-preimage attack, yielding the second message block $\mu_2$ and an IV $\iv'$;
+      \item The attacker then uses a non-padded preimage attack with target $\iv'$, yielding a first message block $\mu_2$.
+    \end{enumerate}
+From the Merkle-Damg\aa rd structure of \shaone, it follows that the two-block message $(\mu_1, \mu_2)$ 
+    is a preimage of $c$.
+
+    For attacks up to 60 rounds, we can use the pseudo-preimage attacks of~\cite{DBLP:conf/crypto/KnellwolfK12}; for 61 and 62 rounds,
+    we use the ones of this section. This results in attacks of complexities as shown in \autoref{SHA14}.
+
+  \begin{table}[t]
+    \caption[Two-block preimage.]{Two-block preimage attacks on \shaone reduced to $N$ steps. The pseudo-preimage attacks followed by
+    `$\star$' come from \cite{DBLP:conf/crypto/KnellwolfK12}.\label{SHA14}}
+    \begin{center}
+      \begin{tabular}{l c c c } \toprule
+        $N\qquad$ & Second block complexity\phantom{bla} & First block complexity\phantom{bla}  & Total Complexity \\\midrule
+        58    & $156.3^\star$ & 157.4& 157.9\\ 
+        59    & $156.7^\star$ & 157.7& 158.3\\ 
+        60    & $157.5^\star$ & 158.0& 158.7\\ 
+        61    & 156.4    & 158.5& 158.8\\ 
+        62    & 157.0    & 159.0& 159.3\\ 
+        \bottomrule
+        \hline
+      \end{tabular}
+    \end{center}
+  \end{table}
+
+\section{Conclusion}
+This chapter showed how to extend the \mitm framework for hash function preimage attacks with higher-order differentials,
+and how this could be applied to find better attacks on \shaone.
+The source of the improvements come from the fact that higher-order differentials lead to better message partitions, which
+then mechanically allow to mount attacks up to a larger number of steps than the previous best
+results. However, this comes at the cost of a more complex attack procedure.

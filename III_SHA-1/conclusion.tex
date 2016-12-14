@@ -6,10 +6,10 @@ the progress we have made does allow us to precisely estimate and update what wo
 the computational cost required to generate such a collision is actually a recurrent debate in the academic community since the first theoretical attack from Wang~\etal~\cite{DBLP:conf/crypto/WangYY05a}.
 
 Schneier's projections~\cite{schneierSHA1} on the cost of \shaone collisions, made in 2012 (on Amazon EC2: $\approx$700K US\$ by 2015, $\approx$173K US\$ by 2018 and $\approx$43K US\$ by 2021) were based on
-(an early announcement of) \cite{DBLP:conf/eurocrypt/Stevens13}. These projections have been used to establish the timeline of migrating away from \shaone-based signatures for secure Internet websites,
+an early announcement of \cite{DBLP:conf/eurocrypt/Stevens13}. These projections have been used to establish the timeline of migrating away from \shaone-based signatures for secure Internet websites,
 resulting in a migration by January 2017 ---one year before Schneier estimated that a \shaone collision would be within the resources of criminal syndicates. 
 
-This work demonstrated that GPUs are much faster for this type of attacks (compared to CPUs)
+This work demonstrated that GPUs are much faster for this type of attacks when compared to CPUs,
 and we could estimate that at the time where this work was done, in the autumn 2015, a full \shaone collision would not cost more than between 75K and 120K US\$ by renting computational power on Amazon EC2.
 Our new GPU-based projections are more accurate and significantly below Schneier's estimations. What could be considered more worrying
 is that they were theoretically already within Schneier's estimated financial resources of criminal syndicates as of the end of 2015,
@@ -23,7 +23,7 @@ to move away from using \shaone.
 
 \medskip
 
-At the time of the find of the 80-step freestart collision, in October 2015, we learned that in an ironic turn of events the CA/Browser Forum (which is the main association of industries regulating the use of digital certificates on the Internet)
+At the time of the find of the 80-step freestart collision, in October 2015, we learned that in an ironic turn of events the CA/Browser Forum, which is the main association of industries regulating the use of digital certificates on the Internet,
 was planning to hold a ballot to decide whether to extend issuance of \shaone certificates through the year 2016 \cite{cabforum}.
 With our new cost projections in mind, we strongly recommended against this extension and the ballot was also subsequently withdrawn \cite{cabforum2}.
 Further action was subsequently considered by major browser providers such as Microsoft \cite{MS_sha} and Mozilla \cite{Moz_sha} to speed up the deprecation of \shaone certificates.

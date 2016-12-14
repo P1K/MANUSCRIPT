@@ -1,0 +1,178 @@
+\section{Meet-in-The-Middle Attacks and the Differential Framework from CRYPTO 2012}
+\label{KKFramework}
+
+As a preliminary, we give a description of the \mitm framework for preimage attacks on hash functions,
+and in particular of the differential formulation of Knellwolf and Khovratovich from CRYPTO~2012~\cite{DBLP:conf/crypto/KnellwolfK12}.
+
+The relevance of \mitm for preimage attacks comes from the fact that many hash functions are built from a compression
+function which is an \ah block cipher used in one of the ``PGV'' modes~\cite{PGV93}.
+The \shaone function itself follows this design strategy and uses the particular Davies-Meyer mode, already described
+in \autoref{chap:hashfun}.
+
+so-called \emph{Davies-Meyer}, where a compression function $\Hc~: \{0, 1\}^v \times \{0, 1\}^n \rightarrow \{0, 1\}^v$ compressing a chaining value $c$ with
+a message $m$ to form the updated chaining value $c' = \Hc(c, m)$ is defined as $\Hc(c, m) \defas \Fs(m, c) + c$, with
+$\Fs~: \{0, 1\}^n \times \{0, 1\}^v \rightarrow \{0, 1\}^v$ a block cipher of key-length and message-length $n$ and $v$
+
+Given a compression function $\Hc~: \{0, 1\}^v \times \{0, 1\}^n \rightarrow \{0, 1\}^v$,
+the problem of finding a preimage of $t$ for $\Hc$ is equivalent to finding a key $m$ for
+the block cipher $\Fs~: \{0, 1\}^n \times \{0, 1\}^v \rightarrow \{0, 1\}^v$, with $\Hc(c,m) = \Fs(m,c) + c$,
+such that $\Fs(m, p) = c$ for a pair $(p, c)$, with $c = t - p$. Additional constraints can also be put on $p$, such as prescribing
+it to a fixed initialization value $\iv$.
+
+In its most basic form, a \mitm attack can speed-up the search for a preimage if the block cipher $\Fs$ can equivalently be
+described as the composition $\Fd \circ \Fuu$ of two block ciphers $\Fuu~: \ksu \times \{0, 1\}^v
+\rightarrow \{0, 1\}^v$ and $\Fd~: \ksd \times \{0, 1\}^v\rightarrow \{0, 1\}^v$ with independent key spaces $\ksu, \ksd \subset \{0,1\}^n$.
+Indeed, if this is the case, an attacker can select a subset $\{k^1_i, i = 1\ldots N_1\}$ (resp. $\{k^2_j, j = 1\ldots N_2\}$)
+of keys of $\ksu$ (resp. $\ksd$), which
+together suggest $N \defas N_1 \cdot N_2$ candidate keys $k^{12}_{ij} \defas (k^1_i, k^2_j)$ for $\Fs$ by setting
+$\Fs(k^{12}_{ij},\cdot) = \Fd(k^2_j,\cdot) \circ \Fuu(k^1_i,\cdot)$.
+
+Since the two sets $\{\Fuu(k^1_i, p), i = 1\ldots N_1\}$ and $\{\Fd^{-1}(k^2_j, c), j = 1\ldots N_2\}$ can be computed  independently, the complexity
+of testing $\Fs(k^{12}_{ij},p) = c$ for
+$N$ keys is only of $\bigo(\max(N_1, N_2))$ time and $\bigo(\min(N_1, N_2))$ memory, which is less than $N$
+and can be as low as $\sqrt{N}$ when $N_1 = N_2$.
+
+\subsection{Formalizing \mitm attacks with related-key differentials}
+
+Let us denote by $(\alpha,  \beta) \overset{\Fs}{\underset{p}{\longrightarrow}} \gamma$ the fact that 
+$\underset{(x,y)}{\Pr}\big[\Fs(x \oplus \alpha, y \oplus \beta) = \Fs(x, y) \oplus \gamma\big] = p$, meaning
+that $(\alpha, \beta)$ is a related-key differential for $\Fs$ that holds with probability $p$.
+The goal of an attacker is now to find two linear sub-spaces $D_1$ and $D_2$ of $\{0,1\}^m$ such that:
+\begin{equation}
+D_1 \cap D_2 = \{0\}
+\end{equation}
+\vspace{-4mm}
+\begin{equation}
+\forall \delta_1 \in D_1~\exists~ \Delta_1 \in \{0,1\}^v \text{ s.t. } (\delta_1, 0) \overset{\Fuu}{\underset{1}{\longrightarrow}} \Delta_1
+\label{diff1}
+\end{equation}
+\vspace{-4mm}
+\begin{equation}
+\forall \delta_2 \in D_2~ \exists~ \Delta_2 \in \{0,1\}^v \text{ s.t. } (\delta_2, 0) \overset{\Fd^{-1}}{\underset{1}{\longrightarrow}} \Delta_2.
+\label{diff2}
+\end{equation}
+Let $d_1$ and $d_2$ be the dimension of $D_1$ and $D_2$ respectively. Then for a set $M$ of messages $\mu_i \in \{0,1\}^m$, or more
+precisely the quotient space of $\{0,1\}^m$ by $D_1 \oplus D_2$,
+one can define $\#M$ distinct sets $\mu_i \oplus D_1 \oplus D_2$ of dimension $d_1 + d_2$ (and size $2^{d_1 + d_2}$),
+which can be tested for a preimage with a complexity of only $\bigo(\max(2^{d_1}, 2^{d_2}))$ time and $\bigo(\min(2^{d_1}, 2^{d_2}))$ memory.
+We recall the procedure to do so in \autoref{affine_testing}.
+ 
+\begin{algorithm}[ht]
+\LinesNumbered
+\KwIn{
+	$D_1, D_2 \subset \{0,1\}^m$, $\mu \in \{0,1\}^m$, $p$, $c$
+}
+\KwOut{
+	A preimage of $c + p$ if there is one in $\mu \oplus D_1 \oplus D_2$, $\bot$ otherwise
+}
+\KwData{ Two lists $L_1, L_2$ indexed by $\delta_2, \delta_1$ respectively
+}
+
+\ForAll{$\delta_2 \in D_2$
+}
+{
+	$L_1[\delta_2] \leftarrow \Fuu(\mu \oplus \delta_2, p) \oplus \Delta_2$
+}
+\ForAll{$\delta_1 \in D_1$
+}
+{
+	$L_2[\delta_1] \leftarrow \Fd^{-1}(\mu \oplus \delta_1, c) \oplus \Delta_1$
+}
+\ForAll{$(\delta_1, \delta_2) \in D_1 \times D_2$
+}
+{
+\If{$L_1[\delta_2] = L_2[\delta_1]$}
+{
+	\Return{$\mu \oplus \delta_1 \oplus \delta_2$}	
+}
+}
+\Return{$\bot$}
+\caption{\label{affine_testing}Testing $\mu \oplus D_1 \oplus D_2$ for a preimage~\cite{DBLP:conf/crypto/KnellwolfK12}}
+
+\end{algorithm}
+
+\subsubsection{Analysis of \autoref{affine_testing}.}
+For the sake of simplicity we assume that $d_1 = d_2 \defas d < \frac{v}{2}$.
+The running time of every loop of \autoref{affine_testing} is therefore $\bigo(2^d)$, assuming efficient
+data structures and equality testing for the lists,
+and $\bigo(2^d)$ memory is necessary for storing $L_1$ and $L_2$. It is also
+clear that if the condition $L_1[\delta_2] = L_2[\delta_1]$ is met, then $\mu \oplus \delta_1 \oplus \delta_2$
+is a preimage of $c + p$. Indeed, this translates to $\Fuu(\mu \oplus \delta_2, p) \oplus \Delta_2
+= \Fd^{-1}(\mu \oplus \delta_1, c) \oplus \Delta_1$, and using the differential properties
+of $D_1$ and $D_2$ for $\Fuu$ and $\Fd$, we
+have that $\Fuu(\mu \oplus \delta_1 \oplus \delta_2, p) = \Fuu(\mu \oplus \delta_2, p) \oplus \Delta_1$
+and $\Fd^{-1}(\mu \oplus \delta_1 \oplus \delta_2, c) = \Fd^{-1}(\mu \oplus \delta_1, c) \oplus \Delta_2$.
+Hence, $\Fuu(\mu \oplus \delta_1 \oplus \delta_2, p) = \Fd^{-1}(\mu \oplus \delta_1 \oplus \delta_2$), and
+$\Fs(\mu \oplus \delta_1 \oplus \delta_2, p) = c$.
+This algorithm therefore allows to search through $2^{2d}$ candidate preimages with a complexity
+of $\bigo(2^d)$, and thus gives a speed-up of $2^d$. The complexity of a full attack is hence $\bigo(2^{v - d})$.
+
+\subsubsection{Comparison with basic \mitm.}
+When setting $\Delta_1 = \Delta_2 = 0$, this differential variant of the \mitm technique becomes a special case
+of the general formulation of the basic technique given at the beginning of this section: the key spaces $\ksu$ and $\ksd$ now possess a structure
+of affine spaces.
+Although this is a restriction on the shape of the key partition, the additional structure is useful when one is intent on finding actual attacks.
+
+The advantage of the differential view of the \mitm attack comes from the fact that it gives a practical way of searching for the key spaces,
+as differential path search is a well-studied area of symmetric cryptanalysis. Another major advantage is that it makes the formulation of
+several extensions to this basic attack very natural, without compromising the ease of the search for the key spaces. One such immediate
+extension is obviously to consider non-zero values for $\Delta_1$ and $\Delta_2$. As noted by Knellwolf and Khovratovich,
+this already corresponds to an advanced technique of \emph{indirect matching} in the original framework of Aoki and Sasaki.
+Further extensions are detailed next.
+
+\subsection{Probabilistic truncated differential \mitm}
+\label{probtrunc}
+
+There are two natural ways to generalize the differential formulation of the \mitm, that each correspond to relaxing one of the conditions from
+above. First, one can consider differentials of probability less than one ---although a high probability is still usually needed;
+second, one can consider truncated differentials by using an
+equivalence relation ``$\equiv$'' instead of the equality, with one usually taking $\equiv$ to be a truncated equality:
+$a \equiv b [m] \Leftrightarrow a \wedge m = b \wedge m$ for $a, b, m
+\in \{0,1\}^v$.
+One can then use the notation
+$(\alpha,  \beta) \overset{\Fs}{\underset{p}{\rightsquigarrow}} \gamma$ to denote the fact that 
+$\underset{(x,y)}{\Pr}\big[\Fs(x \oplus \alpha, y \oplus \beta) \equiv \Fs(x, y) \oplus \gamma\big] = p$. Hence \autoref{diff1} becomes:
+\begin{equation}
+\forall \delta_1 \in D_1~\exists~ \Delta_1 \in \{0,1\}^v \text{ s.t. } (\delta_1, 0) \overset{\Fuu}{\underset{p_1}{\rightsquigarrow}} \Delta_1,
+\end{equation}
+for some probability $p_1$ and relation $\equiv$, and the same changes apply to \autoref{diff2}.
+
+Again, these generalizations correspond to advanced techniques of Aoki and Sasaki's framework, which find here a concise and efficient description.
+
+\medskip
+
+The only change to \autoref{affine_testing} needed to accommodate these extensions is to replace the equality by the appropriate equivalence
+relation on line 6. However, the fact that this equivalence holds no longer ensures that $x \defas \mu \oplus \delta_1 \oplus \delta_2$ is a preimage,
+which implies an increased complexity for the attack.
+This increase comes from to factors:  first, even when $x$ \emph{is} a preimage, the relation on line 6 might not
+hold with probability $1 - p_1p_2$, meaning that on average one needs to test $1/p_1p_2$ times more candidates in order to account for
+the false negatives; secondly, if we denote by $s$ the average size of the equivalence classes under $\equiv$ (when using truncation as
+above, this is equal to $2^{v - r}$ with $r$ the Hamming weight of $m$), then one needs to check $s$ potential preimages
+as returned on line 6 on average before finding a valid one, in order to account for the false positives.
+The total complexity of an attack with the modified algorithm is therefore $\bigo((2^{v-d} + s)/\tilde{p_1}\tilde{p_2})$, where $\tilde{p_1}$ and $\tilde{p_2}$ are the respective
+average probabilities for $p_1$ and $p_2$ over the spaces $D_1$ and $D_2$.
+
+\subsection{Splice-and-cut, initial structures and bicliques}
+
+The two techniques we present now are older than the framework of~\cite{DBLP:conf/crypto/KnellwolfK12}, but are fully compatible with its differential approach.
+
+Splice-and-cut was introduced by Aoki and Sasaki in 2008~\cite{AS08}. Its idea is to use the feedforward of the compression
+function so as to
+be able to start the computation of $\Fuu$ and $\Fd^{-1}$ not from $p$ and $c$ but from an intermediate value from the middle of the computation
+of $\Fs$. If one sets $\Fs = \Ft \circ \Fd \circ \Fuu$ and calls $s$ the intermediate value $\Ft^{-1}(c)$ (or equivalently $\Fd \circ \Fuu(p)$),
+an attacker may now sample the functions $\Fuu(t - \Ft(s))$ and $\Fd^{-1}(s)$ on their respective key-spaces, which are as always taken to
+be independent, when searching
+a preimage for $t$.
+By giving more possible choices for the decomposition of $\Fs$, one can hope for better attacks. This however comes at the cost that they are now
+pseudo-preimage attacks, as one does not control the value of the IV anymore which is now equal to $t - \Ft(s)$.
+
+A possible improvement to a splice-and-cut decomposition is the use of \emph{initial structures}~\cite{SA09}, which were later reformulated as \emph{bicliques}~\cite{KRS12}.
+Instead of starting the computations in the middle from an intermediate value $s$, the idea is now to start from a set of multiple values
+possessing a special structure that spans several rounds. If the cost of constructing such sets is negligible w.r.t the rest of the computations,
+the rounds spanned by the structure actually come for free. In more details, a biclique, say for $\Ft$ in the above
+decomposition of $\Fs$, is a set $\{m,D_1,D_2,Q_1,Q_2\}$ where $m$ is a message,
+$D_1$ and $D_2$ are linear spaces of dimension $d$, and $Q_1$ (resp. $Q_2$) is a list of $2^d$ values indexed by the differences $\delta_1$
+of $D_1$ (resp. $D_2$) s.t. $\forall (\delta_1, \delta_2) \in D_1 \times D_2\quad Q_2[\delta_2] = \Ft(m \oplus \delta_1 \oplus \delta_2, Q_1[\delta_1])$.
+This allows to search the message space $m \oplus D_1 \oplus D_2$ in $\bigo(2^d)$
+with a meet-in-the-middle approach that does not need any call to $\Ft$,
+essentially bypassing this part of the decomposition.

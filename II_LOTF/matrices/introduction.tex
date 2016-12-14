@@ -1,6 +1,6 @@
 \section{Introduction}
 
-The use of \emph{MDS} matrices over finite fields as linear mappings in block cipher design is an old trend, followed by many prominent algorithms such as the \AES/\rijndael{} family~\cite{aes}.
+The use of \emph{MDS} matrices over finite fields as linear mappings in block cipher design is an old trend, followed by many prominent algorithms such as the \AES/\rijndael{} family~\cite{aes} and its predecessors~\cite{shark,square}.
 These matrices are called MDS as they are derived from \emph{maximum distance separable} linear error-correcting codes, which achieve the highest minimum distance possible
 for a given length and dimension. This notion of minimum distance coincides with the one of \emph{branch number} of a mapping~\cite{phddaemen}, which is a measure of the effectiveness
 of a diffusion layer.
@@ -39,12 +39,12 @@ Obviously,
 32 bits is not enough for a large mapping \emph{à la} \shark{}. We must therefore search for codes with a slightly smaller minimum distance
 in the hope that they can be made longer.
 
-Our proposed solution to this problem is to use \emph{algebraic-geometry codes}, as they precisely offer this tradeoff.
+Our proposed solution to this problem is to use \emph{algebraic geometry codes}, as they precisely offer this tradeoff.
 One way of defining these codes is as evaluation codes on algebraic curves; thus our proposal brings a nice connection between these objects and
 symmetric cryptography: although elliptic and hyperelliptic curves are now commonplace in public-key cryptography, we show an unusual application of
 a hyperelliptic curve to the design of block ciphers. We present a specific code of length 32 and dimension 16 over $\Fst$ with minimum distance 15, which is only
-two less than what an MDS code would achieve\footnote{This is also much better than a random code for these alphabet, length and dimension. Such a code
-would typically have an expected minimum distance of 11.}.
+two less than what an MDS code would achieve; this is also much better than a random code for these alphabet, length and dimension, as such a code
+would typically have an expected minimum distance of 11.
 This lets us deriving a very good diffusion matrix on $16\times4 = 64$ bits in a straightforward way. Interestingly, this matrix can also be applied
 to vectors over an extension of $\Fst$ such as $\Fth$, while keeping the same good diffusion properties.
 This allows for instance to increase the diffusion to $16\times8 = 128$ bits.

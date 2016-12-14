@@ -4,7 +4,7 @@
 We now turn to implementation considerations, and present two algorithms
 for matrix-vector multiplication in $\matspace_n(\Fst)$. We let the dimension
 $n$ be equal to 16 in this presentation, but the algorithms apply equally well
-to other (close) values.
+to other close values.
 
 %This section presents software algorithms for matrix-vector multiplication over $\Fst$.
 %%We specifically discuss these when the field is $\Fst$, but they can be generalized
@@ -50,15 +50,15 @@ which allows not to overwrite the first operand.
 
 
 \paragraph{Targeted properties.} In this chapter we focus solely on algorithms that can easily be implemented in a way that makes
-them immune to timing-attacks (see \eg \cite{timinattacks}). Specifically, we consider the matrix as a known constant but the vector as a secret, and we wish to perform
-the multiplication without secret-dependent branches or memory accesses. It might not always be important to be immune (or even partially resistant) to this type
+them immune to timing-attacks, see \eg \cite{timinattacks}. Specifically, we consider the matrix as a known constant but the vector as a secret, and we wish to perform
+the multiplication without secret-dependent branches or memory accesses. It might not always be important to be immune, or even partially resistant to this type
 of attacks, but we consider that it should be important for any cryptographic primitive or structure to \emph{possibly} be implemented in such a way. Hence we try
 to find efficient such implementations for the \shark{} structure and therefore for dense matrix-vector multiplications.
 
 \bigskip
 
 We now go on to describe the algorithms.
-In all of the remainder of this section, $\veci$ and $\veco$ are two (column) vectors of $\Fst^{16}$, and $\mat$ a matrix
+In all of the remainder of this section, $\veci$ and $\veco$ are two column vectors of $\Fst^{16}$, and $\mat$ a matrix
 of $\mappi_{16}(\Fst)$.
 %We first briefly discuss two unsatisfactory straightforward ways of implementing matrix-vector multiplication.
 We first briefly recall the principle of table implementations which are generic and efficient but unsatisfactory when timing attacks are taken into account.
@@ -77,17 +77,17 @@ We first briefly recall the principle of table implementations which are generic
 
 We wish to compute $\veco = \mat\veci$. The idea of table implementations is to use table lookups to perform the equivalent multiplication
 $\veco^t = \veci^t\mat^t$, \ie $\veco^t = \sum_{i = 0}^{15} \veci_i\mat^t_i$.
-This can be computed efficiently by tabulating beforehand the products $\lambda\mat^t_i, \lambda\in\Fst$ (resulting in
-sixteen tables, each of sixteen entries of 64 bits), and then for each
+This can be computed efficiently by tabulating beforehand the products $\lambda\mat^t_i, \lambda\in\Fst$, resulting in
+sixteen tables, each of sixteen entries of 64 bits, and then for each
 multiplication by accessing the table for $\mat^t_i$ at the index $\veci_i$ and summing all the retrieved table entries together.
 This only requires sixteen table lookups per multiplication. However, the memory accesses depend on the value of $\veci$,
 which makes this algorithm inherently vulnerable to timing attacks.
 
 Note that there is a more memory-efficient alternative implementation of this algorithm which consists in explicitly computing the multiplications for each term $\lambda\mat^t_i$.
-This can be done with a single \pshufb instruction per matrix row, taking as first operand the table of multiplication by $\lambda$ (which is made of sixteen
-4-bit entries, and can be precomputed) and as second operand a register representing $\mat^t_i$.
+This can be done with a single \pshufb instruction per matrix row, taking as first operand the table of multiplication by $\lambda$, which is made of sixteen
+4-bit entries, and can be precomputed, and as second operand a register representing $\mat^t_i$.
 In that case, only the sixteen multiplication tables need to be stored, but their accesses
-still depend on the secret value $\veci$ (as for each $\veci_i$, one needs to look up the appropriate multiplication table).
+still depend on the secret value $\veci$, as one needs to look up the appropriate multiplication table for each $\veci_i$.
 
 
 \subsection{A generic constant-time algorithm}
@@ -163,9 +163,9 @@ computed this way are rather $\mathbf{0}_{128}$ and $\mathbf{1}_{128}$. Adapting
 and $\mathbf{1}_{64}$ is however simple to do.
 
 In practice, the input $x$ to \pshufb{} can conveniently be constructed offline and stored in memory, but the second input $y$ might not be readily available before
-performing this computation\footnote{And because it depends on what we assume to be a secret value, it cannot either be fetched from memory.}.
+performing this computation, and because it depends on what we assume to be a secret value, it cannot either be fetched from memory.
 However, it can easily be computed thanks to an additional \pshufb{}. Alternatively, if the
-above computation is done with a vector $y \defas (\lambda, ?, ?, \ldots)$ instead (with $?$ denoting unknown values) and call $z$ its result $(x[\lambda], ?, ?, \ldots)$,
+above computation is done with a vector $y \defas (\lambda, ?, ?, \ldots)$ instead, with $?$ denoting unknown values, and call $z$ its result $(x[\lambda], ?, ?, \ldots)$,
 then we have $\broad(\lambda, i)_n = \pshufb~z~ (0, 0, \ldots)$.
 
 \medskip
@@ -179,7 +179,7 @@ We give a snippet of such an implementation in \autoref{app:gene}.
 
 \paragraph{Scalar implementation of $\broad$.}
 On an architecture without access to \pshufb, the $\broad$ function can still be implemented rather efficiently with a few arithmetic and logical instructions.
-Let $x$ be an $n$-bit value, $n = 64$ (w.l.o.g.) represented by an unsigned integer, then the following sequence of C instructions computes $\broad(x,i)_n$:
+Let $x$ be an $64$-bit value, w.l.o.g., represented by an unsigned integer, then the following sequence of C instructions computes $\broad(x,i)_{64}$:
 \begin{center}
 \begin{minted}{c}
 x = ~x;
@@ -200,8 +200,8 @@ We present here an alternative that can be much faster when the matrix possesses
 The idea behind this second algorithm is to take advantage of the fact that many coefficients of a matrix may be identical, thence many of the finite-field multiplications performed in
 a matrix-vector product consist in multiplications by the same constants. Thus, we may be tempted
 to take advantage of this fact by performing those in parallel.
-A motivation of this approach is that the multiplications being by constants
-(the known coefficients of the matrix), they can be
+A motivation of this approach is that the multiplications being by constants, \ie
+the known coefficients of the matrix, they can be
 performed by \pshufb-implemented table lookups, which are more efficient than
 a broadcast-based algorithm.
 
@@ -337,9 +337,9 @@ this is for instance the case for circulant matrices, by definition.
 More generally, we can heuristically hope that the cost of a matrix will be low if all of its rows can be obtained from the permutation of, say, only two rows.
 
 We can try to estimate the minimum cost of an arbitrary dense circulant matrix of dimension sixteen over $\Fst$.
-If the coefficients of the (unique, up to permutation) row are chosen uniformly at random, we should expect them to be made of about $1-(1-1/16)^{16} \approx 2/3$ of the elements of $\Fst$.
-Additionally, fifteen permutations of the input will need to be computed (all rows need to be different for the matrix to be of full rank ---which is something we will
-desire in our applications--- but the coefficients on the diagonal are constant).
+If the coefficients of the unique row, up to permutation, are chosen uniformly at random, we should expect them to be made of about $1-(1-1/16)^{16} \approx 2/3$ of the elements of $\Fst$.
+Additionally, fifteen permutations of the input will need to be computed: all rows need to be different for the matrix to be of full rank ---which is something we will
+desire in our applications--- but the coefficients on the diagonal are constant.
 Thus we can estimate the cost of such a random matrix to be about 25.
 
 \medskip

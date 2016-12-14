@@ -1,0 +1,188 @@
+\section{Higher-Order Differential Meet-in-The-Middle}
+\label{NewFramework}
+
+We now describe how to modify the framework of \autoref{KKFramework} to use higher-order differentials.
+Let us denote by 
+$(\{\alpha_1,\alpha_2\}, \{\beta_1,\beta_2\}) \overset{\Fs}{\underset{p}{\longrightarrow}} \gamma$
+the fact that
+  $\underset{(x,y)}{\Pr}\big[\Fs(x \oplus \alpha_1 \oplus \alpha_2, y \oplus \beta_1 \oplus \beta_2) \oplus
+  \Fs(x \oplus \alpha_1, y \oplus \beta_1) \oplus  \Fs(x \oplus \alpha_2 , y \oplus \beta_2) =
+  \Fs(x,y )\oplus \gamma \big] = p$
+, meaning
+that $(\{\alpha_1,\alpha_2\}, \{\beta_1,\beta_2\})$ is a related-key order-2 differential for $\Fs$ that holds with probability $p$.
+
+Similarly as in \autoref{KKFramework}, the goal of the attacker is to find four linear subspaces
+$D_{1,1}, D_{1,2}, D_{2,1}, D_{2,2}$ of $\{0,1\}^m$ in direct sum such that:
+\begin{equation}
+\label{eq:Dir_sum}
+  D_{1,1} \bigoplus D_{1,2} \bigoplus D_{2,1} \bigoplus D_{2,2} 
+\end{equation}
+\vspace{-4mm}
+\begin{equation}
+\forall \delta_{1,1} , \delta_{1,2} \in D_{1,1} \times D_{1,2}~\exists~ \Delta_1 \in \{0,1\}^v \text{ s.t. }
+(\{\delta_{1,1}, \delta_{1,2}\}, \{0,0\})
+\overset{\Fuu}{\underset{1}{\longrightarrow}} \Delta_1
+\label{Differential_def_1}
+\end{equation}
+\vspace{-4mm}
+\begin{equation}
+\forall \delta_{2,1} , \delta_{2,2} \in D_{2,1} \times D_{2,2}~\exists~ \Delta_2 \in \{0,1\}^v \text{ s.t. }
+(\{\delta_{2,1}, \delta_{2,2}\}, \{0,0\})
+\overset{\Fd^{-1}}{\underset{1}{\longrightarrow}} \Delta_2.
+\label{Differential_def_2}
+\end{equation}
+Then $M \oplus \delta_{1,1} \oplus \delta_{1,2} \oplus \delta_{2,1} \oplus \delta_{2,2}$ 
+is a \emph{preimage} of $c+p$ if and only if $
+    \Fuu(\mu \oplus \delta_{1,1} \oplus \delta_{1,2} \oplus 
+    \delta_{2,1} \oplus \delta_{2,2}, c) = 
+    \Fd^{-1}(\mu \oplus \delta_{1,1} \oplus \delta_{1,2} \oplus 
+    \delta_{2,1} \oplus \delta_{2,2}, p) $
+which is equivalent by the \autoref{Differential_def_1} 
+and \autoref{Differential_def_2} to the equality: 
+\begin{equation}
+  \label{eq:Hmitm_eq}
+  \begin{split}
+  \Fuu(\mu \oplus \delta_{1,1} \oplus \delta_{2,1} \oplus \delta_{2,2}, p) & 
+    \oplus \quad \qquad \quad 
+    \Fd^{-1}(\mu \oplus \delta_{2,1},\oplus \delta_{1,1} \oplus \delta_{1,2}, c) \oplus \\
+    \Fuu(\mu \oplus \delta_{1,2} \oplus \delta_{2,1} \oplus \delta_{2,2}, p) & 
+    \oplus\quad  = \quad \quad   
+    \Fd^{-1}(\mu \oplus \delta_{2,2}, \oplus \delta_{1,1} \oplus \delta_{1,2}, c) \oplus \\ 
+    \Fuu(\mu \oplus \delta_{2,1} \oplus \delta_{2,2}, p) \oplus \Delta_1 & 
+    \qquad \quad \quad \quad   
+    \Fd^{-1}(\mu \oplus \delta_{1,1}  \oplus \delta_{1,2}, c) \oplus \Delta_2.
+    \end{split}
+\end{equation}
+
+We denote by $d_{i,j}$ the dimension of the 
+sub-space $D_{i,j}$ for $i,j=1,2$. Then for a set $M$ of messages $\mu \in \{0,1\}^m)$ one can define $\# M$ affine sub-sets 
+$\mu_i \oplus D_{1,1} \oplus D_{1,2} \oplus D_{2,1} \oplus D_{2,2}$ of dimension $d_{1,1} + d_{1,2} + d_{2,1} +d_{2,2}$
+(since the sub-spaces $D_{i,j}$ are in direct sum by hypothesis), which can be tested for a preimage using \autoref{eq:Hmitm_eq}.
+This can be done efficiently by a modification of \autoref{affine_testing} into the following \autoref{affine_testing_II}.
+
+\begin{algorithm}[ht]
+\LinesNumbered 
+\KwIn{
+	$D_{1,1}, D_{1,2},D_{2,1},D_{2,2} \subset \{0,1\}^m$, $\mu \in \{0,1\}^m$, $p$, $c$
+}
+\KwOut{
+  A preimage of $c + p$ if there is one in $\mu \oplus D_{1,1} \oplus D_{1,2}, \oplus D_{2,1} \oplus D_{2,2} $, $\bot$ otherwise
+}
+\KwData{ Six lists:\\
+$L_{1,1}$ indexed by $\delta_{1,2} , \delta_{2,1} , \delta_{2,2}$\\
+$L_{1,2}$ indexed by $\delta_{1,1},  \delta_{2,1},  \delta_{2,2}$\\
+$L_{2,1}$ indexed by $\delta_{1,1},  \delta_{1,2},  \delta_{2,2}$\\
+$L_{2,2}$ indexed by $\delta_{1,1} , \delta_{1,2},  \delta_{2,1}$\\
+$L_{1}$ indexed by $\delta_{2,2},  \delta_{2,1}$\\
+$L_{2}$ indexed by $\delta_{1,1} , \delta_{1,2}$
+}
+        \ForAll{
+          $ \delta_{1,2}, \delta_{2,1}, \delta_{2,2} \in
+            D_{1,2} \times D_{2,1} \times D_{2,2} $
+        }
+        {
+          $ L_{1,1}[\delta_{1,2}, \delta_{2,1}, \delta_{2,2} ] \leftarrow 
+          \Fd^{-1}(\mu \oplus \delta_{1,2} \oplus \delta_{2,1} \oplus \delta_{2,2}, c)$ \;
+        }
+
+        \ForAll{
+          $ \delta_{1,1}, \delta_{2,1}, \delta_{2,2}\in 
+          D_{1,1} \times D_{2,1} \times D_{2,2}$
+        }
+        {
+          $ L_{1,2}[\delta_{1,1}, \delta_{2,1}, \delta_{2,2}] \leftarrow 
+          \Fd^{-1}(\mu \oplus \delta_{1,1} \oplus \delta_{2,1} \oplus \delta_{2,2}, c)$ \;
+        }
+
+        \ForAll{
+          $ \delta_{1,1}, \delta_{1,2}, \delta_{2,2}\in 
+          D_{1,1} \times D_{1,2} \times D_{2,2} \times$
+        }
+        {
+          $ L_{2,1}[\delta_{1,1}, \delta_{1,2}, \delta_{2,2}] \leftarrow 
+          \Fuu(\mu \oplus \delta_{1,1} \oplus \delta_{1,2} \oplus \delta_{2,2},p)$ \;
+        }
+
+        \ForAll{
+          $ \delta_{1,1}, \delta_{1,2}, \delta_{2,1} \in 
+          D_{1,1} \times D_{1,2} \times D_{2,1}$
+        }
+        {
+          $ L_{2,2}[\delta_{1,1}, \delta_{1,2}, \delta_{2,1}] \leftarrow
+         \Fuu(\mu \oplus \delta_{1,1} \oplus \delta_{1,2} \oplus \delta_{2,1}, p)$ \;
+        }
+
+        \ForAll{
+          $ \delta_{1,1}, \delta_{1,2} \in D_{1,1} \times D_{1,2}$
+        }
+        {
+          $ L_{2}[\delta_{1,1}, \delta_{1,2}] \leftarrow
+          \Fd^{-1}(\mu \oplus \delta_{1,1} \oplus \delta_{1,2}, c) \oplus \Delta_1$ \;
+        }
+
+        \ForAll{
+          $ \delta_{2,1}, \delta_{2,2}\in D_{2,1} \times D_{2,2} $
+        }
+        {
+          $ L_{1}[\delta_{2,1}, \delta_{2,2}] \leftarrow
+          \Fuu(\mu \oplus \delta_{2,1} \oplus \delta_{2,2}, 
+          p  ) \oplus \Delta_2$ \;
+        }
+
+        \ForAll{
+          $ \delta_{1,1},\delta_{1,2}, \delta_{2,1}, \delta_{2,2} \in 
+            D_{1,1} \times D_{1,2} \times D_{2,1} \times D_{2,2} $
+        }
+        { 
+          \If {$L_{1,1}[\delta_{1,2}, \delta_{2,1}, \delta_{2,2} ] \oplus 
+            L_{1,2}[\delta_{1,1}, \delta_{2,1}, \delta_{2,2} ] \oplus 
+            L_1[\delta_{2,1}, \delta_{2,2}] = 
+            L_{2,1}[\delta_{1,1}, \delta_{1,2}, \delta_{2,2} ] \oplus 
+            L_{2,2}[\delta_{1,1}, \delta_{1,2}, \delta_{2,1} ] \oplus 
+          L_2[\delta_{1,1}, \delta_{1,2}] $ 
+        }
+          {
+            \Return $\mu  \oplus \delta_{1,1} \oplus \delta_{1,2} 
+                        \oplus \delta_{2,1} \oplus \delta_{2,2}$ 
+          }
+        }
+        \Return {$\bot$}
+        \caption{\label{affine_testing_II} Testing $\mu \oplus D_{1,1} \oplus D_{1,2} \oplus D_{2,1} \oplus D_{2,2}$ for a preimage}
+
+      \end{algorithm}
+
+    \subsection{Analysis of \autoref{affine_testing_II}.}
+      If we denote by $\Gamma_1$ and $\Gamma_2$ the cost of evaluating
+      of $\Fuu$ and $\Fd^{-1}$ and $\Gamma_{match}$ the cost of the test on line~14,
+      then the algorithm allows to test
+      $2^{d_{1,1}+d_{1,2}+d_{2,1}+d_{2,2}}$ messages with a complexity of 
+          $2^{d_{1,2}+d_{2,1}+d_{2,2}} \Gamma_2 + 2^{d_{1,1}+d_{2,1}+d_{2,2}} \Gamma_2 +
+          2^{d_{1,1}+d_{1,2}+d_{2,1}} \Gamma_1 +2^{d_{1,1}+d_{1,2}+d_{2,1}} \Gamma_1 +
+          2^{d_{1,1}+d_{1,2}} \Gamma_2 + 2^{d_{2,1}+d_{2,2}} \Gamma_1 + \Gamma_{\text{match}}$. 
+      The algorithm must then be run $2^{n - (d_{1,1}+d_{1,2}+d_{2,1}+d_{2,2})}$ times in order to test
+      $2^n$ messages. 
+      In the special case where all the linear spaces have the same 
+      dimension $d$ and if we consider that $\Gamma_{\text{match}}$ is negligible
+      with respect to the total complexity, the total complexity of an attack is
+      then of : 
+      $2^{n-4d}\cdot(2^{3d}\cdot(2\Gamma_1+2\Gamma_2)+2^{2d}\cdot(\Gamma_1+\Gamma_2)) = 
+      2^{n-d+1} \Gamma + 2^{n-2d} \Gamma = \bigo(2^{n-d})$ where $\Gamma$ is the cost of the 
+      evaluation of the total compression function $\Fs$. We think that the assumption on
+      the cost of $\Gamma_\text{match}$ is
+      reasonable given the small size of $d$ in actual attacks and the fact that performing
+      a single match is much faster than computing $\Fs$.
+
+      The factor that is gained from a brute-force search of complexity $\bigo(2^n)$ is hence of
+      $2^d$, which is the same as for \autoref{affine_testing}. However, one now needs
+      four spaces of differences of size $2^d$ instead of only two,
+      which might look like a setback. Indeed the real
+      interest of this method does not lie in a simpler attack but in the fact that
+      using higher-order differentials may now allow to attack functions for which no
+      good-enough order-1 differentials are available.
+
+
+    \subsection{Using probabilistic truncated differentials.}
+    Similarly as in  \autoref{KKFramework}, \autoref{affine_testing_II} can be modified in order
+    to use probabilistic truncated differentials instead of probability-1 differentials
+    on the full state. The changes to the algorithm and the complexity evaluation are
+    identical to the ones described in \autoref{probtrunc}, which we refer to for a description.

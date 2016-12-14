@@ -31,7 +31,7 @@ The \emph{linearity} $\linU$ of $\sbo$ is defined as:
 \max_{(a,b) \neq (0,0)} |\lin_{\sbo}(a,b)|.
 \]
 \end{defi}
-Roughly speaking, the linearity measures the maximum (absolute) difference between how many times a (non-trivial) linear approximation
+Roughly speaking, the linearity measures the maximum absolute difference between how many times a non-trivial linear approximation
 takes the value 1 and how many times it takes the value 0. It is therefore twice the difference between $2^{n-1}$ (for an $n$-bit S-box)
 and how many times either value is taken.
 In particular, if we define the \emph{bias} $b$ of a probability $p$ as $|p - 1/2|$, it means that
@@ -59,5 +59,5 @@ Let $f : \ftwo^n \rightarrow \ftwo$ be an $n$-bit Boolean function, its \emph{al
 such that for all $x \in \ftwo^n$, $f(x) = g(x[0],\ldots,\allowbreak x[n-1])$.
 Similarly, the ANF of an $n$-bit S-box $\sbo$ 
 is the sequence of the ANFs of its $n$ constituent Boolean
-functions $\langle\sbo(\cdot),e_i\rangle$ (with $(e_i)$ the canonical basis of $\ftwo^n$).
+functions $\langle\sbo(\cdot),e_i\rangle$, with $(e_i)$ the canonical basis of $\ftwo^n$.
 \end{defi}

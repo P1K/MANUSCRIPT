@@ -5,17 +5,17 @@
 
 \subsection{The Lai-Massey structure}
 Our S-box uses the \emph{Lai-Massey structure}, which was proposed in 1991 for the design
-of the block cipher \idea \cite{idea}. The structure is similar in its objective to a Feistel or Misty structure
-(see \eg{}~\cite{sac15} for definitions)
+of the block cipher \idea \cite{idea}. The structure is similar in its objective to a Feistel or Misty structure,
+see \eg{}~\cite{sac15} for definitions,
 as it allows to construct $n$-bit functions out of smaller components. It is in particular well-suited
 to build efficient 8-bit S-boxes from 4-bit S-boxes all the while amplifying the good cryptographic
 properties of the 4-bit S-boxes.
 It was already used as such for the design of the second S-box of the \whirlpool hash function
-\cite{whirlpool} (an early version of \whirlpool used a randomly-generated S-box), using five
-4-bit S-boxes (see \autoref{whirlpoolS})
+\cite{whirlpool} (an early version of \whirlpool used a randomly-generated S-box) using five
+4-bit S-boxes, see \autoref{whirlpoolS},
 and for the design of the S-box of the \fox block cipher \cite{fox} which uses a three-round iterated structure.
-In our construction, we use only one round of the more classical variant of the structure, with only three S-boxes
-(see \autoref{littlunS}), which allows nonetheless to square the differential probability
+In our construction, we use only one round of the more classical variant of the structure, with only three S-boxes,
+see \autoref{littlunS}, which allows nonetheless to square the differential probability
 and the linearity of the underlying 4-bit S-box\footnote{We do not require the 4-bit S-boxes to
 be orthomorphisms of any group; hence we in fact only partially adhere to the Lai-Massey structure as later defined
 by Vaudenay~\cite{vaudmassey}.}.
@@ -24,25 +24,25 @@ The choice of the Lai-Massey structure was mainly motivated by our objective of 
 an S-box with a branch number of three, both differential and linear; this will in turn be useful to design a good lightweight round function.
 Indeed, it is easy to see that the S-box will
 have this property for the differential branch number by construction as soon as the 4-bit S-boxes have differential branch number three,
-and such S-boxes are well-known (see \eg \serpent \cite{serpent}). So much cannot be said however for
-the linear branch number, as no (differential and linear optimal) 4-bit S-box exists with this property\footnote{As
-demonstrated by an exhaustive search we performed on the optimal classes described \eg{} in~\cite{class4bit}.}. In fact, we are not aware
+and such S-boxes are well-known, see \eg \serpent \cite{serpent}. So much cannot be said however for
+the linear branch number, as no 4-bit S-box with optimal resistance to differential and linear cryptanalysis exists with this property, as
+demonstrated by an exhaustive search we performed on the optimal classes described \eg{} in~\cite{class4bit}. In fact, we are not aware
 of previous examples of 8-bit S-boxes with this feature either.
 
 Other good properties of the structure are that it yields S-boxes with a
-circuit depth of two S-boxes and it allows for efficient vector implementations using SIMD instructions
-(see \autoref{sec:simdimplem}).
+circuit depth of two S-boxes and it allows for efficient vector implementations using SIMD instructions,
+see \autoref{sec:simdimplem}.
 On the downside, it requires the 4-bit S-boxes to be permutations if we want the
 8-bit S-box to be one. Canteaut, Duval and Leurent recently showed how the absence of such a restriction
 for Feistel structures could be used to build compact S-boxes with particularly low differential probability
-\cite{sac15}. We should note however that for the applications we have in mind (see \autoref{sec:fly}),
+\cite{sac15}. We should note however that for the applications we have in mind, see \autoref{sec:fly},
 the linearity of the
 S-box is as important as the differential probability, and the linearity of the S-box of Canteaut \etal is
 average, and in particular not better than ours.
 Finally, we should mention that the good and bad points of the Lai-Massey structure cited so far
 are shared with the Misty structure. Choosing Lai-Massey in our case was mainly due to a matter of
-taste, though it is noteworthy that Misty yields S-boxes with a rather sparse algebraic expression
-(meaning that the polynomials in the ANF of such S-boxes tend to have many zero coefficients).
+taste, though it is noteworthy that Misty yields S-boxes with a rather sparse algebraic expression,
+meaning that the polynomials in the ANF of such S-boxes tend to have many zero coefficients.
 
 \subsection{An instantiation: \littlunOne}
 
@@ -90,7 +90,7 @@ As we already mentioned, several 4-bit S-boxes from the literature have a differ
 has such a property to be quite more remarkable.
 
 \begin{prop}[Algebraic properties]
-The maximal degree of (the ANF of) \littlunOne is 5 in four of the eight output bits,
+The maximal degree of the ANF of \littlunOne is 5 in four of the eight output bits,
 4 in two other and 3 in the remaining two. The maximal degree of its inverse is 5 in six of the eight output bits
 and 4 in the other two.
 %The complete ANF of \littlunOne and its inverse are given in Table~\ref{littANF} and

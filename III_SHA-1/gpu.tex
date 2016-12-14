@@ -5,9 +5,9 @@ the matter of concrete implementation of the attack procedure. Specifically, we 
 units} (GPUs).
 
 The use of GPUs is attractive for computation-intensive cryptanalysis, as they offer much more raw computational power than
-similarly-priced general-purpose processors (\ie CPUs). The availability of efficient frameworks for general-purpose GPU programming such as CUDA~\cite{cuda} allows
+similarly-priced general-purpose processors (CPUs). The availability of efficient frameworks for general-purpose GPU programming such as CUDA~\cite{cuda} allows
 for potentially complex code to be conveniently deployed on GPUs. However, the differences in architecture between CPUs and GPUs
-(as highlighted below) need to be taken into account, and not every attack may be suitable for a GPU implementation.
+as highlighted below need to be taken into account, and not every attack may be suitable for a GPU implementation.
 
 GPUs have already been used with some success in heavy-computation cryptography, notably to aid in integer factorization or in finding discrete
 logarithms~\cite{DBLP:conf/asiacrypt/BosK12,DBLP:conf/ches/MieleBKL14,DBLP:conf/eurocrypt/BarbulescuGGM15,DBLP:phd/hal/Jeljeli15}, and also for collision attacks on reduced \shaone~\cite{cryptoeprint:2011:641}.
@@ -16,9 +16,9 @@ Even if the latter case in particular is essentially identical to our own, we no
 \subsection{GPU architecture and programming model}
 
 We start by first recalling a few important points about current GPUs that will help
-understanding our design decisions\footnote{We specifically discuss these points
+understanding our design decisions. We specifically discuss these points
 for Nvidia GPUs of the \emph{Maxwell} generation such as the \gtx
-used in our attacks.}.
+used in our attacks.
 
 %\paragraph{Number of cores and scheduling.}
 A modern GPU can feature more
@@ -26,7 +26,7 @@ than a thousand small cores, that are packed together in a small
 number of larger ``multiprocessor'' execution units. Taking the example of the
 Nvidia \gtx for concreteness, there are 13 multiprocessors of 128 cores each,
 making 1664 cores in total~\cite{gtx970_specs}. The fastest instructions
-(such as for instance 32-bit bitwise logical operations or modular addition) have a throughput of 1 per core,
+such as for instance 32-bit bitwise logical operations or modular addition have a throughput of 1 per core,
 which means that in ideal conditions 1664 instructions may be simultaneously processed by such a GPU in one clock
 cycle~\cite{cuda_prog_guide}.
 
@@ -47,7 +47,7 @@ serialized. At an even higher level, warps executing the same code can be groupe
 
 Each multiprocessor can host a maximum of 2048 threads regrouped
 in at least 2 and at most 32 blocks~\cite{cuda_prog_guide}. If every multiprocessor of the GPU hosts 2048 threads, we say that we have
-reached \emph{full occupancy}. While a multiprocessor can only physically run one thread per core (\ie 128) at a given time,
+reached \emph{full occupancy}. While a multiprocessor can only physically run one thread per core, \ie 128, at a given time,
 a higher number of resident threads is beneficial to hide computation and memory latencies.
 These can have a significant
 impact on the performance as a single waiting thread causes its entire warp of 32 to wait with him; it is thus important in
@@ -66,9 +66,9 @@ having ``only'' $2^{16}$ registers, this limits the number of threads to 1024. A
 
 %\paragraph{Memory architecture and thread synchronization.}
 In the same way as they feature many execution units, GPUs also provide
-memory of a generous size (\eg 4 GB for the \gtx), which must however be shared among the threads. The amount of memory available to a single thread
-is therefore much less than what is typically available on a CPU (it of course highly depends on the number of
-running threads, but can be lower than 1\,MB). This, together with the facts that threads of a same warp do not actually execute
+memory of a generous size, \eg 4 GB for the \gtx, which must however be shared among the threads. The amount of memory available to a single thread
+is therefore much less than what is typically available on a CPU; though it of course highly depends on the number of
+running threads, it can be lower than 1\,MB. This, together with the facts that threads of a same warp do not actually execute
 independently of each other and that threads of a same block run the same code makes it enticing to organize the memory
 structure of a program at the block level. Fortunately, this is made rather easy by the fact that many efficient
 synchronization functions are available for the threads, both at the warp and at the block level.
@@ -88,7 +88,7 @@ This is an intensely parallel task that is well suited to running on GPUs. Howev
 was emphasized above, GPUs are most efficient when there is a high coherency between the execution of many threads. For that reason,
 we must avoid having idle threads that are waiting because their candidate solutions failed to follow the differential paths, while
 others keep on verifying a more successful one. Our approach to this is to fragment the verification into many small functions
-(or \emph{snippets})
+or \emph{snippets}
 that are chosen in a way which ensures that coherency is maintained for every thread of a warp when executing a single snippet, except in
 only a few small points. This is achieved through a series of intermediary buffers that store inputs and outputs for the snippets.
 A warp then only executes a given snippet if enough inputs are available for every of its threads.
@@ -111,8 +111,8 @@ we use intermediary buffers to store partial solutions up to $\state_{17}$ (\ie 
 Then for each step the corresponding snippet consists
 in loading one partial solution per thread of a warp and applying every possible combination of neutral bits for this step. Each combination
 is tried by every thread at the same time on its own partial solution, thereby maintaining coherency.
-Then, each thread assesses if the current combination yields a valid extension (by one step) of its own partial solution, and writes the result to
-an output buffer for the snippet (which is the input buffer for the next snippet) if this is the case;
+Then, each thread assesses if the current combination yields a valid extension by one step of its own partial solution, and writes the result to
+an output buffer for the snippet, which is the input buffer for the next snippet, if this is the case;
 this conditional write is the only part of the code where threads may briefly diverge.
 
 For the
@@ -137,7 +137,7 @@ about 90\% of the time is spent on $\state_{24}$ or higher, which is at most two
 Thus, work on early steps and in particular on base solutions is done only intermittently.
 
 We conclude this high-level description by giving a simplified flow chart
-of the GPU part of the 76-step attack in \autoref{fig:attack_diagram}, made slightly incorrect for the sake of clarity (notably omitting the fact that further verification is still done on GPU up to steps 56).
+of the GPU part of the 76-step attack in \autoref{fig:attack_diagram}, made slightly incorrect for the sake of clarity, notably omitting the fact that further verification is still done on GPU up to steps 56.
 
 \def\rectanMac{\begin{tikzpicture}[scale=0.2]\draw (0,0) rectangle (1,1);\end{tikzpicture}}
 \def\elliMac{\begin{tikzpicture}[scale=0.3,transform shape]\node[draw,ellipse] (e) at (0,0) {\phantom{toto}};\end{tikzpicture}}
@@ -179,19 +179,19 @@ As the basis of our framework is to store, load and extend many partial solution
 in an efficient way. One thus needs to define good representations for partial solutions, such that processing them is computationally simple, and managing them
 in memory causes as little overhead as possible.
 
-The representation we use is based on two types of buffers: some are holding enough information to define a \sha computation in its entirety (\ie it
-contains the value of at least five (resp. sixteen) consecutive state (resp. message) words), while others only contain the necessary information to
+The representation we use is based on two types of buffers: some are holding enough information to define a \sha computation in its entirety, \ie it
+contains the value of at least five (resp. sixteen) consecutive state (resp. message) words, while others only contain the necessary information to
 express how the associated partial solution differs from a completely-defined one. Typically, the first kind of buffer may be used to store base solutions,
 while the second is used to keep track of which neutral bits are active in a partial solution.
 
 It is quite straightforward to define the structure of a base solution buffer, as there is little doubt about the necessary information they need
 to include and the way to represent it. For instance, the 76-step base solution buffer contains the value of state words $\state_{13},\ldots,\state_{17}$
 and of the message words $\expmess_6,\ldots,\expmess_{21}$. Additionally, it includes the value of $\state_{12}$; while this information is
-not strictly necessary, it is useful to speed-up the computation of the activation of some neutral bits. Similar buffers (without an extra state word)
-are used to hold partial solutions up to $\state_{36}$ and $\state_{56}$ (resp. $\state_{40}$ and $\state_{60}$ in the 80-step case)\footnote{The choice
-of these boundaries to define the late partial solutions (were no more control is possible) simply comes from the fact that a pair of messages following
+not strictly necessary, it is useful to speed-up the computation of the activation of some neutral bits. Similar buffers without an extra state word
+are used to hold partial solutions up to $\state_{36}$ and $\state_{56}$ (resp. $\state_{40}$ and $\state_{60}$ in the 80-step case). The choice
+of these boundaries to define the late partial solutions were no more control is possible simply comes from the fact that a pair of messages following
 the differential path of either attack is not expected to have any state differences at these steps. It is thus particularly efficient to filter
-solutions that are not valid at these points.}.
+solutions that are not valid at these points.
 
 The structures of the other buffers are also quite simple, but their instantiations may require some care to make them especially efficient.
 In a nutshell, we just want such a buffer to keep a reference to a base solution and to remember the values of the currently active neutral bits.
@@ -211,8 +211,8 @@ In the 76-step case, there is a natural location that may be used to define what
 on words $\expmess_{19}$ to $\expmess_{21}$ are only used in later steps. Thus, it would make sense that once the active bits up to
 $\expmess_{18}$ have all been determined, only the modified message words and the corresponding value for the state should be stored. There is
 however no need to keep again sixteen message words in such an extended base solution, as most of them are identical to the ones of the corresponding
-base solution (and as a base solution is in general extended into many distinct extended base solutions, it would not make sense to \eg add enough
-message words to the latter and erase the former). One subtlety in the definition of this extended base solution is that
+base solution, and as a base solution is in general extended into many distinct extended base solutions, it would not make sense to \eg add enough
+message words to the latter and erase the former. One subtlety in the definition of this extended base solution is that
 it also includes the message word $\expmess_{20}$. Although no neutral bits on this word
 have been activated at the point where the solution is
 formed, some of its bits may need to be flipped depending on the use of neutral bits on words $\expmess_{15}$ and $\expmess_{16}$, so as to
@@ -231,9 +231,9 @@ individual neutral bit contributions are stored alongside the actual neutral bit
 start defining an extended base solution, as there is no natural separation between the location of various neutral bits as there was in
 the 76-step case. This is not a major issue, however, as the location of the neutral bits of a same word shared between base and extended base solutions
 are not overlapping inside the word itself; splitting their representation over multiple buffers thus does not result in significant overhead.
-Finally, the additional use of boomerang neutral bits (or somehow equivalently, the use of more neutral bits than in the 76-step attack)
-implies that the last inter-snippet buffers contain one more word (\ie three in total) compared to the ones for early snippets and all such buffers
-in the 76-step case.
+Finally, the additional use of boomerang neutral bits, or somehow equivalently the use of more neutral bits than in the 76-step attack,
+implies that the last inter-snippet buffers contain one more word  compared to the ones for early snippets and all such buffers
+in the 76-step case, \ie three in total.
 
 In \autoref{sec:res_76} and \autoref{sec:res_80}, we will describe the full content of most of the inter-snippet buffers.
 
@@ -245,8 +245,8 @@ All of the buffers are cyclic and hold $2^{20}$ elements, regardless of their si
 $\state_{36} \sim \state_{40}$ and $\state_{56} \sim \state_{60}$ which only have $2^{10}$ elements as they see a lower production rate due to their purely probabilistic nature.
 
 With the exception of the buffers holding the base solutions and the collision candidates formed by partial solutions
-up to $\state_{56} \sim \state_{60}$ (\ie the buffers that are written or read by a CPU),
-there is one instance of every buffer per block (\ie 26 buffers per GPU). This allows to use block-wise instead of global
+up to $\state_{56} \sim \state_{60}$, \ie the buffers that are written or read by a CPU,
+there is one instance of every buffer per block, \ie 26 buffers per GPU. This allows to use block-wise instead of global
 synchronization mechanisms when updating the buffers' content,
 thence reducing the overhead inherent to the use of such shared data structures.
 Taken together, the buffers thus use a significant portion of the 4\,GB memory available on the \gtx, needing in the neighbourhood of 3\,GB.
@@ -257,8 +257,8 @@ hardly enough to store the whole buffers themselves, we take advantage of it by 
 the buffers and of the meta-data used for their control logic, the latter being held in
 shared memory. This improves the overall latency of buffer manipulations, especially in case of
 heavy contention between different warps. This local shared memory is also very useful to buffer
-the writes to the buffers themselves. Indeed, only a fraction (often as low as $2^{-3}$)
-of the threads of a warp have a valid solution to write after having tested a single candidate,
+the writes to the buffers themselves. Indeed, only a fraction of the threads of a warp often as low as $2^{-3}$
+have a valid solution to write after having tested a single candidate,
 and the more unsuccessful threads need to wait while the former write their solution to global memory.
 It is therefore beneficial to first write the solutions to a small local warp-specific buffer and to
 flush it to the main block-wise buffer as soon as it holds 32 solutions or more, thence
@@ -268,9 +268,9 @@ significantly reducing the number of accesses to the slower global memory.
 \subsubsection{An example of snippet function}
 \label{sec:snippet}
 
-We now illustrate the discussion of this section by providing a commented snippet from the 76-step attack given in \autoref{lst:snippet_example} (written in \textsf{CUDA C/C++}), namely a function that is taking partial solutions up to $\state_{22}$  and that is
+We now illustrate the discussion of this section by providing a commented snippet from the 76-step attack given in \autoref{lst:snippet_example} written in \textsf{CUDA C/C++}, namely a function that is taking partial solutions up to $\state_{22}$  and that is
 trying to extend them up to $\state_{23}$ using neutral bits on $\expmess_{19}$. Its structure is a straightforward application of the framework, and is fairly representative of most of the
-code of both of our attacks (although some snippets may at first seem more complex due to their use of neutral bits located on several distinct message words).
+code of both of our attacks although some snippets may at first seem more complex due to their use of neutral bits located on several distinct message words.
 
 \begin{minted}[linenos,breaklines]{c}
 __device__ void stepQ23(uint32_t thread_rd_idx)
@@ -333,16 +333,16 @@ buffer, or from the matching solution of the base solution buffer \mintinline{c}
 is the one of \mintinline{c}{q22} on line 16, using the \shaone round function. This would in fact not be necessary in this function, as the value could have been included in the extended base solution altogether.
 This was not done because recomputing \mintinline{c}{q22} is necessary in the snippets of the following steps and causes only minimal overhead in this one, while saving a 32-bit word from the \mintinline{c}{Q22SOLBUF} buffer.
 
-The loop from lines 18 to 41 (\ie the remainder of the function) applies every combination of the five neutral bits for this step, all of which 
+The loop from lines 18 to 41, \ie the remainder of the function, applies every combination of the five neutral bits for this step, all of which 
 are located on $\expmess_{19}$. In more details, line 21 sets the register
 \mintinline{c}{w19_q23_nb} to one of the 32 possible combinations. Lines 23 and 24 clear the message word \mintinline{c}{m19} of the previous neutral bit combination and applies the new one, and line 25
-computes the expanded message word \mintinline{c}{m22} based on the new value for \mintinline{c}{m19}, using \shaone's message expansion (note that this computation could actually be optimized, \eg by
-precomputing the contribution of \mintinline{c}{m14}, \mintinline{c}{m8} and \mintinline{c}{m6}, which are fixed in this function).
-Lines 27 to 30 compute the impact of the current neutral bit combination, first by (partially) recomputing the state words \mintinline{c}{newq20} and \mintinline{c}{newq21}, then fully recomputing
-\mintinline{c}{newq22}, and finally computing the (as yet unknown) word \mintinline{c}{newq23}.
+computes the expanded message word \mintinline{c}{m22} based on the new value for \mintinline{c}{m19}, using \shaone's message expansion. Note that this computation could actually be optimized, \eg by
+precomputing the contribution of \mintinline{c}{m14}, \mintinline{c}{m8} and \mintinline{c}{m6}, which are fixed in this function.
+Lines 27 to 30 compute the impact of the current neutral bit combination, first by partially recomputing the state words \mintinline{c}{newq20} and \mintinline{c}{newq21}, then fully recomputing
+\mintinline{c}{newq22}, and finally computing the as yet unknown word \mintinline{c}{newq23}.
 Line 32 computes a mask of sufficient conditions for the value of \mintinline{c}{newq23} based on the value of \mintinline{c}{newq22}.
 Lines 33 to 35 determine if the current combination of neutral bits lead to a valid partial solution for $\state_{23}$, first by comparing the values of \mintinline{c}{q21} and  \mintinline{c}{q22}
-(which we know to fulfill the conditions) with the updated values \mintinline{c}{newq21} and \mintinline{c}{newq22} (lines 33 and 34), and then checking \mintinline{c}{newq23} for the previously computed conditions.
+which we know to fulfill the conditions with the updated values \mintinline{c}{newq21} and \mintinline{c}{newq22} (lines 33 and 34), and then checking \mintinline{c}{newq23} for the previously computed conditions.
 Lines 37 and 38 prepare the description of the partial solution.
 Finally, line 40 writes the partial solution to the buffer \mintinline{c}{Q23SOLBUF}, at the condition that it is indeed valid. As mentioned at the end of \autoref{sec:part_sol}, this is done through a warp-specific
 temporary buffer, which is flushed to the actual buffer on line 42 to ensure that every valid solution is indeed eventually copied to \mintinline{c}{Q23SOLBUF}.
@@ -356,7 +356,7 @@ After our initial implementation of the 76-step attack, we did some fine tuning 
 One first objective was to ensure that the GPU fans work at 100\% during the attack, as this was strangely
 not the case initially for our particular boards, and was obviously not ideal for cooling.
 We also experimented with various temperature limits
-(that define when the GPU will start to throttle) and both over-clocking and under-volting.
+that define when the GPU will start to throttle and both over-clocking and under-volting.
 
 Taken together, these variations had a significant impact on the overall performance of the program. For a single GPU, the initial setting resulted in an estimated
 time of 4.94 days to produce one 76-step freestart collision. We were able to eventually reduce this to 4.16 days. We also set-up machines with four GPUs, and observed significant
@@ -373,21 +373,21 @@ The collision was found after ten days, with the attack being run on sixteen 4-G
 \label{sec:effi_fw}
 
 We conclude this section by evaluating the performance of our framework, and in particular by assessing the relative efficiency of a GPU-based attack compared to a more traditional CPU implementation.
-We provide this analysis for the 76-step attack, but the results apply entirely to the 80-step attack as well (and to would-be \shaone collision attacks implemented with our framework in general).
+We provide this analysis for the 76-step attack, but the results apply entirely to the 80-step attack as well and to would-be \shaone collision attacks implemented with our framework in general.
 
 
-Our GPU implementation of \shaone can compute about $2^{31.8}$ (full) \shaone compression functions per second on a \gtx.
+Our GPU implementation of \shaone can compute about $2^{31.8}$ full \shaone compression functions per second on a \gtx.
 Comparing this with the expected time to find a collision of 4.16 days, this means that the 76-step attack has a complexity equivalent to $2^{50.25}$ calls to the compression function for the
 best-performing GPU; this increases slightly to $2^{50.34}$ when considering the 4-GPU average of 4.42 days.
 
 Comparatively, on a Haswell Core-i5 running at 3.2\,GHz, the OpenSSL implementation of \shaone
 can compute $2^{23.47}$ compression functions per second on one core. A CPU implementation of our attack
 on the same processor leads to an expected time to collision of 606.12 core-days, which translates to a complexity of $2^{49.1}$
-compression function calls\footnote{This could probably be improved by vectorizing part of the CPU implementation.}.
+compression function calls, though this could probably be improved by vectorizing part of the CPU implementation.
 This means that a single \gtx is worth 322 such CPU cores when computing the \shaone compression function, and 138 cores when
-running our attack program (this increases to 146 for the best-performing GPU).
+running our attack program; this increases to 146 for the best-performing GPU.
 While this drop in relative efficiency was to be expected, it is somehow surprisingly small given the
 complexity of our implementation and \eg the intensive use of large shared data structures. Our careful implementation thus
 gives a much better value for the GPUs when compared to previous attempts at running collision attacks on such a platform:
-in their work, Grechnikov and Adinetz estimated a GPU to be worth 39 CPU cores~\cite{cryptoeprint:2011:641}\footnote{This comparison must be modulated by considering possibly uneven progress in GPUs and CPUs
-since 2011 and different hardware quality. We believe that the gap between these and our results is nonetheless significant.}.
+in their work, Grechnikov and Adinetz estimated a GPU to be worth 39 CPU cores~\cite{cryptoeprint:2011:641}. This comparison should however be modulated by considering possibly uneven progress in GPUs and CPUs
+since 2011 and different hardware quality. We believe that the gap between these and our results is nonetheless significant.

@@ -8,16 +8,16 @@ We call $\kappa$ the \emph{key size} and $n$ the \emph{block size} of $\E$. Typi
 We usually require $\E$ and its inverse $\E^{-1}$ to be efficiently computable (depending on the intended application, it may be enough for only
 one of these to be efficient).
 
-The most immediate purpose of block ciphers is to provide confidentiality of communications. Two parties $A$ and $B$ who share a key $k$\footnote{We
-completely ignore the problem of obtaining such a shared key.} for the same
-block cipher are able to send encrypted messages $c \defas \E(k,p)$, $c' \defas \E(k,p')$, etc. The non-key input to $\E$ is generally called
+The most immediate purpose of block ciphers is to provide confidentiality of communications. Assuming that two parties $A$ and $B$
+have been able to share a secret $k$, for instance using asymmetric cryptography techniques, they can then use $k$ as the key input to the same
+block cipher to send encrypted messages $c \defas \E(k,p)$, $c' \defas \E(k,p')$, etc. The non-key input to $\E$ is generally called
 the \emph{plaintext}, and the output of $\E$ is called the \emph{ciphertext}.
 
 If $\E$ is such that the permutations $\E(k,\cdot)$ are hard to invert when $k$ is unknown, $A$ and $B$ may suppose that a secure channel of communication
 between them consists in injecting their messages to strings $m_0||m_1||\ldots||m_\ell$ of sizes multiple of $n$ and sending encrypted messages
 $\E(k,m_0)||\E(k,m_1)||\ldots||\E(k,m_\ell)$. There are two major problems with this scheme, however, regardless of the security of the block
 cipher: first, the scheme is not \emph{randomised}, \ie encrypting the same plaintext twice always results in the same ciphertext. An eavesdropper
-(a ``passive adversary'') on the channel between $A$ and $B$ can thus detect when identical message blocks have been sent; second, the
+on the channel between $A$ and $B$, \ie a ``passive adversary'', can thus detect when identical message blocks have been sent; second, the
 communication is not authenticated. An active adversary on the channel may delete or modify some of the blocks of a message, append to a message
 some blocks from a previous message, or add randomly generated blocks. All of this can be done without $A$ and $B$ noticing that someone
 is maliciously tampering with the channel.
@@ -37,8 +37,8 @@ An \emph{ideal block cipher} $\E$ is a mapping $\{0,1\}^\kappa \times \{0,1\}^n 
 $\E(k,\cdot)$ are drawn independently and uniformly at random among the permutations of $\{0,1\}^n$.
 \end{defi}
 
-This definition intuitively corresponds to the best we can achieve from the definition of a block cipher. For small values of $n$
-(\eg up to $20 \sim 32$ depending on the desired performance), one can implement ideal block ciphers by using an appropriate
+This definition intuitively corresponds to the best we can achieve from the definition of a block cipher. For small values of $n$,
+\eg up to $20 \sim 32$ depending on the desired performance, one can implement ideal block ciphers by using an appropriate
 shuffling algorithm, such as the one variously attributed to Fisher, Yates, Knuth, etc.~\cite{uniform_shuffle}, which we will
 call ``FYK''. As this method
 requires $\bigo(2^n)$ setup time and memory per key, it is obviously impractical for cryptographically common block sizes $n \geq 64$.
@@ -48,14 +48,14 @@ ideal block ciphers. A useful, mostly theoretical, way of quantifying the securi
 is from being ideal. Informally, this is done by upper-bounding the \emph{advantage} over a random answer that any adversary
 with some bounded resources
 has of distinguishing whether he is given black-box access to a randomly-drawn permutation or to an instance of the block cipher
-with a randomly chosen (unknown) key. This statement can be made more precise in the form of the following definition,
+with a randomly chosen unknown key. This statement can be made more precise in the form of the following definition,
 similar to the one that can be found \eg in \cite{DBLP:journals/jcss/BellareKR00}:
 
 \begin{defi}[Pseudo-random permutations (PRP)]
 We consider a block cipher $\E$ of key size $\kappa$ and block size $n$.
 We write $\Pi_{2^n}$ for the set of permutations on binary strings of length $n$; $x \overset{\$}{\leftarrow} \mathcal{S}$
 the action of drawing $x$ uniformly at random among elements of the set $\mathcal{S}$; $\mathcal{A}^{f}$ an algorithm with
-oracle (black-box) access to the function $f$ and which outputs a single bit.
+oracle, black-box access to the function $f$ and which outputs a single bit.
 Then we define the \emph{PRP advantage} of $\mathcal{A}$ over $\E$, written $\Adv^{\text{PRP}}_{\E}(\mathcal{A})$ as:
 \[
 \Adv^{\text{PRP}}_{\E}(\mathcal{A}) = |\Pr[\mathcal{A}^f = 1~|~f \overset{\$}{\leftarrow} \Pi_{2^n}] - \Pr[\mathcal{A}^f = 1~|~f \defas \E(k,\cdot), k \overset{\$}{\leftarrow} \{0,1\}^\kappa]|.
@@ -93,8 +93,8 @@ section to sketching some typical elements of attacks on block ciphers.
 The core of many concrete attacks on block ciphers is made of \emph{distinguishers}, which can be defined as algorithms using reasonable resources which have a non-negligible advantage according to \autoref{def:prp}.
 There is no easy answer as to what ``reasonable'' and ``non-negligible'' should mean in the context of actual cryptanalysis, as the key and block size of a specific cipher are fixed values. While some ciphers or potential distinguishers
 may be parameterized in a way that helps to make the definition meaningful, this does not have to be the case. Sometimes, one is easily convinced by the performance of an algorithm so that there is
-consensus that it can be called a distinguisher (\eg distinguishing $\E$ of key and block size $128$ with $q = 2$, $t = 2^{20}$, probability $\approx 1$), while some other times the picture is much less clear
-(\eg $q = t =  2^{120}$ and probability $\approx 1$). We will ignore this issue altogether and assume that all the attacks of this chapter are consensual.
+consensus that it can be called a distinguisher, \eg distinguishing $\E$ of key and block size $128$ with $q = 2$, $t = 2^{20}$, probability $\approx 1$, while some other times the picture is much less clear,
+\eg $q = t =  2^{120}$ and probability $\approx 1$. We will ignore this issue altogether and assume that all the attacks of this chapter are consensual.
 
 \subsubsection{Classes of distinguishers for block ciphers}
 
@@ -103,17 +103,17 @@ We now briefly describe two types of distinguishers, which exploit ``non-ideal''
 \bigskip
 
 We start with \emph{differential distinguishers}, which are part of the broader class of \emph{statistical} distinguishers.
-The basic idea of the latter is to define an event which has a different probability distribution for the target (the block cipher $\E$)
-than for a random permutation drawn from $\Pi_{2^n}$. Running the distinguisher then consists in collecting a certain number of samples (obtained through
-the oracle) and deciding from which distribution
+The basic idea of the latter is to define an event which has a different probability distribution for the target, \ie the block cipher $\E$
+than for a random permutation drawn from $\Pi_{2^n}$. Running the distinguisher then consists in collecting a certain number of samples obtained through
+the oracle and deciding from which distribution
 %(the one entailed by $\E$ or the one entailed by a random permutation)
 those are the
 most likely to have been drawn.
 A differential distinguisher instantiates this idea by considering a certain type of statistical events. Another major class of
 statistical distinguishers is the one of \emph{linear distinguishers}.
 
-Consider a block cipher $\E$; a \emph{differential} for $\E$ is a pair $(\Delta,\delta)$ of input and output \emph{differences},
-according to some group law $+$\footnote{We implicitly only consider non-trivial differentials where $\Delta \neq 0$.}.
+Consider a block cipher $\E$; a \emph{differential} for $\E$ is a pair $(\Delta \neq 0,\delta)$ of input and output \emph{differences},
+according to some group law $+$.
 In the huge majority of cases, $+$ is the addition in $\mathbf{F}_2^n$,
 \ie the bitwise exclusive OR (XOR); in this case we usually use the alternative notation $\oplus$. Sometimes, $+$
 is taken to be the addition in $\mathbf{Z}/2^n\mathbf{Z}$, and some other times differences according to the two laws may be jointly used.
@@ -130,12 +130,12 @@ is simply its differential probability for $\E(k,\cdot)$ averaged over $k$:
 $\EDP^{\E}(\Delta,\delta) \defas 2^{-\kappa}\sum_{k\,\in\,\{0,1\}^\kappa} \DP^{\E(k,\cdot)}(\Delta,\delta)$.
 A common assumption is that for most keys and differentials, the fixed-key DP is close to the average EDP.
 The DP of a random differential w.r.t. a random permutation can be approximated by
-a Poisson distribution: the (approximate) number of differential pairs is $\sim \poi(2^{-1})$, of mean and variance $2^{-1}$
-(see~\cite{DBLP:journals/jmc/DaemenR07}, using an earlier result~\cite{DBLP:journals/joc/OConnor95}).
+a Poisson distribution: the approximate number of differential pairs is $\sim \poi(2^{-1})$, of mean and variance $2^{-1}$,
+see~\cite{DBLP:journals/jmc/DaemenR07}, using an earlier result~\cite{DBLP:journals/joc/OConnor95}.
 As there are $2^{n-1}$ possible pairs, the expected DP is thus $2^{-n}$; note however that the DP is in fact restricted to values multiple of $2^{-n+1}$.
 For a distinguisher on $\E$ to be of any use, we need its EDP not to be equal to $2^{-n}$. If it is far enough
-from that (\eg $2^{-3n/4}$), we usually make the simplifying working hypothesis that all DPs are equal to their expected value (or rather the nearest
-possible values).
+from that, \eg $2^{-3n/4}$, we usually make the simplifying working hypothesis that all DPs are equal to their expected value, or rather the nearest
+possible values.
 In such a case, using the distinguisher consists in collecting $\propto 1/\EDP^{\E}(\Delta,\delta)$ plaintext pairs verifying
 the input difference and counting how many of them verify the output difference. We decide that we are interacting with $\E$ if and only if this is one or more.
 
@@ -144,14 +144,15 @@ the input difference and counting how many of them verify the output difference.
 Another kind of distinguishers is based on \emph{algebraic} representations of block ciphers. One can always redefine a block cipher
 $\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ as an ordered set of functions $\F_i : \{0,1\}^{\kappa+n} \rightarrow \{0,1\}$ that project
 $\E$ on its $i^\text{th}$ output bit: $\E \equiv (\F_0, \ldots, \F_{n-1})$. The $\F_i$s can be understood as Boolean functions
-$\mathbf{F}^{2^{\kappa + n}} \rightarrow \Ftwo$ which are themselves in bijection with elements of $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
+$\mathbf{F}_{2}^{\kappa + n} \rightarrow \Ftwo$ which are themselves in bijection with elements of
+$\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/\langle x_i^2-x_i\rangle_{i<\kappa + n}$,
 \ie multivariate polynomials in $\kappa + n$ variables over $\Ftwo$. The polynomial to which a Boolean function is mapped is called its \emph{algebraic normal form} (ANF);
 the ANF of $\E$ is the ordered set of ANFs of its projections.
 
-An important characteristic of an ANF is its (maximal) degree, which can be used to define simple yet efficient distinguishers. The degree
-of (the ANF of) an $n$-bit permutation is at most $n - 1$, and it is expected of a random permutation to be of maximal degree. If a block cipher
+An important characteristic of an ANF is its degree, which can be used to define simple yet efficient distinguishers. The degree
+of the ANF of an $n$-bit permutation is at most $n - 1$, and it is expected of a random permutation to be of maximal degree. If a block cipher
 has degree $d < n - 1$, it can be distinguished by differentiating it on enough values. This simply requires to evaluate the oracle on $2^{d+1}$ properly chosen
-values (essentially a cube of dimension $d$) and to sum them together. If the result is all-zero, the oracle is likely to be of degree less than
+values ---essentially a cube of dimension $d$--- and to sum them together. If the result is all-zero, the oracle is likely to be of degree less than
 $d$ and is hence assumed to be $\E$; if this is not the case, it is necessarily of degree strictly more than $d$ and hence assumed to be a random permutation.
 
 \subsubsection{Extending distinguishers to key-recovery attacks}
@@ -159,15 +160,16 @@ $d$ and is hence assumed to be $\E$; if this is not the case, it is necessarily 
 In the definition of PRP security, we were content with the notion of distinguisher. In actual attacks on block ciphers, however, the end objective
 would ideally be to recover the unknown key used by the oracle. The context of a concrete attack is also different from a PRP security game as one usually knows that he is interacting with a specific
 cipher $\E$ and not a random permutation, and there is seemingly no point in running a distinguisher at all.
-Despite these observations, distinguishers are in fact useful in many cases, and are often at the basis of key-recovery attacks\footnote{Some attacks
-are not distinguisher-based. Though many of them are quite interesting, we do not describe them here.}. We briefly explain
-the basic idea of this conversion; to do this, we need to assume that $\E$ possesses a certain structure (this is completely without loss of generality).
+Despite these observations, distinguishers are in fact useful in many cases, and are often at the basis of key-recovery attacks, although it
+should be noted that not all such attacks are based on distinguishers.
+We briefly explain
+the basic idea of this conversion; to do this, we need to assume that $\E$ possesses a certain structure, which is in fact very common.
 
 An \emph{iterative block cipher} is a cipher $\E$ that can be described as the multiple composition of a \emph{round function} $\R$, possibly with additional
 composition of an initialization or finalization function that we ignore here: $\E \equiv \R \circ \cdots \circ \R$. Let us assume that a ``full''
 application of $\E$ is made of $r$ rounds. A distinguisher-based key-recovery attack first consists in finding a distinguisher on
-a \emph{reduced-round} version of $\E$ made of the composition of $d < r$ round functions. The next step simply consists in querying the oracle on inputs verifying the distinguisher condition (for instance
-plaintexts with difference $\Delta$, in a differential case); as one obtains encryption with the full block cipher, one is not expected to be able to directly run the distinguisher
+a \emph{reduced-round} version of $\E$ made of the composition of $d < r$ round functions. The next step simply consists in querying the oracle on inputs verifying the distinguisher condition, for instance
+plaintexts with difference $\Delta$, in a differential case; as one obtains encryption with the full block cipher, one is not expected to be able to directly run the distinguisher
 on these values. The main idea comes from the third step, where one guesses values for part of the unknown key $k$ of $\E$ which allow him to partially decrypt the ciphertexts by $r-d$ rounds. Then, if
 the guess was correct, he obtains ciphertexts for the cipher reduced to $d$ rounds, on which the distinguisher is expected to be successful. On the other hand, if the guess was incorrect, one obtains
 ciphertexts somehow equivalent to the ones of a $(2r-d)$-round cipher and the distinguisher should fail. Thus, this overall approach gives us a method to verify a guess for part of the unknown key.
@@ -186,15 +188,16 @@ in some ways, for instance by providing more than one oracle. One such common ge
 $\E(k,\cdot)$, $\E(\rka(k),\cdot)$, with $\rka(\cdot)$ one or more mappings on the key space. A crucial observation in this case is that $\rka$ cannot be arbitrary, as some mappings may
 be so powerful that they allow to attack every cipher; speaking of the security of $\E$ in such a model is then meaningless. We will mention this matter again in \autoref{chap:emrka}.
 
-The potential problems arising from ill-defined related-key models are a useful reminder that attacks should be specified in a well-founded way. While some attacks may be
-considered too unrealistic to be of practical significance (this is in fact a rather common reproach to related-key attacks at large), this question is only secondary to their not allowing to trivially
+The potential problems arising from ill-defined related-key models are a useful reminder that attacks should be specified in a well-founded way. While some attacks
+such as related-key attacks may be
+considered too unrealistic to be of practical significance, this question is only secondary to their not allowing to trivially
 attack any cipher.
 
 \section{Using block ciphers}
 \label{sec:bc_modes}
 
 We mentioned in the beginning of this chapter that block ciphers do not provide adequate security if they are used directly and not as part of a wider construction. One calls \emph{mode
-of operation} such a construction that results in a (hopefully) functional cryptosystem. We do not describe modes in this section, but reiterate from the introduction the essential conditions that they
+of operation} such a construction that results in a functional cryptosystem. We do not describe modes in this section, but reiterate from the introduction the essential conditions that they
 must meet.
 
 A foremost requirement is that a mode be randomised, in the sense that encrypting the same message with the same key twice should not result in the same ciphertext. This can be
@@ -209,9 +212,6 @@ which is then
 called an \emph{authenticated encryption} mode, or AE, or by combining an encryption-only mode with a \emph{message authentication code} (MAC) in an appropriate way. The current
 trend is to favour the former approach, as it tends to lead to more efficient schemes.
 
-We conclude this chapter by highlighting the prevalence of the \emph{birthday bound} (coming from the so-called \emph{birthday paradox}, which we will
-discuss again in \autoref{chap:hashfun}) in cryptography by stating the following fact: when using a block cipher of block size $n$, most modes of operation are only
+We conclude this chapter by highlighting the prevalence in cryptography of the \emph{birthday bound}, named so because of the so-called \emph{birthday paradox}, which we will
+discuss again in \autoref{chap:hashfun}, by stating the following fact: when using a block cipher of block size $n$, most modes of operation are only
 secure up to the encryption of $\approx 2^{n/2}$ blocks with the same key, even if the key size of the block cipher can be much bigger than that.
-
-
-% TODO REFS.... Where???

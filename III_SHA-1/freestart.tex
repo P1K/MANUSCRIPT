@@ -6,9 +6,9 @@ in \autoref{sec:why_free}, and the addition and improvements to existing techniq
 \subsection{Faster collisions by exploiting more freedom}
 \label{sec:why_free}
 
-The main interest of freestart collisions is that they consist in an attack against a meaningful (though weakened) security notion, while granting more freedom to
-the attacker by providing him with an additional input. It is thus expected that such attacks should be more efficient than ones targeting stronger notions (\eg hash function
-collisions), not unlike attacking a reduced version of a function, using fewer steps.
+The main interest of freestart collisions is that they consist in an attack against a meaningful, though weakened security notion, while granting more freedom to
+the attacker by providing him with an additional input. It is thus expected that such attacks should be more efficient than ones targeting stronger notions, \eg hash function
+collisions, not unlike attacks targeting a reduced version of a function, using fewer steps.
 
 However, it is not necessarily clear in general how to efficiently exploit the additional input in a freestart attack. We describe below our strategy in that respect
 in the case of \shaone. Note that unlike hash function attacks \emph{à la} Wang, our freestart collisions use only one block, which has some consequences when
@@ -23,13 +23,13 @@ from the middle can be equivalently defined as starting from the beginning. We c
 the technical definition:
 
 \begin{defi}[Main block offset]
-A freestart collision attack on \shaone uses a \emph{main block offset} of $i \in \{0, \ldots, 64\}$ if the candidate (expanded) messages $\expmess$ tested for a collision are defined
-through the (possibly backward) message expansion of the words $\expmess_i, \ldots, \expmess_{i + 15}$.
+A freestart collision attack on \shaone uses a \emph{main block offset} of $i \in \{0, \ldots, 64\}$ if the candidate expanded messages $\expmess$ tested for a collision are defined
+through the possibly backward message expansion of the words $\expmess_i, \ldots, \expmess_{i + 15}$.
 \end{defi}
 
-The desired effect of using a (non-zero) main block offset is to move down the part where freedom is available, enabling to satisfy conditions (either deterministically or with accelerating techniques)
+The desired effect of using a non-zero main block offset is to move down the part where freedom is available, enabling to satisfy conditions (either deterministically or with accelerating techniques)
 up to a later point in the attack. Being able to do so would mechanically make the attack more efficient, at the condition that this gain is not entirely offset by the cost
-of satisfying potential conditions when computing backward to the corresponding \iv (this computation being eventually necessary to fully determine the colliding inputs).
+of satisfying potential conditions when computing backward to the corresponding \iv, this computation being eventually necessary to fully determine the colliding inputs.
 
 In the case of a freestart attack, the entire freedom of the \iv implies that no \emph{a priori} constraints are set in the middle initialization. This is in contrast to a hash function attack, where
 the necessity for the backward-computed \iv to be of a specific value makes the approach less powerful, although potentially still useful.
@@ -48,7 +48,7 @@ the necessity for the backward-computed \iv to be of a specific value makes the 
 %rebound attacks in general~\cite{DBLP:conf/fse/MendelRST09}, which can be thought of as a start-from-the-middle strategy adapted to the specific case of \aes-like primitives.
 %
 
-It should be noted that this kind of broad approach has already been used successfully in the past in various hash function attacks (see \eg \cite{DBLP:conf/fse/Dobbertin96,DBLP:conf/eurocrypt/LandelleP13,DBLP:conf/fse/MendelRS14}).
+It should be noted that this kind of broad approach has already been used successfully in the past in various hash function attacks, see \eg \cite{DBLP:conf/fse/Dobbertin96,DBLP:conf/eurocrypt/LandelleP13,DBLP:conf/fse/MendelRS14}.
 We conclude this discussion by considering more closely how we applied this technique to \shaone.
 
 \subsubsection{Different choices for the disturbance vectors.}
@@ -64,13 +64,13 @@ We simply expect to use \dvs with different shift values than the ones usually c
 \medskip
 
 The structure of the attack also imposes additional conditions on the \dv, compared to a usual two-block hash function attack. Both conditions come from the aforementioned fact that bit conditions
-(ensuring that the message pair follows a proper differential path)
-may need to be satisfied (probabilistically) when computing the \iv backward from the values of the middle initialization. To make this phase efficient, we would like to have as few such
+which ensure that the message pair follows a proper differential path
+may need to be satisfied probabilistically when computing the \iv backward from the values of the middle initialization. To make this phase efficient, we would like to have as few such
 bit conditions as possible. This translates to the two high-level conditions:
 \begin{enumerate}
 \item The \dv should not imply too many differences in the last five steps of the attack. This is because we aim for a one-block attack, thus corresponding differences will need to be inserted in the
 backward-computed \iv for the pair to define a collision.
-\item The \dv itself should not include too many differences in its early words (corresponding to the ones used in the backward computation), as we observed that being dense on these positions makes
+\item The \dv itself should not include too many differences in its early words, that is the ones corresponding used in the backward computation, as we observed that being dense on these positions makes
 it harder to connect to the \iv with few conditions. Additionally, it may decrease the overall probability of the computation.
 \end{enumerate}
 
@@ -79,7 +79,7 @@ The necessity of satisfying bit conditions in a backward computation also impose
 selectively changing the value of some bits of the message. As the structure of our attacks implies shifting down the free window of the message, changing a bit in this window may also impact
 the value of the first few message words that are computed with the backward message expansion. This may potentially result in unwanted interactions with the ability to satisfy the backward bit conditions.
 
-In short, the selection of accelerating techniques (\eg neutral bits) must take into account their ``back effects'', which may disqualify some otherwise good candidates.
+In short, the selection of accelerating techniques, \eg neutral bits, must take into account their ``back effects'', which may disqualify some otherwise good candidates.
 
 \subsection{New techniques for freestart collisions}
 \label{sec:attack_techs}
@@ -97,14 +97,14 @@ methods (\autoref{sec:free_nl}).
 
 %TODO actually, we rather want lo back interaction proba
 In our freestart attacks, we have the requirements that the computation from the initialized state back to the \iv be of high probability. Ideally, we would even like to be able to satisfy deterministically
-all the conditions associated with this computation (while still performing a shifted initialization). A direct consequence of this is that the differential path should be sparse (\ie include few
-conditions, and especially few differences) in the steps involved in the backward computation.
+all the conditions associated with this computation, while still performing a shifted initialization. A direct consequence of this is that the differential path should be sparse
+in the steps involved in the backward computation, \ie include few conditions and especially few differences.
 
 The known methods for the construction of non-linear differential paths for \sha do not provide good guarantees that the path will be sparse in \emph{a priori} specified state words. However, it is
 not hard to search independently for a sparse prefix for the differential path and then only to search for paths that are extensions of this prefix.
 We implemented this strategy by first greedily searching for prefixes of various lengths and with few differences, and then by searching for good paths extending these prefixes.
-We show in \autoref{fig:lo_start} the starting point that was eventually used in the search for the path of the 76-step attack (using a representation suitable for a guess-and-determine
-path search)\footnote{Note that in order to ensure a collision through the Davies-Meyer feed-forward, a sign has been imposed in the differences in the \iv.}.
+We show in \autoref{fig:lo_start} the starting point that was eventually used in the search for the path of the 76-step attack, using a representation suitable for a guess-and-determine
+path search. Note that in order to ensure a collision through the Davies-Meyer feed-forward, a sign has been imposed in the differences in the \iv.
 
 \begin{figure}[htb]\begin{center}
 \begin{tabular}{lcc}
@@ -135,22 +135,22 @@ $i$ & $\state_i$ & $\mess_i$\\
 
 Through the course of the preparation of the attacks, we tried both methods for constructing the extension of the non-linear path, \ie a guess-and-determine and a meet-in-the-middle approach.
 We have found that the meet-in-the-middle approach allowed to find paths with fewer conditions, and that it allowed a better control of the position where some of these conditions were located.
-A slight downside of our meet-in-the-middle implementation, however, is that it did not give strict guarantees that the paths it produced were completely valid, as they may include contradictory conditions
-(for instance in the high-density part of the path where many differences are located). However, this issue could usually be resolved by considering slight variations of the impossible path, which
+A slight downside of our meet-in-the-middle implementation, however, is that it did not give strict guarantees that the paths it produced were completely valid, as they may include contradictory conditions,
+for instance in the high-density part of the path where many differences are located. However, this issue could usually be resolved by considering slight variations of the impossible path, which
 we were able to do efficiently with a guess-and-determine method.
 % TODO doesn't completely reflect the 80-step. Is that a real problem tho?
 
 \medskip
 
 The evaluation and eventual selection of the \dvs used in our attacks was done using joint local collision analysis. We modified the original implementation of Stevens~\cite{DBLP:conf/eurocrypt/Stevens13}
-to cover \emph{all} steps (including the non-linear part) and to produce the entire set of sufficient state conditions and message bit relations as used by collision attacks. These are
+to cover \emph{all} steps, including the non-linear part, and to produce the entire set of sufficient state conditions and message bit relations as used by collision attacks. These are
 the conditions placed on the expanded messages $\expmess$ that ensure that the highest probability that is reachable for a given \dv is indeed attained.
 More specifically, we improved JLCA in the following ways:
 \begin{enumerate}
 %\item \textsc{Include the non-linear part.} Originally JLCA considered the entire set of differential paths that conform to the disturbance vector only
 \item Originally JLCA considered the entire set of differential paths that conform to the disturbance vector only
 over the linear part. 
-This was done by considering sets $\{\diff\state_i\}$ of allowed state differences for each state word $\state_i$ given the disturbance vector (including carries).
+This was done by considering sets $\{\diff\state_i\}$ of allowed state differences for each state word $\state_i$ given the disturbance vector, including carries.
 We extended this to aid in the non-linear path search by defining sets $\{\diff\state_i\}$ for the non-linear part as the state difference given by the previously constructed differential path of the non-linear part.
 Here one actually has a few options: only consider exact state difference of the non-linear path or also consider changes in carries or signs, as well as include state differences conforming to the disturbance vector.
 We found that allowing changes in carries or signs for the state differences given by the non-linear path made JLCA impractical,
@@ -158,9 +158,9 @@ yet including state differences conforming to the disturbance vector was practic
 
 %\item \textsc{Do not consider path variants not used in the attack.} Originally JLCA considered the possible carry propagations for local collisions  as this improves the overall probability (the probability of variants of paths adding up). 
 \item In the original JLCA,
-the probability computation took into account the possible carry propagations in local collisions, as
-as this improves the overall probability (the probability of variants of paths adding up). 
-However, until a certain step (say, 25), a typical attack implementation requires the partial solutions to strictly follow the main differential path,
+the probability computation took into account the possible carry propagations in local collisions,
+as this improves the overall probability, the probability of variants of paths adding up. 
+However, until a certain step, say 25, a typical attack implementation requires the partial solutions to strictly follow the main differential path,
 and thus variants induced by carry propagations are actually not allowed to happen in an attack, and thus should not be counted as improving the probability.
 We thus corrected JLCA by not adding up the probability of paths over the first 25 steps, but only by taking the maximum probability. 
 %We propose to do this by redefining the cumulative probabilities $p_{(\mathcal{P},w)}$ from~\cite[Sec 4.6]{DBLP:conf/eurocrypt/Stevens13} to:
@@ -187,7 +187,7 @@ From all those paths, one only stores in $\mathcal{O}_{[0,i+1[}$ those that can 
 
 Now given, say, $\mathcal{O}_{[0,26[}$, we can select any path and determine its necessary and sufficient conditions for steps $0,\ldots,25$ and the optimal set of message bit relations that goes with it.
 Although we use only one path, having the entire set $\mathcal{O}_{[0,26[}$ opens even more avenues for future work.
-For instance, one might consider an entire subclass of $2^k$ differential paths from $\mathcal{O}_{[0,26[}$ that can be described by state conditions linear in message bits and a set of (linear) message bit relations.
+For instance, one might consider an entire subclass of $2^k$ differential paths from $\mathcal{O}_{[0,26[}$ that can be described by state conditions linear in message bits and a set of linear message bit relations.
 This would provide $k$ bits more in degrees of freedom that can be exploited by speed up techniques.
 \end{enumerate}
 We thus proposed several extensions to the original JLCA that allowed us to determine sufficient state conditions and message bit relations optimized for collision attacks,
@@ -199,14 +199,14 @@ We thus proposed several extensions to the original JLCA that allowed us to dete
 
 Generally speaking, the accelerating technique used in our attacks are neutral bits. Only ``single-bit'' neutral bits were used in the attack on 76 steps, but
 the 80-step attack also used ``boomerang'' neutral bits where three (and in one occasion, four) carefully chosen bits are flipped at once to compute the
-pair of related messages. Additionally, in both attacks, some additional changes in the message may be necessary (depending on which neutral bits are activated)
-to ensure that no message bit relation becomes violated as a result. In the following, we use the term \emph{neutral bit} to mean either of the ``single-bit''
+pair of related messages. Additionally, in both attacks, some additional changes in the message may be necessary, depending on which neutral bits are activated,
+to ensure that no message bit relation becomes violated. In the following, we use the term \emph{neutral bit} to mean either of the ``single-bit''
 or ``boomerang'' neutral bits.
 
-The main difference in the selection of neutral bits compared to a usual (non-freestart) attack is the presence of the main block offset, which
+The main difference in the selection of neutral bits compared to a usual, non-freestart attack is the presence of the main block offset, which
 determines the offset of the message freedom window used during the attack.
 We have selected a main block offset of 6 (resp. 5) in the 76-step (resp. 80-step) case, as this led to the best distribution of usable neutral bits and boomerangs.
-This means that all the neutral bits (including potential boomerangs) directly lead to changes in the state from steps 6 (resp. 5) up to 21 (resp. 20) and that these changes propagate to steps 5 (resp. 4) down to 0 backwards and steps
+This means that all the neutral bits, including potential boomerangs, directly lead to changes in the state from steps 6 (resp. 5) up to 21 (resp. 20) and that these changes propagate to steps 5 (resp. 4) down to 0 backwards and steps
 22 (resp. 21) up to 79 forwards.
 
 We describe below the selection process more specifically in the case of the 80-step attack; the approach was similar in the 76-step case, with the omission of the boomerangs neutral bits which were not used.
@@ -215,8 +215,8 @@ We describe below the selection process more specifically in the case of the 80-
 
 The search for both single and boomerang neutral bits requires to evaluate the probability that a candidate does not interact badly with path conditions up to a certain point.
 This probability is estimated experimentally by observing the effect of activating potential neutral bits on many partial solutions for the differential path.
-Because the dense area of the attack conditions may implicitly force certain other bits to specific values (resulting in hidden conditions),
-we used more than 4000 partial solutions (over steps 1 up to 16) in the analysis.
+Because the dense area of the attack conditions may implicitly force certain other bits to specific values, resulting in hidden conditions,
+we used more than 4000 partial solutions over steps 1 up to 16 in the analysis.
 The 16 steps fully determine the message block, and also verify the sufficient conditions in the \iv and in the dense non-linear differential path of the first round.
 It should be noted that for this step it is important to generate every sample independently.
 Indeed using \eg{} message modification techniques to generate many samples from a single one would result in a biased distribution where many samples would only differ in the last few steps.
@@ -225,7 +225,7 @@ Indeed using \eg{} message modification techniques to generate many samples from
 We analyze potential boomerangs from the framework of Joux and Peyrin \cite{DBLP:conf/crypto/JouxP07}, which initially flip a single state bit together with 2 or more message bits.
 Each boomerang should be orthogonal to the attack conditions, \ie, the state bit where a difference is introduced
 should be free of sufficient conditions, while flipping the message bits should not break any of the message bit relations
-(either directly or through the message expansion).
+either directly or through the message expansion.
 Let $t\in[6,16], b\in[0,31]$ be such that the state bit $\state_t[b]$ has no sufficient condition.
 
 First, we determine the best usable boomerang on $\state_t[b]$ as follows.
@@ -256,9 +256,9 @@ However, unlike for boomerangs, the reason for flipping more than one bit is to 
 propagation of a state difference.
 Let $t\in[5,20], b\in[0,31]$ be a candidate neutral bit; flipping $\expmess_t[b]$ may possibly break certain message bit relations.
 We express each message bit relation over $\expmess_5,\ldots,\expmess_{20}$ using linear algebra, 
-and use Gaussian elimination to ensure that each of them has a unique last message bit $\expmess_i[j]$ (\ie where $i*32+j$ is maximal).
+and use Gaussian elimination to ensure that each of them has a unique last message bit $\expmess_i[j]$, \ie where $i*32+j$ is maximal.
 For each relation involving $\expmess_t[b]$, let $\expmess_i[j]$ be its last message bit.
-If $(i,j)$ equals $(t,b)$ then this neutral bit is not usable (indeed, it would mean that its value is fully determined by earlier message bits).
+If $(i,j)$ equals $(t,b)$ then this neutral bit is not usable; indeed, this would mean that its value is fully determined by earlier message bits.
 Otherwise we add bit $\expmess_i[j]$ to be flipped together with $\expmess_t[b]$ as part of the neutral bit.
 Similarly to boomerangs, we dismiss any neutral bit that breaks sufficient conditions backwards with probability higher than 0.1.
 The step~$i$ in which the neutral bit is used is determined in the same way as for the boomerangs.
@@ -288,7 +288,7 @@ The step~$i$ in which the neutral bit is used is determined in the same way as f
 
 In the implementations of our attacks, we only apply neutral bits on fully determined message blocks. In other words, neutral bits are used to try to extend to more steps
 partial solutions for the differential path which cannot be extended by using more freedom in the message.
-We call \emph{base solutions} such partial solutions; each of them consists of an (expanded) message and an \iv
+We call \emph{base solutions} such partial solutions; each of them consists of an expanded message and an \iv
 such that 21 consecutive state words (one for each free message word plus the \iv) follow the differential path:
 
 \begin{defi}[Base solution]
@@ -323,12 +323,10 @@ and then extending it backward using message words $\expmess_{11},\ldots,\expmes
 and forward using words $\expmess_{12},\ldots,\expmess_{16}$.
 
 For both attacks, the implementation of this search directly uses the path conditions, such as they are computed by JLCA at the end of the generation of the differential path.
-%TODO expand?
 
-%TODO restructure ? Attack process ?
 \paragraph{Attack process.}
 We already mentioned that the main block offset is 6 (resp. 5) for the 76-step (resp. 80-step) attack. Let us detail here the effect of this offset on the base solution and on the attack process
-in a bit more details, considering the 76-step case (without losing much generality).
+in a bit more details, considering the 76-step case, without losing much generality.
 
 In the course of the attack, the window of freedom for the message is made of $\expmess_6,\ldots,\linebreak\expmess_{21}$, and all state conditions are known to be satisfied for steps $-4$ to $17$.
 The value of the message words cannot be changed entirely, because they must conform to the base solution. It is thus not possible to \eg fix the value of $\expmess_{17}$ so that all conditions

@@ -18,8 +18,8 @@
 \section{Introduction}
 
 
-The Even-Mansour scheme (``Even-Mansour'', or \EM) is arguably the simplest way to construct a block cipher from publicly available
-components. It defines the encryption $\E((k_1, k_0), p)$ of the plaintext $p$ under the (possibly equal) keys $k_0$
+The Even-Mansour scheme, or simply Even-Mansour, or \EM, is arguably the simplest way to construct a block cipher from publicly available
+components. It defines the encryption $\E((k_1, k_0), p)$ of the plaintext $p$ under the possibly equal keys $k_0$
 and $k_1$ as $\Perm(p \oplus k_0) \oplus k_1$, where $\Perm$ is a public permutation. Even and Mansour proved
 in~1991 that for a permutation of size $n$, the probability of recovering the keys
 is upper-bounded by $\bigo(qt \cdot 2^{-n})$ when the attacker considers the permutation as a black box,
@@ -38,8 +38,8 @@ distinguishing attacks, and one must consider alternatives if security in this m
 Yet until the recent work of Cogliati and Seurin~\cite{CS15} and Farshim and Procter~\cite{FP14},
 no variant of Even-Mansour was proved to be secure in the related-key model. This is not the case
 anymore and it has now been proven that one can reach a non-trivial level of related-key security for $\IEM^r$
-starting from $r = 3$ when using keys linearly derived from a single master key (instead
-of using independent keys), or even when $r = 1$
+starting from $r = 3$ when using keys linearly derived from a single master key instead
+of using independent keys, or even when $r = 1$
 when this derivation is non-linear and meets some conditions.
 While related-key analysis obviously gives much more power to the attacker than the
 single-key setting, it is a widely accepted
@@ -63,7 +63,7 @@ to denote the string
 made of the concatenation of $i$ copies of the character $\alpha$, and $\alpha^*$
 to denote any string of the set $\{\alpha^i, i \in \mathbf{N}\}$, $\alpha^0$
 denoting the empty string $\varepsilon$. For any string $s$, we use
-$s[i]$ to denote its $i^\text{th}$ element (starting from zero).
+$s[i]$ to denote its $i^\text{th}$ element, starting from zero.
 
 We also use $\Delta_i^n$ to denote the string
 $0^{n-i-1} || 1 || 0^{i - 1}$. The superscript $n$ will always
@@ -72,7 +72,7 @@ be clear from the context and therefore omitted.
 Finally, we identify strings of length $n$ over the binary alphabet $\{0,1\}$ with elements of
 the vector-space $\mathbf{F}_2^n$ and with the binary representation of elements of
 the group $\mathbf{Z}/2^n\mathbf{Z}$. The addition operations on these structures
-are respectively denoted by $\oplus$ (bitwise exclusive or (XOR)) and $+$ (modular addition).
+are respectively denoted by $\oplus$, the bitwise exclusive or (XOR) and $+$, the modular addition.
 
 \section{Generic related-key key-recovery attacks on $\IEM$}
 \label{sec:gen}
@@ -104,12 +104,13 @@ cipher is in this case resistant to RKA. Taken together, these results mean in e
 that a related-key attack on a block cipher $\E$ using both classes $\xrka(k)$ and $\arka(k)$ does not say
 much on $\E$, as nearly all ciphers fall to an attack
 in the same model. On the other hand, an attack using either of $\xrka$ or $\arka$ \emph{is} meaningful,
-because an ideal cipher is secure in that case\footnote{When
+because an ideal cipher is secure in that case.
+Nonetheless, one should note that when
 queries with many different related keys are allowed, this security remains lower than in a single-key model,
 because of the ability to create collisions. One can
 for instance query $\E(k\oplus\Delta_i,p)$ with $2^{k/2}$ different values for $\Delta_i$ and a constant $p$
 and then computes $\E(\gamma_i,p)$ with $2^{k/2}$ guesses $\gamma_i$ for $k$. With high probability, one
-of the $\gamma_i$s will be equal to one of the $k\oplus\Delta_i$s, which allows to recover $k$.}.
+of the $\gamma_i$s will be equal to one of the $k\oplus\Delta_i$s, which allows to recover $k$.
 
 \subsection{Key-recovery attacks on $\IEM^r$ with independent keys}
 
@@ -167,7 +168,7 @@ original Even-Mansour. An attack in that case works similarly
 by querying \eg $\E((k_1, k_0), \Delta_i)$ and
 $\E((k_1, k_0 \oplus \Delta_i), 0^\kappa)$.
 
-Both attacks use a single difference class for the related keys (either $\xrka$ or $\arka$),
+Both attacks use a single difference class for the related keys, either $\xrka$ or $\arka$,
 and they are therefore meaningful as related-key attacks. They simply emulate the attack that uses both
 classes simultaneously by taking advantage of the fact that the usage of key material is very simple in
 Even-Mansour.
@@ -204,7 +205,7 @@ random keys), the rest of the key bits can be tested one by one.
 
 We conclude this short section by showing why the test of line~5 is successful when $k + \Delta_i = k \oplus \Delta_i$,
 but refer to Cogliati and Seurin for a complete description of their distinguisher, including the general case of distinct
-permutations and keys linearly derived from a master key (adapting the general case to our modified setting only requires small modifications which are left as an exercise to the reader).
+permutations and keys linearly derived from a master key.
 
 For the sake of clarity, we write $k \oplus \Delta_i$ for $k + \Delta_i$, as these values are equal by hypothesis. 
 By definition,
@@ -260,13 +261,13 @@ which is precisely what we describe now for the latter.
 Because our attack solely relies on the Even-Mansour structure of the cipher, we refer the interested reader to the
 submission document of \proest for the definition of its permutation.
 The same goes for the OTR mode~\cite{M14}, as we only need to focus on a small part to describe the attack.
-Consequently, we just describe how the encryption of the first block of plaintext is performed in \proestotr\footnote{This is not necessarily the
-same as encrypting the first block in every instantiations of OTR, as there is some flexibility in the definition of the mode.}.
+Consequently, we just describe how the encryption of the first block of plaintext is performed in \proestotr. Note that this is not necessarily the
+same as encrypting the first block in every instantiations of OTR, as there is some flexibility in the definition of the mode.
 
 \medskip
 
 The mode of operation OTR is nonce-based; it takes as input a key $k$, a nonce $n$, a message $m$,
-(possibly empty) associated data $a$, and produces a ciphertext $c$ corresponding
+possibly empty associated data $a$, and produces a ciphertext $c$ corresponding
 to the encryption of the message with $k$, and a tag $t$ authenticating $m$ and
 $a$ together with the key $k$. It is important for the security of the mode to ensure
 that one cannot encrypt twice using the same nonce. However, there are no
@@ -277,7 +278,7 @@ The encryption of the first block of ciphertext $c_1$ by \proestotr is defined a
 $\fun(k, n, m_1, m_2)$
 of $k$, $n$, and the first two blocks of plaintext $m_1$ and $m_2$:
 let $\ell := \E(k, n || 10^*)$ be the encryption of the padded nonce and
-$\ell' := \permi(\ell)$, with $\permi$ a linear permutation (the multiplication by $4$ in some finite field),
+$\ell' := \permi(\ell)$, with $\permi$ a linear permutation, in this case the multiplication by $4$ in some finite field,
 then $c_1$ is simply equal to $\E(k, \ell' \oplus m_1) \oplus m_2$. We show this schematically along with the encryption
 of the second block in \autoref{fig:otr}.
 Let us now apply the attack from \autoref{sec:gen}.
@@ -378,7 +379,7 @@ We illustrate the propagation of differences in the computation of $\ell'$ and $
 \end{figure}
 
 Yet this does not allow to recover the whole key because the nonce in \proestotr is restricted to a length
-half of the width of the block cipher $\E$ (or equivalently of the underlying \proest permutation),
+half of the width of the block cipher $\E$, or equivalently of the underlying \proest permutation,
 \ie $\frac{\kappa}{2}$. It is then possible to recover only
 half of the bits of $k$ using this procedure, as one cannot introduce appropriate differences in
 the computation of $\ell$ for the other half. The targeted security of the
@@ -401,21 +402,21 @@ bits to our advantage, and by slightly adapting the procedure of the first step,
 of the least significant half of the key with no more effort than for the most significant half.
 
 Let us first show how we can recover the most significant bit of the least significant half of
-the key $k[\msbtwo]$ (\ie the first bit for which we cannot use the previous method)
+the key $k[\msbtwo]$, \ie the first bit for which we cannot use the previous method,
 after a single encryption by $\E$. 
 %For the sake of simplicity, we assume for now that
 %unlike in \proestem the two keys of $\E$ are independent, and we omit to write the second (outer) key in the queries to $\E$.
 
-We note $k^\MSB$ the (known) most significant half of the key $k$.
+We note $k^\MSB$ the known most significant half of the key $k$.
 To mount the attack, one queries $\E(k - k^\MSB + \Delta_\msbtwo, p \oplus \Delta_{\msbtwoone})$ and
 $\E(k - k^\MSB - \Delta_\msbtwo, p)$. We can see that the inputs to $\Perm$ in these two cases are equal
 iff $k[\msbtwo] = 1$. Indeed, in that case,
 the carry in the addition $(k - k^\MSB) + \Delta_\msbtwo$ propagates by exactly one position and is ``cancelled'' by
 the difference in $p$, and there is no carry propagation in $(k - k^\MSB) - \Delta_\msbtwo$.
-The result of the two queries are therefore equal to
-$\mathfrak{C} \oplus (k - k^\MSB + \Delta_\msbtwo) = \mathfrak{C} \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo \oplus \Delta_\msbtwoone)$ and
-$\mathfrak{C} \oplus (k - k^\MSB - \Delta_\msbtwo) = \mathfrak{C} \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo)$
-with $\mathfrak{C} \defas \Perm(p \oplus (k - k^\MSB - \Delta_\msbtwo))$.
+Set $C \defas \Perm(p \oplus (k - k^\MSB - \Delta_\msbtwo))$, then
+the result of the two queries are equal to
+$C \oplus (k - k^\MSB + \Delta_\msbtwo) = C \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo \oplus \Delta_\msbtwoone)$ and
+$C \oplus (k - k^\MSB - \Delta_\msbtwo) = C \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo)$
 Consequently, the XOR difference between the two results is known and equal to $\Delta_\msbtwoone$.
 If on the other hand
 $k[\msbtwo] = 0$, the carry in $((k - k^\MSB) - \Delta_\msbtwo)$ propagates all the way to the most significant bit of $k$, whereas only
@@ -436,14 +437,6 @@ the difference between the results of these two queries when $k[\msbtwo - i] = 1
 to $\Delta_\msbtwoone$. 
 
 
-%We now show that the simplifying assumption that the two keys of $\E$ are independent is not necessary and that the attack
-%still works when they are equal, as is the case for \proestem.
-%In the event of the bit $k[\msbtwo - i]$
-%being one, the (identical) results of the queries are equal to encrypting $p$ under $k$ with all its bits of position higher
-%than $\msbtwo - i$ set to zero. This shows why even when the outer key is chosen equal to the inner key, we can
-%deduce the difference (modular as well as XOR) between the two results, and thence are still able to recover the value of
-%this particular key bit; this difference is in fact independent of $i$ and equal to $\Delta_{\msbtwoone}$.
-
 We conclude by showing how to apply this procedure to \proestotr. For the sake of readability, let us denote
 by $\Delta_i^+$ and $\Delta_i^-$ the complete modular differences used to recover one less significant bit $k[i]$.
 We then simply perform the two queries $\fun(k + \Delta_i^+, n \oplus \Delta_{\msbtwoone}, m_1 \oplus \Delta_{\msbtwoone}, m_2)$
@@ -451,10 +444,10 @@ and $\fun(k + \Delta_i^-, n, m_1 \oplus \permi(\Delta_{\msbtwoone}), m_2)$, whic
 with overwhelming probability.
 
 All in all, one can retrieve the whole key of size
-$\kappa$ using only $2\kappa$ chosen-nonce related-key encryption requests (with $\kappa + \kappa/2 + 1$ different keys), ignoring
-everything in the output (including the tag) apart from the value of the first block
+$\kappa$ using only $2\kappa$ chosen-nonce related-key encryption requests with $\kappa + \kappa/2 + 1$ different keys, ignoring
+everything in the output apart from the value of the first block
 of ciphertext. We give the full attack in \autoref{alg:kr}. Note that it makes use
-of a procedure \textsc{Refresh} which picks fresh values for two message words and (most importantly)
+of a procedure \textsc{Refresh} which picks fresh values for two message words and most importantly
 for the nonce. Because
 the attack is very fast, it can easily be tested. We give an implementation
 for a 64-bit toy cipher in \autoref{sec:toy}.
@@ -462,7 +455,7 @@ for a 64-bit toy cipher in \autoref{sec:toy}.
 \begin{algorithm}[h]
 \LinesNumbered
 \KwIn{ Oracle access to $\fun(k, \cdot, \cdot, \cdot)$ and $\fun(\arka(k), \cdot, \cdot, \cdot)$
-for a fixed (unknown) key $k$ of even length $\kappa$}
+for a fixed unknown key $k$ of even length $\kappa$}
 \KwOut{ Two candidates for the key $k$ }
 
 $k'$ := $0^\kappa$\\
@@ -505,8 +498,8 @@ $k''[\kappa - 1]$ := 1\\
 
 \paragraph{\emph{\textsc{Remark.}}} If the padding of the nonce in \proestotr were done on the most significant bits, no attack similar
 to Step~2 could recover
-the corresponding key bits: the modular addition is a triangular function (meaning that the result of $a + b$ on a bit $i$ only
-depends on the value of bits of position less than $i$ in $a$ and $b$), and therefore no XOR in the nonce in the less
+the corresponding key bits: the modular addition is a triangular function, meaning that the result of $a + b$ on a bit $i$ only
+depends on the value of bits of position less than $i$ in $a$ and $b$, and therefore no XOR in the nonce in the less
 significant bits could control modular differences introduced in the padding in the more significant bits. An attack in that case would thus most likely
 be applicable to general ciphers when using only the $\arka$ class, and it is proven that no such attack is efficient.
 However, one could always imagine using a related-key class using an addition operation reading the bits in reverse. While
@@ -538,25 +531,20 @@ uses a one-round Even-Mansour block cipher as one of its components. The attack 
 case, though, because the masking key used in the Even-Mansour cipher is derived from the master key
 in a highly non-linear way. In fact, Mennink recently proved that both ciphers are resistant
 to related-key attacks~\cite{DBLP:conf/crypto/Mennink16}.
-%the construction used in \minalpher
-%may actually benefit from the security proof of Cogliati and Seurin\footnote{Their
-%proof requires two distinct non-linear \emph{permutations}, whereas \minalpher uses the same non-linear \emph{function} to
-%derive both keys. We did not investigate the impact of these differences, but it is reasonable to expect a good security
-%for this construction.}.
 Finally, leaving aside authentication and
 going back to traditional block ciphers, we could consider designs such as LED \cite{LED}. The attack
 also fails in that case, however, because the cipher uses an iterated construction with at least 8 rounds and
-only one (or two) keys.
+only one or two keys.
 
 This lack of other results is not very surprising, as we only improve existing distinguishing
 attacks, and this improvement cannot be used without a distinguisher as its basis.
 Therefore, any primitive for which resistance to related-key attacks is important should already be resistant
 to the distinguishing attacks and thus to ours. Yet it would be reasonable to allow the presence
 of a simple related-key distinguisher when designing a primitive, as this is a very weak type of
-attack (in fact, this is for instance the approach taken by PRINCE, among others~\cite{PRINCE}, which admits
-a trivial distinguisher due to its \textsf{FX} construction).
+attack; in fact, this is for instance the approach taken by PRINCE, among others~\cite{PRINCE}, which admits
+a trivial distinguisher due to its \textsf{FX} construction.
 What we have shown is that one must be
-careful when contemplating such a decision for \EM (and \textsf{FX} constructions, to some extent), as in that case it is actually
+careful when contemplating such a decision for \EM, and \textsf{FX} constructions, to some extent, as in that case it is actually
 equivalent to allowing key recovery, the most powerful of all attacks.
 
 \setcounter{section}{0}
@@ -569,7 +557,7 @@ We give the source of a C program that recovers a 64-bit key from a design simil
 the permutation has been replaced by a small ARX, for compactness. For the sake of simplicity,
 we do not ensure that the nonce does not repeat in the queries.
 
-\begin{minted}[breaklines]{c}
+\begin{minted}[breaklines,tabsize=2]{c}
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>

@@ -1,4 +1,4 @@
-\section{Diffusion matrices from algebraic-geometry codes}
+\section{Diffusion matrices from algebraic geometry codes}
 \label{matt}
 
 We now discuss how to design diffusion matrices based on the code from \autoref{ex:genus2} of \autoref{sec:ag}
@@ -11,8 +11,8 @@ form, so it is clear that the initial choice of the basis for $\funcspace$ prior
 However, changing the order of the elements of the evaluation domain does result in different matrices.
 
 The problem for the rest of the section is thus to find good orderings $\points$,
-that result in matrices with a low cost, \ie efficient \emph{encoders}\footnote{We call \emph{encoder} an implementation of a generator matrix.}.
-For simplicity, we write $\cagh$ to denote any code obtained from \autoref{ex:genus2} (thus with the precise choice of the evaluation domain $\points$ left unspecified).
+that result in matrices with a low cost, \ie efficient \emph{encoders}, that is implementations of a generator matrix.
+For simplicity, we write $\cagh$ to denote any code obtained from \autoref{ex:genus2}, with the precise choice of the evaluation domain thus $\points$ left unspecified.
 
 
 \subsection{Compact encoders using code automorphisms}
@@ -33,7 +33,7 @@ is to cyclically permute its coordinates locally, along each orbit.
 
 To see that this can be useful, assume that there is an automorphism $\pi$ with two orbits $O_0$ and $O_1$ of size $n/2$ each. Then, if $\mat \defas (I_{n/2}~A)$ is
 built from $\points \defas (O_0, O_1)$, each row of $\mat$ can be obtained by the repeated action of $\pi$ on, say, $\mat_0$, and it follows
-that $A$ is circulant (and therefore has a low cost w.r.t. \autoref{alg:shuffle}). More generally, if an automorphism can be found such that it has orbits of sizes summing up to
+that $A$ is circulant and therefore has a low cost w.r.t. \autoref{alg:shuffle}. More generally, if an automorphism can be found such that it has orbits of sizes summing up to
 $n/2$, and if the two partitions defined by the orbits have maximal rank, then the corresponding matrix $\mat$ can be deduced from a small set of rows. We give two toy examples with Reed-Solomon codes, which can easily be verified.
 
 \paragraph{$\pi:~\Fst \rightarrow \Fst,~x \mapsto 8 x$.} This automorphism has $O_0\defas (1, 8, 12, 10, 15)$
@@ -53,7 +53,7 @@ $\begin{pmatrix}
 
 \subsubsection{Application to $\cagh$.}
 Automorphisms of $\cagh$ may be quite harder to find than ones of RS codes. They can however
-be found within automorphisms of the curve $\curve$ on which it is based~\cite{stichtenoth} (or rather, its function field). This is quite intuitive, as these will precisely permute
+be found within automorphisms of the curve $\curve$ on which it is based~\cite{stichtenoth}, or rather its function field. This is quite intuitive, as these will precisely permute
 places of the curve, which are the elements on which the code is defined. We mostly need to be careful to only use automorphisms that fix the places of the divisor
 $D$ used to define $\funcspace$. In our case, this means fixing the place at infinity.
 
@@ -89,11 +89,9 @@ Type 5 & 0 & 1 & 0 & 0 & 3\\
 \end{table}
 \noindent
 From these automorphisms, it is possible to define partitions of $\points$ in two sets of size sixteen which are union of orbits. We may therefore
-hope to obtain systematic matrices of the type we are looking for. Unfortunately, after an extensive search\footnote{Both on $\cagh$ and
-on the smaller elliptic code of \autoref{ex:genus1}, using its own automorphisms.}, it appears that ordering $\points$ in this fashion \emph{never} results in
+hope to obtain systematic matrices of the type we are looking for. Unfortunately, after an extensive search both on $\cagh$ and
+on the smaller elliptic code of \autoref{ex:genus1} using its own automorphisms, it appears that ordering $\points$ in this fashion \emph{never} results in
 obtaining a systematic matrix, \ie computing the row-reduced of the initial matrix never results in a left square submatrix of full rank.
-
-%TODO try with non-circulant thingies (i.e. arbitrary permutations of the orbits), see what it does.
 
 \subsubsection{Extending the automorphisms with the Frobenius mapping.} We extend the previous automorphisms with the
 Frobenius mapping $\frob:~\Fst^2 \rightarrow \Fst^2,\linebreak(x, y) \mapsto (x^2,y^2)$; this adds another 160 ``automorphisms'' for $\curve$. However, these will not anymore be
@@ -140,4 +138,4 @@ matrices of low cost can be found even after a moderate amount of computation, a
 cost 43, though none of a lower cost. We present in \autoref{tbl:randomsearch} from \autoref{app:stats} the number of matrices of cost strictly less than 60
 that we found during a search of $2^{38}$ encoders.
 We give an example of a matrix of cost 43 in \autoref{fig:matrand}, which is only about a factor 1.7 away from the estimate of the minimum cost of a circulant matrix
-given in \autoref{shuff}. We observe that the transpose of this matrix (its inverse) also has a cost of 43.
+given in \autoref{shuff}. We observe that the transpose of this matrix, \ie its inverse, also has a cost of 43.

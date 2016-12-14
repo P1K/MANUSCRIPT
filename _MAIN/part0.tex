@@ -4,9 +4,9 @@
 
 \addstarredpart{Part Zero}
 
-\cleardoublepage
-\chapter*{Table des matières}
-\parttoc
+%\cleardoublepage
+%\chapter*{Table des matières}
+%\parttoc
 
 
 \chapter[Introduction]{Introduction}
@@ -205,7 +205,7 @@ un autre type de distingueur est basé sur une représentation \emph{algébrique
 Il est toujours possible de redéfinir un chiffre 
 $\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ comme un ensemble ordonné de fonctions $\F_i : \{0,1\}^{\kappa+n} \rightarrow \{0,1\}$ projetant
 $\E$ sur son $i^\text{ème}$ bit de sortie~: $\E \equiv (\F_0, \ldots, \F_{n-1})$. Les $\F_i$s peuvent être vues comme des fonctions booléennes
-$\mathbf{F}^{2^{\kappa + n}} \rightarrow \Ftwo$ qui sont elles mêmes en bijection avec les éléments de $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
+$\mathbf{F}_{2}^{\kappa + n} \rightarrow \Ftwo$ qui sont elles mêmes en bijection avec les éléments de $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
 c'est à dire des polynômes en $\kappa + n$ variables sur $\Ftwo$. Le polynôme correspondant à une fonction booléenne est appelé sa \emph{forme algébrique normale}
 (ANF)~;
 l'ANF de $\E$ est l'ensemble ordonné des ANFs de ses projections.
@@ -902,7 +902,7 @@ de la cryptographie embarquée.
 
 \subsection{\pc et \cdb : deux primitives prouvablement incompressibles \cite{puppycipher}}
 
-Nous décrivons ici des travaux communs avec Pierre-Alain Fouque, Paul Kirchner et Brice Minaud, acceptés à ASIACRYPT 2016.
+Nous décrivons ici des travaux communs avec Pierre-Alain Fouque, Paul Kirchner et Brice Minaud, publiés à ASIACRYPT 2016.
 
 \medskip
 
@@ -981,22 +981,6 @@ techniques avec un certain succès sur les fonctions de la famille \blake, amél
 recherche exhaustive. 
 
 
-\section[Divertissements]{Silly talks}
-
-J'ai la conviction que l'humour est tout aussi important en sciences que de façon générale. À ce titre, cette description de mes travaux inclus également la liste des présentations amusantes
-que j'ai eu l'occasion de faire durant ma thèse. Une des plus notables a notamment consisté à proposer un nouveau drapeau pour l'\emph{International Association for Cryptologic
-Research} (IACR), cf. \autoref{fig:iacr_flag}. 
-
-\begin{figure}[!htb]
-\begin{center}
-\begin{turn}{270}
-\includegraphics[scale=0.8]{iacr_coloured.png}
-\end{turn}
-\end{center}
-\caption{A new flag for the IACR.\label{fig:iacr_flag}}
-\end{figure}
-
-
 \newcommand{\mybibtitle}[1]{\textsf{#1.}\hfil}
 \newcommand{\mybibauth}[1]{#1.}
 \newcommand{\mybibconf}[1]{\hspace*{\stretch{1}}\mbox{(#1)}}
@@ -1066,39 +1050,5 @@ Research} (IACR), cf. \autoref{fig:iacr_flag}.
   \mybibtitle{The \textsc{Littlun} S-box and the \textsc{Fly} block cipher}
   \mybibauth{P.~Karpman, B.~Grégoire}\\
 \end{tabularx}
-
-\section[Mes publications humoristiques]{My silly talks}
-
-\subsection{Article de journal}
-
-\noindent
-\begin{tabularx}{\linewidth}{zX}
-  & \mybibtitle{A new flag for the IACR}
-  \mybibauth{P.~Karpman}
-  \mybibconf{En soumission, invité au J. Craptology}\\
-\end{tabularx}
-
-\subsection{Présentations sans actes}
-
-\noindent
-\begin{tabularx}{\linewidth}{zX}
-  &
-  \mybibtitle{The Coffee Block Cipher Family --- A Snake Oil Candidate}
-  \mybibauth{P.~Karpman}
-  \mybibconf{ASIACRYPT 2014 (Rump session)}\\[2ex]
-  &
-  \mybibtitle{The \emph{Real} SHA-2,3,$\ldots$}
-  \mybibauth{P.~Karpman}
-  \mybibconf{CRYPTO 2015 (Rump session)}\\[2ex]
-  &
-  \mybibtitle{Breaking D.L. at Mont Saint-Michel}
-  \mybibauth{P.~Karpman, B.~Minaud, A.~Wallet}
-  \mybibconf{CHES 2015 (Rump session)}\\[2ex]
-  &
-  \mybibtitle{A new flag for the IACR}
-  \mybibauth{P.~Karpman}
-  \mybibconf{ASIACRYPT 2015 (Rump session)}\\
-\end{tabularx}
-
 
 \renewcommand\thesection{\arabic{section}}

@@ -1,37 +1,44 @@
-\part[Nouvelles constructions linéaires et non-linéaires pour chiffres par bloc]
-	{New linear and non-linear mappings for block ciphers}
+\part[Nouvelles attaques et constructions pour chiffres par bloc]
+	{New attacks and elements of design for block ciphers}
 \label{part:constructions}
 
 \section*{Overview}
 
 A widespread design type for block ciphers is the \emph{SPN} structure. Initially, this stood for \emph{substitution-permutation network},
-with ``permutation'' referring to ``bit'' permutations; in its current usage, this term generally denotes arbitrary (\ftwo-)linear
+with ``permutation'' referring to ``bit'' permutations; in its current usage, this term generally denotes arbitrary \ftwo-linear
 mappings.
 
 The rationale behind the SPN structure is that one may obtain a good block cipher round function by alternating a substitution
 mapping made of the parallel application of \emph{S-boxes} (short for ``substitution boxes'') and a linear mapping. The role
 of both mappings are complementary, and each is also usually selected to interact well with the other. While the S-boxes
-are expected to break any exploitable structure (linear and algebraic, in particular) at the local level, the permutation
+are expected to break any exploitable linear and algebraic structure at the local level, the permutation
 should spread the effects of the S-boxes at the global level, in particular to ensure that no local change remains so through
 the entire cipher execution.
 
 An advantage of SPNs over some other design structures is that they lend themselves relatively well to analysis, in particular w.r.t.
 statistical attacks; this is exemplified by the \emph{wide-trail strategy} used in the design of the \aes. Another notable point
 about SPNs is that they offer many possible tradeoffs in their instantiations. One can choose between large and small S-boxes,
-large S-boxes are comparatively stronger than small ones, but also more expensive; best-performing S-boxes or cheaper
-``average'' ones; bit permutations, particularly efficient in hardware, or (non-permutation) matrices; ``optimally diffusing'' (MDS)
+large S-boxes being comparatively stronger than small ones but also more expensive; best-performing S-boxes or cheaper
+``average'' ones; bit permutations, particularly efficient in hardware, or non-permutation matrices; ``optimally diffusing'' (MDS)
 matrices or not; state-wide matrices or not, etc.; the design space of SPNs is thus quite large.
 
 \bigskip
 
 In the second part of this thesis, we study two mappings intended to be used as part of an SPN round function, the second
-of them being also instantiated in a complete block cipher design.
+of them being also instantiated in a complete block cipher design. On the cryptanalysis side, we start by presenting a simple attack of the
+\proestotr authenticated-encryption scheme, using a related-key model.
+
+In \autoref{cha:emrka}, we show how the simple related-key distinguisher on Even-Mansour constructions can be converted into a
+key-recovery attack by considering related-key introduced with a modular addition rather than an XOR. Although this observation
+is quite elementary, it finds a practical application in a very efficient related-key attack on \proestotr, which is an instantiation
+of the OTR authenticated-encryption mode of operation with the \proest permutation.
+
 
 In \autoref{cha:difmat}, we present large linear mappings with very good diffusion and efficient software implementations,
-with respect to their sizes. They are derived from linear codes over a small field (typically $\Fst$) with a high dimension
-(typically 16) and a high minimum distance. This results in
+with respect to their sizes. They are derived from linear codes over a small field, typically $\Fst$, with a high dimension,
+typically 16, and a high minimum distance. This results in
 diffusion matrices with equally high dimension and a large branch number.
-Because we aim for parameters for which no MDS code is known to exist, we propose to use more flexible \emph{algebraic-geometry} codes.
+Because we aim for parameters for which no MDS code is known to exist, we propose to use more flexible \emph{algebraic geometry} codes.
 We present two simple yet efficient algorithms for the software implementation of matrix-vector multiplication in this context, and derive
 conditions on the generator matrices of the codes to yield efficient encoders. We then specify an appropriate code and use its automorphisms as well as random sampling
 to find good such matrices.
@@ -53,9 +60,13 @@ terms of a single 4-bit S-box.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\chapter[Attaques en clefs liées améliorées sur les schémas Even-Mansour]{Improved related-key attacks on Even-Mansour}
+\label{cha:emrka}
 
-%\chapter[Matrices de diffusions issues de codes géométriques]{Diffusion matrices from algebraic-geometry codes with efficent vector implementations}
-\chapter[Matrices de diffusions issues de codes géométriques]{Efficient diffusion matrices from algebraic-geometry codes}
+\input{../I_PROLEGO/emrka.tex}
+
+
+\chapter[Matrices de diffusions issues de codes géométriques]{Efficient diffusion matrices from algebraic geometry codes}
 \label{cha:difmat}
 
 \input{../II_LOTF/matrices/introduction}
