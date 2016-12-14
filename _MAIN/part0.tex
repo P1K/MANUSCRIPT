@@ -747,24 +747,24 @@ Les travaux réalisés pendant cette thèse appartiennent au domaine de la crypt
 \medskip
 
 Une importante partie de cette thèse et de ce manuscrit est dédiée à des attaques sur la fonction de hachage \shaone. Notre objectif principal concernant cette fonction a été d'obtenir
-une attaque «\,explicite\,» (dans le sens où l'attaque peut être exécutée jusqu'à son terme) sur une version complète de \shaone,
+une attaque «\,explicite\,», dans le sens où l'attaque peut être exécutée jusqu'à son terme, sur une version \emph{complète} de \shaone, ceci
 contrairement aux attaques explicites précédentes
 qui ont toujours ciblé des versions réduites~; le type d'attaque retenu a été celui des attaques en collision, qui sont à ce jour les plus efficaces sur \shaone.
 Pour atteindre notre objectif, néanmoins, nous nous sommes placés dans un modèle à initialisation libre, légèrement plus favorable à l'attaquant.
 
 Nous avons aussi développé une seconde attaque sur \shaone visant cette fois à calculer efficacement des préimages. Ces résultats restent cependant théoriques, dans le sens où le coût
-de l'attaque est trop important pour mener à un calcul explicite comme dans le premier cas. De plus, aucune attaque (même théorique) n'est connue pour la fonction complète, et notre
+de l'attaque est trop important pour mener à un calcul explicite comme dans le premier cas. De plus, aucune attaque, même théorique,  n'est connue pour la fonction complète, et notre
 objectif a précisément été d'augmenter le nombre de tours de la fonction pour lequel une attaque peut être menée.
 
 \medskip
 
 D'autres travaux menés pendant cette thèse ont consisté en des attaques sur des algorithmes différents de \shaone. Le premier de ces autres résultats a porté sur la famille de primitive
 \asasa, qui est faite de plusieurs instances à clef secrète et à clef publique. Nous avons développé une idée générale d'attaque exploitant certaines propriétés algébriques de la
-structure utilisée dans \asasa, ce qui nous a permis d'attaquer toutes les instances proposées (à l'exception d'une, qui avait également été attaquée avant nos travaux, en utilisant
-d'autres méthodes).
+structure utilisée dans \asasa, ce qui nous a permis d'attaquer toutes les instances proposées, à l'exception d'une, qui avait également été attaquée avant nos travaux en utilisant
+d'autres méthodes.
 
 Un second algorithme que nous avons attaqué en plus de \shaone est le schéma de chiffrement authentifié \proestotr, pour lequel nous avons développé une attaque en clefs liées
-extrêmement efficace. L'idée utilisée dans l'attaque est très simple, et permet génériquement d'améliorer (en un certain sens) les attaques en clefs liées existantes sur les constructions
+extrêmement efficace. L'idée utilisée dans l'attaque est très simple, et permet génériquement d'améliorer en un certain sens les attaques en clefs liées existantes sur les constructions
 de type Even-Mansour.
 
 \medskip
@@ -789,9 +789,9 @@ Nous décrivons ici des travaux réalisés avec Brice Minaud, Pierre-Alain Fouqu
 \medskip
 
 À ASIACRYPT~2014, Biryukov \etal ont proposé la structure \asasa, dans le but de réaliser un certain nombre de primitives à clef secrète et à clef publique~\cite{DBLP:conf/asiacrypt/BiryukovBK14}.
-La structure commune à ces primitives consiste à alterner un petit nombre de fois des applications linéaires (ou plus généralement affines) $A$ avec des applications non-linéaires $S$, une structure
+La structure commune à ces primitives consiste à alterner un petit nombre de fois des applications linéaires, ou plus généralement affines, $A$ avec des applications non-linéaires $S$, une structure
 complète pouvant être notée
-comme $A'' \circ S' \circ A' \circ S \circ A$. De façon relativement inhabituelle, le secret paramétrant ces structures n'est pas injecté séparément (par exemple avec un XOR), mais ce sont
+comme $A'' \circ S' \circ A' \circ S \circ A$. De façon relativement inhabituelle, le secret paramétrant ces structures n'est pas injecté séparément, mais ce sont
 les applications $A$, $S$, etc. elles mêmes qui sont tenues secrètes.
 En pratique, celles-ci peuvent être générées depuis un générateur pseudo-aléatoire cryptographique paramétré par la «\,vraie\,»
 clef). Par exemple, les instances \asasa de chiffrement à clef secrète proposées par Biryukov \etal sont constituées de
@@ -801,10 +801,9 @@ D'un point de vue pratique, de telles constructions peuvent être intéressantes
 aussi être vues comme des généralisations de structures plus habituelles telles que les réseaux de substitution-permutation (SPNs)~; une étude de la structure \asasa peut ainsi par exemple fournir une borne inférieure sur le nombre de tours
 de n'importe quel SPN, en dessous de laquelle celui-ci pourrait être attaqué «\,génériquement\,».
 
-Dans nos travaux, nous avons montré que les constructions basées sur \asasa présentent des faiblesses qui permettent de retrouver efficacement les différentes applications $A$, $S$, etc.
-(à équivalence prête). Ceci est le cas pour l'instance «\,chiffrement par bloc\,» esquissée ci-dessus, mais aussi pour une instance définissant un schéma de cryptographie «\,multivariée\,»
+Dans nos travaux, nous avons montré que les constructions basées sur \asasa présentent des faiblesses qui permettent de retrouver efficacement les différentes applications $A$, $S$, etc., à équivalence prête. Ceci est le cas pour l'instance «\,chiffrement par bloc\,» esquissée ci-dessus, mais aussi pour une instance définissant un schéma de cryptographie «\,multivariée\,»
 à clef publique, ainsi que des variantes à taille réduite de l'instance chiffrement par bloc utilisées pour définir des algorithmes en boîte blanche.
-Il est à noter qu'un quatrième type d'instance de type clef publique (que nous n'attaquons pas) avait aussi été proposé par Biryukov \etal. Ces instances ont cependant aussi été attaquées par
+Il est à noter qu'un quatrième type d'instance de type clef publique, que nous n'attaquons pas, avait aussi été proposé par Biryukov \etal. Ces instances ont cependant aussi été attaquées par
 Gilbert \etal à CRYPTO~2015~\cite{DBLP:conf/crypto/GilbertPT15}.
  
 La base de nos attaques consiste à exploiter des faiblesses du degré algébrique en sortie des composants de la structure \asasa. Nous détaillons brièvement cette idée dans le cas de l'instance
@@ -834,7 +833,7 @@ Si on considère un modèle d'attaque \emph{à clefs liées}, la construction Ev
 $\oracle$ et $\oracle'$, l'un avec la clef $(k_1,k_0)$ et l'autre avec la clef $(k_1,k_0\oplus\delta)$ avec $\delta$ une constante non nulle connue de l'attaquant,
 il est clair que celui-ci peut facilement distinguer $\E$ d'une construction aléatoire en vérifiant que $\oracle(p) = \oracle'(p \oplus \delta)$.
 Nous avons alors fait l'observation élémentaire que ce distingueur peut être rendu conditionnel à la valeur des bits de la clef en utilisant des clefs liées par l'addition
-modulaire plutôt que le XOR. Nous présentons cette idée dans le cas simple (mais répandu) où $k \defas k_0 = k_1$. Soit $\oracle(\cdot) \defas \E(k, \cdot)$, $\oracle_i(\cdot)
+modulaire plutôt que le XOR. Nous présentons cette idée dans le cas simple mais répandu où $k \defas k_0 = k_1$. Soit $\oracle(\cdot) \defas \E(k, \cdot)$, $\oracle_i(\cdot)
 \defas \E(k \boxplus \Delta_i,\cdot)$ avec $\Delta_i = 2^i$ (représenté par une chaîne binaire de $n$ bits valant tous zéro sauf celui en position $i$), on peut alors
 apprendre la valeur du $i^\text{ème}$ bit de $k$ en comparant $x \defas \oracle(p)$ et $y \defas \oracle_i(p \oplus \Delta_i)$: si celui-ci vaut zéro, alors la valeur
 en entrée de la permutation $\Perm$ pour $\oracle_i$ est la même que pour $\oracle$, et on a $y \boxminus x = \Delta_i$~; s'il vaut un, les entrées de $\Perm$ sont différentes
@@ -857,13 +856,13 @@ Nous décrivons ici des travaux effectués avec Daniel Augot et Pierre-Alain Fou
 Une structure classique utilisée dans la conception de chiffres par bloc est celle des réseaux de substitution-permutation (SPNs),
 qui alternent applications linéaires et non-linéaires, ces dernières étant
 généralement définies comme l'application parallèle de boîtes S de petites tailles. Les applications linéaires utilisées peuvent diversement consister en des permutations binaires, des matrices sur
-un corps fini (généralement $\Ftwo$, $\Fst$ ou $\Fth$), ou une composition des deux\footnote{Bien sûr, toute application linéaire peut être représentée par une matrice sur une structure bien choisie. Ce n'est
-cependant pas toujours sa représentation la plus naturelle.}.
+un corps fini (généralement $\Ftwo$, $\Fst$ ou $\Fth$), ou une composition des deux. Bien sûr, toute application linéaire peut être représentée par une matrice sur une structure bien choisie. Ce n'est
+cependant pas toujours sa représentation la plus naturelle.
 
 Dans ces travaux, nous nous sommes intéressés à la conception de matrices denses
 de grande dimension pouvant être utilisées pour assurer toute la diffusion dans un SPN, c'est à dire qu'elles agissent sur l'ensemble du bloc. Concrètement, les matrices que nous
 avons étudiées ont une dimension de 16
-et permettent de définir des algorithmes avec des blocs de 64 bits (quand définies sur $\Fst$) ou 128 bits (quand définies sur $\Fth$).
+et permettent de définir des algorithmes avec des blocs de 64 bits, quand définies sur $\Fst$, ou 128 bits, quand définies sur $\Fth$.
 Utiliser une matrice de grande dimension permet d'assurer une diffusion très rapide, à condition qu'elle possède un \emph{branch number} (BN) élevé~; cette notion correspond à la
 distance minimale d'un code généré par la matrice\footnote{Telle qu'elle est définie ici, la matrice ne correspond en fait qu'à
 la partie de redondance d'une matrice génératrice sous forme systématique.}.
@@ -874,7 +873,7 @@ aucun code MDS de dimension 16 sur $\Fst$ n'est connu.
 Nos travaux ont donc particulièrement consisté à explorer l'utilisation de codes géométriques pour définir des matrices de diffusion
 de grande dimension sur de petits corps, et de BN en pratique seulement légèrement inférieur à celui d'une hypothétique matrice MDS de même taille.
 Un code géométrique est dans notre cas un code construit à partir d'une courbe algébrique, qui permet de définir à la fois un ensemble
-de points (ou plus précisément de places) et des espaces de fonctions associés à ses diviseurs~; on peut alors définir des codes
+de points, ou plus précisément de places, et des espaces de fonctions associés à ses diviseurs~; on peut alors définir des codes
 comme l'évaluation d'un espace de fonctions donné sur un sous-ensemble des points.
 En choisissant correctement la courbe et l'espace de fonctions, on peut par exemple construire une matrice de dimension 16 sur
 $\Fst$ de BN 15, soit deux de moins que la borne de Singleton. Cependant, implémenter efficacement la multiplication par une telle
@@ -907,21 +906,21 @@ Nous décrivons ici des travaux communs avec Pierre-Alain Fouque, Paul Kirchner 
 \medskip
 
 L'idée de la cryptographie en boîte blanche a été introduite par Chow \etal à SAC 2002~\cite{DBLP:conf/sacrypt/ChowEJO02},
-et correspond à l'objectif de fournir via un «\,compilateur boîte blanche\,» une implémentation complète d'un algorithme symétrique (par exemple \aes) déjà paramétré par
+et correspond à l'objectif de fournir via un «\,compilateur boîte blanche\,» une implémentation complète d'un algorithme symétrique, par exemple \aes, déjà paramétré par
 une clef, tout en rendant celle-ci difficile à extraire. La réalisation d'un tel objectif est complexe, et l'essentiel des propositions
-jusqu'à ce jour ont été cassées (voir par ex. \cite{HenriWB} pour une revue).
+jusqu'à ce jour ont été cassées, voir par ex. \cite{HenriWB} pour une revue.
 À SAC 2013, Delerablée \etal ont proposé plusieurs modèles plus ou moins exigeants
 permettant de formaliser les objectifs de sécurité d'implémentations boîte blanche~\cite{DBLP:conf/sacrypt/DelerableeLPR13}.
 Le modèle le plus atteignable correspond à une notion d'\emph{incompressibilité}~: face à une implémentation d'une certaine taille, un adversaire doit être incapable de fournir une implémentation
 significativement plus petite qui est fonctionellement équivalente avec très forte probabilité. Cet objectif est relativement facile à atteindre, mais ne satisfait pas nécessairement
-tous les emplois qu'on pourrait souhaiter faire de la cryptographie boîte blanche (qui restent au demeurant vagues). Certaines propositions récentes d'algorithmes en boîte blanche ciblent
-(des variantes proches de) ce modèle~: les instantiations boîte blanche de la construction ASASA de Biryukov \etal~\cite{DBLP:conf/asiacrypt/BiryukovBK14}
-(largement attaquées~\cite{DBLP:journals/iacr/DinurDKL15,DBLP:conf/asiacrypt/MinaudDFK15}) et la famille \spacehard de Bogdanov et Isobe~\cite{DBLP:conf/ccs/BogdanovI15}.
+tous les emplois qu'on pourrait souhaiter faire de la cryptographie boîte blanche, qui restent au demeurant vagues. Certaines propositions récentes d'algorithmes en boîte blanche ciblent
+(des variantes proches de) ce modèle~: les instantiations boîte blanche de la construction ASASA de Biryukov \etal~\cite{DBLP:conf/asiacrypt/BiryukovBK14},
+largement attaquées~\cite{DBLP:journals/iacr/DinurDKL15,DBLP:conf/asiacrypt/MinaudDFK15}, et la famille \spacehard de Bogdanov et Isobe~\cite{DBLP:conf/ccs/BogdanovI15}.
 
-Nos travaux ont consisté à raffiner le modèle d'incompressibilité de Delerablée \etal en définissant des notions d'incompressibilité faible et forte
-(la nuance  correspondant aux hypothèses faites sur les stratégies des adversaires), puis de proposer deux familles de constructions
+Nos travaux ont consisté à raffiner le modèle d'incompressibilité de Delerablée \etal en définissant des notions d'incompressibilité faible et forte,
+la nuance  correspondant aux hypothèses faites sur les stratégies des adversaires, puis de proposer deux familles de constructions
 prouvablement incompressibles par rapport à ces modèles. La première, \pc, est une famille de chiffres par bloc de tailles d'implémentation variables, prouvable dans le modèle
-faible. La seconde, \cdb, est une famille (également de taille variable) de fonctions
+faible. La seconde, \cdb, est une famille, également de taille variable, de fonctions
 pouvant être utilisées comme générateurs de clef, prouvable dans le modèle faible et dans le modèle fort. La base de nos algorithmes est semblable à celles des précédentes propositions de Biryukov \etal
 et Bogdanov \etal~: elle consiste à utiliser des tables de taille importante remplies de données pseudo-aléatoire et à forcer leur accès en des points a priori imprévisibles pour être capable de
 chiffrer un message aléatoire. L'incompressibilité vient du fait qu'un adversaire «\,oubliant\,» une partie significative des tables se trouverait forcé d'en deviner à nouveau une certaine partie
@@ -931,7 +930,7 @@ dotées de preuves d'incompressibilité, nos constructions sont relativement eff
 
 \section[Nouvelles attaques sur la fonction de hachage \shaone]{New attacks on \shaone}
 
-La fonction de hachage \shaone a été développée par la NSA en 1995~\cite{Nist-SHA1} (sur la base d'un algorithme datant de 1993~\cite{Nist-SHA0}), et a été jusqu'à 2002 l'unique standard du NIST pour
+La fonction de hachage \shaone a été développée par la NSA en 1995~\cite{Nist-SHA1}, sur la base d'un algorithme datant de 1993~\cite{Nist-SHA0}, et a été jusqu'à 2002 l'unique standard du NIST pour
 le hachage cryptographique. En tant que telle, elle fut largement déployée et consiste donc une cible de choix pour les cryptanalystes.
 
 \subsection{Collisions à initialisations libres pour \shaone \cite{DBLP:conf/crypto/KarpmanPS15,DBLP:conf/eurocrypt/StevensKP16}}
@@ -957,7 +956,7 @@ phases de la génération et de l'implémentation de l'attaque.
 Une autre part importante de ces travaux a consisté à implémenter efficacement l'ensemble de l'attaque, notamment en utilisant des cartes graphiques pour le calcul de la partie la plus coûteuse.
 Ceci a nécessité un certain soin lors du développement de l'attaque, entre autres choses pour que sa structure soit adaptée au modèle de calcul imposé par les cartes graphiques.
 
-Nos résultats ont consisté en une collision à initialisation libre pour 76 tours sur 80 de \shaone avec un coût d'environ $2^{50.25}$ appels à la fonction de compression (sur cartes graphiques),
+Nos résultats ont consisté en une collision à initialisation libre pour 76 tours sur 80 de \shaone avec un coût d'environ $2^{50.25}$ appels à la fonction de compression sur cartes graphiques,
 ainsi qu'en une attaque similaire sur la fonction complète pour un coût d'environ $2^{57.5}$. Dans le dernier cas, ceci correspond à environ dix jours de calcul sur soixante-quatre cartes
 graphiques récentes, ce qui est raisonnablement à la portée d'un adversaire moyen.
 
@@ -968,12 +967,12 @@ Nous concluons en décrivant des travaux menés avec Thomas Espitau et Pierre-Al
 
 \medskip
 
-Si la dernière décennie a permis de développer des attaques en collisions puissantes sur \shaone (bien que seulement à la limite supérieure de la faisabilité), nous ne connaissons toujours
+Si la dernière décennie a permis de développer des attaques en collisions puissantes sur \shaone, bien que seulement à la limite supérieure de la faisabilité, nous ne connaissons toujours
 pas d'attaque en préimage même complètement théorique sur la fonction complète.
 En 2012 Knellwolf et Khovratovich ont présenté à CRYPTO une vision différentielle des attaques en préimages utilisant les techniques de rencontre par le milieu~\cite{DBLP:conf/crypto/KnellwolfK12}.
 Ceci leur a permis à l'époque d'atteindre le plus grand nombre de tours attaqués pour \shaone, à 57 sur 80.
 Dans nos travaux, nous avons étendu cette approche différentielle par l'utilisation de différentielles d'ordre supérieur. Ceci permet de trouver de meilleures partitions pour une attaque par
-le milieu (dans le sens où elles couvrent plus de tours), au prix d'une phase de rencontre plus complexe (rendant la technique surtout utile pour des attaques de coût élevé). De cette façon,
+le milieu, dans le sens où elles couvrent plus de tours, au prix d'une phase de rencontre plus complexe, rendant la technique surtout utile pour des attaques de coût élevé. De cette façon,
 nous avons pu augmenter le nombre de tours attaqués de 5, atteignant 62 tours avec une attaque de très grosse complexité estimée à $2^{159.3}$.
 Nous avons aussi pu baisser la complexité des attaques à nombre
 de tours équivalents par rapport à Knellwolf et Khovratovich, attaquant 58 tours pour un coût de $2^{157.9}$ contre 57 tours à $2^{158.8}$. Enfin, nous avons appliqué les mêmes

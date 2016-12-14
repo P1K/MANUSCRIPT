@@ -291,7 +291,7 @@ In this case, we know by definition that the valuation $\ord_{P_\infty}$ is well
 Thus $\exists \alpha,\beta \in \mathbf{N}^*$ s.t. $(x/z)^\beta(y/z)^{-\alpha}$ is regular and non-zero at $P_\infty$. The smallest such $\alpha$
 and $\beta$ are the pole order of $x/z$ and $y/z$ respectively.
 
-We give two examples of a computation with this technique, corresponding to the two curves used in the next \autoref{sec:constr_ag}.
+We give two examples of a computation with this technique, corresponding to the first two curves presented in \autoref{sec:constr_ag}.
 
 \begin{example}[$x^2z + xz^2 = y^3+yz^2$]
 \label{ex:order_gen1}
@@ -329,7 +329,8 @@ Hence we indeed have $\ord_{P_\infty}(x/z) = 2$ and $\ord_{P_\infty}(y/z) = 5$.
 \subsection{Construction of AG codes}
 \label{sec:constr_ag}
 
-We are now ready to define the class of AG codes that we will use in the remainder of this work.
+We are now ready to define the family of AG codes that we will use in the remainder of this work. We refer
+to~\cite[Chapter 4]{tvn} for the description of other ways of defining codes from algebraic geometry.
 
 Let $\curve$ be a smooth projective curve defined by an equation in $\Fq$ such that the set of its rational places $\curve(\Fq)$ is non-empty.
 Let $D \in \cdiv(\curve)$ be a divisor on $\curve$ and $\points \defas (P_0, \ldots, P_{n-1}) \subset \curve(\Fq)$ be $n$ places not in the support of $D$.
@@ -342,7 +343,8 @@ One can see that this will always be the case as long as $\deg(D) < \deg(S)$.
 
 \medskip
 
-Assuming that we defined a code using this construction, one of our main concerns would be to determine its parameters $k$ and $d$, or at least to provide an estimate.
+Assuming that we defined a code using this construction, one of our main concerns would be to determine its parameters $k$ and $d$, or at least to provide an estimate
+for them.
 By definition of the minimal distance, $n - d$ is the maximal number of zeros that a function of $\rrs(D)$ can have
 over $\points$; we already showed that the latter is upper-bounded by $\deg(D)$, so we have $d \geq n - \deg(D)$. This lower-bound
 $n - \deg(D)$ for $d$ is the designed minimum distance $d^*$ for the code.
@@ -351,14 +353,24 @@ The dimension of the code is simply $\ell(D)$, which can be computed from the Ri
 $\curve$, we have $k = \ell(D) = \deg(D) + 1 - g$. We can then rephrase the lower-bound on $d$ in terms of $k$ as $d \geq n - k + 1 - g$, which is indeed
 what we promised at the beginning of the section.
 
+\medskip
+
+Deriving a lower bound on the parameters of an algebraic geometry code as we just did is quite straightforward, but the overall theory is much richer.
+A useful result in particular is that the dual of an AG code from the family we described
+is also an AG code whose parameters are related through the same equation $d \geq n - k + 1 - g$~\cite[Chapter 4]{tvn}.
+This is an interesting property in our context, as it means that diffusion matrices derived from AG codes have identical differential and linear branch
+numbers.
+
+
 \subsubsection{Examples}
 
-We give two concrete examples of AG codes, the second of which being the code used to define the diffusion matrices presented in this chapter.
+We give three concrete examples of AG codes, the second of which being the code used to define the diffusion matrices presented in this chapter.
+All of the examples are built from curves with a maximal number of $\Fst$-rational points given their respective genus.
 
 \begin{example}[An AG code from a curve of genus 1]
 \label{ex:genus1}
 Let $\curve$ be the plane projective curve of genus 1 of equation $x^2z + xz^2 = y^3 + yz^2$ defined over $\Fst$. It is smooth, in special position,
-with a unique point at infinity $P_\infty \defas [1:0:0]$, and has 24 $\Fst$-rational affine points. The pole order
+with a unique point at infinity $P_\infty \defas [1:0:0]$, and it has 24 $\Fst$-rational affine points. The pole order
 of $x/z$ and $y/z$ at $P_\infty$ is 3 and 2 respectively, as computed in \autoref{ex:order_gen1}.
 
 Let $D \defas 12P_\infty$. From the Riemann-Roch theorem, the dimension $\ell(D)$ of $\rrs(D)$ is $12 + 1 - g = 12$. We can thus
@@ -366,7 +378,7 @@ define a $[24, 12]_{\Fst}$ AG code $\evcode(\rrs(D), \points)$ with $\points$ th
 put in any order.
 
 This code can be used to define a diffusion matrix of dimension 12 over $\Fst$, which diffuses over $12\times 4 = 48$ bits and
-has differential (and in fact also linear) branch number at least 12 (in fact exactly 12). 
+has differential and linear branch number at least 12 (in fact exactly 12). 
 \end{example}
 
 \begin{example}[An AG code from a curve of genus 2]
@@ -380,6 +392,21 @@ define a $[32, 16]_{\Fst}$ AG code $\evcode(\rrs(D), \points)$ with $\points$ th
 put in any order.
 
 This code can be used to define a diffusion matrix of dimension 16 over $\Fst$, which diffuses over $16\times 4 = 64$ bits and
-has differential (and in fact also linear) branch number at least 15 (in fact exactly 15). This code is also self-dual,
+has differential and linear branch number at least 15 (in fact exactly 15). This code is also self-dual,
+which implies in particular that its derived diffusion matrices are orthogonal.
+\end{example}
+
+\begin{example}[An AG code from a curve of genus 6]
+\label{ex:genus6}
+Let $\curve$ be the plane projective curve of genus 6 of equation $x^5 = y^4z + yz^4$ defined over $\Fst$. It is smooth, in special position,
+with a unique point at infinity $P_\infty \defas [0:1:0]$ at which a unique place is centered. It has 64 $\Fst$-rational affine points. The pole order
+of $x/z$ and $y/z$ at $P_\infty$ is 4 and 5 respectively.
+
+Let $D \defas 37P_\infty$. From the Riemann-Roch theorem, the dimension $\ell(D)$ of $\rrs(D)$ is $37 + 1 - g = 32$. We can thus
+define a $[64, 32]_{\Fst}$ AG code $\evcode(\rrs(D), \points)$ with $\points$ the affine rational points of $\curve$
+put in any order.
+
+This code can be used to define a diffusion matrix of dimension 32 over $\Fst$, which diffuses over $32\times 4 = 128$ bits and
+has differential and linear branch number at least 27 (in fact exactly 27). This code is also self-dual,
 which implies in particular that its derived diffusion matrices are orthogonal.
 \end{example}
