@@ -1,0 +1,93 @@
+\documentclass{standalone}
+\usepackage{amsfonts}
+\usepackage{tikz}
+
+%%% Public TikZ libraries
+\usetikzlibrary{patterns}
+\usetikzlibrary{positioning}
+
+%%% Custom TikZ addons
+\usetikzlibrary{crypto.symbols}
+\tikzset{shadows=no}        % Option: add shadows to XOR, ADD, etc.
+
+\tikzset{Pup/.style={
+		rectangle,
+		thick,
+		draw,
+		fill=blue!20,
+		text width=1cm, 
+		minimum height=0.5cm,
+		minimum width=4cm,
+		text centered,
+	}
+}
+
+\tikzset{Multi/.style={
+		rectangle,
+		thick,
+		draw,
+		fill=green!20,
+		text width=1cm, 
+		minimum height=1.2cm,
+		minimum width=8cm,
+		text centered,
+	}
+}
+%% Document
+\begin{document}
+\begin{tikzpicture}[
+	scale=1,
+	node distance=1.5cm,
+	]
+
+	\node[Multi] (multi0) {};
+	\coordinate[shift={(-0.8cm,-0.15mm)}] (m016t) at (multi0.north);
+	\coordinate[shift={(0.2cm,0.15mm)}] (m016b) at (multi0.south);
+	\draw[fill=green!10,thick] (m016t) rectangle (m016b); 
+	\coordinate[shift={(0.2cm,-0.15mm)}] (m040t) at (multi0.north);
+	\coordinate[shift={(2.5cm,0.15mm)}] (m040b) at (multi0.south);
+	\draw[fill=green!50,thick] (m040t) rectangle (m040b); 
+	\coordinate[shift={(2.5cm,-0.15mm)}] (m064t) at (multi0.north);
+	\coordinate[shift={(4cm,0.15mm)}] (m064b) at (multi0.south);
+	\draw[fill=green!20,thick] (m064t) rectangle (m064b);
+	%
+	\coordinate[shift={(0.5cm,-.6cm)}] (f3) at (m016t);
+	\node (F3) at (f3) {$f_3$};
+	\coordinate[shift={(1.15cm,-.6cm)}] (f1) at (m040t);
+	\node (F1) at (f1) {$f_1$};
+	\coordinate[shift={(1.6cm,-.6cm)}] (f2) at (multi0.north west);
+	\node (F2) at (f2) {$f_2$};
+	%
+	\coordinate[shift={(-0.5cm,0)}] (f3w) at (f3);
+	\coordinate[shift={(0.5cm,0)}] (f3e) at (f3);
+	\draw[thick] (f3w) -- (F2);
+	\draw[line] (F2) -- (multi0.west);
+	\coordinate[shift={(-0.2cm,0)}] (m0ww) at (multi0.west);
+	\coordinate[shift={(0,-1cm)}] (m0wws) at (m0ww);
+	\coordinate[shift={(0.2cm,0)}] (m0ee) at (multi0.east);
+	\coordinate[shift={(0,-1cm)}] (m0ees) at (m0ee);
+	\coordinate[shift={(1.15cm,0)}] (f1e) at (f1);
+	\draw[line] (multi0.west) -- (m0ww) -- (m0wws) -- (m0ees) -- (m0ee) -- (f1e);
+	\draw[thick] (f3e) -- (F1);
+	\draw[line] (F1) -- (f1e);
+	%
+	\coordinate[shift={(0,.8cm)}] (s2) at (m016t);
+	\coordinate[shift={(-0.2cm,.2cm)}] (s2l) at (m016t);
+	\coordinate[shift={(0.4cm,.2cm)}] (s2r) at (m016t);
+	\draw[thick] (m016t) -- (s2);
+	\node at (s2l) {\tiny$s_2$};
+	\node at (s2r) {\tiny$s_2 + 1$};
+	\coordinate[shift={(0,.8cm)}] (s1) at (m040t);
+	\coordinate[shift={(-0.4cm,.6cm)}] (s1l) at (m040t);
+	\coordinate[shift={(0.2cm,.6cm)}] (s1r) at (m040t);
+	\draw[thick] (m040t) -- (s1);
+	\node at (s1l) {\tiny$s_1 - 1$};
+	\node at (s1r) {\tiny$s_1$};
+	\coordinate[shift={(0,.8cm)}] (e) at (m064t);
+	\coordinate[shift={(-0.2cm,.4cm)}] (el) at (m064t);
+	\coordinate[shift={(0.4cm,.4cm)}] (er) at (m064t);
+	\draw[thick] (m064t) -- (e);
+	\node at (el) {\tiny$e$};
+	\node at (er) {\tiny$e + 1$};
+\end{tikzpicture}
+\end{document}

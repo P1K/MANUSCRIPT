@@ -210,16 +210,16 @@ permutations and keys linearly derived from a master key.
 For the sake of clarity, we write $k \oplus \Delta_i$ for $k + \Delta_i$, as these values are equal by hypothesis. 
 By definition,
 $y_1 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1$ and
-$y_3 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus k \oplus {\color{Green}\Delta_1} \oplus {\color{NavyBlue}\Delta_1} \oplus \Delta_3$
+$y_3 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus k \oplus \underline{\color{Green}\Delta_1} \oplus {\color{NavyBlue}\overline{\Delta_1}} \oplus \Delta_3$
 which simplifies to 
 $\Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_3$. This yields the following
 expression for $x_3$:
 \begin{align*}
-x_3 &= \Perm^{-1}(\Perm^{-1}(\Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus {\color{Green}k \oplus \Delta_3} \oplus {\color{NavyBlue}k \oplus \Delta_3})
+x_3 &= \Perm^{-1}(\Perm^{-1}(\Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus \underline{\color{Green}k \oplus \Delta_3} \oplus {\color{NavyBlue}\overline{k \oplus \Delta_3}})
 \oplus k \oplus \Delta_3) \oplus k \oplus \Delta_3 \\
-&= \Perm^{-1}({\color{Green}\Perm^{-1}(}{\color{NavyBlue}\Perm(}\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1{\color{NavyBlue})}{\color{Green})}
+&= \Perm^{-1}(\underline{\color{Green}\Perm^{-1}(}{\color{NavyBlue}\overline{\Perm(}}\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1{\color{NavyBlue}\overline{)}}\underline{\color{Green})}
 \oplus k \oplus \Delta_3) \oplus k \oplus \Delta_3 \\
-&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus {\color{Green}k} \oplus \Delta_1 \oplus {\color{NavyBlue}k} \oplus \Delta_3) \oplus k \oplus \Delta_3 \\
+&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus \underline{\color{Green}k} \oplus \Delta_1 \oplus {\color{NavyBlue}\overline{k}} \oplus \Delta_3) \oplus k \oplus \Delta_3 \\
 &= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus \Delta_1 \oplus \Delta_3) \oplus k \oplus \Delta_3
 \end{align*}
 Similarly,
@@ -227,13 +227,13 @@ $y_2 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2) \oplu
 $y_4 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2) \oplus k \oplus \Delta_2 \oplus \Delta_1 \oplus \Delta_3$, which
 yields the following expression for $x_4$:
 \begin{align*}
-x_4 &=  \Perm^{-1}(\Perm^{-1}(\Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2) \oplus {\color{Green}k \oplus \Delta_2 \oplus \Delta_1
-\oplus \Delta_3} \oplus {\color{NavyBlue}k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3}) \\
+x_4 &=  \Perm^{-1}(\Perm^{-1}(\Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2) \oplus \underline{\color{Green}k \oplus \Delta_2 \oplus \Delta_1
+\oplus \Delta_3} \oplus {\color{NavyBlue}\overline{k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3}}) \\
 &\oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3) \oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3\\
-&= \Perm^{-1}({\color{Green}\Perm^{-1}(}{\color{NavyBlue}\Perm(}\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2{\color{NavyBlue})}{\color{Green})}
+&= \Perm^{-1}(\underline{\color{Green}\Perm^{-1}(}{\color{NavyBlue}\overline{\Perm(}}\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2{\color{NavyBlue}\overline{)}}\underline{\color{Green})}
 \oplus k \oplus \Delta_1 \oplus \Delta_2
 \oplus \Delta_3) \oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3 \\
-&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus {\color{Green}k \oplus \Delta_2} \oplus {\color{NavyBlue}k} \oplus \Delta_1 \oplus {\color{NavyBlue}\Delta_2} \oplus
+&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus \underline{\color{Green}k \oplus \Delta_2} \oplus {\color{NavyBlue}\overline{k}} \oplus \Delta_1 \oplus {\color{NavyBlue}\overline{\Delta_2}} \oplus
 \Delta_3) \oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3\\
 &= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus \Delta_1 \oplus \Delta_3) \oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3
 \end{align*}
