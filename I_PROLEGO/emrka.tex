@@ -21,10 +21,10 @@
 The Even-Mansour scheme, or simply Even-Mansour, or \EM, is arguably the simplest way to construct a block cipher from publicly available
 components. It defines the encryption $\E((k_1, k_0), p)$ of the plaintext $p$ under the possibly equal keys $k_0$
 and $k_1$ as $\Perm(p \oplus k_0) \oplus k_1$, where $\Perm$ is a public permutation. Even and Mansour proved
-in~1991 that for a permutation of size $n$, the probability of recovering the keys
+in~1991 that for a permutation over $n$-bit values, the probability of recovering the keys
 is upper-bounded by $\bigo(qt \cdot 2^{-n})$ when the attacker considers the permutation as a black box,
-where $q$ is the data complexity and $t$ is the time
-complexity of the attack~\cite{EM}. Although
+where $q$ is the data complexity (the number of accesses to the encryption oracle) and $t$ is the time
+complexity (the number of accesses to the permutation) of the attack~\cite{EM}. Although
 of considerable interest, this bound also shows at the same time that the construction is not ideal,
 as one gets security only up to $\bigo(2^\frac{n}{2})$ queries, which
 is less than the $\bigo(2^n)$ one would expect for an $n$-bit block cipher. For this
@@ -39,8 +39,8 @@ Yet until the recent work of Cogliati and Seurin~\cite{CS15} and Farshim and Pro
 no variant of Even-Mansour was proved to be secure in the related-key model. This is not the case
 anymore and it has now been proven that one can reach a non-trivial level of related-key security for $\IEM^r$
 starting from $r = 3$ when using keys linearly derived from a single master key instead
-of using independent keys, or even when $r = 1$
-when this derivation is non-linear and meets some conditions.
+of using independent keys, or even for the original non-iterated \EM scheme if one uses
+a non-linear key derivation meeting some conditions.
 While related-key analysis obviously gives much more power to the attacker than the
 single-key setting, it is a widely accepted
 model that may provide useful results on primitives studied in a general context.
@@ -58,10 +58,10 @@ model that may provide useful results on primitives studied in a general context
 
 \section{Notation}
 
-We use $||$ to denote string concatenation, $\alpha^i$ with $i$ an integer
+We use $||$ to denote string concatenation, $a^i$ with $i$ an integer
 to denote the string
-made of the concatenation of $i$ copies of the character $\alpha$, and $\alpha^*$
-to denote any string of the set $\{\alpha^i, i \in \mathbf{N}\}$, $\alpha^0$
+made of the concatenation of $i$ copies of the character $a$, and $a^*$
+to denote any string of the set $\{a^i, i \in \mathbf{N}\}$, $a^0$
 denoting the empty string $\varepsilon$. For any string $s$, we use
 $s[i]$ to denote its $i^\text{th}$ element, starting from zero.
 
@@ -83,7 +83,7 @@ related-key attacks (RKA) when an attacker may request encryptions under related
 using two relation classes. A simple example showing why this cannot be the case
 is to consider the classes $\xrka(k)$ and $\arka(k)$ of keys
 related to $k$ by the XOR and the modular addition of any constant chosen by the attacker respectively.
-If we have access to (related-key) encryption oracles
+If we have access to related-key encryption oracles
 $\E(k,\cdot)$, $\E(\xrka(k),\cdot)$ and $\E(\arka(k),\cdot)$ for the block cipher $\E$ with $\kappa$-bit keys,
 we can easily learn the value of the bit $k[i]$ of $k$ by comparing the results of the queries
 $\E(k + \Delta_i, p)$
@@ -95,7 +95,7 @@ with overwhelming probability.
 Doing this test for every bit of $k$ thus allows to recover the whole key
 with a complexity linear in $\kappa$, except its most significant bit, as
 the carry of a modular addition on the MSB never propagates.% and thus never there will never be a difference between the related keys.
-This key bit can of course easily be recovered once all the others have been determined.
+This latter bit can of course easily be recovered once all the others have been determined.
 
 In the same paper, Bellare and Kohno also show that no such trivial generic attack exists when
 the attacker is restricted to using
@@ -108,8 +108,8 @@ because an ideal cipher is secure in that case.
 Nonetheless, one should note that when
 queries with many different related keys are allowed, this security remains lower than in a single-key model,
 because of the ability to create collisions. One can
-for instance query $\E(k\oplus\Delta_i,p)$ with $2^{k/2}$ different values for $\Delta_i$ and a constant $p$
-and then computes $\E(\gamma_i,p)$ with $2^{k/2}$ guesses $\gamma_i$ for $k$. With high probability, one
+for instance query $\E(k\oplus\delta_i,p)$ with $2^{k/2}$ different values for $\delta_i$ and a constant $p$
+and then compute $\E(\gamma_i,p)$ with $2^{k/2}$ guesses $\gamma_i$ for $k$. With high probability, one
 of the $\gamma_i$s will be equal to one of the $k\oplus\Delta_i$s, which allows to recover $k$.
 
 \subsection{Key-recovery attacks on $\IEM^r$ with independent keys}
@@ -161,7 +161,7 @@ This is illustrated in \autoref{fig:em4.1.tex} and \autoref{fig:em4.2.tex}
 \end{figure}
 
 
-A similar attack works on the variant of the (iterated) \EM 
+A similar attack works on the variant of the (iterated) \EM
 that uses modular addition instead of XOR for the combination of the key with the plaintext.
 This variant was first analyzed by Dunkelman, Keller and Shamir~\cite{DKS12} and offers the same security bounds as the
 original Even-Mansour. An attack in that case works similarly
@@ -185,59 +185,59 @@ the distinguisher and transform it into a key-recovery attack. The idea remains 
 replaces the $\xrka$ class of the original distinguisher with $\arka$, which makes its success
 conditioned on the value of a few key bits, hence allowing their recovery. We give
 the description of our modified distinguisher for $\E(k, p) := \Perm(\Perm(k \oplus p) \oplus k) \oplus k$,
-where we let the $\Delta_i$s denote arbitrary differences:
+where we let the $\delta_i$s denote arbitrary differences:
 
 \begin{enumerate}[leftmargin=4em]
-	\item Query $y_1 := \E(k + \Delta_1, x_1)$.
-	\item Set $x_2$ to $x_1 \oplus \Delta_1 \oplus \Delta_2$ and query $y_2 := \E(k + \Delta_2, x_2)$.
-	\item Set $y_3$ to $y_1 \oplus \Delta_1 \oplus \Delta_3$ and query $x_3 := \E^{-1}(k + \Delta_3, y_3)$.
-	\item Set $y_4$  to $y_2 \oplus \Delta_1 \oplus \Delta_3$ and query $x_4 := \E^{-1}(k + (\Delta_1 \oplus \Delta_2 \oplus \Delta_3), y_4)$.
-	\item Test if $x_4 = x_3 \oplus \Delta_1 \oplus \Delta_2$.
+	\item Query $y_1 := \E(k + \delta_1, x_1)$.
+	\item Set $x_2$ to $x_1 \oplus \delta_1 \oplus \delta_2$ and query $y_2 := \E(k + \delta_2, x_2)$.
+	\item Set $y_3$ to $y_1 \oplus \delta_1 \oplus \delta_3$ and query $x_3 := \E^{-1}(k + \delta_3, y_3)$.
+	\item Set $y_4$  to $y_2 \oplus \delta_1 \oplus \delta_3$ and query $x_4 := \E^{-1}(k + (\delta_1 \oplus \delta_2 \oplus \delta_3), y_4)$.
+	\item Test if $x_4 = x_3 \oplus \delta_1 \oplus \delta_2$.
 \end{enumerate}
 
 If the test is successful, it means that with overwhelming probability
-the key bits at the positions of the differences $\Delta_1$, $\Delta_2$,
-$\Delta_3$ are all zero, as in that case  $k + \Delta_i = k \oplus \Delta_i$ and
+the key bits at the positions of the differences $\delta_1$, $\delta_2$,
+$\delta_3$ are all zero, as in that case  $k + \delta_i = k \oplus \delta_i$ and
 the distinguisher works ``as intended'', and as otherwise at least one uncontrolled difference goes through $\Perm$ or $\Perm^{-1}$.
-It is possible to restrict oneself to using differences in only two bits for the $\Delta_i$s, and as soon as two such zero bits
+It is possible to restrict oneself to using differences in only two bits for the $\delta_i$s, and as soon as two zero key bits
 have been found (which happens after an expected four trials for
-random keys), the rest of the key bits can be tested one by one.
+random keys), the rest of the key can be determined one bit at a time.
 
-We conclude this short section by showing why the test of line~5 is successful when $k + \Delta_i = k \oplus \Delta_i$,
+We conclude this short section by showing why the test of line~5 is successful when $k + \delta_i = k \oplus \delta_i$,
 but refer to Cogliati and Seurin for a complete description of their distinguisher, including the general case of distinct
 permutations and keys linearly derived from a master key.
 
-For the sake of clarity, we write $k \oplus \Delta_i$ for $k + \Delta_i$, as these values are equal by hypothesis. 
+For the sake of clarity, we write $k \oplus \delta_i$ for $k + \delta_i$, as these values are equal by hypothesis.
 By definition,
-$y_1 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1$ and
-$y_3 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus k \oplus \underline{\color{Green}\Delta_1} \oplus {\color{NavyBlue}\overline{\Delta_1}} \oplus \Delta_3$
-which simplifies to 
-$\Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_3$. This yields the following
+$y_1 = \Perm(\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_1) \oplus k \oplus \delta_1$ and
+$y_3 = \Perm(\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_1) \oplus k \oplus \underline{\color{Green}\delta_1} \oplus {\color{NavyBlue}\overline{\delta_1}} \oplus \delta_3$
+which simplifies to
+$\Perm(\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_1) \oplus k \oplus \delta_3$. This yields the following
 expression for $x_3$:
 \begin{align*}
-x_3 &= \Perm^{-1}(\Perm^{-1}(\Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1) \oplus \underline{\color{Green}k \oplus \Delta_3} \oplus {\color{NavyBlue}\overline{k \oplus \Delta_3}})
-\oplus k \oplus \Delta_3) \oplus k \oplus \Delta_3 \\
-&= \Perm^{-1}(\underline{\color{Green}\Perm^{-1}(}{\color{NavyBlue}\overline{\Perm(}}\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_1{\color{NavyBlue}\overline{)}}\underline{\color{Green})}
-\oplus k \oplus \Delta_3) \oplus k \oplus \Delta_3 \\
-&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus \underline{\color{Green}k} \oplus \Delta_1 \oplus {\color{NavyBlue}\overline{k}} \oplus \Delta_3) \oplus k \oplus \Delta_3 \\
-&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus \Delta_1 \oplus \Delta_3) \oplus k \oplus \Delta_3
+x_3 &= \Perm^{-1}(\Perm^{-1}(\Perm(\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_1) \oplus \underline{\color{Green}k \oplus \delta_3} \oplus {\color{NavyBlue}\overline{k \oplus \delta_3}})
+\oplus k \oplus \delta_3) \oplus k \oplus \delta_3 \\
+&= \Perm^{-1}(\underline{\color{Green}\Perm^{-1}(}{\color{NavyBlue}\overline{\Perm(}}\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_1{\color{NavyBlue}\overline{)}}\underline{\color{Green})}
+\oplus k \oplus \delta_3) \oplus k \oplus \delta_3 \\
+&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \delta_1) \oplus \underline{\color{Green}k} \oplus \delta_1 \oplus {\color{NavyBlue}\overline{k}} \oplus \delta_3) \oplus k \oplus \delta_3 \\
+&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \delta_1) \oplus \delta_1 \oplus \delta_3) \oplus k \oplus \delta_3
 \end{align*}
 Similarly,
-$y_2 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2) \oplus k \oplus \Delta_2$ and
-$y_4 = \Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2) \oplus k \oplus \Delta_2 \oplus \Delta_1 \oplus \Delta_3$, which
+$y_2 = \Perm(\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_2) \oplus k \oplus \delta_2$ and
+$y_4 = \Perm(\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_2) \oplus k \oplus \delta_2 \oplus \delta_1 \oplus \delta_3$, which
 yields the following expression for $x_4$:
 \begin{align*}
-x_4 &=  \Perm^{-1}(\Perm^{-1}(\Perm(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2) \oplus \underline{\color{Green}k \oplus \Delta_2 \oplus \Delta_1
-\oplus \Delta_3} \oplus {\color{NavyBlue}\overline{k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3}}) \\
-&\oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3) \oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3\\
-&= \Perm^{-1}(\underline{\color{Green}\Perm^{-1}(}{\color{NavyBlue}\overline{\Perm(}}\Perm(x_1 \oplus k \oplus \Delta_1) \oplus k \oplus \Delta_2{\color{NavyBlue}\overline{)}}\underline{\color{Green})}
-\oplus k \oplus \Delta_1 \oplus \Delta_2
-\oplus \Delta_3) \oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3 \\
-&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus \underline{\color{Green}k \oplus \Delta_2} \oplus {\color{NavyBlue}\overline{k}} \oplus \Delta_1 \oplus {\color{NavyBlue}\overline{\Delta_2}} \oplus
-\Delta_3) \oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3\\
-&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \Delta_1) \oplus \Delta_1 \oplus \Delta_3) \oplus k \oplus \Delta_1 \oplus \Delta_2 \oplus \Delta_3
+x_4 &=  \Perm^{-1}(\Perm^{-1}(\Perm(\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_2) \oplus \underline{\color{Green}k \oplus \delta_2 \oplus \delta_1
+\oplus \delta_3} \oplus {\color{NavyBlue}\overline{k \oplus \delta_1 \oplus \delta_2 \oplus \delta_3}}) \\
+&\oplus k \oplus \delta_1 \oplus \delta_2 \oplus \delta_3) \oplus k \oplus \delta_1 \oplus \delta_2 \oplus \delta_3\\
+&= \Perm^{-1}(\underline{\color{Green}\Perm^{-1}(}{\color{NavyBlue}\overline{\Perm(}}\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_2{\color{NavyBlue}\overline{)}}\underline{\color{Green})}
+\oplus k \oplus \delta_1 \oplus \delta_2
+\oplus \delta_3) \oplus k \oplus \delta_1 \oplus \delta_2 \oplus \delta_3 \\
+&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \delta_1) \oplus \underline{\color{Green}k \oplus \delta_2} \oplus {\color{NavyBlue}\overline{k}} \oplus \delta_1 \oplus {\color{NavyBlue}\overline{\delta_2}} \oplus
+\delta_3) \oplus k \oplus \delta_1 \oplus \delta_2 \oplus \delta_3\\
+&= \Perm^{-1}(\Perm(x_1 \oplus k \oplus \delta_1) \oplus \delta_1 \oplus \delta_3) \oplus k \oplus \delta_1 \oplus \delta_2 \oplus \delta_3
 \end{align*}
-From the final expressions of $x_3$ and $x_4$, we see that their XOR difference is indeed $\Delta_1 \oplus \Delta_2$.
+From the final expressions of $x_3$ and $x_4$, we see that their XOR difference is indeed $\delta_1 \oplus \delta_2$.
 
 \section{Application to \proestotr}
 \label{sec:appli}
@@ -348,7 +348,7 @@ Let us now apply the attack from \autoref{sec:gen}.
 \caption{\label{fig:otr}The encryption of the first two blocks of message in \proestotr.}
 \end{figure}
 
-\subsection{Step 1: Recovering the most significant half of the key.}
+\subsection{Step 1: Recovering the most significant half of the key}
 
 It is straightforward to see that one can recover the value
 of the bit $k[i]$ by performing only two queries with related keys
@@ -390,9 +390,22 @@ Even though, it should still be noted that this yields an
 attack with very little data requirements and with the same time complexity as the best
 point on the tradeoff curve of generic attacks, which in that case has a much higher data complexity of
 $2^\frac{\kappa}{2}$.
+%Yet this does not allow to recover the whole key because the nonce in \proestotr is restricted to a length
+%half of the width of the block cipher $\E$, or equivalently of the underlying \proest permutation,
+%\ie $\frac{\kappa}{2}$. It is then possible to recover only
+%the upper half of the bits of $k$, written $k^\MSB$,
+%when using this procedure,
+%as one cannot introduce appropriate differences in
+%the computation of $\ell$ for the lower half. The targeted security of the
+%whole primitive being precisely $\frac{\kappa}{2}$ because of the generic single key
+%attacks on Even-Mansour,
+%one does not make a significant gain by recovering only half of the key.
+%While one could still complete this attack in time $\times$ data complexity
+%$\bigo(2^{\kappa/4})$ by applying the standard attack on Even-Mansour and looking for collisions in the output of queries of the form $(k^\MSB||x)$ and $(0||x)$ to
+%the encryption oracle and the public permutation respectively, it is possible to do better as we describe next.
 
 
-\subsection{Step 2: Recovering the least significant half of the key.}
+\subsection{Step 2: Recovering the least significant half of the key}
 \label{sec:reco_lsb}
 
 Even though the generic attack in its most simple form does not allow to recover the full key
@@ -403,7 +416,7 @@ of the least significant half of the key with no more effort than for the most s
 
 Let us first show how we can recover the most significant bit of the least significant half of
 the key $k[\msbtwo]$, \ie the first bit for which we cannot use the previous method,
-after a single encryption by $\E$. 
+after a single encryption by $\E$.
 %For the sake of simplicity, we assume for now that
 %unlike in \proestem the two keys of $\E$ are independent, and we omit to write the second (outer) key in the queries to $\E$.
 
@@ -434,7 +447,7 @@ that is $\widetilde{\gamma_i}[j] = \widetilde{k[j]}$ if $\msbtwo \geq j \geq \ms
 The modified queries then become $\E(k - k^\MSB + \Delta_{\msbtwo - i} + \widetilde{\gamma_i}, p \oplus \Delta_{\msbtwoone})$ and
 $\E(k - k^\MSB - \Delta_{\msbtwo - i} - \gamma_i, p)$, for which the propagation of the carries is ensured. Note that
 the difference between the results of these two queries when $k[\msbtwo - i] = 1$ is independent of $i$ and always equal
-to $\Delta_\msbtwoone$. 
+to $\Delta_\msbtwoone$.
 
 
 We conclude by showing how to apply this procedure to \proestotr. For the sake of readability, let us denote
@@ -554,7 +567,8 @@ equivalent to allowing key recovery, the most powerful of all attacks.
 \label{sec:toy}
 
 We give the source of a C program that recovers a 64-bit key from a design similar to \proestotr where
-the permutation has been replaced by a small ARX, for compactness. For the sake of simplicity,
+the permutation has been replaced by a small ARX, for compactness. This allows to verify the correctness
+of the attack, all the while showing that it is indeed very simple to implement. For the sake of simplicity,
 we do not ensure that the nonce does not repeat in the queries.
 
 \begin{minted}[breaklines,tabsize=2]{c}
@@ -565,7 +579,7 @@ we do not ensure that the nonce does not repeat in the queries.
 #define ROL32(x,r) (((x) << (r)) ^ ((x) >> (32 - (r))))
 #define MIX(hi,lo,r) { (hi) += (lo); (lo) = ROL32((lo),(r)) ; (lo) ^= (hi); }
 
-#define TIMES2(x) ((x & 0x8000000000000000ULL) ? ((x) << 1ULL) ^                0x000000000000001BULL : (x << 1ULL))
+#define TIMES2(x) ((x & 0x8000000000000000ULL) ? ((x) << 1ULL) ^  0x000000000000001BULL : (x << 1ULL))
 #define TIMES4(x) TIMES2(TIMES2((x)))
 
 #define DELTA(x) (1ULL << (x))
@@ -657,7 +671,7 @@ int main()
 	uint64_t kk1 = recover_lo(secret_key, recover_hi(secret_key));
 	uint64_t kk2 = kk1 ^ 0x8000000000000000ULL;
 
-	printf("The real key is %016llx, the key candidates are %016llx, %016llx     ", secret_key, kk1, kk2);
+	printf("The real key is %016llx, the key candidates are %016llx, %016llx", secret_key, kk1, kk2);
 	if ((kk1 == secret_key) || (kk2 == secret_key))
 		printf("SUCCESS!\n");
 	else
