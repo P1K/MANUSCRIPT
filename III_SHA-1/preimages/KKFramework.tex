@@ -8,21 +8,19 @@ The relevance of \mitm for preimage attacks comes from the fact that many hash f
 function which is an \ah block cipher used in one of the ``PGV'' modes~\cite{PGV93}.
 The \shaone function itself follows this design strategy and uses the particular Davies-Meyer mode, already described
 in \autoref{chap:hashfun}.
-
-so-called \emph{Davies-Meyer}, where a compression function $\Hc~: \{0, 1\}^v \times \{0, 1\}^n \rightarrow \{0, 1\}^v$ compressing a chaining value $c$ with
-a message $m$ to form the updated chaining value $c' = \Hc(c, m)$ is defined as $\Hc(c, m) \defas \Fs(m, c) + c$, with
-$\Fs~: \{0, 1\}^n \times \{0, 1\}^v \rightarrow \{0, 1\}^v$ a block cipher of key-length and message-length $n$ and $v$
-
-Given a compression function $\Hc~: \{0, 1\}^v \times \{0, 1\}^n \rightarrow \{0, 1\}^v$,
-the problem of finding a preimage of $t$ for $\Hc$ is equivalent to finding a key $m$ for
-the block cipher $\Fs~: \{0, 1\}^n \times \{0, 1\}^v \rightarrow \{0, 1\}^v$, with $\Hc(c,m) = \Fs(m,c) + c$,
+We recall that in this mode, the compression function $\Hc~: \{0, 1\}^v \times \{0, 1\}^n \rightarrow \{0, 1\}^v$ compressing a chaining value $c$ with
+a message $m$ to form the updated chaining value $c' \defas \Hc(c, m)$ is defined as $\Hc(c, m) = \Fs(m, c) + c$, with
+$\Fs~: \{0, 1\}^n \times \{0, 1\}^v \rightarrow \{0, 1\}^v$ a block cipher of key-length and message-length $n$ and $v$.
+Given a compression function $\Hc$,
+the problem of finding a preimage of $t$ for $\Hc$ is then equivalent to finding a key $m$ for
+$\Fs$
 such that $\Fs(m, p) = c$ for a pair $(p, c)$, with $c = t - p$. Additional constraints can also be put on $p$, such as prescribing
 it to a fixed initialization value $\iv$.
 
 In its most basic form, a \mitm attack can speed-up the search for a preimage if the block cipher $\Fs$ can equivalently be
 described as the composition $\Fd \circ \Fuu$ of two block ciphers $\Fuu~: \ksu \times \{0, 1\}^v
 \rightarrow \{0, 1\}^v$ and $\Fd~: \ksd \times \{0, 1\}^v\rightarrow \{0, 1\}^v$ with independent key spaces $\ksu, \ksd \subset \{0,1\}^n$.
-Indeed, if this is the case, an attacker can select a subset $\{k^1_i, i = 1\ldots N_1\}$ (resp. $\{k^2_j, j = 1\ldots N_2\}$)
+Indeed, if such a decomposition is possible, an attacker can select a subset $\{k^1_i, i = 1\ldots N_1\}$ (resp. $\{k^2_j, j = 1\ldots N_2\}$)
 of keys of $\ksu$ (resp. $\ksd$), which
 together suggest $N \defas N_1 \cdot N_2$ candidate keys $k^{12}_{ij} \defas (k^1_i, k^2_j)$ for $\Fs$ by setting
 $\Fs(k^{12}_{ij},\cdot) = \Fd(k^2_j,\cdot) \circ \Fuu(k^1_i,\cdot)$.
@@ -92,7 +90,7 @@ We recall the procedure to do so in \autoref{affine_testing}.
 \end{algorithm}
 
 \subsubsection{Analysis of \autoref{affine_testing}.}
-For the sake of simplicity we assume that $d_1 = d_2 \defas d < \frac{v}{2}$.
+For the sake of simplicity we assume that $d_1$ and $d_2$ are equal to a certain value $d < \frac{v}{2}$.
 The running time of every loop of \autoref{affine_testing} is therefore $\bigo(2^d)$, assuming efficient
 data structures and equality testing for the lists,
 and $\bigo(2^d)$ memory is necessary for storing $L_1$ and $L_2$. It is also
@@ -107,15 +105,15 @@ $\Fs(\mu \oplus \delta_1 \oplus \delta_2, p) = c$.
 This algorithm therefore allows to search through $2^{2d}$ candidate preimages with a complexity
 of $\bigo(2^d)$, and thus gives a speed-up of $2^d$. The complexity of a full attack is hence $\bigo(2^{v - d})$.
 
-\subsubsection{Comparison with basic \mitm.}
+\subsubsection{Comparison with the basic \mitm attack.}
 When setting $\Delta_1 = \Delta_2 = 0$, this differential variant of the \mitm technique becomes a special case
 of the general formulation of the basic technique given at the beginning of this section: the key spaces $\ksu$ and $\ksd$ now possess a structure
 of affine spaces.
 Although this is a restriction on the shape of the key partition, the additional structure is useful when one is intent on finding actual attacks.
 
-The advantage of the differential view of the \mitm attack comes from the fact that it gives a practical way of searching for the key spaces,
+The advantage of the differential view of the \mitm attack then comes from the fact that it gives a practical way of searching for the key spaces,
 as differential path search is a well-studied area of symmetric cryptanalysis. Another major advantage is that it makes the formulation of
-several extensions to this basic attack very natural, without compromising the ease of the search for the key spaces. One such immediate
+several extensions to the basic attack very natural, without compromising the ease of the search for the key spaces. One such immediate
 extension is obviously to consider non-zero values for $\Delta_1$ and $\Delta_2$. As noted by Knellwolf and Khovratovich,
 this already corresponds to an advanced technique of \emph{indirect matching} in the original framework of Aoki and Sasaki.
 Further extensions are detailed next.
@@ -123,11 +121,11 @@ Further extensions are detailed next.
 \subsection{Probabilistic truncated differential \mitm}
 \label{probtrunc}
 
-There are two natural ways to generalize the differential formulation of the \mitm, that each correspond to relaxing one of the conditions from
-above. First, one can consider differentials of probability less than one ---although a high probability is still usually needed;
+There are two natural ways to generalise the differential formulation of the \mitm, that each correspond to relaxing one condition.
+First, one can consider differentials of probability less than one ---although a high probability is still usually needed;
 second, one can consider truncated differentials by using an
 equivalence relation ``$\equiv$'' instead of the equality, with one usually taking $\equiv$ to be a truncated equality:
-$a \equiv b [m] \Leftrightarrow a \wedge m = b \wedge m$ for $a, b, m
+$a \equiv b~[m] \Leftrightarrow a \wedge m = b \wedge m$ for $a, b, m
 \in \{0,1\}^v$.
 One can then use the notation
 $(\alpha,  \beta) \overset{\Fs}{\underset{p}{\rightsquigarrow}} \gamma$ to denote the fact that 
@@ -137,7 +135,7 @@ $\underset{(x,y)}{\Pr}\big[\Fs(x \oplus \alpha, y \oplus \beta) \equiv \Fs(x, y)
 \end{equation}
 for some probability $p_1$ and relation $\equiv$, and the same changes apply to \autoref{diff2}.
 
-Again, these generalizations correspond to advanced techniques of Aoki and Sasaki's framework, which find here a concise and efficient description.
+Again, these generalisations correspond to advanced techniques of Aoki and Sasaki's framework, which find here a concise and efficient description.
 
 \medskip
 
@@ -164,7 +162,7 @@ an attacker may now sample the functions $\Fuu(t - \Ft(s))$ and $\Fd^{-1}(s)$ on
 be independent, when searching
 a preimage for $t$.
 By giving more possible choices for the decomposition of $\Fs$, one can hope for better attacks. This however comes at the cost that they are now
-pseudo-preimage attacks, as one does not control the value of the IV anymore which is now equal to $t - \Ft(s)$.
+pseudo-preimage attacks, as one does not control the value of the IV anymore, which becomes equal to $t - \Ft(s)$.
 
 A possible improvement to a splice-and-cut decomposition is the use of \emph{initial structures}~\cite{SA09}, which were later reformulated as \emph{bicliques}~\cite{KRS12}.
 Instead of starting the computations in the middle from an intermediate value $s$, the idea is now to start from a set of multiple values

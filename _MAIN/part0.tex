@@ -35,15 +35,15 @@ telle que pour tout $k \in \{0,1\}^\kappa$, $\E(k,\cdot)$ est une permutation.
 On appelle
 $\kappa$ la \emph{taille de clef} et $n$ la \emph{taille de bloc} de $\E$. Habituellement, ces paramètres ont pour valeur
 $\kappa \in \{64, 80, 128, 192, 256\}$, bien que les clefs de 64 ou 80 bits ne soient plus considérées de nos jours
-comme apportant une sécurité suffisante, et 
+comme apportant une sécurité suffisante, et
 $n \in \{64, 128, 256\}$.
 On requiert aussi que $\E$ et son inverse $\E^{-1}$ soient calculables efficacement, bien qu'en fonction des applications
-il puisse être suffisant qu'un seul des deux le soit. 
+il puisse être suffisant qu'un seul des deux le soit.
 
 L'emploi le plus direct d'un chiffre par bloc est de permettre d'assurer la confidentialité de communications.
 Deux entités $A$ et $B$ partageant une clef $k$ pour le même chiffre\footnote{Nous ne nous intéresserons pas ici à la question de savoir
 comment obtenir un tel partage.} peuvent communiquer par l'intermédiaire de messages chiffrés $c \defas \E(k,p)$,
-$c' \defas \E(k,p')$, etc. Le second argument $p$ de $\E$ est généralement appelé 
+$c' \defas \E(k,p')$, etc. Le second argument $p$ de $\E$ est généralement appelé
 \emph{texte clair}, et le résultat $c$ est généralement appelé \emph{texte chiffré}.
 
 Si $\E$ est tel que la permutation $\E(k,\cdot)$ est difficile à inverser quand $k$ est inconnu, $A$ et $B$
@@ -57,12 +57,12 @@ même chiffré. Un adversaire passif espionnant la conversation sur le canal ent
 détecter quand deux messages identiques ont été envoyés. En second lieu, la communication n'est pas authentifiée. Un
 adversaire actif présent sur le canal peut supprimer et modifier certains des blocs d'un message,
 ajouter des blocs d'un précédent message, ou encore ajouter des blocs générés aléatoirement. Tout ceci peut
-être fait sans que $A$ et $B$ ne détectent qu'un autre parti agit sur le canal avec des intentions hostiles. 
+être fait sans que $A$ et $B$ ne détectent qu'un autre parti agit sur le canal avec des intentions hostiles.
 
 Des problèmes tels que ceux ci-dessus sont résolus en concevant des \emph{modes d'opération} sûrs. Nous n'étudions
 pas ceux-ci dans ce manuscrit, mais mentionnons tout de même certains éléments qui leur sont liés dans
 la section \ref{sec:cf_modes}. Dans l'immédiat, nous nous consacrons à rendre l'intuition derrière les critères de sécurité
-d'un chiffre par bloc plus explicites. 
+d'un chiffre par bloc plus explicites.
 
 \subsection{Sécurité des chiffres par bloc}
 
@@ -84,7 +84,7 @@ Avec cette méthode, calculer la permutation associée à une certaine clef fixe
 $\bigo(2^n)$ en temps et en mémoire, ce qui n'est
 évidemment pas satisfaisant pour les tailles classiques de blocs $n \geq 64$ utilisées en cryptographie.
 Même pour de petites valeurs de $n$, utiliser FYK requiert une quantité considérable d'aléa paramétrisé par une clef,
-ce qui n'est pas quelque chose d'évident à obtenir. 
+ce qui n'est pas quelque chose d'évident à obtenir.
 Tout ceci fait qu'en pratique nous sommes généralement forcés d'utiliser des «\,approximations\,» de chiffres idéaux.
 Une façon utile, bien qu'essentiellement théorique, de quantifier la sécurité d'un chiffre par bloc est alors précisément
 de mesurer à quel point celui-ci est éloigné d'un chiffre idéal.
@@ -95,11 +95,11 @@ sous la forme suivante, similaire à celle qui peut être trouvée par exemple d
 
 \begin{fdefi}[Permutations pseudo-aléatoires (PRP)]
 Soit $\E$ un chiffre par bloc de taille de clef $\kappa$ et de taille de bloc $n$.
-On note 
+On note
 $\Pi_{2^n}$ l'ensemble des permutations sur les chaînes binaires de longueur $n$~; $x \overset{\$}{\leftarrow} \mathcal{S}$
 l'action de tirer $x$ aléatoirement et uniformément parmi les éléments de l'ensemble $\mathcal{S}$~; $\mathcal{A}^{f}$
 un algorithme ayant accès à un oracle $f$ et qui retourne un unique bit.
-On définit alors 
+On définit alors
 l' \emph{avantage PRP} de $\mathcal{A}$ pour $\E$, écrit $\Adv^{\text{PRP}}_{\E}(\mathcal{A})$ comme~:
 \[
 \Adv^{\text{PRP}}_{\E}(\mathcal{A}) = |\Pr[\mathcal{A}^f = 1~|~f \overset{\$}{\leftarrow} \Pi_{2^n}] - \Pr[\mathcal{A}^f = 1~|~f \defas \E(k,\cdot), k \overset{\$}{\leftarrow} \{0,1\}^\kappa]|.
@@ -108,7 +108,7 @@ La \emph{sécurité PRP} de $\E$ pour une \emph{complexité en donnée} $q$ et u
 \[
 \Adv^{\text{PRP}}_{\E}(q,t) \defas \max_{\mathcal{A}\,\in\,\text{Alg}^{f\backslash q, \E\backslash t}} \{\Adv^{\text{PRP}}_{\E}(\mathcal{A})\}.
 \]
-Ici, 
+Ici,
 $\text{Alg}^{f\backslash q, \E\backslash t}$ est l'ensemble des algorithmes $\mathcal{A}$ qui ont accès à un oracle $f$ auquel ils font au plus $q$ accès,
 et qui tournent en temps inférieur à
 $\bigo(t)$, l'unité de temps étant le temps nécessaire pour calculer $\E$ une fois.
@@ -171,7 +171,7 @@ Dans la grande majorité des cas, $+$ est l'addition sur $\mathbf{F}_2^n$,
 c'est à dire le OU exclusif bit à bit (XOR)~; on utilisera alors souvent la notation alternative $\oplus$ pour cette loi.
 Parfois, $+$ est l'addition dans $\mathbf{Z}/2^n\mathbf{Z}$, et d'autres fois les différences peuvent être considérées suivant plusieurs lois à la fois.
 Une \emph{paire différentielle} pour la différentielle $(\Delta,\delta)$ et pour une certaine clef $k$
-est une paire ordonnée de textes clairs et des chiffrés correspondant $((p,c), (p',c'))$ avec 
+est une paire ordonnée de textes clairs et des chiffrés correspondant $((p,c), (p',c'))$ avec
 $p$, $c \defas \E(k,p)$, $p'$, $c' \defas \E(k,p')$, telle que $p - p' = \Delta$, $c - c' = \delta$. Quand la différence est sur $\mathbf{F}_2^n$,
 la soustraction coïncide avec l'addition et la paire peut être non ordonnée. Nous nous plaçons dans un tel cas pour le reste de cette description.
 
@@ -202,7 +202,7 @@ interagit avec $\E$ si et seulement si cette valeur est au moins un.
 
 Tous les distingueurs ne sont pas statistiques;
 un autre type de distingueur est basé sur une représentation \emph{algébrique} des chiffres par bloc.
-Il est toujours possible de redéfinir un chiffre 
+Il est toujours possible de redéfinir un chiffre
 $\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ comme un ensemble ordonné de fonctions $\F_i : \{0,1\}^{\kappa+n} \rightarrow \{0,1\}$ projetant
 $\E$ sur son $i^\text{ème}$ bit de sortie~: $\E \equiv (\F_0, \ldots, \F_{n-1})$. Les $\F_i$s peuvent être vues comme des fonctions booléennes
 $\mathbf{F}_{2}^{\kappa + n} \rightarrow \Ftwo$ qui sont elles mêmes en bijection avec les éléments de $\Ftwo[x_0,x_1,\ldots x_{\kappa + n-1}]/<x_i^2-x_i>_{i<\kappa + n}$,
@@ -267,7 +267,7 @@ Une observation cruciale est que dans ce cas $\rka$ ne peut pas être arbitraire
 pour permettre d'attaquer n'importe quel chiffre~; il ne peut alors pas y avoir de définition sensée de la sécurité de $\E$ dans un tel cas.
 Il est donc utile de garder à l'esprit qu'une attaque doit toujours être spécifiée dans un modèle clair. Bien que certains modèles puissent
 être considérés comme peu réalistes et donc peu utiles (ce qui est une critique souvent formulée à l'égard des attaques à clefs liées), cette
-question est toujours secondaire par rapport à celle de savoir si un modèle permet de mener des attaques triviales dans n'importe quelle circonstance. 
+question est toujours secondaire par rapport à celle de savoir si un modèle permet de mener des attaques triviales dans n'importe quelle circonstance.
 
 \subsection{Utilisation des chiffres par bloc}
 \label{sec:cf_modes}
@@ -282,7 +282,7 @@ doit pas donner le même chiffré. Cette condition peut être formalisée par la
 à un oracle de chiffrement pour un certain système, puis il prépare deux messages $m_0$ et $m_1$ qu'il envoie à un second oracle. Ce dernier
 choisi aléatoirement un des deux messages et retourne son chiffré. Finalement, l'adversaire peut à nouveau émettre des requêtes à son premier oracle et doit ensuite
 deviner quel message a été chiffré. Le cryptosystème est \textsf{IND-CPA} si aucun adversaire aux ressources bornées de façon appropriées ne réussit ce jeu
-avec un avantage non marginal. Il est clair en particulier qu'aucun système déterministe ne peut être sûr suivant cette définition. 
+avec un avantage non marginal. Il est clair en particulier qu'aucun système déterministe ne peut être sûr suivant cette définition.
 
 
 Nous avons aussi déjà mentionné qu'un cryptosystème doit permettre aux entités communicantes de s'authentifier. Ceci peut être assuré directement
@@ -303,15 +303,15 @@ même si la taille de clef est largement supérieure.
 \section{Fonctions de hachage}
 
 Une fonction de hachage est une application d'un ensemble quelconque, non nécessairement fini, vers un ensemble fini de «\,petite taille\,».
-Comme précédemment, nous nous restreindrons ici au cas binaire~; ainsi, on considérera qu'une  
+Comme précédemment, nous nous restreindrons ici au cas binaire~; ainsi, on considérera qu'une
 fonction de hachage  est une application des chaînes binaires de taille arbitraire (les \emph{messages}) vers des chaînes de taille
 fixe (les \emph{empreintes}, ou \emph{hachés})~:
 $\hash : \{0,1\}^* \rightarrow \{0,1\}^n$ pour un entier $n$.
 La plupart des fonctions de hachage ne se conforment pas strictement à cette définition et ne sont définies que sur un domaine fini, de taille par exemple égale
 à $2^{64}$. Ceci n'a a priori pas d'impact en pratique, puisque les arguments potentiels d'une fonction sont bien plus petits que ces
-limites supérieures, même si en toute rigueur il n'est pas évident que ceci soit toujours le cas. 
+limites supérieures, même si en toute rigueur il n'est pas évident que ceci soit toujours le cas.
 La taille de sortie typique d'une fonction de hachage est de quelques centaines de bits, et généralement un multiple de trente-deux~; des fonctions populaires
-du passé et du présent peuvent être trouvées avec 
+du passé et du présent peuvent être trouvées avec
 $n \in \{128, 160, 224, 256, 384, 512\}$.
 
 Une fonction de hachage \emph{cryptographique}\footnote{Nous ne considérerons que de telles fonctions à partir de maintenant.} est une fonction
@@ -343,12 +343,12 @@ dans la section~\ref{sec:fmd}), il est nécessaire de mesurer cette complexité 
 la \emph{fonction de compression}.
 
 
-On peut remarquer que la cible plus basse de 
+On peut remarquer que la cible plus basse de
 $\bigo(2^{n/2})$ pour les attaques en collision est une conséquence directe du
-«\,paradoxe des anniversaires\,»~: informellement, 
+«\,paradoxe des anniversaires\,»~: informellement,
 $N$ éléments définissent $\bigo(N^2)$ paires~; si ces $N$ éléments sont tirés au hasard et uniformément dans un ensemble de taille $S$,
 on s'attend à ce que deux d'entre eux soient les mêmes (collisionnent) avec forte probabilité après en avoir collecté
-$\bigo(\sqrt{S})$. 
+$\bigo(\sqrt{S})$.
 On peut aussi remarquer que contrairement à la résistance en (seconde) préimage, la définition de la résistance en collision n'inclut pas de valeur
 cible en entrée.
 Ainsi, elle ne permet pas d'exclure des algorithmes (génériques) qui retournent simplement une paire de message constante qui résulte en une collision,
@@ -378,7 +378,7 @@ comparé aux fonctions de hachage qui sont typiquement au moins $500$ à $1000$ 
 pour de longs messages. Une alternative utile est alors de d'abord calculer l'empreinte du message $m$
 qui doit être signé
 et de ne signer que cette empreinte plutôt que le message complet.
-Ceci donne des signatures de la forme $(m, \sign(k,\hash(m)))$, avec $k$ la clef utilisée pour signer avec $\sign$. 
+Ceci donne des signatures de la forme $(m, \sign(k,\hash(m)))$, avec $k$ la clef utilisée pour signer avec $\sign$.
 
 Il est évident que pour qu'un tel schéma soit sûr, la fonction $\hash$ doit au moins être résistante en seconde préimage. Si tel n'était pas le cas, un adversaire
 pourrait intercepter un message $m$ signé par $A$, remplacer $m$ par $m'$ de même empreinte, et prétendre que $A$ a signé $m'$.
@@ -416,7 +416,7 @@ $\mac(k, \cdot)$, qu'il ait le choix du message $m$ pour lequel produire $\tagg$
 En fonction de ce dernier point, la propriété de sécurité associée est appelée \emph{contrefaçon existentielle} ou \emph{universelle}.
 Bien sûr, il est aussi nécessaire qu'aucune collision parmi les tags n'ait lieu, que ce soit sur des messages fournis par un adversaire ou non.
 
-Les fonctions de hachage semblent être de bons candidats pour construire des MACs, et en effet des constructions génériques telles que 
+Les fonctions de hachage semblent être de bons candidats pour construire des MACs, et en effet des constructions génériques telles que
 HMAC~\cite{DBLP:conf/crypto/BellareCK96} sont populaires. Cependant, la sécurité exacte fournie par ces constructions n'est pas toujours facile à déterminer,
 et on dispose généralement d'alternatives plus rapides, comme les MACs dits polynomiaux
 (voir par exemple~\cite{DBLP:conf/crypto/BlackHKKR99}).
@@ -435,7 +435,7 @@ de hachage résultante puisse être (partiellement) réduite à celle de la fonc
 pour les attaques en collision, une attaque sur la fonction de hachage peut être utilisée pour donner une attaque sur la fonction
 de compression. Par contraposée, tant qu'on ne connaît pas d'attaque en collision sur la fonction de compression, on peut être convaincu
 qu'il n'y en a pas sur la fonction de hachage. D'une certaine façon, tout ceci est proche de l'objectif de construire un mode d'opération sûr
-à partir d'un chiffre par bloc sûr lui aussi. 
+à partir d'un chiffre par bloc sûr lui aussi.
 
 La construction \merkdam est définie comme suit. Une fonction de compression
 $\compress : \{0,1\}^n \times \{0,1\}^b \rightarrow \{0,1\}^n$
@@ -467,7 +467,7 @@ Nous donnons une illustration de cette procédure dans la figure~\ref{fig:fmerk}
 \input{figures/merkle-damgaard.tex}
 \caption[Une fonction \merkdam traitant un message sur quatre blocs.]{Une fonction \merkdam traitant un message sur quatre blocs. Figure adaptée de \cite{TiKZ:Cryptographers}.\label{fig:fmerk}}
 \end{center}
-\end{figure} 
+\end{figure}
 
 Nous concluons cette présentation en esquissant les preuves de réduction de sécurité de la construction \merkdam pour les attaques en collision
 et en première préimage. Il n'existe pas de telle preuve pour les secondes préimages, car il existe des attaques génériques indépendamment
@@ -499,7 +499,7 @@ On suppose sans perte de généralité que les deux messages étendus font
 $r + 1$ blocs.
 On appelle $i$ le numéro de bloc le plus grand tel que
 $\messblock_{i} \neq \messblock'_{i}$.
-Si 
+Si
 $i = r$, alors $(\chain_r,\messblock_r)$ et $(\chain'_{r}, \messblock'_{r})$
 sont distincts et collisionnent à travers
 $\compress$.
@@ -516,7 +516,7 @@ Une préimage sur une fonction \merkdam $\hash$ implique une préimage sur sa fo
 $\compress$.
 \end{prop}
 \begin{proof}
-Soit 
+Soit
 $m$ un message étendu sur  $r+1$ blocs t.q. $\hash(m) = t$, avec $t$ la cible de préimage, alors
 $\compress(\chain_r, \messblock_r) = t$, et $(\chain_r, \messblock_r)$ est une préimage valide pour $\compress$.
 \end{proof}
@@ -530,7 +530,7 @@ On peut grossièrement distinguer deux types de propriétés additionnelles en f
 non idéaux de certaines méthodes de construction de fonctions de hachage, et celles ciblant les comportements
 non idéaux d'instances spécifiques de fonctions de hachage ou de leurs éléments constitutifs.
 Afin de donner des définitions plus explicites de ces notions supplémentaires, il est utile de tout d'abord définir une vision plus forte et idéalisée des
-fonctions de hachage~: 
+fonctions de hachage~:
 
 \begin{fdefi}[Oracle aléatoire]
 Un \emph{oracle aléatoire} sur $n$ bits
@@ -550,7 +550,7 @@ une fois réalisée en pratique.
 Les fonctions de type \merkdam présentent certains comportements non idéaux dans le sens où elles permettent à certains calculs
 d'être plus efficaces que pour un oracle aléatoire.
 
-Un bon exemple de tels calculs correspond au concept de 
+Un bon exemple de tels calculs correspond au concept de
 \emph{multicollision}, qui consiste à chercher $r > 2$ messages $m_{0},\ldots,m_{r-1}$ dont les images par $\hash$
 sont toutes égales.
 La complexité générique (pour un oracle aléatoire, notamment) de ce problème est
@@ -565,7 +565,7 @@ pour un coût de
 $2^{n/2}$. On peut ensuite chercher une seconde collision, cette fois pour la fonction $\widetilde \hash$ obtenue en remplaçant la valeur de chaînage initiale
 $\chain_0$ par $\hash(m_0) = \hash(m'_0)$, ce qui peut encore être fait pour un coût $2^{n/2}$, résultant en $m_1$ et $m'_1$.
 Alors, grâce à la propriété de chaînage de la construction \merkdam, on a trouvé quatre messages ayant tous la même empreinte~:
-$m_0||m_1$, $m'_0||m_1$, $m_0||m'_1$, $m'_0||m'_1$. 
+$m_0||m_1$, $m'_0||m_1$, $m_0||m'_1$, $m'_0||m'_1$.
 Il est facile de voir que cette procédure se généralise à des messages plus longs, ce qui donne la complexité mentionnée égale à
 $\bigo(r \times 2^{n/2})$.
 On peut observer que la faiblesse de la construction qui est exploitée ici est le fait qu'une collision
@@ -579,7 +579,7 @@ consiste en les attaques génériques en seconde préimages pour des messages lo
 Dean~\cite{dean}, puis indépendamment Kelsey et Schneier~\cite{DBLP:conf/eurocrypt/KelseyS05}
 ont montré comment il est possible d'exploiter la structure \merkdam et des collisions internes
 pour calculer la seconde préimage d'un long message plus efficacement qu'avec un algorithme générique.
-La complexité de l'attaque de Kelsey et Schneier pour trouver une seconde préimage pour un message de 
+La complexité de l'attaque de Kelsey et Schneier pour trouver une seconde préimage pour un message de
 $2^k$ \emph{blocs} est $\approx \bigo(2^{n-k+1})$ appels à $\hash$. Cela veut dire que les fonctions \merkdam sont
 en fait intrinsèquement attaquées si on interprète strictement ce que nous avons énoncé comme objectifs de sécurité.
 Cependant, bien que significatives, de telles attaques restent coûteuses, particulièrement pour les tailles habituelles
@@ -595,7 +595,7 @@ pas la fonction de hachage elle même mais un de ses éléments constitutifs. Il
 de sécurité définies plus haut à ce contexte, ce qui nous mène aux notions d'attaques à initialisation (semi) libre~:
 
 \begin{fdefi}[Préimage à initialisation libre]
-Une 
+Une
 \emph{préimage à initialisation libre}
 pour une fonction de hachage \merkdam $\hash$ est une paire $(\freeiv,m)$
 d'\iv et de message telle que $\hash_\freeiv(m) = t$, avec $\hash_\freeiv(\cdot)$ dénotant
@@ -609,7 +609,7 @@ de deux paires d'\iv et de messages telle que $\hash_\freeiv(m) = \hash_{\freeiv
 
 \begin{fdefi}[Collision à initialisation libre (colibri)]
 Une \emph{collision à initialisation libre} (un \emph{colibri})
-pour une fonction \merkdam 
+pour une fonction \merkdam
 $\hash$ est une paire $((\freeiv,m), (\freeiv',m'))$
 de deux paires d'\iv et de messages telle que $\hash_\freeiv(m) = \hash_{\freeiv'}(m')$.
 \end{fdefi}
@@ -626,7 +626,7 @@ peuvent profiter de la liberté supplémentaire offerte par la valeur de chaîna
 Enfin, une notion supplémentaire quelque peu mal définie s'ajoutant à celles discutées jusqu'à présent est le concept de distingueur pour fonctions de hachage,
 qui cherche à capturer les comportements non idéaux qui ne le sont pas par les notions définies jusqu'à présent. Nous ne donnerons pas de définitions ici,
 car celles-ci sont difficiles à formaliser dans le cas de fonctions de hachage, à cause de l'absence de clefs. À la place, nous mentionnons brièvement
-un exemple de distingueur pour la fonction de compression de \shaone. 
+un exemple de distingueur pour la fonction de compression de \shaone.
 
 Prenant un peu d'avance, nous verrons dans la partie~\ref{part:sha-1} que l'\iv et les blocs de message  de la fonction
 de compression de \shaone sont faits de cinq et seize mots de 32 bits respectivement.
@@ -637,7 +637,7 @@ De telles paires consistent en deux
 $m'_{0,\ldots,15}$ avec $\state'_i = \state_{i-1}$ et $m'_i = m_{i-1}$\footnote{Nous sautons ici les détails de comment déterminer les valeurs de départ
 $\state'_0$ et $m'_0$.}, tels que la paire des sorties de la fonction appelée sur ces entrées possède aussi cette propriété.
 Bien qu'il n'est pas attendu d'une fonction aléatoire qu'elle possède une telle propriété,
-il n'est pas évident que celle-ci puisse-t-être 
+il n'est pas évident que celle-ci puisse-t-être
  utilisée pour monter
 une attaque sur une des notions de sécurité principales ou secondaires définies ci-dessus.
 
@@ -647,7 +647,7 @@ une attaque sur une des notions de sécurité principales ou secondaires défini
 
 Nous avons mentionné deux faiblesses génériques des fonctions \merkdam. La présence de celles-ci fait que les fonctions de hachage modernes sont généralement
 basées sur des constructions alternatives offrant une meilleure sécurité. Nous présentons brièvement deux d'entre elles~: la
-variante \emph{tuyau-large} de \merkdam (ou \emph{coupe-MD}), et les constructions \emph{éponge}. 
+variante \emph{tuyau-large} de \merkdam (ou \emph{coupe-MD}), et les constructions \emph{éponge}.
 
 
 \paragraph{\merkdam «\,tuyau-large\,».}
@@ -700,8 +700,8 @@ $\varepsilon$-indifférentiable d'un oracle aléatoire de sortie de même taille
 avec $\varepsilon \approx 2^{-c}q^2$ \cite{DBLP:conf/eurocrypt/BertoniDPA08}. Pour atteindre les propriétés de sécurité classiques, il est alors
 optimal de prendre $c = 2n$.
 
-Un des meilleurs exemples de fonction éponge est 
-\keccak~\cite{KeccakReference}, qui est devenu le nouveau standard \shathree en 2015~\cite{Nist-SHA3}. 
+Un des meilleurs exemples de fonction éponge est
+\keccak~\cite{KeccakReference}, qui est devenu le nouveau standard \shathree en 2015~\cite{Nist-SHA3}.
 
 \subsection{La famille \mdsha}
 \label{sec:fmdsha}
@@ -717,7 +717,7 @@ Bosselaers a lui-même proposé \ripemd en 1992 comme amélioration alternative 
 et la NSA fit de même l'année suivante en introduisant la première génération des algorithmes SHS/SHA~\cite{Nist-SHA0}.
 Dans les deux derniers cas, les fonctions ont été modifiées peu de temps après, en
 1996 et 1995 respectivement~\cite{DBLP:conf/fse/DobbertinBP96,Nist-SHA1}.
-D'autres algorithmes tels que 
+D'autres algorithmes tels que
 \shatwo~\cite{Nist-SHA}, introduits 2002, ont également été influencés par \mdfour.
 
 Il existe quelques variations parmi les membres de la famille~; notablement
@@ -727,7 +727,7 @@ Nous énumérons spécifiquement ci-dessous les caractéristiques partagées par
 \mdsha dans une large mesure.
 \begin{itemize}
 \item La construction \merkdam est utilisée comme extendeur de domaine.
-\item La fonction de compression est construite à partir d'un chiffre par bloc ad hoc utilisé en mode \emph{Davies-Meyer}~: 
+\item La fonction de compression est construite à partir d'un chiffre par bloc ad hoc utilisé en mode \emph{Davies-Meyer}~:
 soit
 $\blockE(x,y)$ le chiffrement du texte clair $y$ avec la clef $x$ par  $\blockE$, alors
 la fonction de compression est définie par
@@ -774,7 +774,7 @@ Une première contribution a porté sur la conception de matrices de diffusion d
 Nous nous sommes aussi intéressés aux algorithmes de chiffrement dits légers, qui sont conçus spécifiquement pour être utilisés dans des environnements
 contraints, comme par exemple un petit processeur. Nous avons développé l'algorithme \fly, qui répond bien à ce contexte.
 Enfin, nous avons conçu \pc et \cdb, deux algorithmes pouvant être implémentés de façon «\,incompressible\,», et qui de cette façon répondent à un certain modèle
-de chiffrement en «\,boîte blanche\,». 
+de chiffrement en «\,boîte blanche\,».
 
 \bigskip
 
@@ -805,7 +805,7 @@ Dans nos travaux, nous avons montré que les constructions basées sur \asasa pr
 à clef publique, ainsi que des variantes à taille réduite de l'instance chiffrement par bloc utilisées pour définir des algorithmes en boîte blanche.
 Il est à noter qu'un quatrième type d'instance de type clef publique, que nous n'attaquons pas, avait aussi été proposé par Biryukov \etal. Ces instances ont cependant aussi été attaquées par
 Gilbert \etal à CRYPTO~2015~\cite{DBLP:conf/crypto/GilbertPT15}.
- 
+
 La base de nos attaques consiste à exploiter des faiblesses du degré algébrique en sortie des composants de la structure \asasa. Nous détaillons brièvement cette idée dans le cas de l'instance
 chiffrement par bloc. On considère les formes algébriques normales (ANFs) associées aux bits de sortie après la seconde application $S'$,
 juste avant l'application de la dernière couche $A''$~;
@@ -838,8 +838,8 @@ modulaire plutôt que le XOR. Nous présentons cette idée dans le cas simple ma
 apprendre la valeur du $i^\text{ème}$ bit de $k$ en comparant $x \defas \oracle(p)$ et $y \defas \oracle_i(p \oplus \Delta_i)$: si celui-ci vaut zéro, alors la valeur
 en entrée de la permutation $\Perm$ pour $\oracle_i$ est la même que pour $\oracle$, et on a $y \boxminus x = \Delta_i$~; s'il vaut un, les entrées de $\Perm$ sont différentes
 pour les deux oracles, et la différence de leurs sorties est très probablement différente de $\Delta_i$~; les deux cas peuvent donc se distinguer efficacement, pour le coût
-d'une requête à chaque oracle. Un attaquant ayant accès à $\oracle$ et $\oracle_i$, $i \in \{0,\ldots,n - 2\}$, peut donc retrouver l'ensemble de la clef $k$ 
-avec un nombre de requête linéaire en sa taille. 
+d'une requête à chaque oracle. Un attaquant ayant accès à $\oracle$ et $\oracle_i$, $i \in \{0,\ldots,n - 2\}$, peut donc retrouver l'ensemble de la clef $k$
+avec un nombre de requête linéaire en sa taille.
 
 Nous avons appliqué l'attaque en clef liée décrite ci-dessus à l'algorithme de chiffrement authentifié \proestotr~\cite{proest}, qui est une instance du mode de chiffrement
 OTR avec un chiffre de type Even-Mansour.  L'utilisation d'un padding sur la moitié du bloc fait qu'une application directe de notre idée ne permet de retrouver que la moitié
@@ -976,8 +976,8 @@ le milieu, dans le sens où elles couvrent plus de tours, au prix d'une phase de
 nous avons pu augmenter le nombre de tours attaqués de 5, atteignant 62 tours avec une attaque de très grosse complexité estimée à $2^{159.3}$.
 Nous avons aussi pu baisser la complexité des attaques à nombre
 de tours équivalents par rapport à Knellwolf et Khovratovich, attaquant 58 tours pour un coût de $2^{157.9}$ contre 57 tours à $2^{158.8}$. Enfin, nous avons appliqué les mêmes
-techniques avec un certain succès sur les fonctions de la famille \blake, améliorant quelque peu le nombre de tours attaqués en préimage, avec cependant un gain marginal sur la
-recherche exhaustive. 
+techniques avec un succès modéré sur les fonctions de la famille \blake, améliorant quelque peu le nombre de tours attaqués en préimage, avec cependant un gain seulement
+marginal sur la recherche exhaustive.
 
 
 \newcommand{\mybibtitle}[1]{\textsf{#1.}\hfil}
@@ -987,6 +987,7 @@ recherche exhaustive.
 
 \setcounter{section}{0}
 \renewcommand\thesection{\Alph{section}}
+\newpage
 \section[Mes publications]{My publications}
 
 \subsection{Article de journal}

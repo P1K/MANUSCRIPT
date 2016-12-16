@@ -70,7 +70,7 @@
   the resulting differential. In practice, we used values between 2 and 5, 
   depending on the differential considered. 
 
-  \begin{algorithm}[ht]
+  \begin{algorithm}[htb]
         \LinesNumbered
     \KwIn{
       A chunk $\Fs_i$ of the compression function, $\delta_{i,1}, \delta_{i,2} \in \{0,1\}^m$, a threshold value $t$,
@@ -196,14 +196,17 @@
     \caption{\label{typeI-getter}Estimate the average false negative probability}
   \end{algorithm}
 
-  We conclude this section by giving the statistics for the best attacks that we found for
-  various reduced versions of \shaone in \autoref{SHA11}, the highest number of
-  attacked rounds being 62. Because the difference spaces
-  are no longer affine, they do not lend themselves to a compact description and their size
-  is not necessarily a power of 2 anymore. The ones we use do not have many elements, however,
-  which makes them easy to enumerate.
+\bigskip
 
-  \begin{table}[t]
+  We do not explicitly list the difference sets used in our attack, but conclude this section by giving the statistics for the best attacks that we found for
+  various reduced versions of \shaone \emph{without padding} in \autoref{SHA11}, the highest number of
+  attacked rounds being 62.
+%  Because the difference spaces
+%  are no longer affine, they do not lend themselves to a compact description and their size
+%  is not necessarily a power of 2 anymore. The ones we use do not have many elements, however,
+%  which makes them easy to enumerate.
+
+  \begin{table}[htb]
     \caption[One block preimage without padding.]{One block preimage without padding. $N$ is the 
               number of attacked steps, \emph{Split} is the separation step between the
               forward and the backward chunk, $d_{i,j}$ is the $\log_2$ of the cardinal
@@ -236,7 +239,7 @@
   the best attacks that we found in \autoref{SHA12}. One will note that the highest number of attacked
   rounds dropped from 62 to 56 when compared to \autoref{SHA11}.
  
-  \begin{table}[t]
+  \begin{table}[htb]
     \caption[One block preimage with padding.]{One block preimage with padding. $N$ is the 
               number of attacked steps, \emph{Split} is the separation step between the
               forward and the backward chunk, $d_{i,j}$ is the $\log_2$ of the cardinal
@@ -275,7 +278,8 @@
 
   If we relax the conditions on the IV and do not impose anymore that it is fixed
   to the one of the specifications, it becomes possible to use a splice-and-cut
-  decomposition of the function, as well as short properly padded bicliques.
+  decomposition of the function, as well as short properly padded bicliques built in the
+  same way as the ones used by Knellwolf and Khovratovich~\cite{DBLP:conf/crypto/KnellwolfK12}.
 
   The reduced compression function of \shaone $\Fs$ is now decomposed into three smaller
   functions as $\Fs = \Fd^t \circ \Fuu \circ \Ft \circ \Fd^b$, $\Ft$ being the rounds covered by the
@@ -291,15 +295,15 @@
     \end{figure}
 
     Finding the parameters is done in the exact same way as for the one-block preimage attacks.
-    Since the bicliques only cover $7$ steps, one can generate many of them
+    Since we only use bicliques covering $7$ steps, one can generate many of them
     from a single one by modifying some of the remaining message words outside of the biclique proper.
     Therefore, the amortized cost of their construction is small and considered negligible w.r.t. the
-    rest of the attack. The resulting attacks are shown in \autoref{SHA13}.
+    rest of the attack. The statistics of the resulting attacks are shown in \autoref{SHA13}.
 
-  \begin{table}[ht]
+  \begin{table}[htb]
     \caption[One block pseudo-preimage with padding.]{One block pseudo-preimage with padding. $N$ is the 
               number of attacked steps, $d_{i,j}$ is the $\log_2$ of the cardinal
-              of the set $D_{1,2}$ and $\alpha$ is the estimation for false negative probability.
+              of the set $D_{1,2}$ and $\alpha$ is the estimate for the false negative probability.
               The various splits are labeled as in \autoref{biclique}.
             The complexity is computed as described in \autoref{NewFramework}.\label{SHA13}}
     \begin{center}
@@ -316,8 +320,8 @@
   \end{table}
 
   \subsubsection{Complexity of the two-block attacks.}
-  Using both one-block attacks, it is simple to mount a two-block attack at the combined cost of each of them.
-  For a given target $c$, the process is the followinf:
+  Using two one-block attacks, it is simple to mount a two-block attack at the combined cost of each of them.
+  For a given target $c$, the process is the following:
     \begin{enumerate}
       \item The attacker uses a properly-padded pseudo-preimage attack, yielding the second message block $\mu_2$ and an IV $\iv'$;
       \item The attacker then uses a non-padded preimage attack with target $\iv'$, yielding a first message block $\mu_2$.
@@ -328,7 +332,7 @@ From the Merkle-Damg\aa rd structure of \shaone, it follows that the two-block m
     For attacks up to 60 rounds, we can use the pseudo-preimage attacks of~\cite{DBLP:conf/crypto/KnellwolfK12}; for 61 and 62 rounds,
     we use the ones of this section. This results in attacks of complexities as shown in \autoref{SHA14}.
 
-  \begin{table}[t]
+  \begin{table}[htb]
     \caption[Two-block preimage.]{Two-block preimage attacks on \shaone reduced to $N$ steps. The pseudo-preimage attacks followed by
     ``$\star$'' come from \cite{DBLP:conf/crypto/KnellwolfK12}.\label{SHA14}}
     \begin{center}
@@ -346,8 +350,17 @@ From the Merkle-Damg\aa rd structure of \shaone, it follows that the two-block m
   \end{table}
 
 \section{Conclusion}
-This chapter showed how to extend the \mitm framework for hash function preimage attacks with higher-order differentials,
+This chapter showed how to extend the differential variant of the \mitm framework for hash function preimage attacks with higher-order differentials,
 and how this could be applied to find better attacks on \shaone.
 The source of the improvements come from the fact that higher-order differentials lead to better message partitions, which
 then mechanically allow to mount attacks up to a larger number of steps than the previous best
-results. However, this comes at the cost of a more complex attack procedure.
+results.
+
+This new technique is however not without downsides of its own, as it makes the attack procedure more complex. A consequence is
+that it does not seem to improve the best attacks on very weak functions such as \mdfour. Yet, it still produces the best known
+attacks on the more complex \shaone, when the objective is to find a preimage for the highest possible number of rounds.
+It should also be noted that due to the strong similarity with the original \mitm framework, this technique may be
+much less successful when applied to functions with a heavier message expansion, such as \shatwo, or in general to
+function with better diffusion. A striking example in the latter case is that by applying the current framework
+to the \blake-512 hash function~\cite{blake}, we were only able to attack 2.75 out of 16 with a complexity close to a generic attack. 
+

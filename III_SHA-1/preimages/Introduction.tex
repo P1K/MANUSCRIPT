@@ -1,7 +1,7 @@
 \section{Introduction}
 
 This short chapter presents new preimage attacks for the \shaone hash function.
-The results are obtained by extending previous techniques with higher-order differentials.
+The results are obtained by extending the differential view of \mitm preimage attacks with higher-order differentials.
 
 \medskip
 
@@ -22,20 +22,22 @@ of their approach is that it simplifies the formulation of several advanced exte
 the \mitm technique, and thereby facilitates the search for attack parameters, which in the case
 of \mitm attacks roughly correspond to good partitions for the ``secret''.
 
-In this chapter, we further exploit this differential formulation and generalize it to use higher-order
+In this chapter, we further exploit this differential formulation and generalise it to use higher-order
 differentials, which were introduced in cryptography by Lai in 1994~\cite{L94}. The essence
 of this technique is to consider ``standard'' differential cryptanalysis as exploiting properties
 of the first-order derivative of the function one wishes to analyze; it is then somehow natural
-to generalize the idea and to consider higher-order derivatives as well. We illustrate this
+to generalise the idea and to consider higher-order derivatives as well. We illustrate this
 with a small example using XOR differences: consider a function $\Fs$ and
-assume the differential $\Delta_\alpha\Fs \defas \Fs(x) \oplus \Fs(x \oplus \alpha) = A$ holds with a good probability; this
-is the same as saying that the derivative of $\Fs$ in $\alpha$ is biased towards $A$. In particular,
-if $\Fs$ is linear, this is equal to a constant value $\Fs(\alpha)$, though this is obviously not
-true in general. Now consider the value $\Delta_\alpha\Fs(x) \oplus \Delta_\alpha\Fs(x \oplus \beta) =
+assume the equality $\Delta_\alpha\Fs(x) \defas \Fs(x) \oplus \Fs(x \oplus \alpha) = A$ holds with a good probability
+over the values of $x$; this
+is the same as saying that the derivative of $\Fs$ in $\alpha$ is biased towards $A$. In an extreme case,
+if $\Fs$ is linear, then $\Delta_\alpha\Fs$ is constantly equal to $\Fs(\alpha)$.
+%, though this is obviously not true in general.
+Now if we consider the expression $\Delta_\alpha\Fs(x) \oplus \Delta_\alpha\Fs(x \oplus \beta) =
 \Fs(x) \oplus \Fs(x \oplus \alpha) \oplus \Fs(x \oplus \beta)
-\oplus \Fs(x \oplus \alpha \oplus \beta)$, which corresponds to taking the derivative of $\Fs$ twice,
+\oplus \Fs(x \oplus \alpha \oplus \beta)$, this corresponds to taking the derivative of $\Fs$ twice,
 first
-in $\alpha$, and then in $\beta$. The nice point about doing this is that this function may be more
+in $\alpha$, and then in $\beta$. A possible advantage of doing this is that the resulting function may be more
 biased than $\Delta_\alpha\Fs$ was, for instance by being constant when $\Delta_\alpha\Fs$ is linear.
 This process can be iterated at will, each time decreasing the algebraic degree of the resulting
 function until it reaches zero.
@@ -44,16 +46,16 @@ As higher-order differentials are obviously best formulated in differential form
 they combine neatly with the differential view of the framework of Knellwolf and Khovratovich, whereas
 using a similar technique in a \mitm attack independently of any differential formulation would probably prove to be
 much more difficult.
-As a final motivation for this generalization, we show a small application to
-the analysis of the MD4 hash function~\cite{Rivest-md4}. This does not improve the best known
+As a final motivation for this generalisation, we show a small application to
+the analysis of the \mdfour hash function~\cite{Rivest-md4}. This does not improve the best known
 preimage attacks~\cite{md4p2,md4p3}, but gives a good illustration of the potential of the technique.
 
-\paragraph{Higher-order differentials for the compression function of MD4.}
+\paragraph{Higher-order differentials for the compression function of \mdfour.}
 
-The inverse of the state update function inside the compression function of MD4 is of
+The inverse of the state update function inside the compression function of \mdfour is of
 the form: $q_{i-4} \leftarrow (q_i \circlearrowleft s_i) - \boolF(q_{i-1}, q_{i-2}, q_{i-3}) - m_j$,
 with
-the addition being done modulo $2^{32}$.
+the subtraction being done modulo $2^{32}$.
 Four consecutive steps of this inverse function can thus be written as:
 \[
 q_3 \leftarrow (q_7 \circlearrowleft s_7) - \boolF(q_6, q_5, q_4) - m_7
@@ -99,14 +101,14 @@ Hence one obtains a state with no difference on two out of the four state words 
 the differences on the remaining words also have a high probability. This good differential behaviour
 can then be exploited in a later attack.
 
-It is worth noting that in the very case of MD4, one could also use very
+It is worth noting that in the very case of \mdfour, one could also use very
 good local collisions from order-1 message differences, and higher-order differentials do not typically outperform these; we just
 gave them for illustration.
 
 \subsection{Previous and new results on \shaone}
 The first preimage attacks on \shaone were due to De~Canni\`ere and Rechberger~\cite{DBLP:conf/crypto/CanniereR08},
 who used a system-based approach that in particular allows to compute practical preimages for a non-trivial
-number of steps. In order to attack more steps, Aoki and Sasaki later used a MiTM approach~\cite{AS09}.
+number of steps. In order to attack more steps, Aoki and Sasaki later used a \mitm approach~\cite{AS09}.
 This was subsequently improved by Knellwolf and Khovratovich~\cite{DBLP:conf/crypto/KnellwolfK12}, who attacked the highest number
 of rounds so far. To be more precise,
 they attack reduced versions of the function up to 52 steps for \emph{one-block preimages with padding},
@@ -118,8 +120,8 @@ to 64 steps, resulting in \emph{two-block preimages with padding} up to 62 steps
 
 We give a summary of these results in \autoref{tbl:res}.
 
-\begin{table}[t]
-\caption[Existing and new preimage attacks on \shaone.]{Existing and new preimage attacks on \shaone, with complexity is given in base-2 logarithm.\label{tbl:res}}
+\begin{table}[!htb]
+\caption[Existing and new preimage attacks on \shaone.]{Existing and new preimage attacks on \shaone, with complexity given in base-2 logarithm.\label{tbl:res}}
 \begin{center}
 \begin{tabularx}{\textwidth}{@{\extracolsep{2mm} } l c c X  X}
 \toprule

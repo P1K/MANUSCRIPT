@@ -51,7 +51,7 @@ to standard statistical attacks.
 The most powerful attacks against \sam may in fact not be statistical; algebraic attacks may be more
 efficient in exploiting the fact that the round function is defined at a granularity of four bits,
 and that the degree of an invertible 4-bit S-box is at most three. Applying the upper-bound
-from Boura \etal~\cite[Thm. 2]{permdegree}, we get that seven rounds are necessary to
+from Boura \etal~\cite[Theorem 2]{permdegree}, we get that seven rounds are necessary to
 obtain a permutation of maximal degree. Thus, eight full rounds plus an additional half-round
 consisting of only $\sapp$ would probably be necessary to avoid attacks based on the low degree
 of the cipher.
@@ -184,7 +184,7 @@ Processor type & \# rounds & cpb (Alg. 6.1) & cpb (Alg. 6.2)\\
 \end{table}
 
 
-\subsection{Discussion.}
+\subsection{Discussion}
 The performance figures given in \autoref{tbl:perf_sam}, \autoref{tbl:perf_eric} are average for a block cipher. For instance, it compares favourably with
 the optimized vector implementations of
 64-bit ciphers \led and \piccolo in sequential mode from~\cite{sac2013}, which run at speeds between 70 and 90 cpb., depending on the CPU.

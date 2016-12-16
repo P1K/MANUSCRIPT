@@ -5,14 +5,17 @@ We introduce the notation, definitions and background notions that are used in t
 our goal is not to provide a detailed exposition on coding theory, and we refer the reader to any good textbook such as \cite{vanlint} for a thorough treatment.
 
 \subsection{Notation}
-We use `$\defas$' to denote equality by definition.
-We note $\Fq$ an arbitrary finite field and \Ftwom{} the finite field with $2^m$ elements. We often consider $\Fst$, and implicitly use this specific field if not mentioned otherwise.
+We use ``$\defas$'' to denote equality by definition.
+We let $\Fq$
+be the finite field with $q$ elements, and in particular
+\Ftwom{} be the field with $2^m$ elements. We often consider $\Fst$, and implicitly use this specific field if not mentioned otherwise.
 W.l.o.g. we use the representation
-$\Fst \cong \mathbf{F}_2[\alpha]/(\alpha^4 + \alpha + 1)$ when a specific one is needed. We freely use ``integer representation'' for elements of $\Ftwom \cong \Ftwom[\alpha]/I(\alpha)$
-by writing $n \in \{0\ldots2^n-1\} = \sum_{i = 0}^{n-1} a_i 2^i$ to represent the element
-$x \in \Ftwom = \sum_{i = 0}^{n-1} a_i \alpha^i$. In the remainder of this section, and especially in \autoref{sec:ag}, we usually consider an arbitrary algebraically closed field, written $k$;
+$\Fst \cong \mathbf{F}_2[\alpha]/(\alpha^4 + \alpha + 1)$ when a specific one is needed,
+for instance for implementation purposes. We freely use ``integer representation'' for elements of $\Ftwom \cong \Ftwom[\alpha]/I(\alpha)$
+by writing $n \in \{0\ldots2^m-1\} = \sum_{i = 0}^{m-1} a_i 2^i$ to represent the element
+$x \in \Ftwom = \sum_{i = 0}^{m-1} a_i \alpha^i$. In the remainder of this section, and especially in \autoref{sec:ag}, we usually consider an arbitrary algebraically closed field, written $k$;
 it will usually be clear from the context whether $k$ is a field or the dimension of a linear code, see \autoref{def:lincode} below.
-We let $\mathfrak{S}_n$ denote the group of permutations of $n$ elements.
+We let $\mathfrak{S}_n$ denote the group of permutations on $n$ elements.
 
 Bold variables denote vectors, in the sense of elements of a vector space, and subscripts are used to denote their $i^\text{th}$ coordinate, starting from zero. For instance,
 let $\veci \defas (1, 2, 7)$, then  $\veci_2 = 7$.
@@ -22,7 +25,7 @@ its $i^\text{th}$ row.
 Arrays, or tables, in the sense of software data structures, are denoted by regular variables such as $x$ or $T$, and their elements are accessed by using square brackets.
 For instance, $T[i]$ is the $i^\text{th}$ element of the table $T$, starting from zero.
 
-The operator ``$\wedge_{64}$'' denotes the  \emph{logical and} on 64-bit values. We use $\mathbf{0}_{n}$ and $\mathbf{1}_n$ for binary vectors of length $n$ all made of
+The operator ``$\wedge_{64}$'' denotes the  \emph{logical and} between two 64-bit values. We use $\mathbf{0}_{n}$ and $\mathbf{1}_n$ for binary vectors of length $n$ all made of
 zeros and ones respectively. These may also freely be interpreted as elements of other vector spaces that will be clear from the context.
 The function $\indic(\cdot)$ takes as input a set and returns one if it is non-empty, zero otherwise; $\#$ denotes the cardinality of a set.
 We may also use subscripts to show the base in which a number is written when it is not ten, \eg $1010_2$ is the number 10 written in base two.
@@ -45,10 +48,10 @@ The \emph{Hamming distance} $\hdist(\veci,\veco)$ between two vectors is defined
 \begin{defi}[Linear code]
 \label{def:lincode}
 A \emph{linear code} of \emph{length} $n$, \emph{dimension} $k$ and \emph{minimal distance} $d$ over the alphabet $\Fq$ is a $k$-dimensional linear subspace of $\Fq^n$ such that
-$\veci, \veco \neq \veci \in \code \Rightarrow \hdist(\veci, \veco) \geq d$
-and $\exists \veci, \veco \in \code,  \hdist(\veci, \veco) = d$.
-The last conditions can equivalently be expressed as $\veci \neq \nullvec \in \code \Rightarrow \weight(\veci) \geq d$ and $\exists \veci \in \code, \weight(\veci) = d$.
-We use the usual ``NKD'' notation to characterize codes: an $[n, k, d]_{\Fq}$ code $\code$ is a code of length $n$, dimension $k$ and minimum distance $d$
+$\forall\,\veci, \veco \in \code,~ \veci \neq \veco,~\hdist(\veci, \veco) \geq d$
+and $\exists\,\veci, \veco \in \code,~  \hdist(\veci, \veco) = d$.
+The last conditions can equivalently be expressed as $\veci \neq \nullvec \in \code \Rightarrow \weight(\veci) \geq d$ and $\exists\,\veci \in \code, \weight(\veci) = d$.
+We use the usual notation to characterize codes: an $[n, k, d]_{\Fq}$ code $\code$ is a code of length $n$, dimension $k$ and minimum distance $d$
 with symbols in \Fq. When $d$ is unknown, we simply write $[n, k]_{\Fq}$.
 \end{defi}
 
@@ -57,7 +60,7 @@ We usually view a code as a set, and call \emph{codewords} its elements. By an a
 
 \begin{defi}[Dual code]
 Let $\code$ be an $[n, k, d]_{\Fq}$ code over $\Fq$ equipped with a scalar product $\langle\cdot,\cdot\rangle$. The \emph{dual}
-$\code^\bot$ of $\code$ is defined as $\{\veci \in \Fq | \forall \veco \in \code, \langle\veci,\veco\rangle = \nullvec\}$.
+$\code^\bot$ of $\code$ is defined as $\{\veci \in \Fq | \forall \veco \in \code, \langle\veci,\veco\rangle = 0\}$.
 \end{defi}
 
 A code $\code$ equal to its dual $\code^\bot$ is called \emph{self-dual}.
@@ -66,7 +69,7 @@ A code $\code$ equal to its dual $\code^\bot$ is called \emph{self-dual}.
 \begin{defi}[Generator matrix, systematic form]
 A \emph{generator matrix} $G$ of an $[n, k, d]_{\Fq}$ code $\code$ is a matrix of $\matspace_{k,n}(\Fq)$ such that
 $\code = \{\veci G, \veci \in \Fq^k\}$. It is in \emph{systematic form} if it is of the form $(I_k~A)$ with
-$I_k$ the identity matrix of dimension $k$. 
+$I_k$ the identity matrix of dimension $k$.
 \end{defi}
 
 If $(I_k~A)$ is a generator matrix for a code $\code$, then $(-A^t~I_{n-k})$, or equivalently $(I_{n-k}~-A^t)$,
@@ -85,15 +88,15 @@ systematic generator matrix, it is easy to see that $n - k + 1$ is indeed the ma
 
 A useful alternative characterization of MDS matrices is given by the following theorem.
 
-\begin{thm}[\cite{mdsConj}]
+\begin{thm}[{\cite[Chapter 11, Theorem 8]{mdsConj}}] 
 \label{thm:mds_minors}
 A matrix $M$ is MDS if and only if all of its minors are non-zero, \ie all the square sub-matrices of $M$ are invertible.
 \end{thm}
 
-A consequence of this is that the dual of an MDS code is also MDS.
+A consequence is that the dual of an MDS code is also MDS.
 We also have the following, see for instance~\cite[Chap. 1]{tvn}:
 
-\begin{conj}[MDS conjecture]
+\begin{conj}[MDS conjecture~{\cite[Chapter 11, Section 7]{mdsConj}}]
 There is no MDS code $[n,k,n-k+1]_{\Fq}$ of length $n > B$,
 where $B = q + 2$ when $q$ is even and $k = 3$ or $k = q - 1$,
 and $B = q + 1$ in all other cases. 
@@ -105,8 +108,8 @@ We assume in this case that $\Fq = \Ftwom$ for some $m$.
 \begin{defi}[Branch number~\cite{phddaemen}]
 Let $A$ be the matrix of a linear mapping over $\Fu$.
 The \emph{differential branch number} of $A$
-is equal to $\min_{\veci \neq 0}(\weight(\veci) + \weight(\veci A))$,
-and the \emph{linear branch number} of $A$ is equal to $\min_{\veci \neq 0}(\weight(\veci) + \weight(\veci A^t))$.
+is equal to $\min_{\veci \neq \nullvec}(\weight(\veci) + \weight(\veci A))$,
+and the \emph{linear branch number} of $A$ is equal to $\min_{\veci \neq \nullvec}(\weight(\veci) + \weight(\veci A^t))$.
 \end{defi}
 
 If $A$ is such that $(I_k~A)$ is a generator matrix of a code of minimum distance $d$ whose dual has minimum distance $d'$,

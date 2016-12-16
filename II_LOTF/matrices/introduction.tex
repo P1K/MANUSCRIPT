@@ -17,7 +17,7 @@ a full 128-bit block with excellent diffusion properties, at a moderate hardware
 
 As interesting as it may be in hardware, the cost in software of a large linear mapping tends to make these designs rather less attractive than more balanced solutions.
 An early attempt to use a large matrix was the block cipher \shark{}, a \rijndael{} predecessor~\cite{shark}; the same kind of design
-was also later used for \khazad. Both are  64-bit ciphers which use an MDS matrix of dimension
+was also later used for \khazad~\cite{khazad}. Both are  64-bit ciphers which use an MDS matrix of dimension
 eight over $\Fth$ for their linear diffusion. The usual technique for implementing such a mapping in software is to rely on a table of precomputed multiples of
 the matrix rows. However, table-based implementations now tend to be frown upon as they may lead to \emph{timing attacks}~\cite{timinattacks}, and this could
 leave ciphers with a structure similar to \shark{}'s without reasonable software implementations when resistance to these attacks is required.
