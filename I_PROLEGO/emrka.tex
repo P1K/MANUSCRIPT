@@ -671,7 +671,7 @@ int main()
 	uint64_t kk1 = recover_lo(secret_key, recover_hi(secret_key));
 	uint64_t kk2 = kk1 ^ 0x8000000000000000ULL;
 
-	printf("The real key is %016llx, the key candidates are %016llx, %016llx", secret_key, kk1, kk2);
+	printf("The real key is %016llx, the key candidates are %016llx, %016llx    ", secret_key, kk1, kk2);
 	if ((kk1 == secret_key) || (kk2 == secret_key))
 		printf("SUCCESS!\n");
 	else

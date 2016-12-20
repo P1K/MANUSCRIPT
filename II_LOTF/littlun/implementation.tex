@@ -9,9 +9,9 @@ such as the Virtual Silicon standard cell library, OR and AND gates cost 1.33 ga
 the S-box with this library would cost 80 GE. 
 
 \subsection{Bitsliced software implementation}
-One of our main objective w.r.t. implementation was to obtain an S-box with an efficient \emph{bitsliced} implementation in
+One of our main objective w.r.t. implementation is to obtain an S-box with an efficient \emph{bitsliced} implementation in
 software. This is closely related to the simplicity of the circuit of the S-box, though not exactly equivalent.
-We purposefully chose a 4-bit S-box from the \emph{class 13} of Ullrich \etal \cite{skew} because of its very
+We purposefully choose a 4-bit S-box from the \emph{class 13} of Ullrich \etal \cite{skew} because of its very
 efficient bitsliced implementation that requires only 9 instructions
 on a wide variety of platforms.
 %(and offers good instruction-level parallelism).
@@ -53,7 +53,8 @@ The low number of non-linear gates needed to implement \littlunOne makes it a su
 Indeed, it directly implies a lower cost when using Boolean masking schemes, both hardware and software, which represent the primitive to be masked as a circuit \cite{isw,DBLP:conf/fse/CarletGPQR12}.
 In particular, \littlunOne is competitive with the S-boxes proposed by Grosso \etal \cite{lsdesigns}: it has the same gate count as the S-box used for \robin and only
 one more non-linear and one less XOR gate than the one used for \fantomas. All three S-boxes are comparable in terms of cryptographic properties.
-The S-box of Canteaut \etal is slightly more expensive, requiring two more non-linear gates~\cite{sac15}; it is however stronger against differential cryptanalysis.
+The S-box of Canteaut \etal is slightly more expensive, requiring two more non-linear gates~\cite{sac15}; it is however stronger against differential cryptanalysis,
+its differential uniformity being equal to 8.
 
 One could alternatively consider that the chief non-linear component to take into account in that context is actually \littlunS, the 4-bit S-box underlying \littlunOne, rather than the full S-box.
 Indeed, any cryptosystem using \littlunOne in combination with an arbitrary linear layer

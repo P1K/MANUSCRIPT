@@ -1,19 +1,25 @@
 \section{Preliminaries}
+\label{sec:elprelim}
 
-We start by defining the main notions that will be used in evaluating the cryptographic properties of our construction.
+We start by giving an overview of the main notions that will be used in evaluating the cryptographic properties of our construction.
+A more detailed and rigorous treatment of the following can for instance be found in~\cite{phdRoue}.
+
+\bigskip
+
 Although we will mostly consider S-boxes as defined over binary strings, we may see an $n$-bit S-box as a mapping
-$\ftwo^n \rightarrow \ftwo^n$ whenever convenient.
-
+$\ftwo^n \rightarrow \ftwo^n$ whenever convenient, in particular so that the addition of a difference to an S-box
+input is a well-defined operation.
 
 \begin{defi}[Differential uniformity of an S-box]
+\label{diffS}
 Let $\sbo$ be an $n$-bit S-box. We define its
-\emph{difference distribution table} (or DDT) as the function $\diff_{\sbo}$ defined extensively by:
+\emph{difference distribution table} (or DDT) as the function $\Ldiff_{\sbo}$ defined extensively by:
 \[
-\diff_{\sbo}(a,b) \defas \#\{x \in \ftwo^n | \sbo(x) + \sbo(x + a) = b\}.
+\Ldiff_{\sbo}(a,b) \defas \#\{x \in \ftwo^n | \sbo(x) + \sbo(x + a) = b\}.
 \]
 The \emph{differential uniformity} $\LdiffU$ of $\sbo$ is defined as:
 \[
-\max_{(a,b) \neq (0,0)} \diff_{\sbo}(a,b).
+\max_{(a,b) \neq (0,0)} \Ldiff_{\sbo}(a,b).
 \]
 \end{defi}
 Put another way, an $n$-bit S-box with differential uniformity $\LdiffU$ has a maximal differential probability
@@ -21,6 +27,7 @@ of $\LdiffU/2^n$ over its inputs.
 
 
 \begin{defi}[Linearity of an S-box]
+\label{linS}
 Let $\sbo$ be an $n$-bit S-box. We define its
 \emph{linear approximation table} (or LAT) as the function $\lin_{\sbo}$ defined extensively by:
 \[
@@ -32,32 +39,169 @@ The \emph{linearity} $\linU$ of $\sbo$ is defined as:
 \]
 \end{defi}
 Roughly speaking, the linearity measures the maximum absolute difference between how many times a non-trivial linear approximation
-takes the value 1 and how many times it takes the value 0. It is therefore twice the difference between $2^{n-1}$ (for an $n$-bit S-box)
+takes the value 1 and how many times it takes the value 0. For an $n$-bit S-box, it is therefore twice the difference between $2^{n-1}$
 and how many times either value is taken.
-In particular, if we define the \emph{bias} $b$ of a probability $p$ as $|p - 1/2|$, it means that
-the bias of any linear approximation of an $n$-bit S-box of linearity $\linU$ is upper-bounded by $(\linU/2)/2^n$.
+In particular, if we define the \emph{bias} $b$ of a probability $p$ as $p - 1/2$, it means that
+the absolute bias of any linear approximation of an $n$-bit S-box of linearity $\linU$ is upper-bounded by $(\linU/2)/2^n$.
+Alternatively, it may sometimes be useful to consider the \emph{correlation} of a linear approximation for the S-box
+defined as $\Cor_{\sbo}(a,b) \defas 2^{-n}\lin_{\sbo}(a,b)$, \ie twice the bias.
 
 \begin{defi}[Differential branch number of an S-box]
 The \emph{differential branch number} of an S-box $\sbo$ is:
 \[
-\min_{\{(a,b) \neq (0,0) | \diff_{\sbo}(a,b) \neq 0\}} \wt(a) + \wt(b),
+\min_{\{(a,b) \neq (0,0) \,|\, \Ldiff_{\sbo}(a,b) \neq 0\}} \wt(a) + \wt(b),
 \]
-where $\wt(x)$ is the Hamming weight of $x$. 
+where $\wt(x)$ is the Hamming weight of $x$.
 \end{defi}
 
 \begin{defi}[Linear branch number of an S-box]
 The \emph{linear branch number} of an S-box $\sbo$ is:
 \[
-\min_{\{(a,b) \neq (0,0) | \lin_{\sbo}(a,b) \neq 0\}} \wt(a) + \wt(b).
+\min_{\{a,b\neq 0\, |\, \lin_{\sbo}(a,b) \neq 0\}} \wt(a) + \wt(b).
 \]
 
 \end{defi}
 
 \begin{defi}[Algebraic normal form]
 Let $f : \ftwo^n \rightarrow \ftwo$ be an $n$-bit Boolean function, its \emph{algebraic normal form}
-(or ANF) is defined as the polynomial $g \in \ftwo[x_0,x_1,\ldots x_{n-1}]/\langle\,x_i^2-x_i\,\rangle_{i<n}$
+(or ANF) is defined as the unique polynomial $g \in \ftwo[x_0,x_1,\ldots x_{n-1}]/\langle\,x_i^2-x_i\,\rangle_{i<n}$
 such that for all $x \in \ftwo^n$, $f(x) = g(x[0],\ldots,\allowbreak x[n-1])$.
-Similarly, the ANF of an $n$-bit S-box $\sbo$ 
+Similarly, the ANF of an $n$-bit S-box $\sbo$
 is the sequence of the ANFs of its $n$ constituent Boolean
 functions $\langle\sbo(\cdot),e_i\rangle$, with $(e_i)$ the canonical basis of $\ftwo^n$.
 \end{defi}
+
+The previous definitions focused on properties of individual S-boxes; in particular they involved
+no key or other kind of parameterisation. As we are eventually interested in the properties of block ciphers,
+\ie families of permutations indexed by a key, we may also require definitions that average
+some of the above properties in a meaningful way.
+We then get the two following definitions, where we naturally
+extend the notion of differential uniformity and linearity to any function rather than just
+S-boxes.
+
+\begin{defi}[Maximum expected differential probability of a family of functions]
+\label{diffC}
+The \emph{Maximum expected differential probability} (MEDP) of
+$\Fun : \keyspace \times \{0,1\}^n \rightarrow \{0,1\}^n$ is defined as:
+\[
+\max_{(a,b) \neq (0,0)} ~ \frac{1}{\#\keyspace}~\cdot~ \sum_{k \in \keyspace} \frac{\Ldiff_{\Fun(k,\cdot)}(a,b)}{2^n}.
+\]
+\end{defi}
+
+\begin{defi}[Maximum expected linear potential of a family of functions]
+\label{linC}
+The \emph{Maximum expected linear potential} (MELP) of
+$\Fun : \keyspace \times \{0,1\}^n \rightarrow \{0,1\}^n$ is defined as:
+\[
+\max_{(a,b) \neq (0,0)} ~ \frac{1}{\#\keyspace}~\cdot~ \sum_{k \in \keyspace} \Bigg(\frac{\lin_{\Fun(k,\cdot)}(a,b)}{2^n}\Bigg)^2.
+\]
+\end{defi}
+
+The MEDP and MELP of (reduced versions of) a block cipher are good indicators of its resistance against differential and linear cryptanalyis.
+Unfortunately, it is usually a hard problem to compute the MEDP and MELP for a non-trivial number of rounds of a block cipher.
+However, in the case of SPN ciphers,
+it is generally easier to derive upper bounds on the probability and potential of given differential and linear
+\emph{trails} (or \emph{characteristics}), for which the intermediate differences and linear masks are specified at every round. For some
+SPN ciphers, it may even be possible to provide bounds for \emph{any} trail on a given number of rounds. These notions are then often
+used instead of the MEDP and MELP to argue about the security of the cipher.
+
+\medskip
+
+In the following, we consider an iterative $n$-bit block cipher $\E$ with round function $\R$. If we write $\R_k$ the
+round function with pre-addition of a subkey $k$, \ie $\R_k(x) = \R(x \oplus k)$,
+then the $r$-round $\E$ is defined as $\E(K,x) = (\R_{k_{r-1}} \circ \cdots \circ \R_{k_0}(x)) \oplus k_r$, where the tuple
+$(k_0,\ldots,k_r)$ is the image of $K$ by some key expansion mapping. We then have:
+
+\begin{defi}[Differential trail]
+An $r$-round \emph{differential trail} for a block cipher $\E$ is an $(r+1)$-tuple $(a_0,\ldots,a_r)$ of $n$-bit \emph{differences}.
+An input $x$ to $\E$ is said to \emph{follow} the trail for the subkeys $(k_0,\ldots,k_r)$
+if $\forall\, i < r,\,\R_{k_i}(x) \oplus \R_{k_i}(x \oplus a_i) = a_{i+1}$.
+
+\noindent
+When the key (equivalently the tuple of subkeys) of $\E$ is fixed, we call \emph{differential trail probability} (DTP) of a trail the probability
+that it is followed by an input to $\E$.
+\end{defi}
+
+\begin{defi}[Linear trail]
+\label{linT}
+An $r$-round \emph{linear trail} for $\E$ is an $(r+1)$-tuple $(a_0,\ldots,a_r)$ of $n$-bit \emph{linear selection masks}.
+
+\noindent
+For a fixed key of $\E$, the \emph{linear trail correlation} (LTC) of a trail is given by:
+\[
+\prod_{i=0}^{r-1} \Cor_{\R_{k_i}}(a_i, a_{i+1}).
+\]
+\end{defi}
+
+In the same spirit as \autoref{diffC} and \autoref{linC}, we will usually be interested in the expected values of the DTP
+and the squared LTC over the choice of the key.
+%We then call EDTP and ELTP the \emph{expected differential trail probability}
+%and \emph{expected linear trail potential} respectively.
+
+\medskip
+
+The above definitions are in fact not completely specific to SPN block ciphers. However, for such ciphers, one can additionally
+define the notion of \emph{active} S-box in a trail, which we define informally as follows:
+
+\begin{defi}[Active S-box in a trail]
+An $i^\text{th}$-round S-box is \emph{active} in an $r$-round differential (resp. linear) trail $(a_0,\ldots,a_r)$
+if it has a non-zero input difference as per $a_i$ (resp. if some of its input bits are selected
+by the mask $a_i$).
+\end{defi}
+
+\noindent
+For example, taking the block and S-box size to be respectively 32 and 4 and using hexadecimal notation, all S-boxes are active in the
+$2$-round trails $(\texttt{0xFFFFFFFF}, \texttt{0xFFFF}\linebreak{}\texttt{FFFF}, \texttt{0xFFFFFFFF})$ and
+$(\texttt{0x12345678}, \texttt{0x9ABCDEFE}, \texttt{0xDCBA9876})$, and only one S-box is active at every round of the trail $(\texttt{0x10000000},
+\texttt{0x30000000}, \texttt{0x00000004})$.
+
+We can define the \emph{weight} of a trail $(a_r)$ as the number of S-boxes active for $(a_r)$. Note that whether
+an S-box is active or not in a trail solely depends on the definition of the latter and not, say, on subkey values.
+Consequently, even though the probability of the differential trails of a block cipher (say) may in fact depend on the key, the possible weights of
+trails of non-zero probability are only a consequence of the round function.
+
+If we allow ourselves to make some independence hypotheses, assuming that consecutive round functions
+behave independently of each other, then the number of active S-boxes in a differential trail can be used to upper-bound its expected probability.
+This is expressed informally as the following:
+
+\begin{assu}
+\label{assu:mark}
+Let $(a_r)$ be a differential trail of weight $w$ for the SPN block cipher $\E$ which uses a unique $b$-bit S-box $\sbo$ of differential uniformity
+$\LdiffU$. Call $p_{\sbo} \defas \LdiffU/2^b$ the maximum differential probability of $\sbo$.
+Then the expected probability over the choice of $K$ that an input to $\E(K,\cdot)$ follows the trail $(a_r)$ is upper-bounded by $(p_{\sbo})^w$.
+\end{assu}
+
+In other words, \autoref{assu:mark} is a consequence of the assumption that the expected probability of an $r$-round
+differential trail is equal to the
+product of the expected probabilities of the one-round trails it is made of, \ie the so-called Markov assumption~\cite{idea}.
+
+The case of linear trails is treated somewhat similarly. In particular, from \autoref{linT}, the correlation of
+a trail for a fixed key is easy to compute from the correlation of the one-round trails it is made of. Hence, we get:
+
+\begin{prop}
+\label{prop:lina}
+Let $(a_r)$ be a linear trail of weight $w$ for the SPN block cipher $\E$ which uses a unique $b$-bit S-box $\sbo$ of linearity
+$\linU$. Call $\Cor_{\sbo} \defas \linU/2^b$ the maximal absolute correlation of a linear approximation for $\sbo$.
+Then, fixing the key $K$, the absolute correlation of the trail $(a_r)$ for $\E(K,\cdot)$ is upper-bounded by $(\Cor_{\sbo})^w$.
+\end{prop}
+
+Depending on the properties of the S-box and on the block size of a cipher, one can use the upper bounds
+from \autoref{assu:mark} and \autoref{prop:lina} to set an objective for the minimum number of active S-boxes in any trail.
+
+For resistance against differential cryptanalysis, one typically requires trails to have at least $\mathit{wd}$ differentially active
+S-boxes so that $(p_{\sbo})^\mathit{wd} < D2^{-n}$, with $n$ the block size of the cipher under consideration and
+$D$ a number. This comes from
+the fact that differentials of probability $2^{-n+1}$ are bound to exist, and one wishes both that no single trail has a
+higher expected probability and more importantly that no set of more than $D$ trails with a minimum number of active
+S-boxes and equal starting and ending differences can be found.
+
+In the case of linear cryptanalysis, one similarly typically requires at least $\mathit{wl}$ linearly active
+S-boxes in any trail so that $(\Cor_{\sbo})^\mathit{wl} < L2^{-n/2}$. This comes from the fact that the data complexity required to exploit
+an approximation of correlation $C$ grows with the square of $C$, and that we do not want the net number of trails with
+equal starting and ending masks, activating
+the minimum number of S-boxes, and interfering constructively
+to be likely more than $L$ for some fixed keys.
+
+This entire approach then becomes particularly useful if one is able to use the structure of the round function of a block cipher to lower-bound the
+number of differentially and linearly active S-boxes for any trail of a given number of round, as the objective on the number
+of S-boxes becomes one on the number of rounds.

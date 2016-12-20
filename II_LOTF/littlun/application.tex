@@ -18,12 +18,12 @@ an input, with $x_i$, $rk_i$ 8-bit words. The big endian convention is used to c
 
 Let us first define $f_i(t) \defas \iota_i(t_0)||\kappa(t_1)||t_2||t_3||t_4||t_5||t_6||t_7$, with $\kappa(x) \defas x \oplus \texttt{0xFF}$;
 $\iota_i(x) \defas x \oplus \mathcal{C}(i)$,
-$\mathcal{C}(i)$ being a round constant produced as the $i^\text{th}$ iteration of the LFSR shown in
-\autoref{rcon_lfsr}, initialized with zero. Algebraically speaking, this LFSR implements the mapping $x \mapsto \alpha(x + \alpha^7)$
-in $\mathbf{F}_2[\alpha]/\alpha^8+\alpha^7+\alpha^3+\alpha^2+1$. Note however that the mapping of elements of this field to the state of the
-LFSR, or equivalently 8-bit machine words, uses the inverse ordering of the usual convention, \ie{} the highest coefficient is
+$\mathcal{C}(i)$ being a round constant produced as the $i^\text{th}$ iteration of the LFSR-like function $\mathcal{C}$ shown in
+\autoref{rcon_lfsr}, initialized with zero. Algebraically speaking, $\mathcal{C}$ implements the mapping $x \mapsto \alpha(x + \alpha^7)$
+in $\mathbf{F}_2[\alpha]/\alpha^8+\alpha^7+\alpha^3+\alpha^2+1$. Note however that the mapping of elements of this field to the state of
+\autoref{fig:avrK}, or equivalently 8-bit machine words, uses the inverse ordering of the usual convention, \ie{} the highest coefficient is
 stored in the LSB. This, as well as the addition of $\alpha^7$ prior to the multiplication by $\alpha$, is done to ease software implementations
-of this round constant generation. An example of such an implementation is given in 
+of this round constant generation. An example of such an implementation is given in
 \autoref{fig:avrK}.
 \begin{figure}[ht]
 \begin{minted}[breaklines]{c}
@@ -35,7 +35,7 @@ r[5] = r[5] ^ flip; r[7] = r[7] ^ flip;
 % // 3
 % // 2
 % // 0
-\caption[The round-constant-generating LFSR.]{The LFSR whose $i^\text{th}$ iteration starting from a zero state defines the $i^\text{th}$ round constant. This pseudo-code
+\caption[The round-constant-generating function.]{The function whose $i^\text{th}$ iteration starting from a zero state defines the $i^\text{th}$ round constant. This pseudo-code
 assumes an 8-bit state $r$, whose entry $r[0]$ maps to the LSB in a machine representation\label{rcon_lfsr}.}
 \end{figure}
 
@@ -70,7 +70,7 @@ omitted.}
 We propose two key-schedules, $\ksOne$ and $\ksTwo$, depending on whether resistance to related-key attacks is required (in the case of $\ksTwo$) or not.
 In order to distinguish between the two block ciphers, we write \fly for the default case where $\ksOne$ is used and $\flyrk$ when $\ksTwo$ is used.
 We describe $\ksOne$ first, which in fact performs only an elementary scheduling:
-let $k := k_0||k_1$ be the 128-bit master key, and $k_0$ (resp. $k_1$) its first (resp. second) half; then 
+let $k := k_0||k_1$ be the 128-bit master key, and $k_0$ (resp. $k_1$) its first (resp. second) half; then
 the sequence $(rk)$ of round keys of $\ksOne$ is the simple alternation of $k_0$ and $k_0 \oplus k_1$ defined as $rk_i \defas k_0 \oplus i\times k_1$, where
 $i\times k_1$
 means the all-zero key for even values of $i$ and $k_1$ otherwise.
@@ -79,7 +79,7 @@ A round constant is also added in $\ark$ through the function $f_i$ to prevent s
 \medskip
 
 For \fly to be resistant to related-key attacks, we use the same approach as \noekeon \cite{noekeon} to define $\ksTwo$ as follows. Let us denote by $\fly(0, \cdot)/12$ twelve applications of the round function of \fly
-with the all-zero 128-bit key and define $k' \defas k_0'||k_1' = \fly(0, k_0)/12||\fly(0, k_1)/12$. Then $\ksTwo$ is defined through $\flyrk$ as $\flyrk(k, \cdot) \defas \fly(k', \cdot)$. 
+with the all-zero 128-bit key and define $k' \defas k_0'||k_1' = \fly(0, k_0)/12||\fly(0, k_1)/12$. Then $\ksTwo$ is defined through $\flyrk$ as $\flyrk(k, \cdot) \defas \fly(k', \cdot)$.
 
 \medskip
 
@@ -87,7 +87,7 @@ The round function of \fly is applied 20 times, the same as \pride. The entire c
 as $\fly(k,\cdot) \defas \ark(rk_{20},\cdot) \circ \rfly(rk_{19}, \cdot) \circ \ldots \circ \rfly(rk_1, \cdot) \circ \rfly(rk_0,\cdot)$.
 
 
-\subsubsection*{Design rationale.}
+\subsubsection*{Design rationale}
 The core of \fly is the \littlunOne S-box, which was designed to have a branch number of three. This allows to achieve a good diffusion when combining the S-box
 application with a simple bit permutation. The latter was chosen so that all eight bits at the output of an S-box go to one different S-box each; similarly, all
 input bits come from a different S-box. Unlike in \present, this permutation also has cycles of different lengths,
@@ -108,9 +108,9 @@ that consists in ``scrambling'' the master key with a permutation of good differ
 
 We now analyse the security of \fly against various types of attacks. Considering the similarity of the design with \present and the published analysis on this cipher, the
 most efficient attacks on \fly are likely to be variants of classical statistical (differential and linear) attacks, which we analyse first, in the single-key setting.
-We then give an overview of the resistance against other attack techniques. 
+We then give an overview of the resistance against other attack techniques.
 
-\subsubsection{Statistical attacks.}
+\subsubsection{Statistical attacks}
 \label{sec:stats}
 We can use the branch number of \littlunOne together with the properties of the bit permutation $\rot$ to easily derive a lower bound on the number of
 differentially and linearly active S-boxes. Indeed, as the branch number is 3, we are guaranteed to have at least 6 active S-boxes
@@ -127,25 +127,31 @@ every four rounds of any non-trivial differential or linear characteristic. This
 %%\item Any four rounds (excluding the first and last rounds) have at least 6 active S-boxes.
 %\end{enumerate}
 \begin{prop}
+\label{proppropag}
 %No transitions of active S-boxes on three rounds of \fly of the form $1 \rightarrow n \rightarrow 1$ are possible.
-There is no 3-round trail on \fly activating 1, then $n$, then 1 S-box, for any value of $n$. 
+There is no 3-round trail on \fly activating 1, then $n$, then 1 S-box, for any value of $n$.
 \end{prop}
 \begin{proof}
 In a round following one round with a single active S-box, all $n$ active S-boxes are active in a single bit of their input, and consequently
 each of their outputs activates at least 2 S-boxes.
 \end{proof}
 
-The block size of \fly being 64 bits, we want
-the expected probability of any differential characteristic to be less than 
-$p \approx 2^{-64}$,  with the expectation computed over the key space, and the differential probability computed over the message space.
-Similarly, we want the expected bias of any linear characteristic to be no more than $b \approx 2^{-32}$. From
-\autoref{statprop}, by multiplying the differential probabilities and applying the piling-up lemma respectively, this means that we want a differential
-(respectively linear) characteristic to have \emph{at least} 16 active S-boxes. This happens at the latest after 12 rounds, for which at least 18 S-boxes are guaranteed to be active.
+Following \autoref{sec:elprelim}, the block size of \fly being 64 bits and the differential uniformity and linearity
+of its 8-bit S-box being 16 and 64 respectively, we want any differential trail to have more than $16$ active S-boxes to preclude
+differential distinguishers, as $2^{-64} = (16/256)^{16}$; we also want any linear trail to have more than $16$ active S-boxes,
+as $2^{-32} = (64/256)^{16}$. From \autoref{proppropag}, this happens in both cases after at most 12 rounds, after which at least
+18 S-boxes are guaranteed to be active, both linearly and differentially.
+%the expected probability of any differential characteristic to be less than
+%$p \approx 2^{-64}$,  with the expectation computed over the key space, and the differential probability computed over the message space.
+%Similarly, we want the expected bias of any linear characteristic to be no more than $b \approx 2^{-32}$. From
+%\autoref{statprop}, by multiplying the differential probabilities and applying the piling-up lemma respectively, this means that we want a differential
+%(respectively linear) characteristic to have \emph{at least} 16 active S-boxes. This happens at the latest after 12 rounds, for which at least 18 S-boxes are guaranteed to be active.
 Even by discounting the additional 2 S-boxes and assuming that a distinguisher can be found for this amount of rounds, this gives a very comfortable margin of 8 rounds,
 which we estimate to be much beyond the ability of an attacker to convert the distinguisher into, say, key-recovery; in particular, this is twice the number of rounds needed
 for full diffusion.
 This also leaves some margin to ensure that even in the case where \fly would exhibit a strong differential or linear hull effect it would be unlikely for an attacker to be able
-to mount a meaningful attack. For instance, after 16 rounds, an attacker would need about $2^{32}$ ``optimal'' contributing characteristics to obtain a distinguisher with non-trivial
+to mount a meaningful attack. For instance, after 16 rounds, an attacker would need about $2^{32}$ ``optimal'' contributing differential trails
+to obtain a distinguisher with non-trivial
 probability, and would still be facing 4 rounds to mount an attack.
 
 Thus, we conjecture that \fly with 20 rounds offers good resistance to statistical attacks.
@@ -164,7 +170,7 @@ We would like to estimate how many rounds of \fly are necessary for the degree o
 to estimate how quickly the degree increases \cite{permdegree}. In our case, this bound states that $\deg(G \circ F) \leq n - (n - \deg(G))/(n_0 - 2)$, where $n$ is the block size and $n_0$ the
 size of the S-box. Combining this bound with the fact that the degree of the S-box is 5, and thus that $\deg(\blit \circ F) \leq 5\cdot\deg(F)$, we can see that 5 rounds of
 \fly are necessary to reach a full degree; this increases to 6 rounds if we take 3 as the degree of the S-box, which is the minimum degree of its projections on one
-output bit. If we assume the latter bound to be an equality, any algebraic distinguisher on more than about twice this number, \ie twelve rounds, is unlikely to exist. 
+output bit. If we assume the latter bound to be an equality, any algebraic distinguisher on more than about twice this number, \ie twelve rounds, is unlikely to exist.
 Even when relaxing this latter assumption, 20 rounds seem to be well enough to make \fly resistant to algebraic attacks.
 
 \paragraph{Meet-in-the-middle attacks.}
@@ -196,7 +202,7 @@ differences between two different effective master keys $k_0'||k_1'$ and $\widet
 and $(k_1,\widetilde{k_1})$ goes through a permutation with maximum expected differential probability not significantly above $2^{-64}$. Furthermore, unlike single-key differential attacks, which introduce differences
 on the plaintext, we do not expect an attacker to easily be able to force a change of (related) keys
 if their effective master keys fail to verify a difference relation. Thus, even
-if a differential on $\ksTwo$ with probability $p$ higher than $2^{-128}$ were found, it would only lead to a related-key attack on a weak-key class 
+if a differential on $\ksTwo$ with probability $p$ higher than $2^{-128}$ were found, it would only lead to a related-key attack on a weak-key class
 	(of size $\approx p/2^{-128}$) or to an attack requiring a huge amount of keys.
 Putting everything together, we believe $\flyrk$ to be resistant to XOR-induced related-key attacks.
 
@@ -209,7 +215,7 @@ to build a cryptographically strong compression function.
 
 %We conclude this discussion on \fly by showing how it can be implemented efficiently on 8-bit AVR microcontrollers, and also discuss the additional cost of masking.
 
-\subsubsection{Microcontrollers implementations.}
+\subsubsection{Microcontrollers implementations}
 The S-box application can take advantage of the bitsliced expression of \littlunOne from \autoref{sec:implem}, which can easily be implemented with instructions available on the cheapest ATtiny chips \cite{ATtiny}. It is even possible to save 2 instructions from
 the 43 quoted in \autoref{sec:implem} on higher-end architectures such as the ATmega family \cite{ATmega} by using word-wise 16-bit \texttt{movw} instructions,
 resulting in the implementation given in \autoref{fig:avrS} of \autoref{sec:mega}. A straightforward implementation of the inverse S-box application requires 59 instructions ---a significant overhead of 44\,\%.
@@ -228,7 +234,7 @@ On-the-fly computation of one round-key of the key-schedule $\ksOne$ can be done
 as shown in \autoref{fig:avrK}.
 
 The total round function of \fly including the key-schedule can thus be implemented in 76 instructions, which is eight more than \pride. Note however that the conjectured security
-margin of \fly is much bigger, and unlike \pride, its resistance to generic attacks does not decrease with the amount of data available to the adversary. In contrast,
+margin of \fly is much larger, and unlike \pride, its resistance to generic attacks does not decrease with the amount of data available to the adversary. In contrast,
 \pride uses an FX construction,
 where one half of its 128-bit key is only used for pre- and post-whitening. This
 leads to a simple way to merge on-the-fly round-key generation with the round function, but significantly degrades the security of the cipher to generic attacks
@@ -237,19 +243,19 @@ from 128 bits to $128 - \log(D)$, with $D$ the amount of data available to an at
 %key schedules of \fly and \pride are rather similar, one could consider using the round function of \fly with the key schedule of \pride. This would result in a cipher slightly more efficient
 %than both, with the same profile as the latter; we do not expect such a swap to introduce any specific weakness.
 
-\subsubsection{Masked implementations.}
-We have just considered the good performance of \fly on AVR processors. 
-However, on such platforms, discounting the overhead of protection 
-against side-channel attacks may be misleading. 
-Indeed, these devices are rather prone to leakage, and it might not be 
+\subsubsection{Masked implementations}
+We have just considered the good performance of \fly on AVR processors.
+However, on such platforms, discounting the overhead of protection
+against side-channel attacks may be misleading.
+Indeed, these devices are rather prone to leakage, and it might not be
 entirely reasonable to deploy unprotected cryptosystems on them \cite{avrleak}.
-Consequently, we consider here the cost of masked implementations of \fly, 
-and compare it to \pride and the ``NSA ciphers'' \simon and \speck~\cite{NSAciph} in the same setting.
-All the masked implementations have been generated automatically by 
+Consequently, we consider here the cost of masked implementations of \fly at vairous orders,
+and compare them to \pride and the ``NSA ciphers'' \simon and \speck~\cite{NSAciph} in the same setting.
+All the masked implementations have been generated automatically by
 using the compiler of Barthe \etal{} \cite{maskingcomp}.
 This compiler takes a \C implementation of a cipher as an input and generates \C code for a corresponding masked implementation. This code is then instrumented to count the number of basic instructions,
 \eg{} logical and arithmetic, executed in the encryption of one block.
- 
+
 \begin{table}
 \begin{center}
 \begin{tabular}{l r r r r r}
@@ -286,7 +292,7 @@ Masking bitwise operations can be done relatively efficiently by using a Boolean
 but it is costly to do so with an additive scheme, while the converse holds for modular additions.
 In practice, the compiler of Barthe \etal{} uses the algorithm of Coron \etal{} from CHES~2014 to mask
 modular additions with a Boolean scheme \cite{DBLP:conf/ches/CoronGV14}. If we were to restrict ourselves to first-order masking,
-it would be possible to use the more efficient algorithm of Coron \etal{} from FSE~2015 \cite{DBLP:conf/fse/CoronGTV15}. 
+it would be possible to use the more efficient algorithm of Coron \etal{} from FSE~2015 \cite{DBLP:conf/fse/CoronGTV15}.
 
 On the contrary, both \fly and \simon are quite efficient to mask with a Boolean scheme.
 Note that we implemented \simonC in two ways: one using 8-bit words, suitable for 8-bit microcontrollers
