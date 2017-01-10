@@ -9,7 +9,7 @@ similarly-priced general-purpose processors (CPUs). The availability of efficien
 for potentially complex code to be conveniently deployed on GPUs. However, the differences in architecture between CPUs and GPUs
 as highlighted below need to be taken into account, and not every attack may be suitable for a GPU implementation.
 
-GPUs have already been used with some success in heavy-computation cryptography, notably to aid in integer factorization or in finding discrete
+GPUs have already been used with some success in heavy-computation cryptography, notably to aid in integer factorisation or in finding discrete
 logarithms~\cite{DBLP:conf/asiacrypt/BosK12,DBLP:conf/ches/MieleBKL14,DBLP:conf/eurocrypt/BarbulescuGGM15,DBLP:phd/hal/Jeljeli15}, and also for collision attacks on reduced \shaone~\cite{cryptoeprint:2011:641}.
 Even if the latter case in particular is essentially identical to our own, we nonetheless developed our GPU framework for implementing collision attacks from scratch.
 
@@ -34,7 +34,7 @@ Yet, so many instructions cannot be emitted independently, or to put it in anoth
 thread of computation for every core. In fact, threads are grouped together by 32 forming a \emph{warp}, and only
 warps may be scheduled independently. Threads within a warp may have a diverging control flow, for instance by
 taking a different path upon encountering a conditional statement, but their execution in this case is
-serialized. At an even higher level, warps executing the same code can be grouped together as \emph{blocks}.
+serialised. At an even higher level, warps executing the same code can be grouped together as \emph{blocks}.
 
 %Furthermore, on each multiprocessor one can run up to 2048 threads simultaneously, which are dynamically scheduled every cycle
 %onto the 128 cores at a warp granularity.
@@ -69,9 +69,9 @@ In the same way as they feature many execution units, GPUs also provide
 memory of a generous size, \eg 4 GB for the \gtx, which must however be shared among the threads. The amount of memory available to a single thread
 is therefore much less than what is typically available on a CPU; though it of course highly depends on the number of
 running threads, it can be lower than 1\,MB. This, together with the facts that threads of a same warp do not actually execute
-independently of each other and that threads of a same block run the same code makes it enticing to organize the memory
+independently of each other and that threads of a same block run the same code makes it enticing to organise the memory
 structure of a program at the block level. Fortunately, this is made rather easy by the fact that many efficient
-synchronization functions are available for the threads, both at the warp and at the block level.
+synchronisation functions are available for the threads, both at the warp and at the block level.
 
 \subsection{High-level structure of the framework}
 
@@ -85,7 +85,7 @@ quickly, this can be done efficiently in an offline fashion using CPUs.
 The second phase then consists in trying to extend probabilistically the base solutions to satisfy path conditions up to a further point by
 trying many neutral bit combinations, in the hope of eventually finding a collision.
 This is an intensely parallel task that is well suited to running on GPUs. However, as it
-was emphasized above, GPUs are most efficient when there is a high coherency between the execution of many threads. For that reason,
+was emphasised above, GPUs are most efficient when there is a high coherency between the execution of many threads. For that reason,
 we must avoid having idle threads that are waiting because their candidate solutions failed to follow the differential paths, while
 others keep on verifying a more successful one. Our approach to this is to fragment the verification into many small functions
 or \emph{snippets}
@@ -189,7 +189,7 @@ to include and the way to represent it. For instance, the 76-step base solution 
 and of the message words $\expmess_6,\ldots,\expmess_{21}$. Additionally, it includes the value of $\state_{12}$; while this information is
 not strictly necessary, it is useful to speed-up the computation of the activation of some neutral bits. Similar buffers without an extra state word
 are used to hold partial solutions up to $\state_{36}$ and $\state_{56}$ (resp. $\state_{40}$ and $\state_{60}$ in the 80-step case). The choice
-of these boundaries to define the late partial solutions were no more control is possible simply comes from the fact that a pair of messages following
+of these boundaries to define the late partial solutions where no more control is possible simply comes from the fact that a pair of messages following
 the differential path of either attack is not expected to have any state differences at these steps. It is thus particularly efficient to filter
 solutions that are not valid at these points.
 
@@ -222,7 +222,7 @@ All in all, the buffer of extended base solution of the 76-step attack is made o
 six message words $\expmess_{14}$ to $\expmess_{18}$ and $\expmess_{20}$, and one word holding an identifier for the base solution from which
 it is extended.
 
-The ``inter-snippet'' buffers that refer to changes from a base or extended base solution are only made of two words consisting of concatenated
+The inter-snippet buffers that refer to changes from a base or extended base solution are only made of two words consisting of concatenated
 segments of the message words containing neutral bits and of a reference to the associated solution.
 
 The 80-step attack uses similar representations but with a few variations. As we will show in \autoref{sec:res_80}, there are
@@ -247,7 +247,7 @@ $\state_{36} \sim \state_{40}$ and $\state_{56} \sim \state_{60}$ which only hav
 With the exception of the buffers holding the base solutions and the collision candidates formed by partial solutions
 up to $\state_{56} \sim \state_{60}$, \ie the buffers that are written or read by a CPU,
 there is one instance of every buffer per block, \ie 26 buffers per GPU. This allows to use block-wise instead of global
-synchronization mechanisms when updating the buffers' content,
+synchronisation mechanisms when updating the buffers' content,
 thence reducing the overhead inherent to the use of such shared data structures.
 Taken together, the buffers thus use a significant portion of the 4\,GB memory available on the \gtx, needing in the neighbourhood of 3\,GB.
 
@@ -317,12 +317,13 @@ __device__ void stepQ23(uint32_t thread_rd_idx)
 	WARP_TMP_BUF.flush2(Q23SOLBUF, Q23SOLCTL);
 }
 \end{minted}
-\begin{figure}[tbh]
+
+\vspace{-1mm}
+\begin{figure}[!h]
 \caption{The \emph{stepQ23} function from the 76-step attack.}
 \label{lst:snippet_example}
 \end{figure}
 
-\medskip
 
 This function takes as argument a thread-dependent identifier \mintinline{c}{thread_rd_idx} for a partial solution, which is essentially an index for the buffer \mintinline{c}{Q22SOLBUF}
 of solutions up to $\state_{22}$.
@@ -336,7 +337,7 @@ This was not done because recomputing \mintinline{c}{q22} is necessary in the sn
 The loop from lines 18 to 41, \ie the remainder of the function, applies every combination of the five neutral bits for this step, all of which 
 are located on $\expmess_{19}$. In more details, line 21 sets the register
 \mintinline{c}{w19_q23_nb} to one of the 32 possible combinations. Lines 23 and 24 clear the message word \mintinline{c}{m19} of the previous neutral bit combination and applies the new one, and line 25
-computes the expanded message word \mintinline{c}{m22} based on the new value for \mintinline{c}{m19}, using \shaone's message expansion. Note that this computation could actually be optimized, \eg by
+computes the expanded message word \mintinline{c}{m22} based on the new value for \mintinline{c}{m19}, using \shaone's message expansion. Note that this computation could actually be optimised, \eg by
 precomputing the contribution of \mintinline{c}{m14}, \mintinline{c}{m8} and \mintinline{c}{m6}, which are fixed in this function.
 Lines 27 to 30 compute the impact of the current neutral bit combination, first by partially recomputing the state words \mintinline{c}{newq20} and \mintinline{c}{newq21}, then fully recomputing
 \mintinline{c}{newq22}, and finally computing the as yet unknown word \mintinline{c}{newq23}.
@@ -364,7 +365,7 @@ performance variations across the GPUs. This was likely due to uneven heat dissi
 average expected time to obtain a collision on a single 4-GPU machine was 4.42 days per GPU, and thus about 1.1 day per machine. As the cooling was not optimal in our set-up,
 reaching a performance closer to the one-GPU setting is likely to be possible.
 
-We did not make any major changes for the 80-step attack. However, due to the higher computational cost, we only run the attack once, only using 4-GPU machines.
+We did not make any major changes for the 80-step attack. However, due to the higher computational cost, we ran the attack only once.
 The collision was found after ten days, with the attack being run on sixteen 4-GPU machines.
 
 \FloatBarrier

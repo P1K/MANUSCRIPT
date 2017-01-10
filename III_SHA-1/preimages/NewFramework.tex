@@ -13,11 +13,11 @@ that $(\{\alpha_1,\alpha_2\}, \{\beta_1,\beta_2\})$ is a related-key order-2 dif
 
 Similarly as in \autoref{KKFramework}, the goal of the attacker is to find four linear subspaces
 $D_{1,1}, D_{1,2}, D_{2,1}, D_{2,2}$ of $\{0,1\}^m$ in direct sum such that:
-\begin{equation}
-\label{eq:Dir_sum}
-  D_{1,1} \bigoplus D_{1,2} \bigoplus D_{2,1} \bigoplus D_{2,2} 
-\end{equation}
-\vspace{-4mm}
+%\begin{equation}
+%\label{eq:Dir_sum}
+%  D_{1,1} \bigoplus D_{1,2} \bigoplus D_{2,1} \bigoplus D_{2,2} 
+%\end{equation}
+%\vspace{-4mm}
 \begin{equation}
 \forall \delta_{1,1} , \delta_{1,2} \in D_{1,1} \times D_{1,2}~\exists~ \Delta_1 \in \{0,1\}^v \text{ s.t. }
 (\{\delta_{1,1}, \delta_{1,2}\}, \{0,0\})
@@ -151,7 +151,7 @@ $L_{2}$ indexed by $\delta_{1,1} , \delta_{1,2}$
 
       \end{algorithm}
 
-    \subsection{Analysis of \autoref{affine_testing_II}.}
+    \subsection{Analysis of \autoref{affine_testing_II}}
       If we denote by $\Gamma_1$ and $\Gamma_2$ the cost of evaluating
       of $\Fuu$ and $\Fd^{-1}$ and $\Gamma_{match}$ the cost of the test on line~14,
       then the algorithm allows to test
@@ -181,7 +181,7 @@ $L_{2}$ indexed by $\delta_{1,1} , \delta_{1,2}$
       good-enough order-1 differentials are available.
 
 
-    \subsection{Using probabilistic truncated differentials.}
+    \subsection{Using probabilistic truncated differentials}
     Similarly as in  \autoref{KKFramework}, \autoref{affine_testing_II} can be modified in order
     to use probabilistic truncated differentials instead of probability-1 differentials
     on the full state. The changes to the algorithm and the complexity evaluation are

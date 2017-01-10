@@ -7,7 +7,8 @@ in \autoref{sec:why_free}, and the addition and improvements to existing techniq
 \label{sec:why_free}
 
 The main interest of freestart collisions is that they consist in an attack against a meaningful, though weakened security notion, while granting more freedom to
-the attacker by providing him with an additional input. It is thus expected that such attacks should be more efficient than ones targeting stronger notions, \eg hash function
+the attacker by providing him with an additional input. It is thus expected that such attacks should be more efficient than ones targeting stronger notions
+\eg hash function
 collisions, not unlike attacks targeting a reduced version of a function, using fewer steps.
 
 However, it is not necessarily clear in general how to efficiently exploit the additional input in a freestart attack. We describe below our strategy in that respect
@@ -18,20 +19,21 @@ the attack.
 \medskip
 
 The basic idea underlying the structure of our freestart collisions is to start the initialisation of the hash function from a ``middle'' state rather than from the \iv,
-and to similarly initialize the message with an offset. As both of the step function and the message expansion of \shaone can easily be inverted, any computation started
-from the middle can be equivalently defined as starting from the beginning. We call \emph{main block offset} the offset in the initialization of the message, giving us
+and to similarly initialise the message with an offset. As both of the step function and the message expansion of \shaone can easily be inverted, any computation started
+from the middle can be equivalently defined as starting from the beginning. We call \emph{main block offset} the offset in the initialisation of the message, giving us
 the technical definition:
 
 \begin{defi}[Main block offset]
 A freestart collision attack on \shaone uses a \emph{main block offset} of $i \in \{0, \ldots, 64\}$ if the candidate expanded messages $\expmess$ tested for a collision are defined
-through the possibly backward message expansion of the words $\expmess_i, \ldots, \expmess_{i + 15}$.
+through the message expansion of the words $\expmess_i, \ldots, \expmess_{i + 15}$.
 \end{defi}
 
-The desired effect of using a non-zero main block offset is to move down the part where freedom is available, enabling to satisfy conditions (either deterministically or with accelerating techniques)
-up to a later point in the attack. Being able to do so would mechanically make the attack more efficient, at the condition that this gain is not entirely offset by the cost
+The desired effect of using a non-zero main block offset is to move down the part where freedom is available, enabling to satisfy conditions
+up to a later point in the attack, either deterministically or with accelerating techniques.
+Being able to do so would mechanically make the attack more efficient, at the condition that this gain is not entirely offset by the cost
 of satisfying potential conditions when computing backward to the corresponding \iv, this computation being eventually necessary to fully determine the colliding inputs.
 
-In the case of a freestart attack, the entire freedom of the \iv implies that no \emph{a priori} constraints are set in the middle initialization. This is in contrast to a hash function attack, where
+In the case of a freestart attack, the entire freedom of the \iv implies that no \emph{a priori} constraints are set in the middle initialisation. This is in contrast to a hash function attack, where
 the necessity for the backward-computed \iv to be of a specific value makes the approach less powerful, although potentially still useful.
 
 
@@ -51,7 +53,7 @@ the necessity for the backward-computed \iv to be of a specific value makes the 
 It should be noted that this kind of broad approach has already been used successfully in the past in various hash function attacks, see \eg \cite{DBLP:conf/fse/Dobbertin96,DBLP:conf/eurocrypt/LandelleP13,DBLP:conf/fse/MendelRS14}.
 We conclude this discussion by considering more closely how we applied this technique to \shaone.
 
-\subsubsection{Different choices for the disturbance vectors.}
+\subsubsection{Different choices for the disturbance vectors}
 We already mentioned at length the importance of the disturbance vectors in attacks on \shaone.
 When shifting the window where actual freedom is used, it seems natural to also shift the disturbance vector.
 This is in part a consequence of the fact that good \dvs tend to naturally include a series of steps for which they impose a lot of conditions. These can easily be resolved provided that
@@ -65,16 +67,16 @@ We simply expect to use \dvs with different shift values than the ones usually c
 
 The structure of the attack also imposes additional conditions on the \dv, compared to a usual two-block hash function attack. Both conditions come from the aforementioned fact that bit conditions
 which ensure that the message pair follows a proper differential path
-may need to be satisfied probabilistically when computing the \iv backward from the values of the middle initialization. To make this phase efficient, we would like to have as few such
+may need to be satisfied probabilistically when computing the \iv backward from the values of the middle initialisation. To make this phase efficient, we would like to have as few such
 bit conditions as possible. This translates to the two high-level conditions:
 \begin{enumerate}
 \item The \dv should not imply too many differences in the last five steps of the attack. This is because we aim for a one-block attack, thus corresponding differences will need to be inserted in the
 backward-computed \iv for the pair to define a collision.
-\item The \dv itself should not include too many differences in its early words, that is the ones corresponding used in the backward computation, as we observed that being dense on these positions makes
+\item The \dv itself should not include too many differences in its early words, that is the ones used in the backward computation, as we observed that being dense on these positions makes
 it harder to connect to the \iv with few conditions. Additionally, it may decrease the overall probability of the computation.
 \end{enumerate}
 
-\subsubsection{New constraints for the accelerating techniques.}
+\subsubsection{New constraints for the accelerating techniques}
 The necessity of satisfying bit conditions in a backward computation also imposes some constraints on the accelerating techniques that can be used. These all have in common that they work by
 selectively changing the value of some bits of the message. As the structure of our attacks implies shifting down the free window of the message, changing a bit in this window may also impact
 the value of the first few message words that are computed with the backward message expansion. This may potentially result in unwanted interactions with the ability to satisfy the backward bit conditions.
@@ -86,18 +88,18 @@ In short, the selection of accelerating techniques, \eg neutral bits, must take 
 
 There is a certain number of points that need to be specified to make the description of our framework complete. In particular, we will discuss here:
 \begin{enumerate}
-\item The construction of non-linear paths adapted to the shifted initialization and to the requirements of high-probability backward computations, and improvements to existing
+\item The construction of non-linear paths adapted to the shifted initialisation and to the requirements of high-probability backward computations, and improvements to existing
 methods (\autoref{sec:free_nl}).
 \item The accelerating techniques used in our attacks (\autoref{sec:free_nb}).
-\item The modified attack process adapted to the shifted initialization (\autoref{sec:free_att}).
+\item The modified attack process adapted to the shifted initialisation (\autoref{sec:free_att}).
 \end{enumerate}
 
 \subsubsection{Differential paths for freestart attacks}
 \label{sec:free_nl}
 
 %TODO actually, we rather want lo back interaction proba
-In our freestart attacks, we have the requirements that the computation from the initialized state back to the \iv be of high probability. Ideally, we would even like to be able to satisfy deterministically
-all the conditions associated with this computation, while still performing a shifted initialization. A direct consequence of this is that the differential path should be sparse
+In our freestart attacks, we have the requirements that the computation from the initialised state back to the \iv be of high probability. Ideally, we would even like to be able to satisfy deterministically
+all the conditions associated with this computation, while still performing a shifted initialisation. A direct consequence of this is that the differential path should be sparse
 in the steps involved in the backward computation, \ie include few conditions and especially few differences.
 
 The known methods for the construction of non-linear differential paths for \sha do not provide good guarantees that the path will be sparse in \emph{a priori} specified state words. However, it is
@@ -110,7 +112,7 @@ path search. Note that in order to ensure a collision through the Davies-Meyer f
 \begin{tabular}{lcc}
 $i$ & $\state_i$ & $\mess_i$\\
 -4 & \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
-\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&\\ 
+\nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff&\\
 -3 & \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
 \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff& \\
 -2 & \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff
@@ -122,12 +124,12 @@ $i$ & $\state_i$ & $\mess_i$\\
 2 &\nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff &   \onediff \onediff \nodiff \nodiff \onediff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \onediff \nodiff \nodiff \\
 3 & \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff &   \nodiff \nodiff \nodiff \nodiff \onediff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \\
 4 & \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff &   \onediff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \\
-5 &\nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \onediff \nodiff \nodiff \nodiff  &  \onediff \nodiff \onediff \onediff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \onediff \onediff \nodiff \nodiff\\ 
+5 &\nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \onediff \nodiff \nodiff \nodiff  &  \onediff \nodiff \onediff \onediff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \onediff \onediff \nodiff \nodiff\\
 6 & \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff &   \nodiff \nodiff \onediff \onediff \onediff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \\
 7 & \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff &  \onediff \nodiff \onediff \onediff \onediff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \onediff \nodiff \onediff \nodiff \\
 8 & \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff &  \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \\
 9 & \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff &  \nodiff \nodiff \onediff \nodiff \nodiff \onediff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \nodiff \onediff \onediff \onediff \nodiff \nodiff \\
-10 & \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff & \\ 
+10 & \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff \dunnodiff & \\
 \end{tabular}
 \end{center}
 \caption[A sparse prefix for the non-linear differential path of a freestart attack.]{A sparse prefix for the non-linear differential path of a freestart attack. The symbol ``\dunnodiff'' denotes the absence of conditions.\label{fig:lo_start}}
@@ -149,32 +151,32 @@ More specifically, we improved JLCA in the following ways:
 \begin{enumerate}
 %\item \textsc{Include the non-linear part.} Originally JLCA considered the entire set of differential paths that conform to the disturbance vector only
 \item Originally JLCA considered the entire set of differential paths that conform to the disturbance vector only
-over the linear part. 
+over the linear part.
 This was done by considering sets $\{\diff\state_i\}$ of allowed state differences for each state word $\state_i$ given the disturbance vector, including carries.
 We extended this to aid in the non-linear path search by defining sets $\{\diff\state_i\}$ for the non-linear part as the state difference given by the previously constructed differential path of the non-linear part.
 Here one actually has a few options: only consider exact state difference of the non-linear path or also consider changes in carries or signs, as well as include state differences conforming to the disturbance vector.
 We found that allowing changes in carries or signs for the state differences given by the non-linear path made JLCA impractical,
 yet including state differences conforming to the disturbance vector was practical and had a positive effect on the overall probability of the full differential path.
 
-%\item \textsc{Do not consider path variants not used in the attack.} Originally JLCA considered the possible carry propagations for local collisions  as this improves the overall probability (the probability of variants of paths adding up). 
+%\item \textsc{Do not consider path variants not used in the attack.} Originally JLCA considered the possible carry propagations for local collisions  as this improves the overall probability (the probability of variants of paths adding up).
 \item In the original JLCA,
 the probability computation took into account the possible carry propagations in local collisions,
-as this improves the overall probability, the probability of variants of paths adding up. 
+as this improves the overall probability, the probability of variants of paths adding up.
 However, until a certain step, say 25, a typical attack implementation requires the partial solutions to strictly follow the main differential path,
 and thus variants induced by carry propagations are actually not allowed to happen in an attack, and thus should not be counted as improving the probability.
-We thus corrected JLCA by not adding up the probability of paths over the first 25 steps, but only by taking the maximum probability. 
+We thus corrected JLCA by not adding up the probability of paths over the first 25 steps, but only by taking the maximum probability.
 %We propose to do this by redefining the cumulative probabilities $p_{(\mathcal{P},w)}$ from~\cite[Sec 4.6]{DBLP:conf/eurocrypt/Stevens13} to:
-%\[ p_{(\mathcal{P},w)} = \max_{\widehat{\mathcal{P}}_{[0,25]}\in\mathcal{D}_{[0,25]}} 
+%\[ p_{(\mathcal{P},w)} = \max_{\widehat{\mathcal{P}}_{[0,25]}\in\mathcal{D}_{[0,25]}}
 %  \sum_{\substack{
 %	    \mathcal{P}'\in\mathcal{D}_[0,t_e]\\
 %			\mathcal{P}'|_{[0,25]}=\widehat{\mathcal{P}}_{[0,25]}\\
 %			\mathcal{P}=\mathrm{Reduce}(\mathcal{P}'), w=w(\mathcal{P}')
-%			}} 
-%	 \Pr[\mathcal{P}'-\mathcal{P}]. 
+%			}}
+%	 \Pr[\mathcal{P}'-\mathcal{P}].
 %\]
 In our implementation, this can be simply done by replacing the addition of two probabilities by taking their maximum, conditionally on the current \shaone step.
-%\item \textsc{Determine sufficient conditions.} Originally JLCA only gave as output starting differences, ending differences, message bit relations and the optimal success probability. 
-\item Originally JLCA only gave as output starting differences, ending differences, message bit relations and the optimal success probability. 
+%\item \textsc{Determine sufficient conditions.} Originally JLCA only gave as output starting differences, ending differences, message bit relations and the optimal success probability.
+\item Originally JLCA only gave as output starting differences, ending differences, message bit relations and the optimal success probability.
 We extended it so that it can also reconstruct the set of differential paths over steps, say, $[0,25]$ and determine minimal sets of sufficient conditions and message bit relations.
 This can be made possible by keeping the intermediate sets of reduced differential paths $\mathcal{R}_{[t_b,t_e]}$ which were constructed backwards starting at a zero-difference intermediate state of \shaone.
 Then one can iteratively construct sets $\mathcal{O}_{[0,i[}$ of optimal differential paths over steps $0,\ldots,i-1$, \ie,
@@ -182,7 +184,7 @@ differential paths compatible with some combination of the optimal starting diff
 One starts with the set $\mathcal{O}_{[0,0]}$ determined by the optimal starting differences.
 Given $\mathcal{O}_{[0,i[}$ one can compute $\mathcal{O}_{[0,i+1[}$ by considering
 all possible extensions of every differential path in $\mathcal{O}_{[0,i[}$ with step $i$.
-%(under the predefined constraints, \ie $\Delta Q_j \in \mathcal{Q}_j$, $\delta W_i \in \mathcal{W}-i$, see~\cite{DBLP:conf/eurocrypt/Stevens13}). 
+%(under the predefined constraints, \ie $\Delta Q_j \in \mathcal{Q}_j$, $\delta W_i \in \mathcal{W}-i$, see~\cite{DBLP:conf/eurocrypt/Stevens13}).
 From all those paths, one only stores in $\mathcal{O}_{[0,i+1[}$ those that can be complemented by a reduced differential path over steps $i+1,\ldots,t_e$ from $\mathcal{R}_{[i+1,t_e]}$ such that the optimal success probability is achieved over steps $0,\ldots,t_e$.
 
 Now given, say, $\mathcal{O}_{[0,26[}$, we can select any path and determine its necessary and sufficient conditions for steps $0,\ldots,25$ and the optimal set of message bit relations that goes with it.
@@ -190,7 +192,7 @@ Although we use only one path, having the entire set $\mathcal{O}_{[0,26[}$ open
 For instance, one might consider an entire subclass of $2^k$ differential paths from $\mathcal{O}_{[0,26[}$ that can be described by state conditions linear in message bits and a set of linear message bit relations.
 This would provide $k$ bits more in degrees of freedom that can be exploited by speed up techniques.
 \end{enumerate}
-We thus proposed several extensions to the original JLCA that allowed us to determine sufficient state conditions and message bit relations optimized for collision attacks,
+We thus proposed several extensions to the original JLCA that allowed us to determine sufficient state conditions and message bit relations optimised for collision attacks,
 \ie minimal set of conditions for paths attaining the highest success probability.
 %(where auxiliary carries are only allowed after a certain step).
 
@@ -222,7 +224,7 @@ It should be noted that for this step it is important to generate every sample i
 Indeed using \eg{} message modification techniques to generate many samples from a single one would result in a biased distribution where many samples would only differ in the last few steps.
 
 \paragraph{Searching for Boomerangs.}
-We analyze potential boomerangs from the framework of Joux and Peyrin \cite{DBLP:conf/crypto/JouxP07}, which initially flip a single state bit together with 2 or more message bits.
+We analyse potential boomerangs from the framework of Joux and Peyrin \cite{DBLP:conf/crypto/JouxP07}, which initially flip a single state bit together with 2 or more message bits.
 Each boomerang should be orthogonal to the attack conditions, \ie, the state bit where a difference is introduced
 should be free of sufficient conditions, while flipping the message bits should not break any of the message bit relations
 either directly or through the message expansion.
@@ -231,17 +233,17 @@ Let $t\in[6,16], b\in[0,31]$ be such that the state bit $\state_t[b]$ has no suf
 First, we determine the best usable boomerang on $\state_t[b]$ as follows.
 For every sampled solution, we flip that state bit and compute the signed bit differences between the resulting and the unaltered message words $\expmess_5,\ldots,\expmess_{20}$.
 We verify that the boomerang is usable by checking that flipping its constituting bits breaks none of the message bit relations.
-We normalize these signed bit differences by negating them all when the state bit is flipped from 1 to 0.
+We normalise these signed bit differences by negating them all when the state bit is flipped from 1 to 0.
 In this manner we obtain a set of usable boomerangs for $\state_t[b]$.
 We determine the additional conditions on message and state bits associated with the boomerangs that ensure that the initial local collision corrections are successful with probability one,
 and only keep the best usable boomerang that has the fewest such conditions.
 
-Secondly, we analyze the behaviour of the boomerang over the backward steps.
+Secondly, we analyse the behaviour of the boomerang over the backward steps.
 For every sampled solution, we simulate the application of the boomerang by flipping all of its bits.
 We then recompute steps 4 to 0 backwards and verify if any sufficient condition on these steps is broken.
 Any boomerang that breaks any sufficient conditions on the early steps with probability higher than 0.1 is dismissed.
 
-Thirdly, we analyze the behaviour of the boomerang over the forward steps.
+Thirdly, we analyse the behaviour of the boomerang over the forward steps.
 For every sampled solution, we simulate the application of the boomerang by flipping its constituting bits.
 We then recompute steps 21 up to 79 forwards and keep track of any sufficient condition for the differential path that becomes violated.
 A boomerang will be used at step $i$ in our attack if it does not break any sufficient condition up to step $i-1$ with probability more than 0.1.
@@ -255,7 +257,7 @@ Usable neutral bits consist of a set of one or more message bits that are flippe
 However, unlike for boomerangs, the reason for flipping more than one bit is to preserve message bit relations, and not to control the
 propagation of a state difference.
 Let $t\in[5,20], b\in[0,31]$ be a candidate neutral bit; flipping $\expmess_t[b]$ may possibly break certain message bit relations.
-We express each message bit relation over $\expmess_5,\ldots,\expmess_{20}$ using linear algebra, 
+We express each message bit relation over $\expmess_5,\ldots,\expmess_{20}$ using linear algebra,
 and use Gaussian elimination to ensure that each of them has a unique last message bit $\expmess_i[j]$, \ie where $i*32+j$ is maximal.
 For each relation involving $\expmess_t[b]$, let $\expmess_i[j]$ be its last message bit.
 If $(i,j)$ equals $(t,b)$ then this neutral bit is not usable; indeed, this would mean that its value is fully determined by earlier message bits.
@@ -283,7 +285,7 @@ The step~$i$ in which the neutral bit is used is determined in the same way as f
 %
 %The choice of this offset was done experimentally in our attacks, and resulted in choosing an offset of 6 (resp. 5) in the 76-step (resp. 80-step) case.
 
-\subsubsection{The shifted initialization and the attack process}
+\subsubsection{The shifted initialisation and the attack process}
 \label{sec:free_att}
 
 In the implementations of our attacks, we only apply neutral bits on fully determined message blocks. In other words, neutral bits are used to try to extend to more steps
@@ -294,26 +296,27 @@ such that 21 consecutive state words (one for each free message word plus the \i
 \begin{defi}[Base solution]
 A \emph{base solution} for a differential path $\mathcal{P}$ of offset $i \in \{0,\ldots,64\}$ is a pair
 $(\expmess,  I_j(\state) \defas (\state_{j},\ldots,\state_{j+4}; j \in \{-4 + i,\ldots 11 + i\})$
-such that the state words $\state_i, \ldots, \state_{i+20}$ entailed by $\expmess$ and the ``\iv'' $I_j(\state)$ satisfy all necessary conditions imposed on them by $\mathcal{P}$ (\ie is a partial solution for $\mathcal{P}$).
+such that the state words $\state_i, \ldots, \state_{i+20}$ entailed by $\expmess$ and the ``\iv'' $I_j(\state)$ satisfy all necessary conditions imposed on them
+by $\mathcal{P}$, \ie is a partial solution for $\mathcal{P}$.
 \end{defi}
 
 Although we may define base solutions with an offset as above, one should note that it is not directly related to the main block offset; in particular, both offsets do not need to be equal, and they
 are indeed different in our attacks. The reason of that difference is that the two offsets represent different things: the base solution offset defines which state words have their conditions pre-satisfied
-before any neutral bits are applied, while the main block offset defines which state words are modified through the action of the neutral bits. Thus we can see that we typically want the base solution
-to have an offset only if there are no path conditions on the lower state words that become ignored by the initialization as a result. If this were not the case, the conditions would need to be
+before any neutral bit is applied, while the main block offset defines which state words are modified through the action of the neutral bits. Thus we can see that we typically want the base solution
+to have an offset only if there are no path conditions on the lower state words that become ignored by the initialisation as a result. If this were not the case, the conditions would need to be
 satisfied probabilistically, likely with no accelerating technique to make that process efficient. On the other hand, the main block offset is chosen to be the one yielding the best neutral bits, and
 it is chiefly limited by the magnitude of the backward interactions it entails.
 
 There is also some subtlety in how to specify the ``\iv'' of a base solution, as it potentially includes two offsets. The first offset of an \iv
-naturally comes from the one of the base solution it is part of, as the \iv needs to be entirely included in the twenty words of the solution. The
-second offset then comes from the freedom one has, to choose which five contiguous words from the twenty of the base solution are to be initialised.
+naturally comes from the one of the base solution it is part of, as the \iv needs to be entirely included in the twenty-one words of the solution. The
+second offset then comes from the freedom one has, to choose which five contiguous words from the twenty-one of the base solution are to be initialised.
 
 Let us make this more concrete by discussing the specific cases of our attacks.
 
 \medskip
 
 The first state condition in both attacks appears on $\state_{-3}$, \ie the second word of the original \iv.
-Consequently, we chose a base solution offset of one in both cases. 
+Consequently, we chose a base solution offset of one in both cases.
 Thus, a base solution consists of state words $\state_{-3},\ldots,\state_{17}$ specified through a five-word \iv and an expanded message such that all path conditions are verified by
 this partially computed state.
 
@@ -331,7 +334,8 @@ in a bit more details, considering the 76-step case, without losing much general
 In the course of the attack, the window of freedom for the message is made of $\expmess_6,\ldots,\linebreak\expmess_{21}$, and all state conditions are known to be satisfied for steps $-4$ to $17$.
 The value of the message words cannot be changed entirely, because they must conform to the base solution. It is thus not possible to \eg fix the value of $\expmess_{17}$ so that all conditions
 for $\state_{18}$ become satisfied. However, a certain number of neutral bits have been determined for this message window. The attack then consists in searching for good patterns of active and
-inactive neutral bits that allow to satisfy path conditions in state words past $\state_{17}$. These bits were chosen so that they do not interact badly with the already fulfilled conditions,
+inactive neutral bits that allow to satisfy path conditions in state words past $\state_{17}$. These neutral bits were chosen so that they
+do not interact badly with the already fulfilled conditions,
 first of the base solution, and then of the further state words that are iteratively added to the partial solution, all the while allowing to try many different messages. The best of these neutral bits does not
 interact w.h.p. with any condition before $\state_{26}$ excluded; in general, for each previous step starting from $\state_{18}$, some fresh neutral bits are available. Past $\state_{26}$,
 the attack switches to a purely probabilistic phase.
@@ -340,7 +344,7 @@ We show in \autoref{fig:attack_layout} the starting point for the attack process
 (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=horizontal lines] (0,0) rectangle (1,1);\end{tikzpicture}\,\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=vertical lines] (0,0) rectangle (1,1);\end{tikzpicture}\,),
 the message words where neutral bits are located (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=crosshatch] (0,0) rectangle (1,1);\end{tikzpicture}\,) and the remaining (untouched) free message
 window (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=north west lines] (0,0) rectangle (1,1);\end{tikzpicture}\,),
-and the state words where the cost of satisfying the path conditions is amortized through the action of the neutral bits (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=dots] (0,0) rectangle (1,1);\end{tikzpicture}\,).
+and the state words where the cost of satisfying the path conditions is amortised through the action of the neutral bits (\,\begin{tikzpicture}[scale=0.25]\draw[thick,pattern=dots] (0,0) rectangle (1,1);\end{tikzpicture}\,).
 
 \begin{figure}[htb]
   \begin{center}

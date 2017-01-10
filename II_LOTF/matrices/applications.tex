@@ -18,7 +18,7 @@ give key schedules; our objective is rather to evaluate the performance
 of round functions following these structures, in order to assess the utility
 of large diffusion mappings for block cipher design. Consequently, our security
 analysis of \samneric is minimal, and only serves to give a realistic estimate
-of how many rounds are needed to achieve good security. 
+of how many rounds are needed to achieve good security.
 
 %We do this study in the context of block ciphers, by assuming that $\matdiff$ is used
 %as the linear mapping of two ciphers with a \shark{} structure: one with 4-bit S-Boxes
@@ -39,12 +39,14 @@ a 64-bit round key to its input and $\sapp$ is the parallel application of sixte
 We use standard $\emph{wide-trail}$ considerations to study differential and linear properties of a \sam instance~\cite{aes}.
 This is very easy to do thanks to the simple structure of the cipher.
 The branch number of $\matdiff$ is 15, which means that at least 15 S-boxes are active in any two rounds of
-a differential path or linear characteristic, while the best 4-bit S-boxes have a maximum differential probability
-of $2^{-2}$ and a bias of at most $2^{-2}$ for any linear approximation; we will discuss such notions in more details
-in the next chapter. By using
-such S-boxes, one can upper-bound the probability of a single differential path (respectively the bias of a single linear characteristic)
-for $2 n$ rounds by $2^{-2\cdot 15 n}$ (respectively $2^{15n - 1}2^{-2\cdot 15 n}$) . This is smaller than $2^{-64}$ (respectively
-$2^{-32}$)
+a differential or linear trail, while the best 4-bit S-boxes have a maximum differential probability
+of $2^{-2}$ and a squared correlation of at most $2^{-2}$ for any linear approximation; we will discuss such notions in more details
+in the next \autoref{cha:littlun}. By using
+such S-boxes, one can upper-bound the expected probability of a single differential trail over the choice
+%of the key (respectively the absolute bias of a single fixed-key linear trail)
+%for $2 n$ rounds by $2^{-2\cdot 15 n}$ (respectively $2^{15n - 1}2^{-2\cdot 15 n}$) . This is smaller than $2^{-64}$ (respectively
+of the key (respectively the squared correlation of a single fixed-key linear trail)
+for $2 n$ rounds by $2^{-2\cdot 15 n}$. This is smaller than $2^{-64}$
 as soon as $n > 2$. Hence we conjecture that 6 to 8 rounds are enough to make a cipher resistant
 to standard statistical attacks.
 
@@ -91,8 +93,8 @@ Intel Xeon E5649 @ 2.53GHz & 8 & 111.3 & 59.8 \\
 Although the code $\cagh$ from which the matrix $\matdiff$ is built was initially defined with $\Fst$ as an alphabet, this latter
 can be replaced by an algebraic extension of $\Fst$ such as $\Fth$, to yield a code $\cagh'$ with the same parameters,
 namely a $[32, 16, 15]_{\Fth}$ code. One way of seeing this is that by constructing $\Fth$ as an extension of $\Fst$,
-for instance by letting $\Fst \cong \mathbf{F}_2[\alpha]/(\alpha^4 + \alpha^3 + \alpha^2 + \alpha + 1)$ and
-$\Fth \cong \Fst[t]/(t^2 + t + \alpha)$; an
+for instance by letting $\Fst \cong \mathbf{F}_2[\alpha]/\langle\alpha^4 + \alpha^3 + \alpha^2 + \alpha + 1\rangle$ and
+$\Fth \cong \Fst[t]/\langle t^2 + t + \alpha\rangle$; an
 element of $\Fth$ is represented as a degree-one polynomial $at + b$ over $\Fst$.
 It follows that the minimum weight of a codeword $w \defas (a_i t + b_i),\,i \in \{0\ldots31\}$ of $\cagh'$ is at least equal to the
 minimum weight of words $(a_i),\,i = 0\ldots31$ and $(b_i),\,i \in \{0\ldots31\}$.
@@ -123,15 +125,15 @@ uint8_t m71(uint8_t x)
 }
 \end{minted}
 \end{center}
-\caption{Multiplication by \texttt{0x71} in $\mathbf{F}_{2}[x]/<x^8+x^4+x^3+x+1>$\label{lst:mulex}}
+\caption{Multiplication by \texttt{0x71} in $\mathbf{F}_{2}[x]/\langle x^8+x^4+x^3+x+1 \rangle$\label{lst:mulex}}
 \end{figure}
 
 Table lookups from four to eight bits can be performed efficiently with \pshufb; multiplication
 by a constant in $\Fth$ is thus twice as expensive as multiplication in $\Fst$, but it operates
 on twice the amount of data. An implementation of a diffusion matrix
-$\matdiff'$ from $\cagh'$ is thus comparatively as efficient as for the original code. 
+$\matdiff'$ from $\cagh'$ is thus comparatively as efficient as for the original code.
 
-\medskip 
+\medskip
 
 The round function of \eric is taken to be $\matdiff' \circ \sapp' \circ \adkey'$, where $\adkey'$ adds a
 128-bit round key to its input and $\sapp'$ is the parallel application of sixteen identical cryptographically
@@ -139,11 +141,13 @@ strong 8-bit S-boxes.
 
 From wide-trail considerations, the resistance of an \eric cipher to statistical attacks is comparatively better than \sam,
 when an appropriate 8-bit S-Box is used.
-For instance, the $\AES$ S-box has a maximal differential probability of $2^{-6}$, and it cannot be approximated
-linearly with a bias more than $2^{-4}$~\cite{aes}.
-This implies that the probability (respectively bias) of a single differential path (respectively linear characteristic)
-for $2n$ rounds is upper-bounded by $2^{-6\cdot15 n}$ (respectively $2^{15n -1}2^{-4\cdot 15n}$), which is already much smaller than
-$2^{-128}$ (respectively $2^{-64}$) as soon as $n > 1$.
+For instance, the \AES S-box has a maximal differential probability of $2^{-6}$, and it cannot be approximated
+linearly with a squared correlation more than $2^{-6}$~\cite{aes}.
+This implies that the expected probability (respectively squared correlation) of a single differential trail (respectively linear trail)
+for $2n$ rounds is upper-bounded by $2^{-6\cdot15 n}$, which is already much smaller than
+$2^{-128}$ as soon as $n > 1$.
+%for $2n$ rounds is upper-bounded by $2^{-6\cdot15 n}$ (respectively $2^{15n -1}2^{-4\cdot 15n}$), which is already much smaller than
+%$2^{-128}$ (respectively $2^{-64}$) as soon as $n > 1$.
 \eric is also likely to be more resistant to algebraic attacks; at least five rounds are necessary to reach
 full degree for an S-box of degree seven, which is two less than \sam.
 Thus, eight and a half rounds of an \eric cipher should bring adequate security, and six and a half rounds might be enough.
@@ -195,3 +199,7 @@ the \emph{leak extraction} approach used in the stream cipher \lex allowed a 2.5
 Although \lex was later broken~\cite{DBLP:conf/asiacrypt/DunkelmanK08a}, we believe that the stronger diffusion in \samneric may protect
 leak extraction variants against similar attacks; these could for instance lead to two-time speed-ups for an eight-round \eric with leaks of
 the same amount as the ones of \lex.
+
+Finally, a particular advantage of large mappings over small alphabets is that they allow to build ciphers with a small AND complexity, in terms of
+the number and depth of AND gates necessary to implement it. This may be useful in certain contexts such as masking at high order~\cite{zorro} and
+fully-homomorphic encryption~\cite{lowmc}.

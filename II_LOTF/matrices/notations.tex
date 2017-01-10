@@ -9,9 +9,9 @@ We use ``$\defas$'' to denote equality by definition.
 We let $\Fq$
 be the finite field with $q$ elements, and in particular
 \Ftwom{} be the field with $2^m$ elements. We often consider $\Fst$, and implicitly use this specific field if not mentioned otherwise.
-W.l.o.g. we use the representation
-$\Fst \cong \mathbf{F}_2[\alpha]/(\alpha^4 + \alpha + 1)$ when a specific one is needed,
-for instance for implementation purposes. We freely use ``integer representation'' for elements of $\Ftwom \cong \Ftwom[\alpha]/I(\alpha)$
+We use the representation
+$\Ftwo[\alpha]/\langle\alpha^4 + \alpha + 1\rangle$ for $\Fst$ when a specific one is needed,
+for instance for implementation purposes. We freely use ``integer representation'' for elements of $\Ftwom \cong \Ftwo[\alpha]/I(\alpha)$
 by writing $n \in \{0\ldots2^m-1\} = \sum_{i = 0}^{m-1} a_i 2^i$ to represent the element
 $x \in \Ftwom = \sum_{i = 0}^{m-1} a_i \alpha^i$. In the remainder of this section, and especially in \autoref{sec:ag}, we usually consider an arbitrary algebraically closed field, written $k$;
 it will usually be clear from the context whether $k$ is a field or the dimension of a linear code, see \autoref{def:lincode} below.
@@ -25,7 +25,8 @@ its $i^\text{th}$ row.
 Arrays, or tables, in the sense of software data structures, are denoted by regular variables such as $x$ or $T$, and their elements are accessed by using square brackets.
 For instance, $T[i]$ is the $i^\text{th}$ element of the table $T$, starting from zero.
 
-The operator ``$\wedge_{64}$'' denotes the  \emph{logical and} between two 64-bit values. We use $\mathbf{0}_{n}$ and $\mathbf{1}_n$ for binary vectors of length $n$ all made of
+The operator ``$\wedge_{n}$'' denotes the  \emph{logical and} between two $n$-bit values.
+We use $\mathbf{0}_{n}$ and $\mathbf{1}_n$ for binary vectors of length $n$ all made of
 zeros and ones respectively. These may also freely be interpreted as elements of other vector spaces that will be clear from the context.
 The function $\indic(\cdot)$ takes as input a set and returns one if it is non-empty, zero otherwise; $\#$ denotes the cardinality of a set.
 We may also use subscripts to show the base in which a number is written when it is not ten, \eg $1010_2$ is the number 10 written in base two.
@@ -51,7 +52,7 @@ A \emph{linear code} of \emph{length} $n$, \emph{dimension} $k$ and \emph{minima
 $\forall\,\veci, \veco \in \code,~ \veci \neq \veco,~\hdist(\veci, \veco) \geq d$
 and $\exists\,\veci, \veco \in \code,~  \hdist(\veci, \veco) = d$.
 The last conditions can equivalently be expressed as $\veci \neq \nullvec \in \code \Rightarrow \weight(\veci) \geq d$ and $\exists\,\veci \in \code, \weight(\veci) = d$.
-We use the usual notation to characterize codes: an $[n, k, d]_{\Fq}$ code $\code$ is a code of length $n$, dimension $k$ and minimum distance $d$
+We use the usual notation to characterise codes: an $[n, k, d]_{\Fq}$ code $\code$ is a code of length $n$, dimension $k$ and minimum distance $d$
 with symbols in \Fq. When $d$ is unknown, we simply write $[n, k]_{\Fq}$.
 \end{defi}
 
@@ -73,7 +74,7 @@ $I_k$ the identity matrix of dimension $k$.
 \end{defi}
 
 If $(I_k~A)$ is a generator matrix for a code $\code$, then $(-A^t~I_{n-k})$, or equivalently $(I_{n-k}~-A^t)$,
-is a generator matrix for its dual $\code^\bot$. It follows that if $\code$ is self-dual, $A$ is orthogonal,
+is a generator matrix for its dual $\code^\bot$. If $\code$ is self-dual, $A$ is orthogonal,
 \ie $A\cdot A^t = I$
 % TODO why not just A.A^t diagonal?
 
@@ -82,11 +83,11 @@ An $[n,k,d]_{\Fq}$ code $\code$ is called \emph{maximum distance separable}, or 
 By abuse of definition, if $n = 2k$ and $(I_k~A)$ is a generator matrix of $\code$, we call $A$ an \emph{MDS matrix}.
 \end{defi}
 
-This minimum distance corresponds to the Singleton bound. In the case of a linear code 
+The minimum distance attained by an MDS code corresponds to the Singleton bound. In the case of a linear code 
 defined with a
 systematic generator matrix, it is easy to see that $n - k + 1$ is indeed the maximum possible weight for any row.
 
-A useful alternative characterization of MDS matrices is given by the following theorem.
+A useful alternative characterisation of MDS matrices is given by the following theorem.
 
 \begin{thm}[{\cite[Chapter 11, Theorem 8]{mdsConj}}] 
 \label{thm:mds_minors}
@@ -94,7 +95,8 @@ A matrix $M$ is MDS if and only if all of its minors are non-zero, \ie all the s
 \end{thm}
 
 A consequence is that the dual of an MDS code is also MDS.
-We also have the following, see for instance~\cite[Chap. 1]{tvn}:
+
+An important conjecture on MDS codes is the following:
 
 \begin{conj}[MDS conjecture~{\cite[Chapter 11, Section 7]{mdsConj}}]
 There is no MDS code $[n,k,n-k+1]_{\Fq}$ of length $n > B$,
@@ -102,7 +104,7 @@ where $B = q + 2$ when $q$ is even and $k = 3$ or $k = q - 1$,
 and $B = q + 1$ in all other cases. 
 \end{conj}
 
-The next definition rephrases and generalizes some of the above concepts in a way that is more suitable to cryptographic applications.
+The next definition rephrases and generalises some of the above concepts in a way that is more suitable to cryptographic applications.
 We assume in this case that $\Fq = \Ftwom$ for some $m$.
 
 \begin{defi}[Branch number~\cite{phddaemen}]
@@ -122,8 +124,10 @@ we give a brief overview.
 We start with a general definition:
 
 \begin{defi}[Evaluation code]
-Let $\funcspace$ be an $\Fq$-vector space of dimension $k$ of functions $\fun : \dom \rightarrow \Fq$ (the \emph{function space}). Let $\points \defas (P_0,\ldots, P_{n-1})$
-be an ordered subset of $\dom$ of cardinality $n$ (the \emph{evaluation domain}). Let $\evmap_\points : \funcspace \rightarrow \Fq^n$ be the \emph{evaluation map}
+Let $\funcspace$ be an $\Fq$-vector space of dimension $k$ of functions $\fun : \dom \rightarrow \Fq$ from a
+domain $\dom$ to a finite field $\Fq$~; we call $\funcspace$ the \emph{function space}. Let $\points \defas (P_0,\ldots, P_{n-1})$
+be an ordered subset of $\dom$ of cardinality $n$~; we call $\points$ the \emph{evaluation domain}.
+Let $\evmap_\points : \funcspace \rightarrow \Fq^n$ be the \emph{evaluation map}
 defined as $\evmap_\points(\fun) \defas (\fun(P_0),\ldots,\fun(P_{n-1}))$.
 The \emph{evaluation code} $\evcode(\funcspace,\points)$ for an injective evaluation map $\evmap_\points$ is defined as $\{\evmap_\points(\fun)~|~\fun \in \funcspace\}$.
 It is an $[n,k]_{\Fq}$ code.
@@ -148,5 +152,5 @@ of degree less than $k-1$ and $\points$ any ordered subset of $\Fq$ of size $n$.
 \end{defi}
 
 As we must have $n \geq k$ by definition of a code, all polynomials of $\funcspace$
-can be uniquely interpolated on any $n$ points, hence $\evmap_\points$ is injective and Reed-Solomon codes are well-defined.
+can be uniquely interpolated given their evaluations on $n$ points, hence $\evmap_\points$ is injective and Reed-Solomon codes are well-defined.
 Furthermore, for any $\points$, any non-zero polynomial of $\funcspace$ is zero on at most $k - 1$ positions. The minimal distance of a Reed-Solomon code is thus $n - (k - 1)$, which makes them MDS codes.

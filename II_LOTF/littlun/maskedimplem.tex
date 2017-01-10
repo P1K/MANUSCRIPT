@@ -1,16 +1,18 @@
 \section{C masked implementation of \fly}
 \label{sec:mask}
 
-We give here the code of a masked version of the \littlunOne S-box and of the \fly block cipher in \autoref{ms} and \autoref{mf} respectively. These use primitive operations defined in \autoref{mp}.
+We give here the code of a masked version of the \littlunOne S-box and of the \fly block cipher in \autoref{ms} and \autoref{mf} respectively.
+These implementations use masked versions of basic logical operations defined in \autoref{mp}.
+This further shows that \fly can easily be implemented and that its structure does not need to be changed if masking is added.
 
 \begin{minted}[breaklines]{c}
-
 typedef uint8_t bint8_t[NUM_SHARES];
 
 #define NOT(x)      (~x)
 #define XOR(x,y)    (x ^ y)
 #define AND(x,y)    (x & y)
 
+/* Masked logical NOT */
 void bint8_not(bint8_t r, bint8_t a) {
   r[0] = NOT(a[0]);
   // This can be removed if we know that a and r are equal
@@ -18,42 +20,21 @@ void bint8_not(bint8_t r, bint8_t a) {
   return;
 }
 
+/* Masked exclusive OR */
 void bint8_xor(bint8_t r, bint8_t a, bint8_t b) {
   int i;
   for (i = 0; i < NUM_SHARES; i++) r[i] = XOR(a[i], b[i]);
   return;
 }
 
+/* Masked exclusive OR with a public value */
 void bint8_xor_pub(bint8_t r, bint8_t a, uint8_t b) {
   r[0] = XOR(a[0], b);
   memcpy(r+1, a+1, NUM_SHARES - 1);
   return;
 }
 
-void bint8_rotl(bint8_t r, bint8_t a, uint8_t b) {
-  int i;
-  for (i = 0; i < NUM_SHARES; i++) r[i] = ROTL8(a[i], b);
-  return;
-}
-
-void bint8_refresh(bint8_t r, bint8_t a) {
-  int i, j;
-  uint8_t aux;
-
-
-  memcpy(r,a,NUM_SHARES);   //for (i = 0; i < NUM_SHARES; i++) r[i] = a[i];
-
-  for (i = 0; i < NUM_SHARES; i++) {
-    for (j = i + 1; j < NUM_SHARES; j++) {
-      aux = uint8_rand();
-      r[i] = XOR(r[i], aux);
-      r[j] = XOR(r[j], aux);
-    }
-  }
-
-  return;
-}
-
+/* Masked logical AND */
 void bint8_and(bint8_t rc, bint8_t a,bint8_t b) {
   int i, j;
   uint8_t zij, zji, tmp;
@@ -63,7 +44,6 @@ void bint8_and(bint8_t rc, bint8_t a,bint8_t b) {
   for (i = 0; i < NUM_SHARES; i++) {
     r[i] = AND(a[i],b[i]);
   }
-
   // Triangles + Row-Wise Sums
   for (i = 0; i < NUM_SHARES; i++) {
     for (j = i + 1; j < NUM_SHARES; j++) {
@@ -81,15 +61,16 @@ void bint8_and(bint8_t rc, bint8_t a,bint8_t b) {
 
   return;
 }
-\end{minted}
-\begin{figure}[ht]
-\caption{Basic masked operations\label{mp}.} 
-\end{figure}
 
+/* Masked rotation */
+void bint8_rotl(bint8_t r, bint8_t a, uint8_t b) {
+  int i;
+  for (i = 0; i < NUM_SHARES; i++) r[i] = ROTL8(a[i], b);
+  return;
+}
 
-\begin{minted}[breaklines]{c}
-
-void or8 (bint8_t r, bint8_t x, bint8_t y) {
+/* Masked logical OR as a series of NOTs and ANDs */
+void bint8_or (bint8_t r, bint8_t x, bint8_t y) {
   bint8_t aux, x0, y0;
 
   bint8_not(x0, x);
@@ -99,6 +80,41 @@ void or8 (bint8_t r, bint8_t x, bint8_t y) {
   return;
 }
 
+/* The mask-refreshing function  */
+void bint8_refresh(bint8_t r, bint8_t a) {
+  int i, j;
+  uint8_t aux;
+
+  memcpy(r,a,NUM_SHARES);
+
+  for (i = 0; i < NUM_SHARES; i++) {
+    for (j = i + 1; j < NUM_SHARES; j++) {
+      aux = uint8_rand();
+      r[i] = XOR(r[i], aux);
+      r[j] = XOR(r[j], aux);
+    }
+  }
+
+  return;
+}
+\end{minted}
+\begin{figure}[!hbt]
+\caption{Masked implementations of logical operations\label{mp}.} 
+\end{figure}
+
+The masked implementations of logical operations defined in the above code can be used
+to implement masked version of any logical circuit. It can be directly observed
+from these functions that the cost of a masked XOR is linear in the number of
+shares \mintinline{c}{NUM_SHARES}, as can be seen in \mintinline{c}{bint8_xor},
+while it is quadratic for the non-linear AND function \mintinline{c}{bint8_and}.
+
+The masked implementation of the \littlun S-box shown in the next \autoref{ms} follows in a
+straightforward way the standard bitsliced implementation of \autoref{bitsliced8}. The main
+difference is that the masked versions of \autoref{mp} are used to implement the logical
+operations and that regular calls to \mintinline{c}{bint8_refresh} need to be
+made to refresh the random masks. 
+
+\begin{minted}[breaklines]{c}
 void s8 (bint8_t x[8]) {
   bint8_t t, a, b, c, d, aux;
 
@@ -108,7 +124,7 @@ void s8 (bint8_t x[8]) {
   bint8_xor(d, x[3], x[7]);
   bint8_copy(t, b);
   bint8_refresh(aux, a);
-  or8(b, b, aux);
+  bint8_or(b, b, aux);
   bint8_xor(b, b, c);
   bint8_refresh(aux, t);
   bint8_and(c, c, aux);
@@ -117,7 +133,7 @@ void s8 (bint8_t x[8]) {
   bint8_and(d, d, aux);
   bint8_xor(d, d, a);
   bint8_refresh(aux, c);
-  or8(a, a, aux);
+  bint8_or(a, a, aux);
   bint8_xor(a, a, t);
   bint8_xor(x[0], x[0], a);
   bint8_xor(x[1], x[1], b);
@@ -129,7 +145,7 @@ void s8 (bint8_t x[8]) {
   bint8_xor(x[7], x[7], d);
   bint8_copy(t, x[1]);
   bint8_refresh(aux, x[0]);
-  or8(x[1], x[1], aux);
+  bint8_or(x[1], x[1], aux);
   bint8_xor(x[1], x[1], x[2]);
   bint8_refresh(aux, t);
   bint8_and(x[2], x[2], aux);
@@ -138,11 +154,11 @@ void s8 (bint8_t x[8]) {
   bint8_and(x[3], x[3], aux);
   bint8_xor(x[3], x[3], x[0]);
   bint8_refresh(aux, x[2]);
-  or8(x[0], x[0], aux);
+  bint8_or(x[0], x[0], aux);
   bint8_xor(x[0], x[0], t);
   bint8_copy(t, x[5]);
   bint8_refresh(aux, x[4]);
-  or8(x[5], x[5], aux);
+  bint8_or(x[5], x[5], aux);
   bint8_xor(x[5], x[5], x[6]);
   bint8_refresh(aux, t);
   bint8_and(x[6], x[6], aux);
@@ -151,14 +167,21 @@ void s8 (bint8_t x[8]) {
   bint8_and(x[7], x[7], aux);
   bint8_xor(x[7], x[7], x[4]);
   bint8_refresh(aux, x[6]);
-  or8(x[4], x[4], aux);
+  bint8_or(x[4], x[4], aux);
   bint8_xor(x[4], x[4], t);
   return;
 }
 \end{minted}
+
+\vspace{-1mm}
 \begin{figure}[ht]
 \caption{\C masked implementation of the \littlunOne S-box\label{ms}.} 
 \end{figure}
+
+\newpage
+
+The masked implementation of \fly given in \autoref{mf} is a simple implementation of the
+cipher whose only notable fact is that it uses a masked implementation for the S-box.
 
 \begin{minted}[breaklines]{c}
 void fly (bint8_t x[8], bint8_t k[16]) {
@@ -193,5 +216,5 @@ void fly (bint8_t x[8], bint8_t k[16]) {
 }
 \end{minted}
 \begin{figure}[ht]
-\caption{\C masked implementation of \fly\label{mf}.}
+\caption{\C masked implementation of \fly.\label{mf}}
 \end{figure}

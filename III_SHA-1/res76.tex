@@ -263,12 +263,13 @@ $\expmess_{20}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodi
   \label{fig:neutbits76_2}}
 \end{figure}
 
-Finally, on the implementation side, we show how the neutral bits are packed together inside the ``inter-snippet'' buffers (mentioned in \autoref{sec:part_sol}) in \autoref{fig:nb_packing76} and
+Finally, on the implementation side, we show how the neutral bits are packed together inside the inter-snippet buffers from \autoref{sec:part_sol} in \autoref{fig:nb_packing76} and
 \autoref{fig:nb_packing76_2}. These figures represent each of the two words of the buffers as thirty-two numbered coloured circles, one for each bit. The colours represent the original message word from which the
 bit comes from, and the number is the bit position in this original word. For instance, in \autoref{fig:nb_packing76}, \begin{tikzpicture}[scale=0.67,transform shape]\draw[fill=Cerulean!85] (0,0) circle (.3) node{13};\end{tikzpicture}
-is the value of the thirteenth bit (starting from zero) in some instance of $\expmess_{14}$ (\ie $\expmess_{14}[13]$); the fact that this circle is the leftmost one in the top sequence means that in the buffer, this information is stored as the MSB
+is the value of the thirteenth bit in some instance of $\expmess_{14}$, \ie $\expmess_{14}[13]$; the fact that this circle is the leftmost one in the top sequence means that in the buffer, this information is stored as the MSB
 of the first word.
-One should note that not all consecutive bits of a message (for a certain window) are neutral; non-neutral bits do not need to be stored, but it is nonetheless useful to maintain the relative distance between the actual neutral bits inside
+One should note that not all consecutive bits of a message are neutral; non-neutral bits do not need to be stored,
+but it is nonetheless useful to maintain the relative distance between the actual neutral bits inside
 the packing.
 For instance, there is no neutral bit on $\expmess_{15}[15]$, thus this bit is not included \emph{per se} in \autoref{fig:nb_packing76}, but a padding bit is added instead.
 This is shown as \begin{tikzpicture}[scale=0.67,transform shape]\draw[fill=Rhodamine!30] (0,0) circle (.3) node{.};\end{tikzpicture}.
@@ -437,9 +438,9 @@ bits finally hold the index of an extended base solution.}
 \subsection{An example of colliding message pair}
 \label{sec:colli_ex76}
 We give an example of collision in \autoref{tbl:fscoll76}.
-This shows the two (message, \iv) pairs with their (identical) resulting digest. The \ivs and the digests' words are ordered similarly
+This shows the two (message, \iv) pairs with their identical resulting digest. The \ivs and the digests' words are ordered similarly
 as in \autoref{tab:sha_iv}; the messages' words are ordered as $\mess_0,\ldots,\mess_{15}$ from top to bottom, left to right.
-Although the separations between the 32-bit words are not materialized, they should be taken into account, and
+Although the separations between the 32-bit words are not materialised, they should be taken into account, and
 the values should not be interpreted as binary strings.
 Note that unlike most inputs discussed in this chapter, the \iv values are compatible with the \emph{original} description
 of \shaone, \ie they are not (all) equal to the corresponding state values $\state_{0},\ldots,\state_{-4}$; compared to

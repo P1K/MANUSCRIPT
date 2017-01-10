@@ -33,13 +33,13 @@ x'[i] = \left\{
 				x[\lfloor y[i]\rfloor_4]  & \text{if the most significant bit of $y[i]$ is not set}\\
 				0 & \text{otherwise} \\
 				\end{array}
-		,~0\leq i \leq 16
+		,~0\leq i < 16
 		\right.
 \]
 where $\lfloor\cdot\rfloor_4$ denotes truncation to the four least significant bits.
 This instruction allows to arbitrarily \emph{shuffle} a vector according to a mask, with possible repetition and omission of some of the vector
-values\footnote{We will use the word \emph{shuffle} with this precise meaning in the remainder of this chapter.}.
-Notice that this instruction can in particular be used to perform sixteen parallel 4-to-8-bit table lookups: let us call $T$ this table; take
+values. We will use the word \emph{shuffle} with this precise meaning in the remainder of this chapter.
+Notice that this instruction can in particular be used to perform sixteen parallel 4-to-8-bit table lookups: let us call $T$ the table; take
 as first operand to \pshufb{} the vector $x \defas (T[i],~i = 0,\ldots,15)$, as second operand the vector
 $y \defas (a, b, c, d, \ldots)$
 on which to perform the lookup; then we see that the first byte of the result is $x[y[0]] = T[a]$, the second is $x[y[1]] = T[b]$,
@@ -83,7 +83,8 @@ multiplication by accessing the table for $\mat^t_i$ at the index $\veci_i$ and 
 This only requires sixteen table lookups per multiplication. However, the memory accesses depend on the value of $\veci$,
 which makes this algorithm inherently vulnerable to timing attacks.
 
-Note that there is a more memory-efficient alternative implementation of this algorithm which consists in explicitly computing the multiplications for each term $\lambda\mat^t_i$.
+Note that there is a more memory-efficient alternative implementation of this algorithm which consists in explicitly computing the multiplications for
+each term $\lambda\mat^t_i$ instead of using a table lookup.
 This can be done with a single \pshufb instruction per matrix row, taking as first operand the table of multiplication by $\lambda$, which is made of sixteen
 4-bit entries, and can be precomputed, and as second operand a register representing $\mat^t_i$.
 In that case, only the sixteen multiplication tables need to be stored, but their accesses
@@ -98,7 +99,7 @@ the results of the scalar multiplication of the matrix rows $\mat^t_i$, those ar
 %We first present how to achieve this in a somehow abstract way, and then give an explicit sequence of instructions
 %performing this operation.
 
-\subsubsection{Description of \autoref{alg:broadcast}.}
+\subsubsection{Description of \autoref{alg:broadcast}}
 %We give the full description of \autoref{alg:1} in appendix \autoref{app:algo}, and focus here on the intuition.
 We start with a high-level description of the algorithm.
 Assume we want to perform the scalar multiplication $\lambda\vect$ for an unknown scalar $\lambda$ and a known, constant vector $\vect \in \Fst^{16}$.
@@ -149,7 +150,7 @@ matrices of dimension 128~\cite{DBLP:conf/ches/KasperS09}.
 \end{algorithm}
 
 
-\subsubsection{Implementation of \autoref{alg:broadcast} with SSSE3 instructions.}
+\subsubsection{Implementation of \autoref{alg:broadcast} with SSSE3 instructions}
 We now consider how to efficiently implement \autoref{alg:broadcast} in practice. The only
 non-trivial operation that is used is the $\broad$ function, and we show that it can be performed
 with only one or two \pshufb{} instructions.
@@ -277,7 +278,7 @@ Let us define $\shuff(\mat, \lambda)$ as one of the minimal sets of shuffles of 
 there exists a unique vector $\vect \in \shuff(\mat, \lambda)$ such that $\vect_i = \veci_j$ iff $\mat_{i,j} = \lambda$.
 For instance, in the above example, we have $\shuff(\mat,2) = \{(x_2,x_2,x_0,x_1)^t, (x_3,0,x_3,0)^t\}$. Equivalently, we could have taken
 $\shuff(\mat, 2) = \{(x_3,x_2,x_3,0)^t, (x_2,0,x_0,x_1)^t\}$.
-These sets are straightforward to compute from this particular matrix, and so are they in the general case.
+These sets are straightforward to compute for this particular matrix, and so are they in the general case.
 
 From the definition of $\shuff$, it is clear that we have $\mat\veci = \sum_{\lambda \in \Fst^*}\sum_{\vect \in \shuff(\mat,\lambda)} \lambda\cdot \vect$.
 Once the values of the sets $\shuff$ have been determined, it is clear that we only need to compute this sum to get our result, and 
@@ -294,7 +295,7 @@ We give a complete description of this shuffle-based process in \autoref{alg:shu
   Offline phase\\
   \For{$i \defas 1$, $i < 16$}
   {
-  $s_i[\,] \defas \shuff(M, i)$ $\triangleright$ \emph{Initialize the array $s_i$ with one of the possible sets of shuffles.}
+  $s_i[\,] \defas \shuff(M, i)$ $\triangleright$ \emph{Initialise the array $s_i$ with one of the possible sets of shuffles.}
   }
   Online phase\\
   $\veco \defas \mathbf{0}_{64}$\\
@@ -308,7 +309,7 @@ We give a complete description of this shuffle-based process in \autoref{alg:shu
   \Return{$\veco$}
 \end{algorithm}
 
-\subsubsection{Cost of \autoref{alg:shuffle}.} The cost of computing a matrix-vector product with \autoref{alg:shuffle} depends
+\subsubsection{Cost of \autoref{alg:shuffle}} The cost of computing a matrix-vector product with \autoref{alg:shuffle} depends
 on the coefficients of the matrix, since the size of the sets $\shuff(\mat, \lambda)$ depends both on the density
 of the matrix and of how its coefficients are arranged.
 
@@ -331,7 +332,7 @@ with identical non-zero coefficients, the actual cost is one less than computed 
 \medskip
 
 A matrix with minimal cost w.r.t. $\cost$ is one that
-minimizes the sum of the maximum number of occurrence of $\lambda$ in any row, for every $\lambda \in \Fst^*$.
+minimises the sum of the maximum number of occurrence of $\lambda$ in any row, for every $\lambda \in \Fst^*$.
 A simple observation is that for matrices with the same number of non-zero coefficients, this amount is the smallest when every row can be deduced by permutation of a single one;
 this is for instance the case for circulant matrices, by definition.
 More generally, we can heuristically hope that the cost of a matrix will be low if all of its rows can be obtained from the permutation of, say, only two rows.
@@ -346,7 +347,7 @@ Thus we can estimate the cost of such a random matrix to be about 25.
 
 Before concluding this section, let us notice that special cases of this algorithm have already been used for circulant matrices, namely in the case of the \AES{} \mc{} matrix~\cite{vpaes}.
 
-\subsubsection{Implementation of \autoref{alg:shuffle} with SSSE3 instructions.}
+\subsubsection{Implementation of \autoref{alg:shuffle} with SSSE3 instructions}
 
 The implementation of \autoref{alg:shuffle} is quite straightforward. We give nonetheless a small code snippet in \autoref{app:spec}.
 

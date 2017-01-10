@@ -1,15 +1,18 @@
 \section{Block ciphers}
 
-A \emph{block cipher} is a family of injective mappings over finite domains and co-domains, indexed by a finite set of \emph{keys}. This very broad definition will
-in fact always be specialized, taking domains and co-domains of identical sizes, and all parameters living in the binary world. Hence, a block cipher
+A \emph{block cipher} is a family of injective mappings over finite domains and co-domains, indexed by a finite set of \emph{keys}.
+In this manuscript, we will only consider ciphers with domains and co-domains of identical sizes, with all arguments taken to be binary strings
+of a fixed length.
+Hence, a block cipher
 is a mapping $\E : \{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ such that for all $k \in \{0,1\}^\kappa$, $\E(k,\cdot)$ is a permutation.
-We call $\kappa$ the \emph{key size} and $n$ the \emph{block size} of $\E$. Typical parameter sizes are $\kappa \in \{64, 80, 128, 192, 256\}$, though
-64 and 80-bit keys are now considered to be too short to provide adequate security, and $n \in \{64, 128, 256\}$.
-We usually require $\E$ and its inverse $\E^{-1}$ to be efficiently computable (depending on the intended application, it may be enough for only
-one of these to be efficient).
+We call $\kappa$ the \emph{key size} and $n$ the \emph{block size} of $\E$. Typical parameter sizes are $\kappa \in \{64, 80, 128, 192, 256\}$
+and $n \in \{64, 128, 256\}$, though
+64 and 80-bit keys are now considered to be too short to provide adequate security.
+We usually require $\E$ and its inverse $\E^{-1}$ to be efficiently computable, though depending on the intended application, it may be enough for only
+one of these to be efficient.
 
 The most immediate purpose of block ciphers is to provide confidentiality of communications. Assuming that two parties $A$ and $B$
-have been able to share a secret $k$, for instance using asymmetric cryptography techniques, they can then use $k$ as the key input to the same
+have been able to share a secret $k$, they can then use $k$ as the key input to the same
 block cipher to send encrypted messages $c \defas \E(k,p)$, $c' \defas \E(k,p')$, etc. The non-key input to $\E$ is generally called
 the \emph{plaintext}, and the output of $\E$ is called the \emph{ciphertext}.
 
@@ -23,14 +26,13 @@ some blocks from a previous message, or add randomly generated blocks. All of th
 is maliciously tampering with the channel.
 
 Problems such as the ones above are solved by designing secure \emph{modes of operation}. We do not study this topic in this thesis, but
-we mention some elements related to modes in \autoref{sec:bc_modes}. But first, we make the intuition behind the evaluation of the security
-of block ciphers themselves more explicit in \autoref{sec:bc_sec}.
+we mention some elements related to modes in \autoref{sec:bc_modes}.
 
 \section{Security of block ciphers}
 \label{sec:bc_sec}
 
 We keep this section relatively informal. Our goal is to be able to specify what it means for $\E$ to be a good block cipher from
-a practical point of view. Yet, we start by defining the useful notion of \emph{ideal block cipher}.
+a practical point of view. We start nonetheless by defining the useful notion of \emph{ideal block cipher}.
 
 \begin{defi}[Ideal block cipher]
 An \emph{ideal block cipher} $\E$ is a mapping $\{0,1\}^\kappa \times \{0,1\}^n \rightarrow \{0,1\}^n$ s.t. all the permutations
@@ -38,17 +40,18 @@ $\E(k,\cdot)$ are drawn independently and uniformly at random among the permutat
 \end{defi}
 
 This definition intuitively corresponds to the best we can achieve from the definition of a block cipher. For small values of $n$,
-\eg up to $20 \sim 32$ depending on the desired performance, one can implement ideal block ciphers by using an appropriate
-shuffling algorithm, such as the one variously attributed to Fisher, Yates, Knuth, etc.~\cite{uniform_shuffle}, which we will
-call ``FYK''. As this method
-requires $\bigo(2^n)$ setup time and memory per key, it is obviously impractical for cryptographically common block sizes $n \geq 64$.
-Even for small values of $n$, running the FYK shuffle requires a considerable amount of randomness parameterized by the keys, which
-is not something trivial to obtain. All of this leads to the fact that we are forced most of the time to use ``approximations'' of
+\eg $20$, one can implement ideal block ciphers by using an appropriate
+shuffling algorithm, such as the one variously attributed to Fisher, Yates, Knuth, etc.~\cite{uniform_shuffle}.
+As this algorithm 
+requires $\bigo(2^n)$ setup time and memory per key, it is impractical for cryptographically common block sizes $n \geq 64$.
+Even for small values of $n$, the shuffling requires a considerable amount of key-dependent randomness, which may be something hard
+to provide.
+All of this leads to the fact that we are forced most of the time to use ``approximations'' of
 ideal block ciphers. A useful, mostly theoretical, way of quantifying the security of a specific block cipher is then  to measure ``how far'' it
 is from being ideal. Informally, this is done by upper-bounding the \emph{advantage} over a random answer that any adversary
 with some bounded resources
 has of distinguishing whether he is given black-box access to a randomly-drawn permutation or to an instance of the block cipher
-with a randomly chosen unknown key. This statement can be made more precise in the form of the following definition,
+with a randomly chosen key. This statement can be made more precise in the form of the following definition,
 similar to the one that can be found \eg in \cite{DBLP:journals/jcss/BellareKR00}:
 
 \begin{defi}[Pseudo-random permutations (PRP)]
@@ -68,33 +71,32 @@ Here, $\text{Alg}^{f\backslash q, \E\backslash t}$ is the set of all algorithms 
 and which run in time $\bigo(t)$, with the time unit being the time necessary to compute $\E$ once.
 \label{def:prp}
 \end{defi}
-There exists a related notion of \emph{strong pseudo-random permutation} (SPRP) where one considers algorithms given oracle access both to $f$ and its inverse.
-
-\medskip
 
 \autoref{def:prp} is quite useful in some contexts, for instance to prove that a construction using a block cipher is not significantly less secure than the latter. This is
 typically done by defining an advantage function similar to PRP security for the higher-level construction  and by showing that
 it is not more than a reasonable function of the PRP security of the block cipher.
-For instance, in the case of \cite{DBLP:journals/jcss/BellareKR00}, the high-level construction is CBC-MAC.
+For instance, the high-level construction studied in \cite{DBLP:journals/jcss/BellareKR00} is CBC-MAC.
 
 However, this definition is not constructive, in the sense that it does not provide any efficient
-way of computing the PRP security of a block cipher in general. Some results do exist for specific block cipher constructions,
-but these in turn usually need access to a lower-level primitive such as a
-``random permutation''. One such construction is due to Even and Mansour~\cite{EM}, which we will see again in \autoref{chap:emrka}.
+way of computing the PRP security of a block cipher in general.
 A major topic in symmetric cryptography is to analyse explicit instances of block ciphers
 in order to assess their concrete security against attacks. In the language of \autoref{def:prp}, this
-consists in finding algorithms for which $q$, $t$ and the PRP advantage is known. Any such attack on a block cipher $\E$ allows to lower-bound its PRP-security at a given point.
-In reality, though, the world of block cipher cryptanalysis is more nuanced than what \autoref{def:prp} may lead us to believe; practically important characteristics of an attack
+consists in finding algorithms for which $q$, $t$ and the PRP advantage is known. Any such attack on a block cipher $\E$ allows to lower-bound its PRP-security at
+a given point $(q,t)$.
+In reality, cryptanalysis results on block ciphers are seldom as easily expressed as what \autoref{def:prp} may lead us to believe;
+practically important characteristics of an attack
 are also its memory complexity, distinguishing between its online and offline time complexity, whether it applies equally well to all keys or if it is only successful
 for some ``weak'' subset thereof, whether it also recovers $k$ when $f$ was instantiated from $\E$, or an algorithm equivalent to $\E(k,\cdot)$, etc. We devote the remainder of this
 section to sketching some typical elements of attacks on block ciphers.
 
 \subsection{Distinguishers and attacks}
-The core of many concrete attacks on block ciphers is made of \emph{distinguishers}, which can be defined as algorithms using reasonable resources which have a non-negligible advantage according to \autoref{def:prp}.
-There is no easy answer as to what ``reasonable'' and ``non-negligible'' should mean in the context of actual cryptanalysis, as the key and block size of a specific cipher are fixed values. While some ciphers or potential distinguishers
-may be parameterized in a way that helps to make the definition meaningful, this does not have to be the case. Sometimes, one is easily convinced by the performance of an algorithm so that there is
+Many concrete attacks on block ciphers use \emph{distinguishers} as their basis. These can be defined as algorithms
+using reasonable resources which have a non-negligible advantage according to \autoref{def:prp}.
+There is no easy answer as to what ``reasonable'' and ``non-negligible'' should mean in the context of actual cryptanalysis,
+as the key and block size of a specific cipher are fixed values. While some ciphers or potential distinguishers
+may be parameterised in a way that helps to make the notion meaningful, this does not have to be the case. Sometimes, one is easily convinced by the performance of an algorithm so that there is
 consensus that it can be called a distinguisher, \eg distinguishing $\E$ of key and block size $128$ with $q = 2$, $t = 2^{20}$, probability $\approx 1$, while some other times the picture is much less clear,
-\eg $q = t =  2^{120}$ and probability $\approx 1$. We will ignore this issue altogether and assume that all the attacks of this chapter are consensual.
+\eg $q = t =  2^{120}$ and probability $\approx 1$. We ignore this issue altogether and assume that all the attacks of this chapter are consensual.
 
 \subsubsection{Classes of distinguishers for block ciphers}
 
@@ -103,9 +105,9 @@ We now briefly describe two types of distinguishers, which exploit ``non-ideal''
 \bigskip
 
 We start with \emph{differential distinguishers}, which are part of the broader class of \emph{statistical} distinguishers.
-The basic idea of the latter is to define an event which has a different probability distribution for the target, \ie the block cipher $\E$
+The basic idea of the latter is to define events which have different probability distributions for the target, \ie the block cipher $\E$
 than for a random permutation drawn from $\Pi_{2^n}$. Running the distinguisher then consists in collecting a certain number of samples obtained through
-the oracle and deciding from which distribution
+an oracle and deciding from which distribution
 %(the one entailed by $\E$ or the one entailed by a random permutation)
 those are the
 most likely to have been drawn.
@@ -166,19 +168,29 @@ We briefly explain
 the basic idea of this conversion; to do this, we need to assume that $\E$ possesses a certain structure, which is in fact very common.
 
 An \emph{iterative block cipher} is a cipher $\E$ that can be described as the multiple composition of a \emph{round function} $\R$, possibly with additional
-composition of an initialization or finalization function that we ignore here: $\E \equiv \R \circ \cdots \circ \R$. Let us assume that a ``full''
+composition of an initialisation or finalisation function that we ignore here: $\E \equiv \R \circ \cdots \circ \R$. Let us assume that a ``full''
 application of $\E$ is made of $r$ rounds. A distinguisher-based key-recovery attack first consists in finding a distinguisher on
 a \emph{reduced-round} version of $\E$ made of the composition of $d < r$ round functions. The next step simply consists in querying the oracle on inputs verifying the distinguisher condition, for instance
-plaintexts with difference $\Delta$, in a differential case; as one obtains encryption with the full block cipher, one is not expected to be able to directly run the distinguisher
-on these values. The main idea comes from the third step, where one guesses values for part of the unknown key $k$ of $\E$ which allow him to partially decrypt the ciphertexts by $r-d$ rounds. Then, if
-the guess was correct, he obtains ciphertexts for the cipher reduced to $d$ rounds, on which the distinguisher is expected to be successful. On the other hand, if the guess was incorrect, one obtains
-ciphertexts somehow equivalent to the ones of a $(2r-d)$-round cipher and the distinguisher should fail. Thus, this overall approach gives us a method to verify a guess for part of the unknown key.
+plaintexts with difference $\Delta$, in a differential case;
+as one obtains ciphertexts encrypted with the full block cipher, one is not expected to be successful when running the distinguisher
+on these values. The main idea comes from the third step, where one guesses values for part of the unknown key $k$ of $\E$ which allow him
+to partially decrypt the ciphertexts by $r-d$ rounds. Then, if
+the guess was correct, he obtains ciphertexts for the cipher reduced to $d$ rounds, on which the distinguisher is expected to be successful.
+On the other hand, if the guess was incorrect, one may assume that decrypting with invalid keys amounts to encrypting with random keys. Hence,
+the inputs to the distinguishers may be seen as ciphertexts encrypted with a cipher using $r + (r-d) = 2r -d$ rounds, and the distinguisher should fail.
+The overall approach thus gives a method to verify a guess for part of the unknown key.
 
-The procedure as described above calls for several comments. First, the cost of guessing part of the key obviously adds to the complexity of the distinguisher, so the overall complexity of the attack
-is higher than the latter. Thus, only distinguishers that leave a sufficient ``margin'' may be converted to key-recovery attack. Second, there are various reasons why a distinguisher may be able to work
-even though only part of the key was guessed, for instance because the entire key is spread over many rounds, or because the distinguisher may be run on only ``part of the state'' of $\E$, whose computation
-does not require the entire ``round key''. Finally, the part of the key that was not recovered thanks to the distinguisher can be obtained by different means. For instance, another distinguisher may be
-used which leads to another part of the key, or it can simply be guessed exhaustively.
+The procedure as described above calls for several comments.
+First, the cost of guessing part of the key obviously adds to the complexity of the distinguisher, so the overall complexity of the attack
+is higher than the latter. Thus, only distinguishers of low-enough complexity may be converted to key-recovery attack.
+Second, 
+one may only use distinguishers that allow to verify a guess on \emph{part} of the key.
+For instance, one can use
+distinguishers that are ``local'', in the sense that they only base their answers on the value of part of the state of the cipher.
+For such distinguishers, it is enough to guess the part of the key necessary to decrypt the relevant part of the state.
+Finally, the part of the key that was not recovered thanks
+to the distinguisher can be obtained by different means. For instance, another distinguisher may be
+used which recovers another part of the key, or it can simply be guessed exhaustively.
 
 
 \subsubsection{Attack models}
@@ -188,10 +200,9 @@ in some ways, for instance by providing more than one oracle. One such common ge
 $\E(k,\cdot)$, $\E(\rka(k),\cdot)$, with $\rka(\cdot)$ one or more mappings on the key space. A crucial observation in this case is that $\rka$ cannot be arbitrary, as some mappings may
 be so powerful that they allow to attack every cipher; speaking of the security of $\E$ in such a model is then meaningless. We will mention this matter again in \autoref{chap:emrka}.
 
-The potential problems arising from ill-defined related-key models are a useful reminder that attacks should be specified in a well-founded way. While some attacks
-such as related-key attacks may be
-considered too unrealistic to be of practical significance, this question is only secondary to their not allowing to trivially
-attack any cipher.
+The potential problems arising from ill-defined related-key models are a useful reminder that attacks should be specified in a well-founded way.
+While some models are more powerful than others and may then be considered less relevant to the actual security of block ciphers, a main concern
+about a new model should be whether it trivially allows to attack any algorithm. 
 
 \section{Using block ciphers}
 \label{sec:bc_modes}
@@ -212,6 +223,6 @@ which is then
 called an \emph{authenticated encryption} mode, or AE, or by combining an encryption-only mode with a \emph{message authentication code} (MAC) in an appropriate way. The current
 trend is to favour the former approach, as it tends to lead to more efficient schemes.
 
-We conclude this chapter by highlighting the prevalence in cryptography of the \emph{birthday bound}, named so because of the so-called \emph{birthday paradox}, which we will
-discuss again in \autoref{chap:hashfun}, by stating the following fact: when using a block cipher of block size $n$, most modes of operation are only
-secure up to the encryption of $\approx 2^{n/2}$ blocks with the same key, even if the key size of the block cipher can be much bigger than that.
+%We conclude this chapter by highlighting the prevalence in cryptography of the \emph{birthday bound}, named so because of the so-called \emph{birthday paradox}, which we will
+%discuss again in \autoref{chap:hashfun}, by stating the following fact: when using a block cipher of block size $n$, most modes of operation are only
+%secure up to the encryption of $\approx 2^{n/2}$ blocks with the same key, even if the key size of the block cipher can be much bigger than that.

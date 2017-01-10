@@ -6,7 +6,7 @@ A more detailed and rigorous treatment of the following can for instance be foun
 
 \bigskip
 
-Although we will mostly consider S-boxes as defined over binary strings, we may see an $n$-bit S-box as a mapping
+Although we will mostly consider S-boxes as defined over binary strings we may see an $n$-bit S-box as a mapping
 $\ftwo^n \rightarrow \ftwo^n$ whenever convenient, in particular so that the addition of a difference to an S-box
 input is a well-defined operation.
 
@@ -43,8 +43,8 @@ takes the value 1 and how many times it takes the value 0. For an $n$-bit S-box,
 and how many times either value is taken.
 In particular, if we define the \emph{bias} $b$ of a probability $p$ as $p - 1/2$, it means that
 the absolute bias of any linear approximation of an $n$-bit S-box of linearity $\linU$ is upper-bounded by $(\linU/2)/2^n$.
-Alternatively, it may sometimes be useful to consider the \emph{correlation} of a linear approximation for the S-box
-defined as $\Cor_{\sbo}(a,b) \defas 2^{-n}\lin_{\sbo}(a,b)$, \ie twice the bias.
+We will in fact mostly use the alternative notion of squared \emph{correlation} of linear approximations, 
+where the correlation of a given approximation is defined as $\Cor_{\sbo}(a,b) \defas \lin_{\sbo}(a,b)/2^n$, \ie twice the bias.
 
 \begin{defi}[Differential branch number of an S-box]
 The \emph{differential branch number} of an S-box $\sbo$ is:
@@ -57,7 +57,7 @@ where $\wt(x)$ is the Hamming weight of $x$.
 \begin{defi}[Linear branch number of an S-box]
 The \emph{linear branch number} of an S-box $\sbo$ is:
 \[
-\min_{\{a,b\neq 0\, |\, \lin_{\sbo}(a,b) \neq 0\}} \wt(a) + \wt(b).
+\min_{\{a\neq 0,b\neq 0\, |\, \lin_{\sbo}(a,b) \neq 0\}} \wt(a) + \wt(b).
 \]
 
 \end{defi}
@@ -97,7 +97,7 @@ $\Fun : \keyspace \times \{0,1\}^n \rightarrow \{0,1\}^n$ is defined as:
 \]
 \end{defi}
 
-The MEDP and MELP of (reduced versions of) a block cipher are good indicators of its resistance against differential and linear cryptanalyis.
+The MEDP and MELP of (reduced versions of) a block cipher are good indicators of its resistance against differential and linear cryptanalysis.
 Unfortunately, it is usually a hard problem to compute the MEDP and MELP for a non-trivial number of rounds of a block cipher.
 However, in the case of SPN ciphers,
 it is generally easier to derive upper bounds on the probability and potential of given differential and linear
@@ -155,7 +155,7 @@ $2$-round trails $(\texttt{0xFFFFFFFF}, \texttt{0xFFFF}\linebreak{}\texttt{FFFF}
 $(\texttt{0x12345678}, \texttt{0x9ABCDEFE}, \texttt{0xDCBA9876})$, and only one S-box is active at every round of the trail $(\texttt{0x10000000},
 \texttt{0x30000000}, \texttt{0x00000004})$.
 
-We can define the \emph{weight} of a trail $(a_r)$ as the number of S-boxes active for $(a_r)$. Note that whether
+We can define the \emph{weight} of a trail $(a_n)$ as the number of S-boxes active for $(a_n)$. Note that whether
 an S-box is active or not in a trail solely depends on the definition of the latter and not, say, on subkey values.
 Consequently, even though the probability of the differential trails of a block cipher (say) may in fact depend on the key, the possible weights of
 trails of non-zero probability are only a consequence of the round function.
@@ -166,9 +166,9 @@ This is expressed informally as the following:
 
 \begin{assu}
 \label{assu:mark}
-Let $(a_r)$ be a differential trail of weight $w$ for the SPN block cipher $\E$ which uses a unique $b$-bit S-box $\sbo$ of differential uniformity
+Let $(a_n)$ be a differential trail of weight $w$ for the SPN block cipher $\E$ which uses a unique $b$-bit S-box $\sbo$ of differential uniformity
 $\LdiffU$. Call $p_{\sbo} \defas \LdiffU/2^b$ the maximum differential probability of $\sbo$.
-Then the expected probability over the choice of $K$ that an input to $\E(K,\cdot)$ follows the trail $(a_r)$ is upper-bounded by $(p_{\sbo})^w$.
+Then the expected probability over the choice of $K$ that an input to $\E(K,\cdot)$ follows the trail $(a_n)$ is upper-bounded by $(p_{\sbo})^w$.
 \end{assu}
 
 In other words, \autoref{assu:mark} is a consequence of the assumption that the expected probability of an $r$-round
@@ -180,9 +180,10 @@ a trail for a fixed key is easy to compute from the correlation of the one-round
 
 \begin{prop}
 \label{prop:lina}
-Let $(a_r)$ be a linear trail of weight $w$ for the SPN block cipher $\E$ which uses a unique $b$-bit S-box $\sbo$ of linearity
+Let $(a_n)$ be a linear trail of weight $w$ for the SPN block cipher $\E$ which uses a unique $b$-bit S-box $\sbo$ of linearity
 $\linU$. Call $\Cor_{\sbo} \defas \linU/2^b$ the maximal absolute correlation of a linear approximation for $\sbo$.
-Then, fixing the key $K$, the absolute correlation of the trail $(a_r)$ for $\E(K,\cdot)$ is upper-bounded by $(\Cor_{\sbo})^w$.
+Then, fixing the key $K$, the absolute correlation of the trail $(a_n)$ for $\E(K,\cdot)$ is upper-bounded by $(\Cor_{\sbo})^w$
+and thus the squared correlation by $(\Cor_{\sbo}^2)^w$.
 \end{prop}
 
 Depending on the properties of the S-box and on the block size of a cipher, one can use the upper bounds
@@ -196,12 +197,13 @@ higher expected probability and more importantly that no set of more than $D$ tr
 S-boxes and equal starting and ending differences can be found.
 
 In the case of linear cryptanalysis, one similarly typically requires at least $\mathit{wl}$ linearly active
-S-boxes in any trail so that $(\Cor_{\sbo})^\mathit{wl} < L2^{-n/2}$. This comes from the fact that the data complexity required to exploit
+S-boxes in any trail so that $(\Cor_{\sbo}^2)^\mathit{wl} < L2^{-n}$. This comes from the fact that the data complexity required to exploit
 an approximation of correlation $C$ grows with the square of $C$, and that we do not want the net number of trails with
 equal starting and ending masks, activating
-the minimum number of S-boxes, and interfering constructively
+the minimum number of S-boxes, and interfering constructively,
 to be likely more than $L$ for some fixed keys.
 
-This entire approach then becomes particularly useful if one is able to use the structure of the round function of a block cipher to lower-bound the
-number of differentially and linearly active S-boxes for any trail of a given number of round, as the objective on the number
-of S-boxes becomes one on the number of rounds.
+The entire approach based on counting the number of active S-boxes becomes particularly useful
+if one is able to use the structure of the round function of a block cipher to lower-bound the
+number of differentially and linearly active S-boxes for any trail of a given number of round. If such a bound can be computed, the objective on the number
+of S-boxes then becomes one on the number of rounds.

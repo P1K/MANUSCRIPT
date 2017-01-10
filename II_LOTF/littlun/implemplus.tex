@@ -56,7 +56,7 @@ uint8_t littlun1[256] =
 \subsection{SIMD software implementation of \littlunOne}
 \label{sec:simdimplem}
 
-In the context of 4 to 8-bit S-boxes, the Lai-Massey structure of the \littlun construction also allows to conveniently use ``vector'' Single Instruction Multiple Data (or SIMD) instructions for
+In the context of 4 to 8-bit S-boxes, the Lai-Massey structure of the \littlun construction also allows to conveniently use vector Single Instruction Multiple Data (or SIMD) instructions for
 efficient implementations. We discuss here an implementation of \littlunOne based mostly on the \pshufb instruction from Intel's SSSE3 instruction set.
 %This instruction
 %allows to perform 16 parallel lookups of a 4-bit S-box on a 128-bit register, which is particularly convenient to implement a similarly parallel application of

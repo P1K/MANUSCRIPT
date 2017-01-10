@@ -23,7 +23,7 @@ the matrix rows. However, table-based implementations now tend to be frown upon 
 leave ciphers with a structure similar to \shark{}'s without reasonable software implementations when resistance to these attacks is required.
 Yet, such designs also have advantages of their own; their diffusion acts on the whole state at every round, and therefore makes structural attacks harder,
 while also ensuring that many S-Boxes are kept active.
-Additionally, the simplicity of the structure makes it arguably easier to analyze than in the case of most ciphers.
+Additionally, the simplicity of the structure makes it arguably easier to analyse than in the case of most ciphers.
 
 \paragraph{Our contributions.}
 
@@ -31,8 +31,8 @@ In this chapter, we revisit the use of a \emph{\shark{} structure} for block cip
 to achieve both a linear mapping with very good diffusion and efficient software implementations that are not prone to timing attacks.
 To be more specific on this latter point, we target software running on 32 or 64-bit CPUs featuring an SIMD vector unit.
 
-An interesting way of trying to meet both of these goals is to decrease the size of the field from $\Fth$ to $\Fst$. However, according to the \emph{MDS conjecture},
-there is no MDS code over $\Fst$ of length greater than seventeen, and no such code is known~\cite{mdsConj}. Because a diffusion matrix of dimension $n$ is typically
+A possible way of making a mapping more efficient is to decrease the size of the field from $\Fth$ to $\Fst$. However, according to the \emph{MDS conjecture},
+there is no MDS code over $\Fst$ of length greater than seventeen~\cite{mdsConj}. Because a diffusion matrix of dimension $n$ is typically
 obtained from a code of length $2n$, MDS matrices over $\Fst$ are therefore restricted to dimensions less than eight. Hence, the prospect
 of finding an MDS matrix over $\Fst$ diffusing on more than $8\times4 = 32$ bits is hopeless.
 Obviously,

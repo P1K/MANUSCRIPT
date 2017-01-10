@@ -11,7 +11,7 @@ Typical platforms of interest include hardware circuits and 8-bit to 32-bit micr
 Recently, NIST released a draft report on lightweight cryptography with the objective of creating a portfolio of lightweight primitives
 through an open process~\cite{NistLightDraft}. The topic of lightweight cryptography is thus ever more timely. 
 
-In this work, we design a conceptually simple block cipher targeting efficient \emph{light} implementations on 8-bit microcontrollers, where
+In this chapter, we design a conceptually simple block cipher targeting efficient \emph{light} implementations on 8-bit microcontrollers, where
 by \emph{light} implementations,
 we mean in particular that the size of the code is small, typically of the order of 200 bytes. If more resources are available, the best current block cipher is
 probably the \aes, see \eg \cite{DBLP:journals/iacr/BeaulieuSSTWW15}.
@@ -23,7 +23,8 @@ notable
 Our block cipher is built around \littlunOne, a compact 8-bit S-box with branch number 3. This allows
 to define a round function similar to a scaled-up variant of \present, composing the S-box application with a simple bit permutation. As a bit permutation
 obviously does not increase the number of active bits, an important part of the diffusion in such a cipher is played by the S-box. The typical measure of the quality
-of the diffusion of an S-box is its ``branch number'' which plays a role similar to the minimum distance of the linear codes used in \aes-like designs.
+of the diffusion of an S-box is its ``branch number'' which plays a role similar to the minimum distance of the linear codes used in \aes-like designs
+and in the previous chapter \autoref{cha:difmat}.
 We thus get a trade-off between hardware and light software implementations: \littlunOne is more expensive in hardware than two applications
 of the S-box of \present, but the bit permutation is simple to implement with 8-bit rotations. Owing to Golding, we name our
 block cipher ``\fly''.

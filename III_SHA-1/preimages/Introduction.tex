@@ -5,7 +5,7 @@ The results are obtained by extending the differential view of \mitm preimage at
 
 \medskip
 
-The starting point of the work described in this chapter is the \mitm technique, which
+The starting point of the work described here is the \mitm technique, which
 was first used in cryptography by Diffie and Hellman in 1977 to attack double-encryption~\cite{DH77}.
 Its use for preimage attack is much more recent and is due to Aoki and Sasaki, who used it as a framework to
 attack various hash functions, including for instance SHA-0 and \shaone~\cite{AS09}.
@@ -17,7 +17,7 @@ similar technique can nonetheless be exploited in certain cases; we show in more
 so in the preliminaries of~\autoref{KKFramework}.
 
 At CRYPTO~2012, Knellwolf and Khovratovich introduced a differential formulation of the \mitm framework
-of Aoki and Sasaki, which they used to improve the best attacks on \shaone. One of the main interests
+of Aoki and Sasaki, which they used to improve the best attacks on \shaone~\cite{DBLP:conf/crypto/KnellwolfK12}. One of the main interests
 of their approach is that it simplifies the formulation of several advanced extensions of
 the \mitm technique, and thereby facilitates the search for attack parameters, which in the case
 of \mitm attacks roughly correspond to good partitions for the ``secret''.
@@ -25,7 +25,7 @@ of \mitm attacks roughly correspond to good partitions for the ``secret''.
 In this chapter, we further exploit this differential formulation and generalise it to use higher-order
 differentials, which were introduced in cryptography by Lai in 1994~\cite{L94}. The essence
 of this technique is to consider ``standard'' differential cryptanalysis as exploiting properties
-of the first-order derivative of the function one wishes to analyze; it is then somehow natural
+of the first-order derivative of the function one wishes to analyse; it is then somehow natural
 to generalise the idea and to consider higher-order derivatives as well. We illustrate this
 with a small example using XOR differences: consider a function $\Fs$ and
 assume the equality $\Delta_\alpha\Fs(x) \defas \Fs(x) \oplus \Fs(x \oplus \alpha) = A$ holds with a good probability
@@ -95,9 +95,7 @@ a state $q_{0\ldots3}$ with differences of the form:
 \phantom{toto} For diff. on $m_7$ & \phantom{toto} For diff. on $m_6$ & \phantom{toto} For diff. on $m_6$ \& $m_7$\\
 \end{tabular}
 
-Thus there is no difference on the value $q_3^\dagger - q_3^\star - q_3^\ddagger + q_3$, nor
-on $q_2^\dagger - q_2^\star - q_2^\ddagger + q_2$.
-Hence one obtains a state with no difference on two out of the four state words with probability one;
+Thus there is no difference on the value $q_3^\dagger - q_3^\star - q_3^\ddagger + q_3$, and
 the differences on the remaining words also have a high probability. This good differential behaviour
 can then be exploited in a later attack.
 

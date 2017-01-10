@@ -4,10 +4,12 @@
 We start by introducing some notation that is used through this entire part.
 \autoref{table:symbs} gives the meaning of various standard symbols and \autoref{table:appbitconditions} shows the signification of the symbols used to denote bit differences between two states.
 Additionally, we use the following conventions: \shaone states, messages, and expanded messages are respectively denoted by $\state$, $\mess$, $\expmess$; for a variable $x$, the corresponding variable related by a specific
-difference is noted $\widetilde{x}$, the difference itself is denoted by $\diff(x,\widetilde{x})$ or $\diff x$; two different variables of the same type are noted $x$, $x'$ when their difference is not specific;
+difference is noted $\widetilde{x}$, the difference itself is denoted by $\diff(x,\widetilde{x})$ or $\diff x$; two different variables of the same type are noted $x$, $x'$ when their difference is not known;
 a variable that can be seen as an array can have its words accessed through a subscript, indices starting from zero, \eg $x_2$ is the third word of $x$; a variable that can be seen as a fixed-size binary word
-can have its bits accessed through a bracket notation, indices starting from zero, \eg $x[31]$ is the thirty-second bit of $x$; 
-numbers written in hexadecimal use a fixed-space font and the \emph{0x} prefix, \eg \texttt{0x1337}; we sometimes also write numbers in base two, in which case they are written with a subscript $2$, \eg $1010_2$. Finally, `$\defas$' is used to denote equality by definition.
+can have its bits accessed through a bracket notation, indices starting from zero, \eg $x[31]$ is the thirty-second bit of $x$;
+numbers written in hexadecimal use a fixed-space font and the \emph{0x} prefix, \eg \texttt{0x1337}; we sometimes also write numbers in base two with a subscript $2$,
+\eg $1010_2$, in the case
+where the basis cannot immediately be inferred. Finally, ``$\defas$'' is used to denote equality by definition.
 Various additional shorthands are introduced throughout the text.
 
 \begin{table}[!htb]

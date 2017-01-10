@@ -27,7 +27,7 @@ where $q$ is the data complexity (the number of accesses to the encryption oracl
 complexity (the number of accesses to the permutation) of the attack~\cite{EM}. Although
 of considerable interest, this bound also shows at the same time that the construction is not ideal,
 as one gets security only up to $\bigo(2^\frac{n}{2})$ queries, which
-is less than the $\bigo(2^n)$ one would expect for an $n$-bit block cipher. For this
+is less than the $\bigo(2^n)$ one would expect from an $n$-bit block cipher. For this
 reason, much later work investigated the security of variants of the original construction. A simple
 one is the iterated Even-Mansour scheme ($\IEM$). When using independent keys and independent permutations,
 its $r$-round version is defined as
@@ -66,7 +66,7 @@ denoting the empty string $\varepsilon$. For any string $s$, we use
 $s[i]$ to denote its $i^\text{th}$ element, starting from zero.
 
 We also use $\Delta_i^n$ to denote the string
-$0^{n-i-1} || 1 || 0^{i - 1}$. The superscript $n$ will always
+$0^{n-i-1} || 1 || 0^{i - 1}$. The value of the superscript $n$ will in fact always
 be clear from the context and therefore omitted.
 
 Finally, we identify strings of length $n$ over the binary alphabet $\{0,1\}$ with elements of
@@ -93,7 +93,7 @@ $k[i] = 0$, then resulting in the same ciphertext, and is
 encrypted under different keys if $k[i] = 1$, then resulting in different ciphertexts
 with overwhelming probability.
 Doing this test for every bit of $k$ thus allows to recover the whole key
-with a complexity linear in $\kappa$, except its most significant bit, as
+with a complexity linear in $\kappa$, except its most significant bit as
 the carry of a modular addition on the MSB never propagates.% and thus never there will never be a difference between the related keys.
 This latter bit can of course easily be recovered once all the others have been determined.
 
@@ -110,7 +110,7 @@ queries with many different related keys are allowed, this security remains lowe
 because of the ability to create collisions. One can
 for instance query $\E(k\oplus\delta_i,p)$ with $2^{k/2}$ different values for $\delta_i$ and a constant $p$
 and then compute $\E(\gamma_i,p)$ with $2^{k/2}$ guesses $\gamma_i$ for $k$. With high probability, one
-of the $\gamma_i$s will be equal to one of the $k\oplus\Delta_i$s, which allows to recover $k$.
+of the $\gamma_i$s will be equal to one of the $k\oplus\delta_i$s, which allows to recover $k$.
 
 \subsection{Key-recovery attacks on $\IEM^r$ with independent keys}
 
@@ -163,7 +163,7 @@ This is illustrated in \autoref{fig:em4.1.tex} and \autoref{fig:em4.2.tex}
 
 A similar attack works on the variant of the (iterated) \EM
 that uses modular addition instead of XOR for the combination of the key with the plaintext.
-This variant was first analyzed by Dunkelman, Keller and Shamir~\cite{DKS12} and offers the same security bounds as the
+This variant was first analysed by Dunkelman, Keller and Shamir~\cite{DKS12} and offers the same security bounds as the
 original Even-Mansour. An attack in that case works similarly
 by querying \eg $\E((k_1, k_0), \Delta_i)$ and
 $\E((k_1, k_0 \oplus \Delta_i), 0^\kappa)$.
@@ -207,7 +207,7 @@ We conclude this short section by showing why the test of line~5 is successful w
 but refer to Cogliati and Seurin for a complete description of their distinguisher, including the general case of distinct
 permutations and keys linearly derived from a master key.
 
-For the sake of clarity, we write $k \oplus \delta_i$ for $k + \delta_i$, as these values are equal by hypothesis.
+We write $k \oplus \delta_i$ for $k + \delta_i$ to make the simplifications more obvious, as these values are equal by hypothesis.
 By definition,
 $y_1 = \Perm(\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_1) \oplus k \oplus \delta_1$ and
 $y_3 = \Perm(\Perm(x_1 \oplus k \oplus \delta_1) \oplus k \oplus \delta_1) \oplus k \oplus \underline{\color{Green}\delta_1} \oplus {\color{NavyBlue}\overline{\delta_1}} \oplus \delta_3$
@@ -252,8 +252,8 @@ $\E(k,p) := \Perm(p \oplus k) \oplus k$,
 with the \proest permutation as $\Perm$. We will denote this cipher as \proestem.
 
 Although the attack of \autoref{sec:gen} could readily be applied to \proestem, this cipher is only
-meant to be embedded into a specific instantiation of a mode such as OTR, and attacking it out of context may not
-be relevant to its intended use.
+meant to be embedded into a specific instantiation of a mode such as OTR, and attacking it out of context is not
+relevant to its intended use.
 Hence we must
 be able to mount an attack on \proestcopa or \proestotr as a whole for it to be really significant,
 which is precisely what we describe now for the latter.
@@ -382,11 +382,15 @@ Yet this does not allow to recover the whole key because the nonce in \proestotr
 half of the width of the block cipher $\E$, or equivalently of the underlying \proest permutation,
 \ie $\frac{\kappa}{2}$. It is then possible to recover only
 half of the bits of $k$ using this procedure, as one cannot introduce appropriate differences in
-the computation of $\ell$ for the other half. The targeted security of the
-whole primitive being precisely $\frac{\kappa}{2}$ because of the generic single key
-attacks on Even-Mansour,
+the computation of $\ell$ for the other half.
+For the same reason, it is not possible either
+to finish the attack by looking for collisions in the unknown half of the key using the classical
+attack on Even-Mansour schemes.
+The targeted security of the
+whole primitive being precisely $\frac{\kappa}{2}$ because of the classical single key
+attack,
 one does not make a significant gain by recovering only half of the key.
-Even though, it should still be noted that this yields an
+Nonetheless, it should still be noted that this yields an
 attack with very little data requirements and with the same time complexity as the best
 point on the tradeoff curve of generic attacks, which in that case has a much higher data complexity of
 $2^\frac{\kappa}{2}$.
@@ -424,12 +428,12 @@ We note $k^\MSB$ the known most significant half of the key $k$.
 To mount the attack, one queries $\E(k - k^\MSB + \Delta_\msbtwo, p \oplus \Delta_{\msbtwoone})$ and
 $\E(k - k^\MSB - \Delta_\msbtwo, p)$. We can see that the inputs to $\Perm$ in these two cases are equal
 iff $k[\msbtwo] = 1$. Indeed, in that case,
-the carry in the addition $(k - k^\MSB) + \Delta_\msbtwo$ propagates by exactly one position and is ``cancelled'' by
+the carry in the addition $(k - k^\MSB) + \Delta_\msbtwo$ propagates by exactly one position and is cancelled by
 the difference in $p$, and there is no carry propagation in $(k - k^\MSB) - \Delta_\msbtwo$.
 Set $C \defas \Perm(p \oplus (k - k^\MSB - \Delta_\msbtwo))$, then
 the result of the two queries are equal to
 $C \oplus (k - k^\MSB + \Delta_\msbtwo) = C \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo \oplus \Delta_\msbtwoone)$ and
-$C \oplus (k - k^\MSB - \Delta_\msbtwo) = C \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo)$
+$C \oplus (k - k^\MSB - \Delta_\msbtwo) = C \oplus (k \oplus k^\MSB \oplus \Delta_\msbtwo)$.
 Consequently, the XOR difference between the two results is known and equal to $\Delta_\msbtwoone$.
 If on the other hand
 $k[\msbtwo] = 0$, the carry in $((k - k^\MSB) - \Delta_\msbtwo)$ propagates all the way to the most significant bit of $k$, whereas only
@@ -443,7 +447,7 @@ it should propagate up to $k_{\msbtwoone}$, the position where we cancel it with
 Let us define $\gamma_i$ as the value of the key $k$ only on positions $\msbtwo\ldots\msbtwoone - i$, completed with zeros left and right;
 that is $\gamma_i[j] = k[j]$ if $\msbtwo \geq j \geq \msbtwoone - i$, and $\gamma_i[j] = 0$ otherwise.
 Let us also define $\widetilde{\gamma_i}$ as the binary complement of $\gamma_i$ on its non-zero support,
-that is $\widetilde{\gamma_i}[j] = \widetilde{k[j]}$ if $\msbtwo \geq j \geq \msbtwoone - i$, and $\widetilde{\gamma_i}[j] = 0$ otherwise.
+that is $\widetilde{\gamma_i}[j] = \neg k[j]$ if $\msbtwo \geq j \geq \msbtwoone - i$, and $\widetilde{\gamma_i}[j] = 0$ otherwise.
 The modified queries then become $\E(k - k^\MSB + \Delta_{\msbtwo - i} + \widetilde{\gamma_i}, p \oplus \Delta_{\msbtwoone})$ and
 $\E(k - k^\MSB - \Delta_{\msbtwo - i} - \gamma_i, p)$, for which the propagation of the carries is ensured. Note that
 the difference between the results of these two queries when $k[\msbtwo - i] = 1$ is independent of $i$ and always equal
@@ -451,7 +455,8 @@ to $\Delta_\msbtwoone$.
 
 
 We conclude by showing how to apply this procedure to \proestotr. For the sake of readability, let us denote
-by $\Delta_i^+$ and $\Delta_i^-$ the complete modular differences used to recover one less significant bit $k[i]$.
+by $\Delta_i^+$ and $\Delta_i^-$ the complete modular differences used to recover one less significant bit $k[i]$,
+that is $\Delta_i^+ = -k^\MSB + \Delta_{\msbtwo - i} + \widetilde{\gamma_i}$ and $\Delta_i^- = -k^\MSB + \Delta_{\msbtwo - i} - \gamma_i$. 
 We then simply perform the two queries $\fun(k + \Delta_i^+, n \oplus \Delta_{\msbtwoone}, m_1 \oplus \Delta_{\msbtwoone}, m_2)$
 and $\fun(k + \Delta_i^-, n, m_1 \oplus \permi(\Delta_{\msbtwoone}), m_2)$, which differ by $\Delta_{\msbtwoone}$ iff $k_i$ is one,
 with overwhelming probability.
@@ -557,7 +562,7 @@ of a simple related-key distinguisher when designing a primitive, as this is a v
 attack; in fact, this is for instance the approach taken by PRINCE, among others~\cite{PRINCE}, which admits
 a trivial distinguisher due to its \textsf{FX} construction.
 What we have shown is that one must be
-careful when contemplating such a decision for \EM, and \textsf{FX} constructions, to some extent, as in that case it is actually
+careful when contemplating such a decision for \EM, and in fact \textsf{FX} constructions to some extent as well, as in that case it is actually
 equivalent to allowing key recovery, the most powerful of all attacks.
 
 \setcounter{section}{0}
@@ -566,8 +571,8 @@ equivalent to allowing key recovery, the most powerful of all attacks.
 \section{Proof-of-concept implementation for a 64-bit permutation}
 \label{sec:toy}
 
-We give the source of a C program that recovers a 64-bit key from a design similar to \proestotr where
-the permutation has been replaced by a small ARX, for compactness. This allows to verify the correctness
+We give in \autoref{fig:rkattack} the source of a C program that recovers a 64-bit key from a design similar to \proestotr, where
+the \proest permutation has been replaced by a small 64-bit ARX for compactness. This allows to verify the correctness
 of the attack, all the while showing that it is indeed very simple to implement. For the sake of simplicity,
 we do not ensure that the nonce does not repeat in the queries.
 
@@ -577,18 +582,19 @@ we do not ensure that the nonce does not repeat in the queries.
 #include <stdlib.h>
 
 #define ROL32(x,r) (((x) << (r)) ^ ((x) >> (32 - (r))))
-#define MIX(hi,lo,r) { (hi) += (lo); (lo) = ROL32((lo),(r)) ; (lo) ^= (hi); }
+#define MIX(hi,lo,r) \
+{ (hi) += (lo); (lo) = ROL32((lo),(r)) ; (lo) ^= (hi); }
 
-#define TIMES2(x) ((x & 0x8000000000000000ULL) ? ((x) << 1ULL) ^  0x000000000000001BULL : (x << 1ULL))
+/* Multiplication by x and x^2 in F_2[x]/x^64 + x^4 + x^3 + x^1 + x */
+#define TIMES2(x) ((x & 0x8000000000000000ULL) ? ((x) << 1ULL) ^ \
+0x000000000000001BULL : (x << 1ULL))
 #define TIMES4(x) TIMES2(TIMES2((x)))
 
 #define DELTA(x) (1ULL << (x))
 #define MSB(x) ((x) & 0xFFFFFFFF00000000ULL)
 #define LSB(x) ((x) & 0x00000000FFFFFFFFULL)
 
-/* Replace arc4random() by your favourite PRNG */
-
-/* 64-bit permutation using Skein's MIX */
+/* A 64-bit permutation using Skein's MIX function */
 uint64_t p64(uint64_t x)
 {
 	uint32_t hi = x >> 32;
@@ -604,11 +610,14 @@ uint64_t p64(uint64_t x)
 	return ((((uint64_t)hi) << 32) ^ lo);
 }
 
+/* A 64-bit Even-Mansour block cipher using the p64 permutation */
 uint64_t em64(uint64_t k, uint64_t p)
 {
 	return p64(k ^ p) ^ k;
 }
 
+/* The encryption of one block of message as done in
+ * Proest-OTR, using em64 as the underlying block cipher */
 uint64_t potr_1(uint64_t k, uint64_t n, uint64_t m1, uint64_t m2)
 {
 	uint64_t l, c;
@@ -619,6 +628,10 @@ uint64_t potr_1(uint64_t k, uint64_t n, uint64_t m1, uint64_t m2)
 	return c;
 }
 
+/* Step 1 of the attack, that recovers the highest
+ * 32 bits of the key
+ * The ``secret'' key is taken as an argument to
+ * implement related-key oracle queries */
 uint64_t recover_hi(uint64_t secret_key)
 {
 	uint64_t kk = 0;
@@ -640,6 +653,8 @@ uint64_t recover_hi(uint64_t secret_key)
 	return kk;
 }
 
+/* Step 2 of the attack, that recovers the lowest
+ * 32 bits of the key */
 uint64_t recover_lo(uint64_t secret_key, uint64_t hi_key)
 {
 	uint64_t kk = hi_key;
@@ -665,6 +680,7 @@ uint64_t recover_lo(uint64_t secret_key, uint64_t hi_key)
 	return kk;
 }
 
+/* Selects a random key and tries to recover it thanks to the attack */
 int main()
 {
 	uint64_t secret_key = (((uint64_t)arc4random()) << 32) ^ arc4random();
@@ -680,5 +696,11 @@ int main()
 	return 0;
 }
 \end{minted}
+\begin{figure}[!h]
+\caption{A proof-of-concept implementation of the related-key attack on \proestotr.\label{fig:rkattack}}
+\end{figure}
+
+The code of \autoref{fig:rkattack} is a straightforward implementation of \autoref{alg:kr}. The attack is split in two functions, \mintinline{c}{recover_hi} and \mintinline{c}{recover_lo},
+that each recover one half of the key; the rest of the code minimally implements the \proestotr-like cryptosystem. 
 
 \renewcommand\thesection{\arabic{section}}

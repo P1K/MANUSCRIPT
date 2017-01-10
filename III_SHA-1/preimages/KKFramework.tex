@@ -5,7 +5,7 @@ As a preliminary, we give a description of the \mitm framework for preimage atta
 and in particular of the differential formulation of Knellwolf and Khovratovich from CRYPTO~2012~\cite{DBLP:conf/crypto/KnellwolfK12}.
 
 The relevance of \mitm for preimage attacks comes from the fact that many hash functions are built from a compression
-function which is an \ah block cipher used in one of the ``PGV'' modes~\cite{PGV93}.
+function which is an \ah block cipher used in one of the PGV modes~\cite{PGV93}.
 The \shaone function itself follows this design strategy and uses the particular Davies-Meyer mode, already described
 in \autoref{chap:hashfun}.
 We recall that in this mode, the compression function $\Hc~: \{0, 1\}^v \times \{0, 1\}^n \rightarrow \{0, 1\}^v$ compressing a chaining value $c$ with
@@ -15,7 +15,7 @@ Given a compression function $\Hc$,
 the problem of finding a preimage of $t$ for $\Hc$ is then equivalent to finding a key $m$ for
 $\Fs$
 such that $\Fs(m, p) = c$ for a pair $(p, c)$, with $c = t - p$. Additional constraints can also be put on $p$, such as prescribing
-it to a fixed initialization value $\iv$.
+it to a fixed initialisation value $\iv$.
 
 In its most basic form, a \mitm attack can speed-up the search for a preimage if the block cipher $\Fs$ can equivalently be
 described as the composition $\Fd \circ \Fuu$ of two block ciphers $\Fuu~: \ksu \times \{0, 1\}^v
@@ -89,7 +89,7 @@ We recall the procedure to do so in \autoref{affine_testing}.
 
 \end{algorithm}
 
-\subsubsection{Analysis of \autoref{affine_testing}.}
+\subsubsection{Analysis of \autoref{affine_testing}}
 For the sake of simplicity we assume that $d_1$ and $d_2$ are equal to a certain value $d < \frac{v}{2}$.
 The running time of every loop of \autoref{affine_testing} is therefore $\bigo(2^d)$, assuming efficient
 data structures and equality testing for the lists,
@@ -105,7 +105,7 @@ $\Fs(\mu \oplus \delta_1 \oplus \delta_2, p) = c$.
 This algorithm therefore allows to search through $2^{2d}$ candidate preimages with a complexity
 of $\bigo(2^d)$, and thus gives a speed-up of $2^d$. The complexity of a full attack is hence $\bigo(2^{v - d})$.
 
-\subsubsection{Comparison with the basic \mitm attack.}
+\subsubsection{Comparison with the basic \mitm attack}
 When setting $\Delta_1 = \Delta_2 = 0$, this differential variant of the \mitm technique becomes a special case
 of the general formulation of the basic technique given at the beginning of this section: the key spaces $\ksu$ and $\ksd$ now possess a structure
 of affine spaces.
@@ -142,7 +142,7 @@ Again, these generalisations correspond to advanced techniques of Aoki and Sasak
 The only change to \autoref{affine_testing} needed to accommodate these extensions is to replace the equality by the appropriate equivalence
 relation on line 6. However, the fact that this equivalence holds no longer ensures that $x \defas \mu \oplus \delta_1 \oplus \delta_2$ is a preimage,
 which implies an increased complexity for the attack.
-This increase comes from to factors:  first, even when $x$ \emph{is} a preimage, the relation on line 6 might not
+This increase comes from two factors:  first, even when $x$ \emph{is} a preimage, the relation on line 6 might not
 hold with probability $1 - p_1p_2$, meaning that on average one needs to test $1/p_1p_2$ times more candidates in order to account for
 the false negatives; secondly, if we denote by $s$ the average size of the equivalence classes under $\equiv$ (when using truncation as
 above, this is equal to $2^{v - r}$ with $r$ the Hamming weight of $m$), then one needs to check $s$ potential preimages

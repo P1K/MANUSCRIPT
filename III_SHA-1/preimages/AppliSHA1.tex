@@ -43,7 +43,7 @@
 
 \subsection{One-block preimages without padding}
 \label{sec:one_wo_pad}
-  We apply the framework of \autoref{NewFramework} to mount attacks on \shaone
+  We can apply the framework of \autoref{NewFramework} to mount attacks on \shaone
   for \emph{one-block preimages without padding}. These are rather direct applications
   of the framework, the only difference being the fact that we use \emph{sets} of
   differentials instead of \emph{linear spaces}. This has no impact
@@ -59,10 +59,10 @@
   A similar behaviour was observed by Knellwolf and Khovratovich in their attacks, and this can be explained by the fact
   that the \shaone step function has a somewhat weaker diffusion when computed backward compared to forward.
 
-  We use \autoref{difference-getter} to
+  We used \autoref{difference-getter} to
   construct a suitable set of differences in the preparation of an attack.
-  This algorithm was run on input differences of low Hamming weight; these
-  are kept only when they result in output differences
+  This algorithm was run on input differences of low Hamming weight; a difference 
+  was kept only when it resulted in output differences
   with truncation masks that are long enough and with good overall
   probabilities. The sampling parameter $Q$ that we used was $2^{15}$;
   the threshold value $t$ was subjected to a tradeoff: the larger it is,
@@ -106,7 +106,7 @@
     \caption{\label{difference-getter}Computing a suitable output difference for a given input difference}
   \end{algorithm}
 
-  Once input and output differences have been chosen, we use an adapted version of \cite[Algorithm~2]{DBLP:conf/crypto/KnellwolfK12} given in
+  Once input and output differences had been chosen, we used an adapted version of \cite[Algorithm~2]{DBLP:conf/crypto/KnellwolfK12} given in
   \autoref{mask-getter} to compute suitable truncation masks. 
 
   \begin{algorithm}[ht]
@@ -156,7 +156,7 @@
 
   \medskip
 
-  We similarly adapt \cite[Algorithm 3]{DBLP:conf/crypto/KnellwolfK12} as \autoref{typeI-getter} in order to estimate the average
+  We similarly adapted \cite[Algorithm 3]{DBLP:conf/crypto/KnellwolfK12} as \autoref{typeI-getter} in order to estimate the average
   false negative probability associated with the final truncated differential.
 
   \begin{algorithm}[ht]
@@ -233,7 +233,7 @@
   If we want the message to be properly padded, 65 out of the 512 bits of the last message
   blocks need to be fixed according to the padding rules, and this naturally restricts the positions
   of where one can now use message differences. This has in particular an adverse effect on
-  the differences in the backward step, which Hamming weight increases because of some
+  the differences in the backward step, whose Hamming weight increases because of some
   features of \shaone's message expansion algorithm. The overall process of finding attack
   parameters is otherwise unchanged from the non-padded case. We give statistics for
   the best attacks that we found in \autoref{SHA12}. One will note that the highest number of attacked
@@ -274,7 +274,7 @@
   more than compensate for the ones added by the padding. We first describe
   how to compute such pseudo-preimages.
 
-  \subsubsection{One-block pseudo-preimages.}
+  \subsubsection{One-block pseudo-preimages}
 
   If we relax the conditions on the IV and do not impose anymore that it is fixed
   to the one of the specifications, it becomes possible to use a splice-and-cut
@@ -297,7 +297,7 @@
     Finding the parameters is done in the exact same way as for the one-block preimage attacks.
     Since we only use bicliques covering $7$ steps, one can generate many of them
     from a single one by modifying some of the remaining message words outside of the biclique proper.
-    Therefore, the amortized cost of their construction is small and considered negligible w.r.t. the
+    Therefore, the amortised cost of their construction is small and considered negligible w.r.t. the
     rest of the attack. The statistics of the resulting attacks are shown in \autoref{SHA13}.
 
   \begin{table}[htb]
@@ -319,7 +319,7 @@
     \end{center}
   \end{table}
 
-  \subsubsection{Complexity of the two-block attacks.}
+  \subsubsection{Complexity of the two-block attacks}
   Using two one-block attacks, it is simple to mount a two-block attack at the combined cost of each of them.
   For a given target $c$, the process is the following:
     \begin{enumerate}
@@ -352,7 +352,7 @@ From the Merkle-Damg\aa rd structure of \shaone, it follows that the two-block m
 \section{Conclusion}
 This chapter showed how to extend the differential variant of the \mitm framework for hash function preimage attacks with higher-order differentials,
 and how this could be applied to find better attacks on \shaone.
-The source of the improvements come from the fact that higher-order differentials lead to better message partitions, which
+The source of the improvements comes from the fact that higher-order differentials lead to better message partitions, which
 then mechanically allow to mount attacks up to a larger number of steps than the previous best
 results.
 
@@ -361,6 +361,6 @@ that it does not seem to improve the best attacks on very weak functions such as
 attacks on the more complex \shaone, when the objective is to find a preimage for the highest possible number of rounds.
 It should also be noted that due to the strong similarity with the original \mitm framework, this technique may be
 much less successful when applied to functions with a heavier message expansion, such as \shatwo, or in general to
-function with better diffusion. A striking example in the latter case is that by applying the current framework
+functions with better diffusion. A striking example in the latter case is that by applying the current framework
 to the \blake-512 hash function~\cite{blake}, we were only able to attack 2.75 out of 16 with a complexity close to a generic attack. 
 

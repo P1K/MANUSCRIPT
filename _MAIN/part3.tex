@@ -15,7 +15,7 @@ and ever more efficient hardware would make such an endeavour more affordable th
 The considerable amount of work that followed Wang \etal's original contribution then mostly focused on first getting a better understanding of the attack process, and
 secondly on bringing innovations allowing to explicitly provide collisions for reduced versions of \shaone with the highest number of steps. 
 
-Considering the efficient collision attacks developped since 2005, it may seem remarkable that \shaone
+Considering the efficient collision attacks developed since 2005, it may seem remarkable that \shaone
 in fact still offers a comfortable security margin against first preimage attacks. Until our own work,
 the attack reaching the highest number of steps was due to Knellwolf and Khovratovich, who showed in 2012 how to attack $57/80$ of the function, with an estimated
 complexity of $2^{158.8}$ evaluations of the compression function.
@@ -27,14 +27,14 @@ The third and last part of this thesis describes new attacks on \shaone.
 
 We start by presenting explicit collision attacks for the full compression function of \shaone. While this comes short of a practical
 attack on the \emph{hash function}, this is the first explicit result on \shaone for a standard security notion. Furthermore, the efficient implementation framework that was developed
-for this work could also be reused for hash function attacks, which have a very similar (and in some respect simpler) structure than our ``freestart'' case.
+for this work could also be reused for hash function attacks, which have a very similar and in some respect simpler structure than our freestart case.
 
 Collision attacks on \shaone \emph{à la} Wang have a rather specific structure, full of small technicalities. Thus, after briefly
-introducting \shaone in \autoref{cha:shaone_pres}, we start with a presentation of this topic in \autoref{cha:shaone_hist},
+introducing \shaone in \autoref{cha:shaone_pres}, we start with a presentation of this topic in \autoref{cha:shaone_hist},
 that we hope to be self-contained. Our contributions on freestart collisions are presented next in \autoref{cha:shaone_new}.
 
 We then conclude this thesis by presenting in \autoref{cha:shaone_pre}
-the current best preimage attacks on \shaone, in terms of number of attacked steps. By extending the framework developped by Knellwolf and Khovratovich to
+the current best preimage attacks on \shaone, in terms of number of attacked steps. By extending the framework developed by Knellwolf and Khovratovich to
 higher-order differential attacks, we are able to increase by five the number of steps of \shaone for which a preimage can be computed faster than with
 a generic method.
 
@@ -66,7 +66,7 @@ a generic method.
 
 \input{../III_SHA-1/history.tex}
 
-\chapter[Collisions à initialisation libres pour \shaone]
+\chapter[Collisions à initialisation libre pour \shaone]
         {Freestart collision attacks for \shaone}
 \label{cha:shaone_new}
 

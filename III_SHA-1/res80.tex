@@ -1,7 +1,7 @@
 \section{Freestart collisions for 80-step SHA-1}
 \label{sec:res_80}
 
-This section gives the attack parameters for the 80-step (full) freestart collision attack on \shaone.
+This section gives the attack parameters for the 80-step full freestart collision attack on \shaone.
 
 \subsection{The differential path for part of the first two rounds}
 \label{sec:app_diff_path80}
@@ -241,6 +241,22 @@ additional flips may be needed in order to preserve message bit relations.
 
 We also give a graphical representation of this repartition in \autoref{fig:neutbits80_2}.
 
+\begin{figure}[!htb]
+\centering
+\begin{tabular}{l c}
+$\expmess_{10}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\diffup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
+$\expmess_{11}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$\equaup\nodiff\nodiff\nodiff\nodiff$\monediffd$\diffrightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{12}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\equarightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{13}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{14}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\equaup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{15}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$\equaup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
+$\expmess_{16}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\equarightup\nodiff\nodiff\nodiff\nodiff\nodiff \\
+\end{tabular}
+  \caption[The local collision patterns for each of the four boomerangs.]{The local collision patterns for each of the four boomerangs, using ``difference'' symbols by an abuse of notation. The position of the first difference to be introduced is highlighted
+  with a difference (black) symbol; the associated correcting differences (identified by the corresponding white symbols) must then have a sign different from this one. Note that boomerang ``\diffup'' uses one more difference than the others.
+  \label{fig:boom_coll}}
+\end{figure}
+
 \begin{figure}[ht]
 \centering
 \begin{tabular}{l c}
@@ -284,22 +300,6 @@ More precisely, the four boomerangs have their first differences on bits 7,8 of 
 In \autoref{fig:boom_coll}, we give a graphical representation of the complete set of message bits to be flipped for each
 boomerang. One can see that these follow the pattern of a local collisions, with some ``linear'' corrections omitted thanks to the absorption
 properties of the $\fif$ Boolean function. 
-
-\begin{figure}[!htb]
-\centering
-\begin{tabular}{l c}
-$\expmess_{10}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\monediffu$\diffup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\ 
-$\expmess_{11}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$\equaup\nodiff\nodiff\nodiff\nodiff$\monediffd$\diffrightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
-$\expmess_{12}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\equarightup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
-$\expmess_{13}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
-$\expmess_{14}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\equaup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
-$\expmess_{15}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffo$\equaup\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff \\
-$\expmess_{16}$: & \nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff\nodiff$\mnodiffz$\equarightup\nodiff\nodiff\nodiff\nodiff\nodiff \\
-\end{tabular}
-  \caption[The local collision patterns for each of the four boomerangs.]{The local collision patterns for each of the four boomerangs, using ``difference'' symbols by an abuse of notation. The position of the first difference to be introduced is highlighted
-  with a difference (black) symbol; the associated correcting differences (identified by the corresponding white symbols) must then have a sign different from this one. Note that boomerang ``\diffup'' uses one more difference than the others.
-  \label{fig:boom_coll}}
-\end{figure}
 
 We conclude by showing how the neutral bits are packed together with the index of an (extended) base solution in \autoref{fig:nb_packing80_1} and \autoref{fig:nb_packing80_1}.
 Note that neutral bits on $\expmess_{17}$ are split between the buffers for steps 18--20 and 21--25. Furthermore, the packing of steps 21--25 also includes
@@ -470,7 +470,7 @@ bits from $\expmess_{19}$ (with two flip bits on 17 and 15), and finally light r
 \label{sec:colli_ex80}
 
 We give an example of 80-step collision in \autoref{tbl:fscoll80}.
-This shows the two (message, \iv) pairs with their (identical) resulting digest.
+This shows the two (message, \iv) pairs with their identical resulting digest.
 This table is formatted in the same way as the one of \autoref{sec:colli_ex76}.
 
 \begin{table}[!htb]
@@ -511,7 +511,7 @@ $\compress(\diff\iv,\diff\mess)$ & \hspace{-3.4mm} \texttt{ f0 20 48 6f 07 1b f1
 \label{sec:comp80}
 
 To estimate the complexity of the attack, we may as in \autoref{sec:comp76} consider the production rate of partial solutions up to $\state_{60}$ and the corresponding probability of extending
-these to a collision. However, the slower production rate (due to the higher number of conditions) would lead to a less reliable estimate than in the 76-step case. Thus, we choose instead to
+these to a collision. However, the slower production rate due to the higher number of conditions would lead to a less reliable estimate than in the 76-step case. Thus, we choose instead to
 consider partial solutions up to $\state_{40}$. On a good-performing \gtx, such solutions are produced at a rate of about 1030 per second. The probability that one of these results
 in a collision is given by JLCA to be $2^{-35.58}$, leading to an expected time to collision of 577.16 days.
 Recalling that one \gtx can compute $2^{31.8}$ \shaone compression functions per second, the complexity of the attack is thus of $2^{57.37}$ on such a GPU.

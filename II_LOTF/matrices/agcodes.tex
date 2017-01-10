@@ -3,9 +3,9 @@
 
 We now present \emph{algebraic geometry codes} (``AG codes''), which are the main object used in this chapter,
 and we show how they can give rise to diffusion matrices with interesting parameters.
-We introduce a few geometry notions along the way in order to be able to faithfully describe the codes we will
-be using. 
-We refer the reader to the relevant chapters of \cite{vanlint,tvn,stichtenoth,fulton} for a much more detailed and rigorous treatment of the subject. 
+We introduce a few notions of algebra and geometry along the way in order to be able to faithfully describe the codes we will
+be using.
+We refer the reader to the relevant chapters of \cite{vanlint,tvn,stichtenoth,fulton} for a much more detailed and rigorous treatment of the subject.
 
 \paragraph{AG codes as a generalisation of RS codes.}
 We first give an intuition of the construction used in AG codes. We have seen that RS codes are MDS
@@ -23,12 +23,12 @@ of higher dimension than the ``line'' used in RS codes. For instance, one could 
 $m$-dimensional space $\Fq^m$, and $\funcspace$ to be the $m$-variate polynomials of $\Fq[x_0,\ldots,x_{n-1}]$
 less than a certain degree $r$. This defines \emph{Reed-Muller codes} (``RM codes'') of order $r$.
 Although this construction successfully yields codes longer than RS codes, they are not asymptotically good, in
-the sense that construction does not allow to have code parameters where neither of $d/n$ and $k/n$ tends to
+the sense that this construction does not allow to have code parameters where neither of $d/n$ and $k/n$ tends to
 zero when $n$ goes to infinity.
 
 An alternative approach to construct longer variants of RS codes is the one followed by AG codes. Seeing
 RS codes as working with a line of genus zero, the idea is to take as evaluation domains
-the points of plane curves of higher genera,
+the points of plane curves of higher genus,
 which can be assimilated to a subset of $\Fq^2$. A geometrically
 meaningful way to choose the function spaces $\funcspace$ is then to consider certain subspaces of
 the function fields of the curves. We will see that for well-chosen $\funcspace$, this construction
@@ -36,7 +36,7 @@ leads to codes of parameters $[n, k, d \geq n - k + 1 - g]_{\Fq}$ for curves of 
 maximal number of points on a curve is roughly increasing with the genus, this construction gives us the
 sort of tradeoff we were searching for, and also yields asymptotically good codes.
 
-\subsection{Selected algebraic geometry notions}
+\subsection{Selected notions from algebraic geometry}
 
 We will be needing a few tools from algebraic geometry to make our description of AG codes explicit. We only introduce
 here the notions that are relevant to this specific application,
@@ -71,7 +71,7 @@ The set of projective points $(x_0 : \ldots : x_{n-1} : 0)$ is called the \emph{
 We recall the following definitions about ideals.
 
 \begin{defi}[Ideal, prime ideal, maximal ideal, principal ideal]
-An \emph{ideal} $\mathcal{I}$ of a ring $\mathcal{R}$ is a subset of $\mathcal{R}$ closed by addition and absorbing by
+An \emph{ideal} $\mathcal{I}$ of a ring $\mathcal{R}$ is a subset of $\mathcal{R}$ closed by addition and that is absorbing by
 multiplication: $a, b \in \mathcal{I} \Rightarrow a + b \in \mathcal{I}$; $a \in \mathcal{I}, b \in \mathcal{R} \Rightarrow
 a b \in \mathcal{I}$.
 
@@ -97,15 +97,15 @@ of a prime ideal $\mathcal{I} \defas \langle f_0, \ldots, f_m \rangle$ of homoge
 monomials all have the same degree.
 \end{defi}
 
-A \emph{projective curve} is a projective variety of dimension one, where the dimension $n$ of a variety $V$ is defined by
+A \emph{projective curve} is a projective variety of dimension one, where the dimension $n$ of a variety $V$ can formally be defined as
 the maximal length of the inclusion chain $V = V_0 \supsetneq \ldots \supsetneq V_n \neq \emptyset$, with $V_i$ closed in $V_{i-1}$, for the \emph{Zariski topology}
-for all $i \in \{1,\ldots,n\}$. In practice, we will only consider curves in $\projec^2$, \ie plane curves,
-which will then be defined by a single homogeneous polynomial $E$.
+for all $i \in \{1,\ldots,n\}$. We will not need this definition in this chapter, as we only consider dimension-one varieties in $\projec^2$, \ie plane curves,
+which are defined by a single homogeneous polynomial $E$.
 
-\paragraph{Remarks.}
+\paragraph{Remarks}
 \begin{enumerate}
 \item The condition that $k$ be algebraically closed is not as restrictive as it may seem. Say that we wish to work in $\Fq$, with a
-curve $\curve$ defined by an equation $E$ over $\Fq$ or one of its subfields. Then, 
+curve $\curve$ defined by an equation $E$ over $\Fq$ or one of its subfields. Then,
 although we define $\curve$ over the algebraic closure of $\Fq$, we
 will only be interested in $\curve(\Fq)$, the points of $\curve$ that lie in $\Fq$: its \emph{$\Fq$-rational points}, or simply rational points.
 For instance, we may wish to only consider curves which have a large number of rational points.
@@ -135,12 +135,13 @@ We will need to be able to talk about the behaviour of functions at specific poi
 
 \begin{defi}[Local ring of a point]
 The \emph{local ring} $\locring_P$ of a point $P$ of a variety $\curve$ is the set of rational functions regular at $P$.
-It has a unique maximal ideal $\maxi_P \defas \{f \in \locring_P ~|~ f(P) = 0\}$. 
+It has a unique maximal ideal $\maxi_P \defas \{f \in \locring_P ~|~ f(P) = 0\}$.
 \end{defi}
 
 The local ring and its maximal ideal are in particular useful to define the \emph{tangent space} at a point $P$, which in turn allows to define smooth and singular points,
 depending on its dimension.
-We will not give the general definition here, mentioning instead  the following convenient alternative characterization in the specific case of curves:
+We do not give the general definition here as it is more convenient in our case to define smoothness at a point from properties of the corresponding local ring.
+Indeed, we have the following convenient direct characterisation in the specific case of curves:
 
 \begin{defi}[Smooth and singular points of a curve, local parameter]
 A point $P$ of a curve $\curve$ is \emph{smooth} or \emph{non-singular} iff $\maxi_P$ is a principal ideal. Any generator of the ideal $t_P \in \locring_P$ s.t. $\maxi_P = t_P\locring_P$
@@ -166,9 +167,8 @@ This can be extended to arbitrary rational functions by writing them as quotient
 \]
 For a function $f$, if $\ord_P(f) \geq 0$, we call this value the \emph{zero order} of $f$ at $P$; if $\ord_P(f) < 0$
 we call $-\ord_P(f)$ the \emph{pole order} of $f$ at $P$.
-
-We note in particular the two useful properties of $\ord$:
-1) $\ord(fg) = \ord(f) + \ord(g)$; 2) $\ord(1/f) = -\ord(f)$.
+It is also useful to notice that
+$\ord(fg) = \ord(f) + \ord(g)$ and that $\ord(1/f) = -\ord(f)$.
 
 %We will shortly see that being able to compute the order of a function at some desired points is essential in the definition of $\funcspace$.
 In effect, $\ord_P$ defines a \emph{discrete valuation} of functions of $k(\curve)$, associated with the point $P$, \ie $\locring_P$ is a \emph{valuation ring}:
@@ -242,7 +242,7 @@ of the curves we use will be known beforehand.
 In the last few paragraphs, we have assumed that we were working with a smooth curve. We justified this by the need of being able to define a valuation for functions
 at any point of the curve, which allowed us to define divisors and their associated vector spaces.
 Unfortunately, some of the curves we may wish to use in practice are not smooth. We briefly and informally sketch here how it is possible to nonetheless work with some
-of these curves. We refer the reader to \eg Fulton~\cite[Chap. 7]{fulton} for a serious treatment of the matter.
+of these curves. We refer the reader to \eg Fulton~\cite[Chapter 7]{fulton} for a serious treatment of the matter.
 
 A first remark is that what effectively matters in the definition of the function space is not so much the points on the curves as their associated valuation
 rings. It is in fact possible to define entirely what we have presented above in a purely algebraic way, as is done for instance by Stichtenoth~\cite{stichtenoth}.
@@ -250,7 +250,7 @@ In this case, the notion of points is replaced by the one of \emph{places} of a 
 ideal of a valuation ring of the function field:
 
 \begin{defi}[Place of a function field]
-A place $P$ of a function field $F/k$ is the maximal ideal of a valuation ring $\locring$ of $F/k$. 
+A place $P$ of a function field $F/k$ is the maximal ideal of a valuation ring $\locring$ of $F/k$.
 \end{defi}
 
 Divisors can then be redefined as sums of places instead of sums of points.
@@ -261,22 +261,23 @@ This can be done by constructing a \emph{non-singular model} $\nscurve$ of $\cur
 and taking as places of $\curve$ the points of $\nscurve$. A useful theorem is that for a projective curve $\curve$, there is a unique (up to isomorphism) non-singular curve
 $\nscurve$ that is birationally equivalent to it, which means that there are \emph{rational maps} from $\curve$ to $\nscurve$ and vice-versa, that compose to the identity wherever they are
 defined,
-a rational map $\curve \subseteq \projec^m \rightarrow \projec^n$ being an $n+1$-tuple of homogeneous polynomials s.t. the polynomials do not jointly
+a rational map $\curve \subseteq \projec^m \rightarrow \projec^n$ being an $(n+1)$-tuple of homogeneous polynomials s.t. the polynomials do not jointly
 vanish at any point of the curve. Furthermore, the function fields $k(\curve)$ and $k(\nscurve)$ are the same, up to isomorphism, so defining the places of $\curve$ in this
 way is meaningful.
 We will not address here the problem of computing these non-singular models \emph{per se}.
 
 The map $\curve \rightarrow \nscurve$ may not be defined on every point of $\curve$, but the number of points where it is not defined is finite; this makes sense, as a curve
-has at most finitely many singular points. We say that a place is \emph{centered} at a point $P$ if $P$ is its image by the map $\nscurve \rightarrow \curve$.
+has at most finitely many singular points. We say that a place is \emph{centered} at a point $P$ if $P$ is its image by the inverse map $\nscurve \rightarrow \curve$.
 Every non-singular
 point of $\curve$ has exactly one place centered at it, while finitely many places may be centered at singular points.
 
 We conclude by defining curves that are said to be in \emph{special position}, cf. \eg \cite{DBLP:journals/tit/SaintsH95}, which are convenient to use for several reasons.
 
 \begin{defi}[Curve in special position]
+We recall our notation: a point $P \in \projec^2(k)$ is written $(x : y : z)$, and is
+at infinity iff $z = 0$.
 A projective plane curve $\curve$ is in \emph{special position}
-if\footnote{We recall our notation: a point $P \in \projec^2(k)$ is written $(x : y : z)$, and is
-at infinity iff $z = 0$.}:
+if:
 \begin{enumerate}
 \item it has exactly one point $P_\infty$ at infinity;
 \item there is exactly one place centered at $P_\infty$;
@@ -288,7 +289,9 @@ at infinity iff $z = 0$.}:
 Curves in special positions are useful as there is a bijection between their places and their (potentially singular) points; thus they can always be considered
 ``as if smooth'' w.r.t. to the discussions of this section. Additionally, if one considers the space $\rrs(aP_\infty)$, $a > 0$, of functions having poles only at the point at infinity,
 its elements can be mapped to polynomials of the coordinate ring of $\curve_A$. In other words, one can perform all the computations in $\rrs(aP_\infty)$ with the affine curve
-only; we discuss how to explicitly compute bases for such spaces next. The main curve used in this chapter is a singular curve in special position.
+only; we discuss how to explicitly compute bases for such spaces next.
+
+The main curve used in this chapter is a singular curve in special position.
 
 \subsubsection{Computation of a basis of $\rrs(aP_\infty)$ for a curve in special position}
 
@@ -315,17 +318,19 @@ We conclude by presenting a simple technique to compute the pole order of $x/z$ 
 in a way that does not require to explicitly find a local parameter at $P_\infty$.
 In this setting, we know by definition that the valuation $\ord_{P_\infty}$ is well-defined and that it is negative and distinct for $x/z$ and $y/z$.
 Thus $\exists\, \alpha,\beta \in \mathbf{N}^*$ s.t. $(x/z)^\beta(y/z)^{-\alpha}$ is regular and non-zero at $P_\infty$. The smallest such $\alpha$
-and $\beta$ are the pole order of $x/z$ and $y/z$ respectively.
+and $\beta$ are the pole orders of $x/z$ and $y/z$ respectively.
 
 We give two examples of a computation with this technique, corresponding to the first two curves presented in \autoref{sec:constr_ag}.
 
 \begin{example}[$x^2z + xz^2 = y^3+yz^2$]
 \label{ex:order_gen1}
-We consider the curve of equation $E(x,y,z) := x^2z + xz^2 = y^3+yz^2$ over a field of characteristic two. It has a unique place at infinity $P_\infty \defas [1:0:0]$.
-From the equation of the curve, we may guess 3 and 2 to be the orders of $x/z$ and $y/z$, as the fraction $x^2z^3/y^3z^2$ seems to be the one of least degree
-that can be simplified using $E$.
+We consider the curve of equation $E(x,y,z) := x^2z + xz^2 = y^3+yz^2$ over a field of characteristic two. It has a unique place at infinity $P_\infty \defas [1:0:0]$,
+\ie a unique projective point with $z = 0$ that verifies the curve equation; indeed, setting $z$ to zero in $E$ we see that we must have $y = 0$ as well.
+From the curve equation, we may guess 3 and 2 to be the orders of $x/z$ and $y/z$, as the fraction $x^2z^3/y^3z^2$ seems to be the one of least degree
+that can be simplified using $E$. For this guess to be validated, we need to show that $x^2z^3/y^3z^2$ is regular and non-zero at $P_\infty$, which can be done
+by finding a suitable equivalent expression for this function.
 
-We may then rewrite $x^2z^3$ in the four following ways:
+Using $E$, we may rewrite $x^2z^3$ in the four following ways:
 \begin{enumerate}
 \item $z^2(x^2z)$;
 \item $z^2(y^3 + yz^2 + xz^2)$;
@@ -355,14 +360,14 @@ Hence we indeed have $\ord_{P_\infty}(x/z) = 2$ and $\ord_{P_\infty}(y/z) = 5$.
 \subsection{Construction of AG codes}
 \label{sec:constr_ag}
 
-We are now ready to define the family of AG codes that we will use in the remainder of this work. We refer
+We are now ready to define the family of AG codes that we use in the remainder of this chapter. We refer
 to~\cite[Chapter 4]{tvn} for the description of other ways of defining codes from algebraic geometry.
 
 Let $\curve$ be a smooth projective curve defined by an equation in $\Fq$ such that the set of its rational places $\curve(\Fq)$ is non-empty.
 Let $D \in \cdiv(\curve)$ be a divisor on $\curve$ and $\points \defas (P_0, \ldots, P_{n-1}) \subsetneq \curve(\Fq)$ be $n$ places not in the support of $D$.
 This defines a code $\evcode(\rrs(D), \points)$ through the evaluation map $\evmap_\points(\fun) \defas (\fun(P_0),\ldots,\fun(P_{n-1}))$, $\fun \in \rrs(D)$.
 
-For the definition to be valid, the evaluation map from $\rrs(D)$ to $\points$ has to be injective, \ie its kernel must be equal to $\{0\}$.
+For the definition to be valid, the evaluation map from $\rrs(D)$ at $\points$ has to be injective, \ie its kernel must be equal to $\{0\}$.
 This condition can easily be expressed in terms of divisors; if we call $S \defas P_0 + \ldots + P_{n-1}$ the divisor of the
 evaluation support, we need $\rrs(D - S)$ (\ie functions of $\rrs(D)$ with zeros in all of the $P_i$s, \ie the kernel of $\evmap$) to be reduced to the zero function.
 One can see that this will always be the case as long as $\deg(D) < \deg(S)$.
@@ -399,13 +404,16 @@ Let $\curve$ be the plane projective curve of genus 1 of equation $x^2z + xz^2 =
 with a unique point at infinity $P_\infty \defas [1:0:0]$, and it has 24 $\Fst$-rational affine points. The pole order
 of $x/z$ and $y/z$ at $P_\infty$ is 3 and 2 respectively, as computed in \autoref{ex:order_gen1}.
 
-Let $D \defas 12P_\infty$. From the Riemann-Roch theorem, the dimension $\ell(D)$ of $\rrs(D)$ is $12 + 1 - g = 12$. We can thus
+Let $D \defas 12P_\infty$. From the Riemann-Roch theorem, the dimension $\ell(D)$ of $\rrs(D)$ is $12 + 1 - g = 12$.
+We can thus
 define a $[24, 12]_{\Fst}$ AG code $\evcode(\rrs(D), \points)$ with $\points$ the affine rational points of $\curve$
 put in any order.
+A generating matrix for this code can be computed by evaluating a basis of $\rrs(D)$ on $\points$, one such basis
+being for instance $(1,y,x,y^2,xy,y^3,xy^2,y^4,xy^3,y^5,xy^4,y^6)$.
 
 This code and its dual have minimum distance at least 12.
 Either code can thus be used to define a diffusion matrix of dimension 12 over $\Fst$, which diffuses over $12\times 4 = 48$ bits and
-has differential and linear branch number at least 12 (in fact exactly 12). 
+has differential and linear branch number at least 12 (in fact exactly 12).
 \end{example}
 
 \begin{example}[An AG code from a curve of genus 2]
