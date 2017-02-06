@@ -73,8 +73,8 @@ With this notation, the output of one application of the compression function is
 \begin{tabular}{c c c c} \toprule
 $\;\; \textnormal{round} \;\;$ & step $i$ & $\boolF_i(x,y,z)$ &  $\mathcal{K}_i$ \\ \midrule
 1 & $\;\;  \:\:0 \leq i <  20 \;\;$  & $\boolF_{\text{IF}} = (x \wedge y) \vee (\neg x \wedge z)$ & $\;\; \texttt{0x5a827999} \;\;$ \\
-2 & $20 \leq i <  40$ & $\boolF_{\text{XOR}} = x \oplus y \oplus z$ & \texttt{0x6ed6eba1} \\
-3 & $40 \leq i <  60$ & $\;\;  \boolF_{\text{MAJ}} = (x \wedge y) \vee (x \wedge z) \vee (y \wedge z) \;\;$  & \texttt{0x8fabbcdc} \\
+2 & $20 \leq i <  40$ & $\boolF_{\text{XOR}} = x \oplus y \oplus z$ & \texttt{0x6ed9eba1} \\
+3 & $40 \leq i <  60$ & $\;\;  \boolF_{\text{MAJ}} = (x \wedge y) \vee (x \wedge z) \vee (y \wedge z) \;\;$  & \texttt{0x8f1bbcdc} \\
 4 & $60 \leq i <  80$ & $\boolF_{\text{XOR}} = x \oplus y \oplus z $ & \texttt{0xca62c1d6} \\
 \bottomrule
 \end{tabular}
